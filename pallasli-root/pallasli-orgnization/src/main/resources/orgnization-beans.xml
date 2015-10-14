@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="userBean" class="com.pallasli.authority.orgnization.bean.User"></bean>
+	<bean id="roleBean" class="com.pallasli.authority.orgnization.bean.Role"></bean>
+	<bean id="resourceBean" class="com.pallasli.authority.orgnization.bean.Resource"></bean>
+	<bean id="DepartmentBean" class="com.pallasli.authority.orgnization.bean.Department"></bean>
+	<bean id="orgnizationBean" class="com.pallasli.authority.orgnization.bean.Orgnization"></bean>
+</beans>
