@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  
+<mapper namespace="com.atwasoft.dao.bpm.AccountDAO">
+
+  <!-- Account INSERT -->
+
+  <insert id="insertAccount" parameterType="com.atwasoft.entity.bpm.Account">
+    insert into TEMP_BPM_TEST (ID, NAME, MONEY, REVISION)
+    values (
+      #{id,jdbcType=VARCHAR},     
+      #{name ,jdbcType=VARCHAR},
+      #{money ,jdbcType=DECIMAL},
+      #{revision ,jdbcType=INTEGER}
+    )
+  </insert>
+  
+  
+
+</mapper>

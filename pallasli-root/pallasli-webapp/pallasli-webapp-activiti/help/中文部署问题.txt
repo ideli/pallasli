@@ -1,0 +1,18 @@
+ 在Activiti Modeler中设计的流程包含奇数个中文时不能部署问题 
+解决方法：set JVM options: -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8
+
+activiti 发布后图片中汉字显示乱码问题 
+图片乱码的问题有两种
+第一种 因为服务器缺少必要的字体到这的问题：
+解决办法
+            <!-- 发布流程生成图片是正常显示中文 -->
+            <property name="activityFontName" value="宋体"/>
+            <property name="labelFontName" value="宋体"/>
+
+第二种情况是客户端的问题：
+
+虽然你提供的文件 开头描述是  UTF-8 的，但实际上汉字是GBK 字符集，
+
+byte[] bpmnBytes = xmlConverter.convertToXML(model,"GBK");
+
+至于怎么判断是什么字符集就多试试吧！

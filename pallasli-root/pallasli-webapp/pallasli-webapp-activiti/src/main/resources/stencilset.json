@@ -1,0 +1,1608 @@
+{
+  "title" : "BPMN 2.0",
+  "namespace" : "http://b3mn.org/stencilset/bpmn2.0#",
+  "description" : "This is the BPMN 2.0 stencil set specification.",
+  "propertyPackages" : [ {
+    "name" : "elementbase",
+    "properties" : [ {
+      "id" : "overrideid",
+      "type" : "String",
+      "title" : "编号",
+      "value" : "",
+      "description" : "元素唯一标识.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "baseattributes",
+    "properties" : [ {
+      "id" : "name",
+      "type" : "String",
+      "title" : "名称",
+      "value" : "",
+      "description" : "元素描述名.",
+      "popular" : true,
+      "refToView" : "text_name"
+    }, {
+      "id" : "documentation",
+      "type" : "Text",
+      "title" : "描述",
+      "value" : "",
+      "description" : "BPMN元素描述名称.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "processbase",
+    "properties" : [ {
+      "id" : "process_id",
+      "type" : "String",
+      "title" : "流程标识KEY",
+      "value" : "process",
+      "description" : "流程定义KEY，定义唯一标识符.",
+      "popular" : true
+    }, {
+      "id" : "process_author",
+      "type" : "String",
+      "title" : "流程作者",
+      "value" : "",
+      "description" : "流程定义作者.",
+      "popular" : false
+    }, {
+      "id" : "process_executable",
+	  "type" : "Choice",
+	  "title" : "是否执行",
+	  "value" : "Yes",
+	  "description" : "流程是否能够执行.",
+	  "popular" : true,
+	  "items" : [ {
+	    "id" : "no",
+	    "title" : "否",
+	    "value" : "No"
+	  }, {
+	    "id" : "yes",
+	    "title" : "是",
+	    "value" : "Yes"
+	  }]
+    }, {
+      "id" : "process_version",
+      "type" : "String",
+      "title" : "流程版本字符串 (仅文档)",
+      "value" : "",
+      "description" : "为了文档的用途的版本标识符.",
+      "popular" : false
+    }, {
+      "id" : "process_namespace",
+      "type" : "String",
+      "title" : "命名空间",
+      "value" : "http://www.activiti.org/processdef",
+      "description" : "流程命名空间.",
+      "popular" : false
+    } ]
+  }, {
+    "name" : "usertaskbase",
+    "properties" : [ {
+      "id" : "formkeydefinition",
+      "type" : "String",
+      "title" : "表单Key",
+      "value" : "",
+      "description" : "用户任务的表单模版.",
+      "popular" : true
+    }, {
+      "id" : "duedatedefinition",
+      "type" : "String",
+      "title" : "过期时间",
+      "value" : "",
+      "description" : "用户任务过期时间.",
+      "popular" : true
+    }, {
+      "id" : "prioritydefinition",
+      "type" : "String",
+      "title" : "优先级",
+      "value" : "",
+      "description" : "用户任务优先级.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "usertaskassignment",
+    "properties" : [ {
+      "id" : "usertaskassignment",
+      "type" : "Complex",
+      "title" : "分配",
+      "value" : "",
+      "description" : "用户任务分配定义",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "assignment_type",
+        "name" : "类型",
+        "name_de" : "Typ",
+        "type" : "Choice",
+        "value" : "",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "c1",
+          "title" : "代理人(assignee)",
+          "title_de" : "Performer",
+          "value" : "assignee",
+          "refToView" : ""
+        }, {
+          "id" : "c2",
+          "title" : "候选用户(candidateUsers)",
+          "title_de" : "HumanPerformer",
+          "value" : "candidateUsers",
+          "refToView" : ""
+        }, {
+          "id" : "c3",
+          "title" : "候选组(candidateGroups)",
+          "title_de" : "PotentialOwner",
+          "value" : "candidateGroups",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "resourceassignmentexpr",
+        "name" : "资源分配表达式",
+        "name_de" : "Zuordnungs-Ausdruck",
+        "type" : "String",
+        "description" : "定义用于资源分配的表达式.",
+        "description_de" : "Definiert den Ausdruck, der fr die Zordung von Ressourcen genutzt wird.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      } ]
+    } ]
+  }, {
+    "name" : "formdefinition",
+    "properties" : [ {
+      "id" : "formproperties",
+      "type" : "multiplecomplex",
+      "title" : "表单属性",
+      "value" : "",
+      "description" : "定义表单中一组属性",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "formproperty_id",
+        "name" : "编号(Id)",
+        "name_de" : "Typ",
+        "type" : "String",
+        "description" : "定义表达式用于资源分配.",
+        "description_de" : "Definiert den Ausdruck, der fr die Zordung von Ressourcen genutzt wird.",
+        "value" : "",
+        "width" : 150,
+        "optional" : false
+      }, {
+        "id" : "formproperty_name",
+        "name" : "名称(Name)",
+        "name_de" : "Typ",
+        "type" : "String",
+        "description" : "定义用于资源分配的表达式.",
+        "description_de" : "Definiert den Ausdruck, der fr die Zordung von Ressourcen genutzt wird.",
+        "value" : "",
+        "width" : 150,
+        "optional" : false
+      }, {
+        "id" : "formproperty_type",
+        "name" : "类型",
+        "name_de" : "Typ",
+        "type" : "Choice",
+        "value" : "",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "c1",
+          "title" : "字符串",
+          "title_de" : "String",
+          "value" : "string",
+          "refToView" : ""
+        }, {
+          "id" : "c2",
+          "title" : "日期",
+          "title_de" : "Date",
+          "value" : "date",
+          "refToView" : ""
+        }, {
+          "id" : "c3",
+          "title" : "长整型",
+          "title_de" : "Long",
+          "value" : "long",
+          "refToView" : ""
+        }, {
+          "id" : "c4",
+          "title" : "布尔型",
+          "title_de" : "Boolean",
+          "value" : "boolean",
+          "refToView" : ""
+        }, {
+          "id" : "c5",
+          "title" : "枚举型",
+          "title_de" : "Enum",
+          "value" : "enum",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "formproperty_expression",
+        "name" : "表达式",
+        "name_de" : "Typ",
+        "type" : "String",
+        "description" : "定义表达式.",
+        "description_de" : "Definiert den Ausdruck, der fr die Zordung von Ressourcen genutzt wird.",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "formproperty_variable",
+        "name" : "变量",
+        "name_de" : "Typ",
+        "type" : "String",
+        "description" : "定义表达式.",
+        "description_de" : "Definiert den Ausdruck, der fr die Zordung von Ressourcen genutzt wird.",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "formproperty_required",
+        "name" : "是否必须",
+        "name_de" : "Typ",
+        "type" : "Choice",
+        "value" : "No",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "yes",
+          "title" : "是",
+          "value" : "Yes"
+        }, {
+          "id" : "no",
+          "title" : "否",
+          "value" : "No"
+        } ]
+      }, {
+        "id" : "formproperty_readable",
+        "name" : "是否可读",
+        "name_de" : "Typ",
+        "type" : "Choice",
+        "value" : "Yes",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "yes",
+          "title" : "是",
+          "value" : "Yes"
+        }, {
+          "id" : "no",
+          "title" : "否",
+          "value" : "No"
+        } ]
+      }, {
+        "id" : "formproperty_writeable",
+        "name" : "是否可写",
+        "name_de" : "Typ",
+        "type" : "Choice",
+        "value" : "Yes",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "yes",
+          "title" : "是",
+          "value" : "Yes"
+        }, {
+          "id" : "no",
+          "title" : "否",
+          "value" : "No"
+        } ]
+      }, {
+        "id" : "formproperty_formvalues",
+        "name" : "表单值",
+        "name_de" : "Typ",
+        "type" : "Complex",
+        "width" : 300,
+        "optional" : false,
+        "complexItems" : [ {
+          "id" : "formproperty_formvalue_id",
+          "name" : "编号",
+          "type" : "String",
+          "value" : "",
+          "width" : 100,
+          "optional" : false
+        }, {
+          "id" : "formproperty_formvalue_name",
+          "name" : "名称",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "tasklistenersbase",
+    "properties" : [ {
+      "id" : "tasklisteners",
+      "type" : "multiplecomplex",
+      "title" : "任务监听",
+      "value" : "",
+      "description" : "用户任务监听",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "task_listener_event_type",
+        "name" : "事件",
+        "type" : "Choice",
+        "value" : "",
+        "width" : 100,
+        "optional" : false,
+        "items" : [ {
+          "id" : "c1",
+          "title" : "创建",
+          "value" : "create",
+          "refToView" : ""
+        }, {
+          "id" : "c2",
+          "title" : "分配",
+          "value" : "assignment",
+          "refToView" : ""
+        }, {
+          "id" : "c3",
+          "title" : "完成",
+          "value" : "complete",
+          "refToView" : ""
+        }, {
+          "id" : "c4",
+          "title" : "所有事件",
+          "value" : "all",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "task_listener_class",
+        "name" : "类Class",
+        "type" : "String",
+        "description" : "监听类.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "task_listener_expression",
+        "name" : "表达式",
+        "type" : "String",
+        "description" : "监听表达式定义.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "task_listener_delegate_expression",
+        "name" : "代理表达式",
+        "type" : "String",
+        "description" : "监听代理表达式定义.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "task_listener_fields",
+        "name" : "字段",
+        "type" : "Complex",
+        "width" : 100,
+        "optional" : false,
+        "complexItems" : [ {
+          "id" : "task_listener_field_name",
+          "name" : "名称",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        }, {
+          "id" : "task_listener_field_value",
+          "name" : "字符串值",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        }, {
+          "id" : "task_listener_field_expression",
+          "name" : "表达式",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "servicetaskbase",
+    "properties" : [ {
+      "id" : "servicetaskclass",
+      "type" : "String",
+      "title" : "类Class",
+      "value" : "",
+      "description" : "服务任务实现类.",
+      "popular" : true
+    }, {
+      "id" : "servicetaskexpression",
+      "type" : "String",
+      "title" : "表达式",
+      "value" : "",
+      "description" : "服务任务表达式.",
+      "popular" : true
+    }, {
+      "id" : "servicetaskdelegateexpression",
+      "type" : "String",
+      "title" : "代理表达式",
+      "value" : "",
+      "description" : "服务任务代理表达式.",
+      "popular" : true
+    }, {
+      "id" : "servicetaskresultvariable",
+      "type" : "String",
+      "title" : "结果变量名",
+      "value" : "",
+      "description" : "流程变量名存储服务任务结果.",
+      "popular" : true
+    }, {
+      "id" : "servicetaskfields",
+      "type" : "Complex",
+      "title" : "Class字段",
+      "value" : "",
+      "description" : "字段扩展",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "servicetask_field_name",
+        "name" : "名称",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "servicetask_field_value",
+        "name" : "字符串值",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "servicetask_field_expression",
+        "name" : "表达式",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      } ]
+    } ]
+  }, {
+    "name" : "scripttaskbase",
+    "properties" : [ {
+      "id" : "scriptformat",
+      "type" : "String",
+      "title" : "脚本格式",
+      "value" : "",
+      "description" : "脚本任务格式.",
+      "popular" : true
+    }, {
+      "id" : "scripttext",
+      "type" : "Text",
+      "title" : "脚本",
+      "value" : "",
+      "description" : "脚本任务具体脚本.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "ruletaskbase",
+    "properties" : [ {
+      "id" : "ruletask_class",
+      "type" : "String",
+      "title" : "类Class",
+      "value" : "",
+      "description" : "规则任务.",
+      "popular" : true
+    }, {
+      "id" : "ruletask_variables_input",
+      "type" : "String",
+      "title" : "输入变量",
+      "value" : "",
+      "description" : "输入变量.",
+      "popular" : true
+    }, {
+      "id" : "ruletask_result",
+      "type" : "String",
+      "title" : "结果变量",
+      "value" : "",
+      "description" : "结果变量.",
+      "popular" : true
+    }, {
+      "id" : "ruletask_rules",
+      "type" : "String",
+      "title" : "规则",
+      "value" : "",
+      "description" : "规则.",
+      "popular" : true
+    }, {
+      "id" : "ruletask_exclude",
+      "type" : "Choice",
+      "title" : "排除",
+      "value" : "No",
+      "description" : "排除.",
+      "popular" : true,
+      "items" : [ {
+        "id" : "no",
+        "title" : "否",
+        "value" : "No"
+      }, {
+        "id" : "yes",
+        "title" : "是",
+        "value" : "Yes"
+      } ]
+    } ]
+  }, {
+    "name" : "mailtaskbase",
+    "properties" : [ {
+      "id" : "mailtaskto",
+      "type" : "Text",
+      "title" : "接受者",
+      "value" : "",
+      "description" : "The recipients if the e-mail. Multiple recipients are defined in a comma-separated list.",
+      "popular" : true
+    }, {
+      "id" : "mailtaskfrom",
+      "type" : "Text",
+      "title" : "发送者",
+      "value" : "",
+      "description" : "The sender e-mail address. If not provided, the default configured from address is used.",
+      "popular" : true
+    }, {
+      "id" : "mailtasksubject",
+      "type" : "Text",
+      "title" : "主题",
+      "value" : "",
+      "description" : "The subject of the e-mail.",
+      "popular" : true
+    }, {
+      "id" : "mailtaskcc",
+      "type" : "Text",
+      "title" : "抄送",
+      "value" : "",
+      "description" : "The cc's of the e-mail. Multiple recipients are defined in a comma-separated list",
+      "popular" : true
+    }, {
+      "id" : "mailtaskbcc",
+      "type" : "Text",
+      "title" : "密送",
+      "value" : "",
+      "description" : "The bcc's of the e-mail. Multiple recipients are defined in a comma-separated list",
+      "popular" : true
+    }, {
+      "id" : "mailtasktext",
+      "type" : "Text",
+      "title" : "内容",
+      "value" : "",
+      "description" : "The content of the e-mail, in case one needs to send plain none-rich e-mails. Can be used in combination with html, for e-mail clients that don't support rich content. The client will then fall back to this text-only alternative.",
+      "popular" : true
+    }, {
+      "id" : "mailtaskhtml",
+      "type" : "Text",
+      "title" : "Html",
+      "value" : "",
+      "description" : "A piece of HTML that is the content of the e-mail.",
+      "popular" : true
+    }, {
+      "id" : "mailtaskcharset",
+      "type" : "String",
+      "title" : "编码格式字符集",
+      "value" : "",
+      "description" : "Allows to change the charset of the email, which is necessary for many non-English languages. ",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "callactivitybase",
+    "properties" : [ {
+      "id" : "callactivitycalledelement",
+      "type" : "String",
+      "title" : "调用元素",
+      "value" : "",
+      "description" : "流程引用.",
+      "popular" : true
+    }, {
+      "id" : "callactivityinparameters",
+      "type" : "Complex",
+      "title" : "输入参数",
+      "value" : "",
+      "description" : "定入输出参数",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "ioparameter_source",
+        "name" : "来源",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "ioparameter_sourceexpression",
+        "name" : "来源表达式",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "ioparameter_target",
+        "name" : "目标",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      } ]
+    }, {
+      "id" : "callactivityoutparameters",
+      "type" : "Complex",
+      "title" : "输出参数",
+      "value" : "",
+      "description" : "定义输出参数",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "ioparameter_source",
+        "name" : "来源",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "ioparameter_sourceexpression",
+        "name" : "来源表达式",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      }, {
+        "id" : "ioparameter_target",
+        "name" : "目标",
+        "type" : "String",
+        "value" : "",
+        "width" : 200,
+        "optional" : false
+      } ]
+    } ]
+  }, {
+    "name" : "sequenceflowbase",
+    "properties" : [ {
+      "id" : "conditionsequenceflow",
+      "type" : "Text",
+      "title" : "条件",
+      "value" : "",
+      "description" : "顺序流条件",
+      "popular" : true
+    }, {
+      "id" : "defaultflow",
+      "type" : "Choice",
+      "title" : "缺省路由",
+      "value" : "None",
+      "description" : "缺省路由",
+      "popular" : true,
+      "items" : [ {
+        "id" : "none",
+        "title" : "Standard",
+        "title_de" : "Standard",
+        "value" : "None"
+      }, {
+        "id" : "default",
+        "title" : "Default Flow",
+        "title_de" : "Standardfluss",
+        "value" : "Default",
+        "icon" : "connector/list/type.default.png",
+        "refToView" : "default"
+      } ]
+    }, {
+      "id" : "conditionalflow",
+      "type" : "Choice",
+      "title" : "条件路由",
+      "value" : "None",
+      "description" : "条件路由",
+      "popular" : true,
+      "items" : [ {
+        "id" : "none",
+        "title" : "Standard",
+        "title_de" : "Standard",
+        "value" : "None"
+      }, {
+        "id" : "default",
+        "title" : "Conditional Flow",
+        "value" : "Conditional",
+        "icon" : "connector/list/type.expression.png",
+        "refToView" : "conditional"
+      } ]
+    } ]
+  }, {
+    "name" : "cancelactivityattribute",
+    "properties" : [ {
+      "id" : "cancelactivity",
+      "type" : "Choice",
+      "title" : "取消活动",
+      "value" : "yes",
+      "description" : "取消活动",
+      "popular" : true,
+      "items" : [ {
+        "id" : "yes",
+        "title" : "Yes",
+        "title_de" : "Yes",
+        "value" : "yes"
+      }, {
+        "id" : "no",
+        "title" : "No",
+        "title_de" : "No",
+        "value" : "no"
+      } ]
+    } ]
+  }, {
+    "name" : "timerdefinition",
+    "properties" : [ {
+      "id" : "timerdurationdefinition",
+      "type" : "String",
+      "title" : "时间区间(e.g. PT5M)",
+      "value" : "",
+      "description" : "使用ISO-8601 定义时间区间.",
+      "popular" : true
+    }, {
+      "id" : "timerdatedefinition",
+      "type" : "String",
+      "title" : "时间格式ISO-8601",
+      "value" : "",
+      "description" : "使用ISO-8601 定义时间.",
+      "popular" : true
+    }, {
+      "id" : "timercycledefinition",
+      "type" : "String",
+      "title" : "时间周期 (e.g. R3/PT10H)",
+      "value" : "",
+      "description" : "Define the timer with a ISO-8601 cycle.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "messagerefdefinition",
+    "properties" : [ {
+      "id" : "messageref",
+      "type" : "String",
+      "title" : "消息引用",
+      "value" : "",
+      "description" : "Define the message name.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "signalrefdefinition",
+    "properties" : [ {
+      "id" : "signalref",
+      "type" : "String",
+      "title" : "信号引用",
+      "value" : "",
+      "description" : "Define the signal name.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "errorrefdefinition",
+    "properties" : [ {
+      "id" : "errorref",
+      "type" : "String",
+      "title" : "错误引用",
+      "value" : "",
+      "description" : "Define the error name.",
+      "popular" : true
+    } ]
+  }, {
+    "name" : "nonestarteventbase",
+    "properties" : [ {
+      "id" : "initiator",
+      "type" : "String",
+      "title" : "发起者",
+      "value" : "",
+      "description" : "Initiator of the process.",
+      "popular" : true
+    }, {
+      "id" : "formkeydefinition",
+      "type" : "String",
+      "title" : "表单key",
+      "value" : "",
+      "description" : "Form key of the start event.",
+      "popular" : true
+    }]
+  }, {
+    "name" : "textannotationbase",
+    "properties" : [ {
+      "id" : "text",
+      "type" : "String",
+      "title" : "Text",
+      "value" : "",
+      "description" : "The text of the text annotation.",
+      "popular" : true,
+      "refToView" : "text"
+    } ]
+  }, {
+    "name" : "asynchronousbase",
+    "properties" : [ {
+      "id" : "asynchronousdefinition",
+      "type" : "Choice",
+      "title" : "是否异步",
+      "value" : "No",
+      "description" : "Define the activity as asynchronous.",
+      "popular" : true,
+      "items" : [ {
+        "id" : "no",
+        "title" : "No",
+        "value" : "No"
+      }, {
+        "id" : "yes",
+        "title" : "Yes",
+        "value" : "Yes"
+      } ]
+    }, {
+      "id" : "exclusivedefinition",
+      "type" : "Choice",
+      "title" : "是否排它",
+      "value" : "Yes",
+      "description" : "Define the activity as exclusive.",
+      "popular" : true,
+      "items" : [ {
+        "id" : "no",
+        "title" : "No",
+        "value" : "No"
+      }, {
+        "id" : "yes",
+        "title" : "Yes",
+        "value" : "Yes"
+      } ]
+    } ]
+  }, {
+    "name" : "executionlistenersbase",
+    "properties" : [ {
+      "id" : "executionlisteners",
+      "type" : "multiplecomplex",
+      "title" : "执行监听器",
+      "value" : "",
+      "description" : "Listeners for an activity, process, sequence flow, start and end event.",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "execution_listener_event_type",
+        "name" : "Event",
+        "type" : "Choice",
+        "value" : "",
+        "width" : 200,
+        "optional" : false,
+        "items" : [ {
+          "id" : "c1",
+          "title" : "Start",
+          "value" : "start",
+          "refToView" : ""
+        }, {
+          "id" : "c2",
+          "title" : "End",
+          "value" : "end",
+          "refToView" : ""
+        }, {
+          "id" : "c2",
+          "title" : "Take (only sequence flows)",
+          "value" : "take",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "execution_listener_class",
+        "name" : "类Class",
+        "type" : "String",
+        "description" : "Listener class.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "execution_listener_expression",
+        "name" : "表达式",
+        "type" : "String",
+        "description" : "Listener expression definition.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "execution_listener_delegate_expression",
+        "name" : "代理表达式",
+        "type" : "String",
+        "description" : "Listener delegate expression definition.",
+        "value" : "",
+        "width" : 200,
+        "optional" : true
+      }, {
+        "id" : "execution_listener_fields",
+        "name" : "字段",
+        "type" : "Complex",
+        "width" : 100,
+        "optional" : false,
+        "complexItems" : [ {
+          "id" : "execution_listener_field_name",
+          "name" : "名称",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        }, {
+          "id" : "execution_listener_field_value",
+          "name" : "字符值",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        }, {
+          "id" : "execution_listener_field_expression",
+          "name" : "表达式",
+          "type" : "String",
+          "value" : "",
+          "width" : 200,
+          "optional" : false
+        } ]
+      } ]
+    } ]
+  }, {
+    "name" : "eventListener",
+    "properties" : [ {
+      "id" : "eventlisteners",
+      "type" : "multiplecomplex",
+      "title" : "事件监听器",
+      "value" : "",
+      "description" : "Event listeners for events related to the process definition.",
+      "popular" : true,
+      "complexItems" : [ {
+        "id" : "event_listener_events",
+        "name" : "事件",
+        "type" : "String",
+        "description" : "Listener events.",
+        "value" : "",
+        "width" : 150,
+        "optional" : true
+      }, {
+        "id" : "event_listener_class",
+        "name" : "类Class",
+        "type" : "String",
+        "description" : "Listener implementation class.",
+        "value" : "",
+        "width" : 150,
+        "optional" : true
+      }, {
+        "id" : "event_listener_delegate_expression",
+        "name" : "代理表达式",
+        "type" : "String",
+        "description" : "Listener delegate expression definition.",
+        "value" : "",
+        "width" : 150,
+        "optional" : true
+      },{
+        "id" : "event_listener_entity_type",
+        "name" : "实体类型",
+        "type" : "Choice",
+        "description" : "Listener entity type.",
+        "value" : "",
+        "width" : 100,
+        "optional" : true,
+        "items" : [ {
+          "id" : "attachment",
+          "title" : "Attachment",
+          "value" : "attachment",
+          "refToView" : ""
+        }, {
+          "id" : "comment",
+          "title" : "Comment",
+          "value" : "comment",
+          "refToView" : ""
+        }, {
+          "id" : "execution",
+          "title" : "Execution",
+          "value" : "execution",
+          "refToView" : ""
+        }, {
+          "id" : "identity-link",
+          "title" : "Indentity link",
+          "value" : "identity-link",
+          "refToView" : ""
+        }, {
+          "id" : "job",
+          "title" : "Job",
+          "value" : "job",
+          "refToView" : ""
+        }, {
+          "id" : "process-definition",
+          "title" : "Process definition",
+          "value" : "process-definition",
+          "refToView" : ""
+        }, {
+          "id" : "process-instance",
+          "title" : "Process instance",
+          "value" : "process-instance",
+          "refToView" : ""
+        }, {
+          "id" : "execution",
+          "title" : "Execution",
+          "value" : "execution",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "event_listener_throw_event",
+        "name" : "Throw event",
+        "type" : "Choice",
+        "description" : "Listener event type to throw.",
+        "value" : "",
+        "width" : 100,
+        "optional" : true,
+        "items" : [ {
+          "id" : "signal",
+          "title" : "Signal",
+          "value" : "signal",
+          "refToView" : ""
+        }, {
+          "id" : "globalSignal",
+          "title" : "Glocal signal",
+          "value" : "globalSignal",
+          "refToView" : ""
+        }, {
+          "id" : "message",
+          "title" : "Message",
+          "value" : "message",
+          "refToView" : ""
+        }, {
+          "id" : "error",
+          "title" : "Error",
+          "value" : "error",
+          "refToView" : ""
+        } ]
+      }, {
+        "id" : "event_listener_throw_event_ref",
+        "name" : "Signal/Message name - Error code",
+        "type" : "String",
+        "description" : "Signal name, Message name or error-code.",
+        "value" : "",
+        "width" : 150,
+        "optional" : true
+      } ]
+    } ]
+  }, {
+    "name" : "customformdefinition",
+    "properties" : [ {
+      "id" : "customformdefinition",
+      "type" : "Choice",
+      "title" : "自定义表单",
+      "value" : "",
+      "description" : "Des A",
+      "popular" : true,
+      "items" : [ {
+        "id" : "1",
+        "title" : "form 1",
+        "value" : "1"
+      }, {
+        "id" : "2",
+        "title" : "form 2",
+        "value" : "2"
+      }, {
+        "id" : "3",
+        "title" : "form 3",
+        "value" : "3"
+      } ]
+    } ]
+  }, {
+    "name" : "loopcharacteristics",
+    "properties" : [ {
+      "id" : "looptype",
+      "type" : "Choice",
+      "title" : "循环类型",
+      "value" : "None",
+      "description" : "Repeated activity execution (parallel or sequential) can be displayed through different loop types",
+      "popular" : false,
+      "items" : [ {
+        "id" : "c1",
+        "title" : "None",
+        "title_de" : "Keine Schleife",
+        "value" : "None",
+        "refToView" : "none"
+      }, {
+        "id" : "c2",
+        "title" : "Standard",
+        "title_de" : "Standard",
+        "value" : "Standard",
+        "icon" : "activity/list/looptype.standard.png",
+        "refToView" : "loop"
+      }, {
+        "id" : "c3",
+        "title" : "MI Parallel",
+        "title_de" : "MI parallel",
+        "value" : "Parallel",
+        "icon" : "activity/list/mi.parallel.png",
+        "refToView" : "parallel"
+      }, {
+        "id" : "c4",
+        "title" : "MI Sequential",
+        "title_de" : "MI sequentialisiert",
+        "value" : "Sequential",
+        "icon" : "activity/list/mi.sequential.png",
+        "refToView" : "sequential"
+      } ]
+    } ]
+  }, {
+    "name" : "activity",
+    "properties" : [ {
+      "id" : "multiinstance_sequential",
+      "type" : "Choice",
+      "title" : "顺序多实例",
+      "value" : "Yes",
+      "description" : "Define the multi instance as sequential.",
+      "popular" : true,
+      "items" : [ {
+        "id" : "no",
+        "title" : "No",
+        "value" : "No"
+      }, {
+        "id" : "yes",
+        "title" : "Yes",
+        "value" : "Yes"
+      } ]
+    }, {
+      "id" : "multiinstance_cardinality",
+      "type" : "String",
+      "title" : "实例个数(多实例)",
+      "value" : "",
+      "description" : "定义多实例个数.",
+      "popular" : true
+    }, {
+      "id" : "multiinstance_collection",
+      "type" : "String",
+      "title" : "实例集合(多实例)",
+      "value" : "",
+      "description" : "定义多实例的数据集合.",
+      "popular" : true
+    }, {
+      "id" : "multiinstance_variable",
+      "type" : "String",
+      "title" : "元素变量(多实例)",
+      "value" : "",
+      "description" : "定义多实例的元素变量.",
+      "popular" : true
+    }, {
+      "id" : "multiinstance_condition",
+      "type" : "String",
+      "title" : "完成条件(多实例)",
+      "value" : "",
+      "description" : "多实例结束条件.",
+      "popular" : true
+    }, {
+      "id" : "isforcompensation",
+      "type" : "Boolean",
+      "title" : "是否补偿",
+      "value" : "false",
+      "description" : "A flag that identifies whether this activity is intended for the purposes of compensation.",
+      "popular" : false,
+      "refToView" : "compensation"
+    } ]
+  } ],
+  "stencils" : [ {
+    "type" : "node",
+    "id" : "BPMNDiagram",
+    "title" : "流程",
+    "description" : "A BPMN 2.0 diagram.",
+    "view" : "diagram.svg",
+    "icon" : "diagram.png",
+    "groups" : [ "Diagram" ],
+    "mayBeRoot" : true,
+    "hide" : true,
+    "propertyPackages" : [ "baseattributes", "processbase", "executionlistenersbase", "eventListener" ],
+    "roles" : [ ]
+  }, {
+    "type" : "node",
+    "id" : "StartNoneEvent",
+    "title" : "开始事件",
+    "description" : "未指定触发器的开始事件",
+    "view" : "startevent/none.svg",
+    "icon" : "startevent/none.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "formdefinition", "nonestarteventbase", "executionlistenersbase" ],
+    "roles" : [ "Startevents_all", "sequence_start", "StartEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "UserTask",
+    "title" : "用户任务",
+    "description" : "分配指定用户的人工任务",
+    "view" : "activity/usertask.svg",
+    "icon" : "activity/list/type.user.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "usertaskbase", "usertaskassignment", "formdefinition", "tasklistenersbase", "asynchronousbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ServiceTask",
+    "title" : "服务任务",
+    "description" : "自动运行的服务逻辑任务",
+    "view" : "activity/servicetask.svg",
+    "icon" : "activity/list/type.service.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "servicetaskbase", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ScriptTask",
+    "title" : "脚本任务",
+    "description" : "自动运行的脚本逻辑任务",
+    "view" : "activity/scripttask.svg",
+    "icon" : "activity/list/type.script.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "scripttaskbase", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "BusinessRule",
+    "title" : "业务规则任务",
+    "description" : "自动运行的业务规则逻辑任务",
+    "view" : "activity/businessruletask.svg",
+    "icon" : "activity/list/type.business.rule.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "ruletaskbase", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ReceiveTask",
+    "title" : "接受任务",
+    "description" : "等待指定信号的任务",
+    "view" : "activity/receivetask.svg",
+    "icon" : "activity/list/type.receive.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ManualTask",
+    "title" : "人工任务",
+    "description" : "没有任何逻辑的自动任务",
+    "view" : "activity/manualtask.svg",
+    "icon" : "activity/list/type.manual.png",
+    "groups" : [ "其他元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "MailTask",
+    "title" : "邮件任务",
+    "description" : "发送邮件的自动任务",
+    "view" : "activity/sendtask.svg",
+    "icon" : "activity/list/type.send.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "mailtaskbase", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "ActivitiesMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ExclusiveGateway",
+    "title" : "单选分支（网关）",
+    "description" : "排他型分支，多选一",
+    "view" : "gateway/exclusive.databased.svg",
+    "icon" : "gateway/exclusive.databased.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles" : [ "sequence_start", "sequence_end", "GatewaysMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ParallelGateway",
+    "title" : "并行分支（网关）",
+    "description" : "并行分支，多路由并发执行",
+    "view" : "gateway/parallel.svg",
+    "icon" : "gateway/parallel.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles" : [ "sequence_start", "sequence_end", "GatewaysMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "InclusiveGateway",
+    "title" : "多选分支（网关）",
+    "description" : "An inclusive gateway",
+    "view" : "gateway/inclusive.svg",
+    "icon" : "gateway/inclusive.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles" : [ "sequence_start", "sequence_end", "GatewaysMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "EventGateway",
+    "title" : "事件分支（网关）",
+    "description" : "根据事件路由分支",
+    "view" : "gateway/eventbased.svg",
+    "icon" : "gateway/eventbased.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles" : [ "sequence_start", "sequence_end", "GatewaysMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "Pool",
+    "title" : "池",
+    "groups" : ["常用元素"],
+    "description" : "池和泳道代表活动职责，可能是组织、角色和系统.",
+    "view" : "swimlane/pool.svg",
+    "icon" : "swimlane/pool.png",
+    "propertyPackages" : [ "elementbase", "baseattributes", "processbase" ],
+    "roles" : [ "all", "messageflow_start", "messageflow_end", "fromtoall", "canContainArtifacts" ],
+    "layout" : [{"type" : "layout.bpmn2_0.pool", "orientation" : "horizontal"}]
+  }, {
+    "type" : "node",
+    "id" : "Lane",
+    "title" : "泳道",
+    "groups" : ["常用元素"],
+    "description" : "池和泳道代表活动职责，可能是组织、角色和系统.泳道划分池和其他泳道层次.",
+    "view" : "swimlane/lane.svg",
+    "icon" : "swimlane/lane.png",
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles": [ "PoolChild", "fromtoall", "canContainArtifacts" ]
+  },{
+    "type" : "node",
+    "id" : "SubProcess",
+    "title" : "嵌入子流程",
+    "description" : "划分子流程作用范围",
+    "view" : "activity/subprocess.expanded.svg",
+    "icon" : "activity/expanded.subprocess.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "asynchronousbase", "executionlistenersbase", "loopcharacteristics" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "EventSubProcess",
+    "title" : "事件子流程",
+    "description" : "A event sub process scope",
+    "view" : "activity/event.subprocess.svg",
+    "icon" : "activity/event.subprocess.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "asynchronousbase", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "CallActivity",
+    "title" : "调用子流程",
+    "description" : "调用指定的子流程活动",
+    "view" : "activity/callactivity.svg",
+    "icon" : "activity/task.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "callactivitybase", "asynchronousbase", "executionlistenersbase", "loopcharacteristics", "activity" ],
+    "roles" : [ "sequence_start", "Activity", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "StartTimerEvent",
+    "title" : "开始计时器事件",
+    "description" : "定时器触发开始事件",
+    "view" : "startevent/timer.svg",
+    "icon" : "startevent/timer.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "timerdefinition", "executionlistenersbase" ],
+    "roles" : [ "Startevents_all", "sequence_start", "StartEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "StartMessageEvent",
+    "title" : "开始消息事件",
+    "description" : "消息触发的开始事件",
+    "view" : "startevent/message.svg",
+    "icon" : "startevent/message.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "messagerefdefinition", "executionlistenersbase" ],
+    "roles" : [ "Startevents_all", "sequence_start", "StartEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "StartErrorEvent",
+    "title" : "开始错误事件",
+    "description" : "捕获抛出的BPMN错误的开始事件",
+    "view" : "startevent/error.svg",
+    "icon" : "startevent/error.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "errorrefdefinition", "executionlistenersbase" ],
+    "roles" : [ "Startevents_all", "sequence_start", "StartEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "BoundaryErrorEvent",
+    "title" : "边界错误事件",
+    "description" : "捕获抛出的BPMN错误的边界事件",
+    "view" : "intermediateevent/error.svg",
+    "icon" : "catching/error.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "errorrefdefinition" ],
+    "roles" : [ "sequence_start", "BoundaryEventsMorph", "IntermediateEventOnActivityBoundary" ]
+  }, {
+    "type" : "node",
+    "id" : "BoundaryTimerEvent",
+    "title" : "边界定时事件",
+    "description" : "定时触发的边界事件",
+    "view" : "intermediateevent/timer.svg",
+    "icon" : "catching/timer.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "cancelactivityattribute", "timerdefinition" ],
+    "roles" : [ "sequence_start", "BoundaryEventsMorph", "IntermediateEventOnActivityBoundary" ]
+  }, {
+    "type" : "node",
+    "id" : "BoundarySignalEvent",
+    "title" : "边界信号量事件",
+    "description" : "信号量触发的边界事件",
+    "view" : "intermediateevent/signal.catching.svg",
+    "icon" : "catching/signal.png",
+    "groups" : [ "其他元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "cancelactivityattribute", "signalrefdefinition" ],
+    "roles" : [ "sequence_start", "BoundaryEventsMorph", "IntermediateEventOnActivityBoundary" ]
+  }, {
+    "type" : "node",
+    "id" : "BoundaryMessageEvent",
+    "title" : "边界消息事件",
+    "description" : "使用消息触发的边界事件",
+    "view" : "intermediateevent/message.catching.svg",
+    "icon" : "catching/message.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "cancelactivityattribute", "messagerefdefinition" ],
+    "roles" : [ "sequence_start", "BoundaryEventsMorph", "IntermediateEventOnActivityBoundary" ]
+  },
+  {
+    "type" : "node",
+    "id" : "CatchTimerEvent",
+    "title" : "中间定时捕获事件",
+    "description" : "捕获定时事件的中间捕获事件",
+    "view" : "intermediateevent/timer.svg",
+    "icon" : "catching/timer.png",
+    "groups" : [ "高级元素" ],
+	 "propertyPackages" : [ "elementbase", "baseattributes", "timerdefinition", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "sequence_end", "CatchEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "CatchSignalEvent",
+    "title" : "中间信号捕获事件",
+    "description" : "捕获信号的中间捕获事件",
+    "view" : "intermediateevent/signal.catching.svg",
+    "icon" : "catching/signal.png",
+    "groups" : [ "其他元素" ],
+	"propertyPackages" : [ "elementbase", "baseattributes", "signalrefdefinition", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "sequence_end", "CatchEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "CatchMessageEvent",
+    "title" : "中间消息捕获事件",
+    "description" : "捕获消息事件的中间捕获事件",
+    "view" : "intermediateevent/message.catching.svg",
+    "icon" : "catching/message.png",
+    "groups" : [ "高级元素" ],
+	"propertyPackages" : [ "elementbase", "baseattributes", "messagerefdefinition", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "sequence_end", "CatchEventsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ThrowNoneEvent",
+    "title" : "中间空抛出事件",
+    "description" : "不触发事件的中间事件",
+    "view" : "intermediateevent/none.svg",
+    "icon" : "throwing/none.png",
+    "groups" : [ "高级元素" ],
+	"propertyPackages" : [ "elementbase", "baseattributes", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "ThrowEventsMorph", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "ThrowSignalEvent",
+    "title" : "中间信号抛出事件",
+    "description" : "触发信号的中间事件",
+    "view" : "intermediateevent/signal.throwing.svg",
+    "icon" : "throwing/signal.png",
+    "groups" : [ "其他元素" ],
+	"propertyPackages" : [ "elementbase", "baseattributes", "signalrefdefinition", "executionlistenersbase" ],
+    "roles" : [ "sequence_start", "ThrowEventsMorph", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "EndNoneEvent",
+    "title" : "结束事件",
+    "description" : "不触发事件的结束事件",
+    "view" : "endevent/none.svg",
+    "icon" : "endevent/none.png",
+    "groups" : [ "常用元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "executionlistenersbase" ],
+    "roles" : [ "EndEventsMorph", "sequence_end", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "EndErrorEvent",
+    "title" : "结束错误事件",
+    "description" : "抛出错误事件的错误事件",
+    "view" : "endevent/error.svg",
+    "icon" : "endevent/error.png",
+    "groups" : [ "高级元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "errorrefdefinition", "executionlistenersbase" ],
+    "roles" : [ "EndEventsMorph", "sequence_end", "all" ]
+  }, {
+    "type" : "edge",
+    "id" : "SequenceFlow",
+    "title" : "顺序路由",
+    "description" : "定义活动间执行顺序.",
+    "view" : "connector/sequenceflow.svg",
+    "icon" : "connector/sequenceflow.png",
+    "groups" : [ "常用元素" ],
+    "layout" : [ {
+      "type" : "layout.bpmn2_0.sequenceflow"
+    } ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "sequenceflowbase", "executionlistenersbase" ],
+    "roles" : [ "ConnectingObjectsMorph", "all" ]
+  }, {
+    "type" : "edge",
+    "id" : "Association",
+    "title" : "关联",
+    "description" : "联系文本注释与对象.",
+    "view" : "connector/association.undirected.svg",
+    "icon" : "connector/association.undirected.png",
+    "groups" : [ "其他元素" ],
+    "layout" : [ {
+      "type" : "layout.bpmn2_0.sequenceflow"
+    } ],
+    "propertyPackages" : [ "elementbase", "baseattributes" ],
+    "roles" : [ "ConnectingObjectsMorph", "all" ]
+  }, {
+    "type" : "node",
+    "id" : "TextAnnotation",
+    "title" : "文字注释",
+    "description" : "说明文字标注元素.",
+    "view" : "artifact/text.annotation.svg",
+    "icon" : "artifact/text.annotation.png",
+    "groups" : [ "其他元素" ],
+    "propertyPackages" : [ "elementbase", "baseattributes", "textannotationbase" ],
+    "roles" : [ "all" ]
+  } ],
+  "rules" : {
+    "cardinalityRules" : [ {
+      "role" : "Startevents_all",
+      "incomingEdges" : [ {
+        "role" : "SequenceFlow",
+        "maximum" : 0
+      } ]
+    }, {
+      "role" : "Endevents_all",
+      "outgoingEdges" : [ {
+        "role" : "SequenceFlow",
+        "maximum" : 0
+      } ]
+    } ],
+    "connectionRules" : [ {
+      "role" : "SequenceFlow",
+      "connects" : [ {
+        "from" : "sequence_start",
+        "to" : [ "sequence_end" ]
+      } ]
+    }, {
+      "role" : "Association",
+      "connects" : [ {
+        "from" : "sequence_start",
+        "to" : [ "TextAnnotation" ]
+      } ]
+    }, {
+      "role" : "Association",
+      "connects" : [ {
+        "from" : "TextAnnotation",
+        "to" : [ "sequence_end" ]
+      } ]
+    }, {
+      "role" : "IntermediateEventOnActivityBoundary",
+      "connects" : [ {
+        "from" : "Activity",
+        "to" : [ "IntermediateEventOnActivityBoundary" ]
+      } ]
+    } ],
+    "containmentRules" : [ {
+      "role" : "BPMNDiagram",
+      "contains" : [ "all" ]
+    }, {
+      "role" : "SubProcess",
+      "contains" : [ "sequence_start", "sequence_end", "from_task_event", "to_task_event", "EventSubprocess", "TextAnnotation" ]
+    }, {
+      "role" : "EventSubProcess",
+      "contains" : [ "sequence_start", "sequence_end", "from_task_event", "to_task_event", "TextAnnotation" ]
+    }, {
+      "role" : "Pool",
+      "contains" : [ "Lane" ]
+    }, {
+       "role" : "Lane",
+       "contains" : [ "all" ]
+    } ],
+    "morphingRules" : [ {
+      "role" : "ActivitiesMorph",
+      "baseMorphs" : [ "UserTask" ],
+      "preserveBounds" : true
+    }, {
+      "role" : "GatewaysMorph",
+      "baseMorphs" : [ "ExclusiveGateway" ]
+    }, {
+      "role" : "StartEventsMorph",
+      "baseMorphs" : [ "StartNoneEvent" ]
+    }, {
+      "role" : "EndEventsMorph",
+      "baseMorphs" : [ "StartNoneEvent" ]
+    }, {
+      "role" : "CatchEventsMorph",
+      "baseMorphs" : [ "CatchTimerEvent" ]
+    }, {
+      "role" : "ThrowEventsMorph",
+      "baseMorphs" : [ "ThrowNoneEvent" ]
+    }, {
+      "role" : "TextAnnotation",
+      "baseMorphs" : [ "TextAnnotation" ]
+    } ]
+  }
+}

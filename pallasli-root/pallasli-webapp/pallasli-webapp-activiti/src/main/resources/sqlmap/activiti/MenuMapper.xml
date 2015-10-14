@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pallas.activiti.dao.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.pallas.activiti.model.Menu">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="APP_KEY" jdbcType="VARCHAR" property="appKey" />
+    <result column="MENU_KEY" jdbcType="VARCHAR" property="menuKey" />
+    <result column="PARENT_KEY" jdbcType="VARCHAR" property="parentKey" />
+    <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
+    <result column="MENU_CAPTION" jdbcType="VARCHAR" property="menuCaption" />
+    <result column="URL_PATH" jdbcType="VARCHAR" property="urlPath" />
+    <result column="CHILD_URL_PATH" jdbcType="VARCHAR" property="childUrlPath" />
+    <result column="MENU_TABLE_NAME" jdbcType="VARCHAR" property="menuTableName" />
+    <result column="MENU_WHERE_SQL" jdbcType="VARCHAR" property="menuWhereSql" />
+    <result column="MENU_TYPE_CODE" jdbcType="VARCHAR" property="menuTypeCode" />
+    <result column="PAGE_TYPE_CODE" jdbcType="VARCHAR" property="pageTypeCode" />
+    <result column="MENU_CONFIGS" jdbcType="VARCHAR" property="menuConfigs" />
+    <result column="VERSION" jdbcType="INTEGER" property="version" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, PROJECT_NAME, APP_KEY, MENU_KEY, PARENT_KEY, MENU_NAME, MENU_CAPTION, URL_PATH, 
+    CHILD_URL_PATH, MENU_TABLE_NAME, MENU_WHERE_SQL, MENU_TYPE_CODE, PAGE_TYPE_CODE, 
+    MENU_CONFIGS, VERSION
+  </sql>
+  <select id="selectByExample" parameterType="com.pallas.activiti.model.MenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_app_menu
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pallas.activiti.model.MenuExample">
+    delete from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pallas.activiti.model.Menu">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select uuid()
+    </selectKey>
+    insert into t_app_menu (PROJECT_NAME, APP_KEY, MENU_KEY, 
+      PARENT_KEY, MENU_NAME, MENU_CAPTION, 
+      URL_PATH, CHILD_URL_PATH, MENU_TABLE_NAME, 
+      MENU_WHERE_SQL, MENU_TYPE_CODE, PAGE_TYPE_CODE, 
+      MENU_CONFIGS, VERSION)
+    values (#{projectName,jdbcType=VARCHAR}, #{appKey,jdbcType=VARCHAR}, #{menuKey,jdbcType=VARCHAR}, 
+      #{parentKey,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{menuCaption,jdbcType=VARCHAR}, 
+      #{urlPath,jdbcType=VARCHAR}, #{childUrlPath,jdbcType=VARCHAR}, #{menuTableName,jdbcType=VARCHAR}, 
+      #{menuWhereSql,jdbcType=VARCHAR}, #{menuTypeCode,jdbcType=VARCHAR}, #{pageTypeCode,jdbcType=VARCHAR}, 
+      #{menuConfigs,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pallas.activiti.model.Menu">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select uuid()
+    </selectKey>
+    insert into t_app_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+      <if test="appKey != null">
+        APP_KEY,
+      </if>
+      <if test="menuKey != null">
+        MENU_KEY,
+      </if>
+      <if test="parentKey != null">
+        PARENT_KEY,
+      </if>
+      <if test="menuName != null">
+        MENU_NAME,
+      </if>
+      <if test="menuCaption != null">
+        MENU_CAPTION,
+      </if>
+      <if test="urlPath != null">
+        URL_PATH,
+      </if>
+      <if test="childUrlPath != null">
+        CHILD_URL_PATH,
+      </if>
+      <if test="menuTableName != null">
+        MENU_TABLE_NAME,
+      </if>
+      <if test="menuWhereSql != null">
+        MENU_WHERE_SQL,
+      </if>
+      <if test="menuTypeCode != null">
+        MENU_TYPE_CODE,
+      </if>
+      <if test="pageTypeCode != null">
+        PAGE_TYPE_CODE,
+      </if>
+      <if test="menuConfigs != null">
+        MENU_CONFIGS,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuKey != null">
+        #{menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="parentKey != null">
+        #{parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCaption != null">
+        #{menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPath != null">
+        #{urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="childUrlPath != null">
+        #{childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTableName != null">
+        #{menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuWhereSql != null">
+        #{menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTypeCode != null">
+        #{menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTypeCode != null">
+        #{pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuConfigs != null">
+        #{menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pallas.activiti.model.MenuExample" resultType="java.lang.Integer">
+    select count(*) from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_app_menu
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.projectName != null">
+        PROJECT_NAME = #{record.projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appKey != null">
+        APP_KEY = #{record.appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuKey != null">
+        MENU_KEY = #{record.menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentKey != null">
+        PARENT_KEY = #{record.parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuName != null">
+        MENU_NAME = #{record.menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuCaption != null">
+        MENU_CAPTION = #{record.menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlPath != null">
+        URL_PATH = #{record.urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.childUrlPath != null">
+        CHILD_URL_PATH = #{record.childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTableName != null">
+        MENU_TABLE_NAME = #{record.menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuWhereSql != null">
+        MENU_WHERE_SQL = #{record.menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTypeCode != null">
+        MENU_TYPE_CODE = #{record.menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pageTypeCode != null">
+        PAGE_TYPE_CODE = #{record.pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuConfigs != null">
+        MENU_CONFIGS = #{record.menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null">
+        VERSION = #{record.version,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_app_menu
+    set ID = #{record.id,jdbcType=BIGINT},
+      PROJECT_NAME = #{record.projectName,jdbcType=VARCHAR},
+      APP_KEY = #{record.appKey,jdbcType=VARCHAR},
+      MENU_KEY = #{record.menuKey,jdbcType=VARCHAR},
+      PARENT_KEY = #{record.parentKey,jdbcType=VARCHAR},
+      MENU_NAME = #{record.menuName,jdbcType=VARCHAR},
+      MENU_CAPTION = #{record.menuCaption,jdbcType=VARCHAR},
+      URL_PATH = #{record.urlPath,jdbcType=VARCHAR},
+      CHILD_URL_PATH = #{record.childUrlPath,jdbcType=VARCHAR},
+      MENU_TABLE_NAME = #{record.menuTableName,jdbcType=VARCHAR},
+      MENU_WHERE_SQL = #{record.menuWhereSql,jdbcType=VARCHAR},
+      MENU_TYPE_CODE = #{record.menuTypeCode,jdbcType=VARCHAR},
+      PAGE_TYPE_CODE = #{record.pageTypeCode,jdbcType=VARCHAR},
+      MENU_CONFIGS = #{record.menuConfigs,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pallas.activiti.model.Menu">
+    update t_app_menu
+    <set>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        APP_KEY = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuKey != null">
+        MENU_KEY = #{menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="parentKey != null">
+        PARENT_KEY = #{parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCaption != null">
+        MENU_CAPTION = #{menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPath != null">
+        URL_PATH = #{urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="childUrlPath != null">
+        CHILD_URL_PATH = #{childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTableName != null">
+        MENU_TABLE_NAME = #{menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuWhereSql != null">
+        MENU_WHERE_SQL = #{menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTypeCode != null">
+        MENU_TYPE_CODE = #{menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTypeCode != null">
+        PAGE_TYPE_CODE = #{pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuConfigs != null">
+        MENU_CONFIGS = #{menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pallas.activiti.model.Menu">
+    update t_app_menu
+    set PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      APP_KEY = #{appKey,jdbcType=VARCHAR},
+      MENU_KEY = #{menuKey,jdbcType=VARCHAR},
+      PARENT_KEY = #{parentKey,jdbcType=VARCHAR},
+      MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      MENU_CAPTION = #{menuCaption,jdbcType=VARCHAR},
+      URL_PATH = #{urlPath,jdbcType=VARCHAR},
+      CHILD_URL_PATH = #{childUrlPath,jdbcType=VARCHAR},
+      MENU_TABLE_NAME = #{menuTableName,jdbcType=VARCHAR},
+      MENU_WHERE_SQL = #{menuWhereSql,jdbcType=VARCHAR},
+      MENU_TYPE_CODE = #{menuTypeCode,jdbcType=VARCHAR},
+      PAGE_TYPE_CODE = #{pageTypeCode,jdbcType=VARCHAR},
+      MENU_CONFIGS = #{menuConfigs,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.pallas.activiti.model.Menu">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="PROJECT_NAME" jdbcType="VARCHAR" property="projectName" />
+    <result column="APP_KEY" jdbcType="VARCHAR" property="appKey" />
+    <result column="MENU_KEY" jdbcType="VARCHAR" property="menuKey" />
+    <result column="PARENT_KEY" jdbcType="VARCHAR" property="parentKey" />
+    <result column="MENU_NAME" jdbcType="VARCHAR" property="menuName" />
+    <result column="MENU_CAPTION" jdbcType="VARCHAR" property="menuCaption" />
+    <result column="URL_PATH" jdbcType="VARCHAR" property="urlPath" />
+    <result column="CHILD_URL_PATH" jdbcType="VARCHAR" property="childUrlPath" />
+    <result column="MENU_TABLE_NAME" jdbcType="VARCHAR" property="menuTableName" />
+    <result column="MENU_WHERE_SQL" jdbcType="VARCHAR" property="menuWhereSql" />
+    <result column="MENU_TYPE_CODE" jdbcType="VARCHAR" property="menuTypeCode" />
+    <result column="PAGE_TYPE_CODE" jdbcType="VARCHAR" property="pageTypeCode" />
+    <result column="MENU_CONFIGS" jdbcType="VARCHAR" property="menuConfigs" />
+    <result column="VERSION" jdbcType="INTEGER" property="version" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ID, PROJECT_NAME, APP_KEY, MENU_KEY, PARENT_KEY, MENU_NAME, MENU_CAPTION, URL_PATH, 
+    CHILD_URL_PATH, MENU_TABLE_NAME, MENU_WHERE_SQL, MENU_TYPE_CODE, PAGE_TYPE_CODE, 
+    MENU_CONFIGS, VERSION
+  </sql>
+  <select id="selectByExample" parameterType="com.pallas.activiti.model.MenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_app_menu
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pallas.activiti.model.MenuExample">
+    delete from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pallas.activiti.model.Menu">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select max(id)+1 from t_sys_menu
+    </selectKey>
+    insert into t_app_menu (PROJECT_NAME, APP_KEY, MENU_KEY, 
+      PARENT_KEY, MENU_NAME, MENU_CAPTION, 
+      URL_PATH, CHILD_URL_PATH, MENU_TABLE_NAME, 
+      MENU_WHERE_SQL, MENU_TYPE_CODE, PAGE_TYPE_CODE, 
+      MENU_CONFIGS, VERSION)
+    values (#{projectName,jdbcType=VARCHAR}, #{appKey,jdbcType=VARCHAR}, #{menuKey,jdbcType=VARCHAR}, 
+      #{parentKey,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{menuCaption,jdbcType=VARCHAR}, 
+      #{urlPath,jdbcType=VARCHAR}, #{childUrlPath,jdbcType=VARCHAR}, #{menuTableName,jdbcType=VARCHAR}, 
+      #{menuWhereSql,jdbcType=VARCHAR}, #{menuTypeCode,jdbcType=VARCHAR}, #{pageTypeCode,jdbcType=VARCHAR}, 
+      #{menuConfigs,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pallas.activiti.model.Menu">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      select max(id)+1 from t_sys_menu
+    </selectKey>
+    insert into t_app_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="projectName != null">
+        PROJECT_NAME,
+      </if>
+      <if test="appKey != null">
+        APP_KEY,
+      </if>
+      <if test="menuKey != null">
+        MENU_KEY,
+      </if>
+      <if test="parentKey != null">
+        PARENT_KEY,
+      </if>
+      <if test="menuName != null">
+        MENU_NAME,
+      </if>
+      <if test="menuCaption != null">
+        MENU_CAPTION,
+      </if>
+      <if test="urlPath != null">
+        URL_PATH,
+      </if>
+      <if test="childUrlPath != null">
+        CHILD_URL_PATH,
+      </if>
+      <if test="menuTableName != null">
+        MENU_TABLE_NAME,
+      </if>
+      <if test="menuWhereSql != null">
+        MENU_WHERE_SQL,
+      </if>
+      <if test="menuTypeCode != null">
+        MENU_TYPE_CODE,
+      </if>
+      <if test="pageTypeCode != null">
+        PAGE_TYPE_CODE,
+      </if>
+      <if test="menuConfigs != null">
+        MENU_CONFIGS,
+      </if>
+      <if test="version != null">
+        VERSION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="projectName != null">
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuKey != null">
+        #{menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="parentKey != null">
+        #{parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCaption != null">
+        #{menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPath != null">
+        #{urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="childUrlPath != null">
+        #{childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTableName != null">
+        #{menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuWhereSql != null">
+        #{menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTypeCode != null">
+        #{menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTypeCode != null">
+        #{pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuConfigs != null">
+        #{menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pallas.activiti.model.MenuExample" resultType="java.lang.Integer">
+    select count(*) from t_app_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_app_menu
+    <set>
+      <if test="record.id != null">
+        ID = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.projectName != null">
+        PROJECT_NAME = #{record.projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appKey != null">
+        APP_KEY = #{record.appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuKey != null">
+        MENU_KEY = #{record.menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentKey != null">
+        PARENT_KEY = #{record.parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuName != null">
+        MENU_NAME = #{record.menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuCaption != null">
+        MENU_CAPTION = #{record.menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urlPath != null">
+        URL_PATH = #{record.urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.childUrlPath != null">
+        CHILD_URL_PATH = #{record.childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTableName != null">
+        MENU_TABLE_NAME = #{record.menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuWhereSql != null">
+        MENU_WHERE_SQL = #{record.menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuTypeCode != null">
+        MENU_TYPE_CODE = #{record.menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pageTypeCode != null">
+        PAGE_TYPE_CODE = #{record.pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuConfigs != null">
+        MENU_CONFIGS = #{record.menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null">
+        VERSION = #{record.version,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_app_menu
+    set ID = #{record.id,jdbcType=BIGINT},
+      PROJECT_NAME = #{record.projectName,jdbcType=VARCHAR},
+      APP_KEY = #{record.appKey,jdbcType=VARCHAR},
+      MENU_KEY = #{record.menuKey,jdbcType=VARCHAR},
+      PARENT_KEY = #{record.parentKey,jdbcType=VARCHAR},
+      MENU_NAME = #{record.menuName,jdbcType=VARCHAR},
+      MENU_CAPTION = #{record.menuCaption,jdbcType=VARCHAR},
+      URL_PATH = #{record.urlPath,jdbcType=VARCHAR},
+      CHILD_URL_PATH = #{record.childUrlPath,jdbcType=VARCHAR},
+      MENU_TABLE_NAME = #{record.menuTableName,jdbcType=VARCHAR},
+      MENU_WHERE_SQL = #{record.menuWhereSql,jdbcType=VARCHAR},
+      MENU_TYPE_CODE = #{record.menuTypeCode,jdbcType=VARCHAR},
+      PAGE_TYPE_CODE = #{record.pageTypeCode,jdbcType=VARCHAR},
+      MENU_CONFIGS = #{record.menuConfigs,jdbcType=VARCHAR},
+      VERSION = #{record.version,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pallas.activiti.model.Menu">
+    update t_app_menu
+    <set>
+      <if test="projectName != null">
+        PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        APP_KEY = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuKey != null">
+        MENU_KEY = #{menuKey,jdbcType=VARCHAR},
+      </if>
+      <if test="parentKey != null">
+        PARENT_KEY = #{parentKey,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuCaption != null">
+        MENU_CAPTION = #{menuCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="urlPath != null">
+        URL_PATH = #{urlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="childUrlPath != null">
+        CHILD_URL_PATH = #{childUrlPath,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTableName != null">
+        MENU_TABLE_NAME = #{menuTableName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuWhereSql != null">
+        MENU_WHERE_SQL = #{menuWhereSql,jdbcType=VARCHAR},
+      </if>
+      <if test="menuTypeCode != null">
+        MENU_TYPE_CODE = #{menuTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="pageTypeCode != null">
+        PAGE_TYPE_CODE = #{pageTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuConfigs != null">
+        MENU_CONFIGS = #{menuConfigs,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        VERSION = #{version,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pallas.activiti.model.Menu">
+    update t_app_menu
+    set PROJECT_NAME = #{projectName,jdbcType=VARCHAR},
+      APP_KEY = #{appKey,jdbcType=VARCHAR},
+      MENU_KEY = #{menuKey,jdbcType=VARCHAR},
+      PARENT_KEY = #{parentKey,jdbcType=VARCHAR},
+      MENU_NAME = #{menuName,jdbcType=VARCHAR},
+      MENU_CAPTION = #{menuCaption,jdbcType=VARCHAR},
+      URL_PATH = #{urlPath,jdbcType=VARCHAR},
+      CHILD_URL_PATH = #{childUrlPath,jdbcType=VARCHAR},
+      MENU_TABLE_NAME = #{menuTableName,jdbcType=VARCHAR},
+      MENU_WHERE_SQL = #{menuWhereSql,jdbcType=VARCHAR},
+      MENU_TYPE_CODE = #{menuTypeCode,jdbcType=VARCHAR},
+      PAGE_TYPE_CODE = #{pageTypeCode,jdbcType=VARCHAR},
+      MENU_CONFIGS = #{menuConfigs,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
