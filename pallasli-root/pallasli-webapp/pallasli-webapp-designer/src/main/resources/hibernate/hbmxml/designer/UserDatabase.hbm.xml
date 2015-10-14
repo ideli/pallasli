@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.designer.bean.UserDatabase" 
+    table="t_user_database"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="databaseName"
+        type="java.lang.String"
+        column="database_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="userId"
+        type="java.lang.String"
+        column="user_id"
+        not-null="true"
+        length="60"
+    />
+    <property
+        name="version"
+        type="int"
+        column="version"
+        not-null="true"
+        length="10"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

@@ -1,0 +1,68 @@
+{
+	"f_panels":[{
+		"f_key":"m_g_sys.m_field_set.m_tables.grid",
+		"f_xtype":"p_grid",
+		"f_modelName":"FieldsetField",	
+		"f_extraParams":{"projectName":"","fieldsetName":""},
+		"f_buttons":[{text:'引入字段',handler:"function(){ 
+
+		            	 var win = Ext.create('Pallas.design.portal.ImportTableFieldToGroupWindow', {projectName:'projectManager',fieldsetName:parentPanel.params.nodeName,needRefreshGrid:grid });
+		            	 win.show();
+		                }"
+		              },{
+            			text:'增加',"handler":"function(){
+ 
+        				}"
+		              },{
+            			text:'保存',"handler":"function(){
+ 
+        				}"
+       				}],
+		"f_api": {  
+			"read": FieldsetDirectAction.getFieldSetFields
+		},
+		"f_columns":[{ header: '字段英文名', dataIndex: 'fieldName', flex: 2 },
+				        { header: '字段中文名', dataIndex: 'fieldCaption', flex: 2,
+				            field: {
+			                xtype: 'textfield',
+			                allowBlank: false
+			            } },
+				        { header: '长度', dataIndex: 'fieldLength', xtype: 'numbercolumn', format:'0,000', flex: 1,
+				            field: {
+			                xtype: 'numberfield',
+			                allowBlank: false
+			            } },
+				        { header: '精度', dataIndex: 'fieldPrecision', xtype: 'numbercolumn', format:'0,000',flex: 1,
+				            field: {
+			                xtype: 'numberfield',
+			                allowBlank: false
+			            } },
+				        { header: '类型', dataIndex: 'fieldType', flex: 2,
+				            field: {
+				                xtype: 'combo',
+				                store : datatypestore,
+								queryMode : 'local',
+								displayField: "display",
+								valueField: "value",
+				                allowBlank: false
+			            } },
+				        { header: '允许空', dataIndex: 'fieldAllowblank', flex: 1,
+				            field: {
+			                xtype: 'combo',
+			                store : nullablestore,
+							queryMode : 'local',
+							displayField: "display",
+							valueField: "value",
+			                allowBlank: false
+			            } },
+				        { header: '默认值', dataIndex: 'fieldDefault', flex: 2,
+				            field: {
+			                xtype: 'textfield',
+			                allowBlank: false
+			            } },
+				        { dataIndex: 'projectName', hidden: true }
+				    ]		
+	}],
+	"f_customscripts":"",
+	"f_title":"数据表"
+}

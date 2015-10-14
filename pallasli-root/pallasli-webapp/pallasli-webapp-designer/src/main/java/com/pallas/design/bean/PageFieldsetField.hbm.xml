@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.design.bean.PageFieldsetField" 
+    table="t_page_fieldset_field"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="projectName"
+        type="java.lang.String"
+        column="project_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="pageName"
+        type="java.lang.String"
+        column="page_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="fieldsetName"
+        type="java.lang.String"
+        column="fieldset_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="fieldName"
+        type="java.lang.String"
+        column="field_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="fieldCaption"
+        type="java.lang.String"
+        column="field_caption"
+        length="60"
+    />
+    <property
+        name="fieldType"
+        type="java.lang.String"
+        column="field_type"
+        length="30"
+    />
+    <property
+        name="fieldLength"
+        type="java.lang.Integer"
+        column="field_length"
+        length="10"
+    />
+    <property
+        name="fieldPrecision"
+        type="java.lang.Integer"
+        column="field_precision"
+        length="10"
+    />
+    <property
+        name="fieldAllowblank"
+        type="java.lang.Integer"
+        column="field_allowblank"
+        length="10"
+    />
+    <property
+        name="fieldDefault"
+        type="java.lang.String"
+        column="field_default"
+        length="255"
+    />
+    <property
+        name="fieldOrder"
+        type="java.lang.Integer"
+        column="field_order"
+        length="10"
+    />
+    <property
+        name="fieldConfigs"
+        type="java.lang.String"
+        column="field_configs"
+        length="65535"
+    />
+    <property
+        name="version"
+        type="int"
+        column="version"
+        not-null="true"
+        length="10"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

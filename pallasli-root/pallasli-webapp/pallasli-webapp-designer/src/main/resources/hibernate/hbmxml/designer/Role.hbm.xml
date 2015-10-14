@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.designer.bean.Role" 
+    table="t_role"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="roleName"
+        type="java.lang.String"
+        column="role_name"
+        not-null="true"
+        unique="true"
+        length="30"
+    />
+    <property
+        name="roleCaption"
+        type="java.lang.String"
+        column="role_caption"
+        not-null="true"
+        length="60"
+    />
+    <property
+        name="roleComments"
+        type="java.lang.String"
+        column="role_comments"
+        length="65535"
+    />
+    <property
+        name="version"
+        type="int"
+        column="version"
+        not-null="true"
+        length="10"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

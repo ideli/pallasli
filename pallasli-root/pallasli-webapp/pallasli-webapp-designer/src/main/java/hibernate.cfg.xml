@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+	<session-factory>
+
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">root</property> 
+		<property name="connection.url">jdbc:mysql://localhost:3306/design_all</property>
+        <property name="show_sql">true</property>
+        
+		<mapping resource="com/pallas/design/bean/Comp.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/CompConfig.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/CompType.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Config.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Database.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/DataType.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Fieldset.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/FieldsetField.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Menu.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/MenuType.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Model.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Page.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/PageFieldset.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/PageFieldsetField.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/PageType.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Project.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/Table.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/TableField.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/User.hbm.xml" />
+		<mapping resource="com/pallas/design/bean/UserProject.hbm.xml" />
+
+	</session-factory>
+</hibernate-configuration>

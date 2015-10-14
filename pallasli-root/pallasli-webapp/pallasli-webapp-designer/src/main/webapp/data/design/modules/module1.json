@@ -1,0 +1,15 @@
+{
+	text : '页面组件树',
+	expanded : true,
+	children : [ {
+		text : '单位管理',
+		expanded : true,
+		children : [ {
+				text : '单位开户',
+				leaf : true
+			}, {
+				text : '单位变更',
+				leaf : true
+			} ]
+	} ]
+}

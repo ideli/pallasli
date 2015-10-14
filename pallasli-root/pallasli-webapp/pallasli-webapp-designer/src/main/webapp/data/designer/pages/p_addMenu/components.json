@@ -1,0 +1,41 @@
+{
+	"f_panels":[{
+		"f_key":"p_addMenu.fs_only",
+		"f_xtype":"p_fieldset"
+	}],	
+	"f_fields":[
+	 	{"fieldLabel":"关键字","name":"menuKey","anchor":"100%"},
+		{"fieldLabel":"英文名","name":"menuName","anchor":"100%"},
+		{"fieldLabel":"中文名","name":"menuCaption","anchor":"100%"},
+		{"fieldLabel":"菜单分类","xtype":"combobox","modelName":"MenuType",
+			"queryMode": "remote","displayField": "menuTypeCaption",
+			"valueField": "menuTypeCode","name":"menuTypeCode","anchor":"100%"},
+		{"fieldLabel":"页面分类","xtype":"combobox","modelName":"PageType",
+			"queryMode": "remote","displayField": "pageTypeCaption",
+			"valueField": "pageTypeCode","name":"pageTypeCode","anchor":"100%"},
+		{"fieldLabel":"父菜单","xtype":"combobox","modelName":"MenuPath",
+			"queryMode": "remote","displayField": "menuCaption",
+			"valueField": "menuKey","name":"parentKey","anchor":"100%"},
+		{"fieldLabel":"页面路径","name":"urlPath","anchor":"100%"},
+		{"fieldLabel":"child页面路径","name":"childUrlPath","anchor":"100%"},
+		{"fieldLabel":"表名","name":"menuTableName","anchor":"100%"},
+		{"fieldLabel":"查询条件","name":"menuWhereSql","anchor":"100%"},
+		{"fieldLabel":"配置项","xtype":"textarea","name":"menuConfig","anchor":"100%"}
+	],
+	"f_buttons":[{
+			"text":"保存","handler":"function(){
+				var formValues=form_addType.getForm().getValues(); 
+				var rec=new Menu(); 
+				Ext.apply(rec.data,formValues); 
+				rec.save({ 
+					success:function(rec,opt){  
+					},  
+					failure:function(e,op){  
+						Ext.Msg.alert('发生错误',op.error);  
+					},  
+					scope:form_addType  
+				}); 
+			}"
+	}],
+	"f_customscripts":""
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.designer.bean.MenuConfig" 
+    table="t_menu_config"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="menuId"
+        type="long"
+        column="menu_id"
+        not-null="true"
+        length="19"
+    />
+    <property
+        name="configName"
+        type="java.lang.String"
+        column="config_name"
+        not-null="true"
+        length="60"
+    />
+    <property
+        name="configParentid"
+        type="java.lang.Integer"
+        column="config_parentid"
+        length="10"
+    />
+    <property
+        name="configType"
+        type="java.lang.String"
+        column="config_type"
+        length="30"
+    />
+    <property
+        name="configValue"
+        type="java.lang.String"
+        column="config_value"
+        not-null="true"
+        length="30"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

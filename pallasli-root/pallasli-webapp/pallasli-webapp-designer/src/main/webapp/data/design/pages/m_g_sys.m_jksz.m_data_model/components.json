@@ -1,0 +1,82 @@
+{
+	"f_panels":[{
+		"f_key":"m_g_sys.m_field_set.m_tables.grid",
+		"f_xtype":"p_grid",
+		"f_modelName":"Page",	
+		"f_extraParams":{"projectName":"","tableName":""},
+		"f_buttons":[  {
+	            			text:'增加行',"handler":"function(){
+			                	var rec=new Model();  
+			                	rec.data.projectName='projectMangager';
+			                	store.add(rec);
+	        				}"
+	       				},{
+	            			text:'保存',handler:"function(){
+			                	var records=grid.getSelectionModel().getSelection();  
+			                	var rec=new Page();  
+			                	Ext.apply(rec.data,records[0].data);
+			                	console.log(records[0].data);
+			                	rec.save();
+	        				}"
+	       				}],
+		"f_api": {  
+	        read: PageDirectAction.getPages,
+	        create: PageDirectAction.savePage
+		},
+		"f_columns":[
+				        { header: '英文名', dataIndex: 'pageName', flex : 2 ,
+				        field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            }},
+						        { header: '中文名',  dataIndex: 'pageCaption', flex: 2,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '继承类',  dataIndex: 'page_key', flex: 1,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '包含字段',  dataIndex: 'pageTypeCode', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '增加',  dataIndex: 'config', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '修改',  dataIndex: 'config', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '删除',  dataIndex: 'config', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '加载',  dataIndex: 'config', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+						        { header: '参数',  dataIndex: 'config', flex: 4,
+						            field: {
+					                xtype: 'textfield',
+					                allowBlank: false
+					            } },
+			            {
+			            	dataIndex: 'projectManager',hidden:true
+			            },
+			            {
+			            	dataIndex: 'id',hidden:true
+			            }
+				    ]		
+	}],
+	"f_customscripts":"",
+	"f_title":"字段分組"
+}

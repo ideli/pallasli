@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.design.bean.PageType" 
+    table="t_page_type"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="pageTypeCode"
+        type="java.lang.String"
+        column="page_type_code"
+        not-null="true"
+        unique="true"
+        length="2"
+    />
+    <property
+        name="pageTypeCaption"
+        type="java.lang.String"
+        column="page_type_caption"
+        not-null="true"
+        length="60"
+    />
+    <property
+        name="version"
+        type="int"
+        column="version"
+        not-null="true"
+        length="10"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

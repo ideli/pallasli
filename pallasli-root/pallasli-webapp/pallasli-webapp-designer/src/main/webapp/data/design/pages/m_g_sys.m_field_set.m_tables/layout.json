@@ -1,0 +1,105 @@
+{
+	text : '页面组件树',
+	expanded : true,
+	children : [ {
+		text : '单位增加页面',
+		attributes:{
+			"f_key":"",
+			"f_component_type":"",
+			"f_layout":""
+		},
+		expanded : true,
+		children : [ {
+			text : '基本信息',
+			expanded : true,
+			attributes:{
+				"f_key":"",
+				"f_component_type":"",
+				"f_layout":""
+			},
+			children : [ {
+				text : '客户名称',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			}, {
+				text : '简称',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			}, {
+				text : '组织机构代码',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			} ]
+		}, {
+			text : '注册信息',
+			expanded : true,
+			attributes:{
+				"f_key":"",
+				"f_component_type":"",
+				"f_layout":""
+			},
+			children : [ {
+				text : '注册机构',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			}, {
+				text : '法人代表',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			}, {
+				text : '联系电话',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			} ]
+		}, {
+			text : '缴存信息',
+			expanded : true,
+			attributes:{
+				"f_key":"",
+				"f_component_type":"",
+				"f_layout":""
+			},
+			children : [ {
+				text : '缴存类型',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			}, {
+				text : '月缴存额',
+				leaf : true,
+				attributes:{
+					"f_key":"",
+					"f_component_type":"",
+					"f_layout":""
+				}
+			} ]
+		} ]
+	} ]
+}

@@ -1,0 +1,51 @@
+{
+	"f_panels":[{
+		"f_key":"m_g_sys.m_field_set.m_tables.grid",
+		"f_xtype":"p_grid",
+		"f_modelName":"Table",	
+		"f_buttons":[{
+				"text":"导入数据表",
+				"handler":"function(){
+					var win = Ext.create('Pallas.design.portal.ImportTableWindow', {needRefreshGrid :grid });
+					win.show();				               
+				}"
+			},{
+				"text":"导入数据库",
+				"handler":"function(){}"
+			},{
+				"text":"增加",
+				"handler":"function(){}"
+			},{
+				"text":"保存",
+				"handler":"function(){}"
+		}],
+		"f_api": {  
+			"read": TableDirectAction.getTables
+		},
+		"f_columns":[{
+				"dataIndex":"id",
+				"hidden":true
+			},{
+				"dataIndex":"tableName",
+				"text":"数据表英文名",
+				"flex":2,
+				"align":"left"
+			},{
+				"dataIndex":"tableCaption",
+				"text":"数据表中文名",
+				"flex":2,
+				"field": {
+			                "xtype": "textfield",
+			                "allowBlank": false
+			            },
+				"align":"left"
+			},{
+				"dataIndex":"tableKey",
+				"text":"主键",
+				"flex":3,
+				"align":"left" 
+			}]		
+	}],
+	"f_customscripts":"",
+	"f_title":"数据表"
+}

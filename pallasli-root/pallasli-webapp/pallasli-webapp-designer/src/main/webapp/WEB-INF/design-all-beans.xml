@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<bean name="compDao" class="com.pallas.design.dao.impl.CompDAOImpl"/> 
+	<bean name="compTypeDao" class="com.pallas.design.dao.impl.CompTypeDAOImpl"/> 
+	<bean name="compConfigDao" class="com.pallas.design.dao.impl.CompConfigDAOImpl"/> 
+	<bean name="configDao" class="com.pallas.design.dao.impl.ConfigDAOImpl"/> 
+	<bean name="menuDao" class="com.pallas.design.dao.impl.MenuDAOImpl"/> 
+	<bean name="menuTypeDao" class="com.pallas.design.dao.impl.MenuTypeDAOImpl"/> 
+	<bean name="pageTypeDao" class="com.pallas.design.dao.impl.PageTypeDAOImpl"/> 
+	<bean name="fieldsetDao" class="com.pallas.design.dao.impl.FieldsetDAOImpl"/> 
+	<bean name="fieldsetFieldDao" class="com.pallas.design.dao.impl.FieldsetFieldDAOImpl"/>  
+	<bean name="pageDao" class="com.pallas.design.dao.impl.PageDAOImpl"/> 
+	<bean name="pageFieldsetDao" class="com.pallas.design.dao.impl.PageFieldsetDAOImpl"/> 
+	<bean name="pageFieldsetFieldDao" class="com.pallas.design.dao.impl.PageFieldsetFieldDAOImpl"/> 
+	<bean name="tableDao" class="com.pallas.design.dao.impl.TableDAOImpl"/> 
+	<bean name="tableFieldDao" class="com.pallas.design.dao.impl.TableFieldDAOImpl"/> 
+	<bean name="databaseDao" class="com.pallas.design.dao.impl.DatabaseDAOImpl"/> 
+	
+	
+	
+	<bean name="databaseService" class="com.pallas.design.service.impl.DatabaseServiceImpl">
+		<property name="databaseDao"><ref bean="databaseDao"/></property>
+		<property name="tableDao"><ref bean="tableDao"/></property>
+		<property name="tableFieldDao"><ref bean="tableFieldDao"/></property>
+	</bean> 
+	<bean name="compService" class="com.pallas.design.service.impl.CompServiceImpl">
+		<property name="compDao"><ref bean="compDao"/></property>
+		<property name="compTypeDao"><ref bean="compTypeDao"/></property>
+		<property name="compConfigDao"><ref bean="compConfigDao"/></property>
+	</bean> 
+	<bean name="pageService" class="com.pallas.design.service.impl.PageServiceImpl">
+		<property name="pageDao"><ref bean="pageDao"/></property>
+		<property name="pageFieldsetDao"><ref bean="pageFieldsetDao"/></property>
+		<property name="pageFieldsetFieldDao"><ref bean="pageFieldsetFieldDao"/></property>
+		<property name="configDao"><ref bean="configDao"/></property>
+	</bean>
+	<bean name="sysService" class="com.pallas.design.service.impl.SysServiceImpl">
+		<property name="menuDao"><ref bean="menuDao"/></property>
+		<property name="menuTypeDao"><ref bean="menuTypeDao"/></property>
+		<property name="pageTypeDao"><ref bean="pageTypeDao"/></property>
+	</bean>
+	<bean name="tableService"
+		class="com.pallas.design.service.impl.TableServiceImpl">
+		<property name="tableDao"><ref bean="tableDao"/></property>
+		<property name="tableFieldDao"><ref bean="tableFieldDao"/></property>
+		<property name="configDao"><ref bean="configDao"/></property>
+	</bean>
+	<bean name="fieldsetService"
+		class="com.pallas.design.service.impl.FieldsetServiceImpl">
+		<property name="fieldsetDao"><ref bean="fieldsetDao"/></property>
+		<property name="fieldsetFieldDao"><ref bean="fieldsetFieldDao"/></property>
+		<property name="configDao"><ref bean="configDao"/></property>
+	</bean>
+	
+</beans>

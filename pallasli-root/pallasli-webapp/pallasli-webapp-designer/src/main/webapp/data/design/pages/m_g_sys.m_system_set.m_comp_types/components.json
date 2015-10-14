@@ -1,0 +1,119 @@
+{
+	"f_panels":[{
+		"f_key":"m_g_sys.m_field_set.m_tables.grid",
+		"f_xtype":"p_grid",
+		"f_modelName":"CompType",	
+		"f_extraParams":{"projectName":"","tableName":""},
+		"f_buttons":[ {
+				                text: '增加',
+				                handler: "function(){	
+				                	 var form_addType=Ext.create('Ext.form.Panel',{
+				                          border: false,
+				                          fieldDefaults: {
+				                              labelWidth: 100
+				                          },
+				                          defaultType: 'textfield',
+				                          bodyPadding: 5,
+				                          floatable: false,
+				                          items:[
+						                          	{fieldLabel:'英文名',name:'compTypeCode',anchor:'100%'},
+						                          	{fieldLabel:'中文名',name:'compTypeCaption',anchor:'100%'}                         
+				                          ],
+				                          bbar:[{
+				                        	  text:'保存','handler':function(){
+				                        		 var formValues=form_addType.getForm().getValues(); 
+				                        		 
+				                        		 var rec=new CompType(); 
+				 				            	Ext.apply(rec.data,formValues); 
+				 				            	rec.save({ 
+				 				            	    success:function(rec,opt){  
+				 				            	    	gridstore.reload();
+				 				            	    },  
+				 				            	    failure:function(e,op){  
+				 				            	        Ext.Msg.alert('发生错误',op.error);  
+				 				            	    },  
+				 				            	    scope: form_addType  
+				 				            	}); 
+				                        	  }
+				                          }]
+				                      
+					                 });   
+					            	 var win = Ext.create('widget.window', {
+					                      title: '增加节点',
+					                      closable: true,
+					                      closeAction: 'hide',
+					                      width: 600,
+					                      minWidth: 350,
+					                      height: 350,
+					                      modal: true,
+					                      layout: {
+					                          type: 'fit',
+					                          padding: 5
+					                      },
+					                      items: [form_addType]
+					                  });
+					            	 win.show();
+			                	
+				                }"
+				            },{
+				                text: '修改',
+				                handler: "function(btn,e){
+								}"
+				            },{
+				                text: '删除',
+				                handler: "function(btn,e){	
+				                	var records=knowledgePanel.getSelectionModel().getSelection();
+
+				                	if(records.length>0){
+					                	var recordData=records[0].data;
+					                	Ext.Msg.show({
+					                	     title:'是否删除?',
+					                	     msg: '你确定要删除'+recordData.caption+'吗?',
+					                	     buttons: Ext.Msg.YESNOCANCEL,
+					                	     icon: Ext.Msg.QUESTION,
+					                	     fn:function(btn){
+													if(btn=='yes'){
+								                	KnowledgeAction.deleteKnowledge(recordData,function(result){
+								                		knowledgePanel.getStore().removeAll();
+							                			knowledgePanel.getStore().reload();
+								                	}); 
+													}
+					                	     }
+					                	});
+				                	}
+				                }"
+				            }],
+		"f_api": {  
+			read: CompDirectAction.loadCompTypes,  
+			create: CompDirectAction.saveCompType
+		},
+		"f_columns":[
+				        {
+									"dataIndex":"id",
+									"hidden":true
+								},{
+									"dataIndex":"compTypeCode",
+									"text":"组件分类英文名",
+									"flex":1,
+									"align":"left"
+								},{
+									"dataIndex":"compTypeCaption",
+									"text":"组件分类中文名",
+									"flex":3,
+									"align":"left"
+								},{
+									"dataIndex":"menuTypeCaption",
+									"text":"是否展开",
+									"flex":4,
+									"align":"left"   
+								},{
+									"dataIndex":"parentCaption",
+									"text":"备注",
+									"flex":4,
+									"align":"left"   
+								}
+				    ]		
+	}],
+	"f_customscripts":"",
+	"f_title":"组件分类"
+}

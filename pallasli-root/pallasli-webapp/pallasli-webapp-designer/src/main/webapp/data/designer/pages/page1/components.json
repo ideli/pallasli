@@ -1,0 +1,17 @@
+{
+	"f_panels":[
+		{"f_key":"","f_xtype":""},
+		{"f_key":"","f_xtype":""},
+		{"f_key":"","f_xtype":""},
+	],
+	"f_components":[
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""},
+		{"f_key":"","f_fieldlabel":"","f_xtype":"","f_defaultValue":""}
+	]
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.designer.bean.Comp" 
+    table="t_comp"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="compName"
+        type="java.lang.String"
+        column="comp_name"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="compCaption"
+        type="java.lang.String"
+        column="comp_caption"
+        not-null="true"
+        length="30"
+    />
+    <property
+        name="compTypeId"
+        type="long"
+        column="comp_type_id"
+        not-null="true"
+        length="19"
+    />
+    <property
+        name="compClass"
+        type="java.lang.String"
+        column="comp_class"
+        not-null="true"
+        length="30"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+{
+	"f_panels":[{
+		"f_key":"m_g_sys.m_field_set.m_tables.grid",
+		"f_xtype":"p_grid",
+		"f_modelName":"Fieldset",	
+		"f_extraParams":{"projectName":"","tableName":""},
+		"f_buttons":[ {
+	            			text:'增加行',"handler":"function(){
+			                	var rec=new Fieldset();  
+			                	rec.data.projectName='projectMangager';
+			                	store.add(rec);
+	        				}"
+	       				},{
+	            			text:'保存',handler:"function(){
+			                	var records=grid.getSelectionModel().getSelection();  
+			                	var rec=new Fieldset();  
+			                	Ext.apply(rec.data,records[0].data);
+			                	rec.save();
+	        				}"
+	       				}],
+		"f_api": {  
+	        read: FieldsetDirectAction.getFieldSets,
+	        create: FieldsetDirectAction.saveFieldSet
+		},
+		"f_columns":[
+				        { header: '字段组合英文名', dataIndex: 'fieldsetName', flex: 1,
+				            field: {
+				                xtype: 'textfield',
+				                allowBlank: false
+				            } },
+				        { header: '字段组合中文名', dataIndex: 'fieldsetCaption', flex: 2,
+				            field: {
+			                xtype: 'textfield',
+			                allowBlank: false
+			            } },
+				        { header: '字段组合说明', dataIndex: 'fieldset_comment', flex: 5,
+				            field: {
+			                xtype: 'textfield',
+			                allowBlank: false
+			            } },
+			            {
+			            	dataIndex: 'projectManager',hidden:true
+			            }
+				    ]		
+	}],
+	"f_customscripts":"",
+	"f_title":"字段分組"
+}

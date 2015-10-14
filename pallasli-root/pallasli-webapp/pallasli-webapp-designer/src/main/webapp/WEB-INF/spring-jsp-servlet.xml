@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+	<bean id="jspUrlMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	<bean name="/jsppage.do" class="com.pallas.sys.dispatch.action.JspPageAction"/>
+	
+	
+	<bean name="/home2.do" class="com.pallas.designer.action.HomeAction"/>
+	<bean name="/home.do" class="com.pallas.design.action.HomeAction"/>
+</beans>
