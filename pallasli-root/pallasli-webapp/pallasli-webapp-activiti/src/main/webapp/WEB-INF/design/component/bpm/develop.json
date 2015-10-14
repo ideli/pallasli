@@ -1,0 +1,120 @@
+{
+	"f_key":"develop",
+	"f_name":"develop",
+	"f_caption":"develop",
+	"f_customscripts":"",
+	"f_config":{},
+	"f_columns":[{
+			"f_key":"id",
+			"f_name":"id",
+			"f_caption":"id",
+			"f_flex":1,
+			"f_type":"2",
+			"f_config":{
+				"align":"left"
+			},
+			"f_length":"10"
+		},{
+			"f_key":"key",
+			"f_name":"key",
+			"f_caption":"流程key"	,
+			"f_type":"1",
+			"f_flex":1,
+			"f_config":{
+				"align":"left"
+			}	
+		},{
+			"f_key":"name",
+			"f_name":"name",
+			"f_caption":"流程名",
+			"f_type":"1",
+			"f_flex":1,
+			"f_config":{
+				"align":"left"
+			}			
+		},{
+			"f_key":"createTime",
+			"f_name":"createTime",
+			"f_caption":"创建时间",
+			"f_type":"4",
+			"f_flex":1,
+			"f_config":{
+				"align":"left"
+			}			
+		},{
+			"f_key":"lastUpdateTime",
+			"f_name":"lastUpdateTime",
+			"f_caption":"最后一次修改时间",
+			"f_type":"4",
+			"f_flex":1,
+			"f_config":{
+				"align":"left"
+			}				
+		},{
+			"f_key":"description",
+			"f_name":"description",
+			"f_caption":"流程描述"	,
+			"f_type":"1",
+			"f_flex":1,
+			"f_config":{
+				"align":"left"
+			}			
+	}],
+	"f_actions":[{
+			"f_key":"btn_add",
+			"f_name":"btn_add",
+			"f_caption":"创建",
+			"f_handler":"function(){alert(1)}",
+			"f_config":{
+			}				
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"修改"	,
+			"f_config":{
+			}		
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"删除"	,
+			"f_config":{
+			}		
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"导出"	,
+			"f_config":{
+			}		
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"导入"	,
+			"f_config":{
+			}		
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"部署"	,
+			"f_config":{
+			}
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"启动"	,
+			"f_config":{
+			}
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"流程设置"	,
+			"f_config":{
+			}
+		},{
+			"f_key":"btn_alter",
+			"f_name":"btn_alter",
+			"f_caption":"查询"	,
+			"f_config":{
+			}
+		
+	}],
+}
