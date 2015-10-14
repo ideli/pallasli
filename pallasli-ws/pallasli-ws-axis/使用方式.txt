@@ -1,0 +1,42 @@
+1.	jar包：axix.jar	common-discovery-0.2.jar jaxrpc.jar saaj.jar  wsdl4j-1.6.2.jar
+2.	deploy.wsdd    发布服务
+	<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+		xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+		<service name="StatuteAxisWsdd" provider="java:RPC">
+			<parameter name="className" value="law.axis.service.StatuteAxis" />
+			<parameter name="allowedMethods" value="*" />
+			<parameter name="scope" value="request" />
+		</service>
+	</deployment>
+3.	server-config.wsdd 配置axis环境变量
+	set JAVA_HOME=c:/j2sdk1.4.1_01
+	set CATALINA_HOME=c:/Tomcat 5.0
+	set classpath=.;%JAVA_HOME%/lib/dt.jar;%JAVA_HOME%/lib/tools.jar;
+	set Path=%Path%;%JAVA_HOME%/bin;%CATALINA_HOME%/bin
+	set AXIS_HOME=E:/Tomcat/webapps/axis
+	set AXIS_LIB=%AXIS_HOME%/WEB-INF/lib
+	set AXISCLASSPATH=%AXIS_LIB%/axis.jar;%AXIS_LIB%/commons-discovery.jar;
+		%AXIS_LIB%/commons-logging.jar;%AXIS_LIB%/jaxrpc.jar;%AXIS_LIB%/saaj.jar;
+		%AXIS_LIB%/log4j-1.2.8.jar;%AXIS_LIB%/activation.jar;%AXIS_LIB%/mail.jar;
+		%AXIS_LIB%/wsdl4j-1.5.1.jar;%AXIS_LIB%/axis-ant.jar;%AXIS_LIB%/xmlsec.jar
+	set classpath=.;%JAVA_HOME%/lib/dt.jar;%JAVA_HOME%/lib/tools.jar;
+		%CATALINA_HOME%/common/lib/servlet.jar;
+	启动tomcat ，运行-cmd  到deploy.wsdd文件所在目录下使用命令
+	WEB-INF>java -Djava.ext.dirs="e:/Java/Tomcat 5.5/webapps/axis/WEB-INF/lib" 
+			org.apache.axis.client.AdminClient deploy.wsdd
+	运行这个命令后会在E:/Java/Tomcat 5.5/webapps/axis/WEB-INF 下生成server-config.wsdd 
+
+4.	web.xml ----配置axis Servlet
+5.	service类  普通类，通过配置文件指定
+6.	客户端调用
+	String url = "应用地址/services/服务名";
+	Service se = new Service();
+	try {
+		Call call = se.createCall();
+		call.setTargetEndpointAddress(url);
+		call.setOperationName(new QName(url, "方法名"));
+		//传参
+		String result = (String) call.invoke(new Object[] { "", "" });
+	} catch (Exception e) {
+		e.printStackTrace();
+	}

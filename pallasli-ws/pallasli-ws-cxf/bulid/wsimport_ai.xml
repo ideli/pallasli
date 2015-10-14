@@ -1,0 +1,32 @@
+﻿<project default="jar">
+	<!--
+-cp 定义classpath
+-r 生成 bean的wsdl文件的存放目录
+-s 生成发布Web Service的源代码文件的存放目录（如果方法有抛出异常，则会生成该异常的描述类源文件）
+-d 生成发布Web Service的编译过的二进制类文件的存放目录（该异常的描述类的class文件）
+
+       wsimport命令的主要功能是根据wsdl文件生成客户端存根及框架，负责与Web Service 服务器通信，并在将其封装成实例，客户端可以直接使用，就像使用本地实例一样。
+
+命令参数说明：
+-d 生成客户端执行类的class文件的存放目录
+-s 生成客户端执行类的源文件的存放目录
+-p 定义生成类的包名
+-->
+	<property name="ws_server" value="localhost" />
+	<property name="ws_port" value="8081" />
+	<property name="target" value="./release" />
+
+	<target name="wsimport">
+		<exec executable="wsimport">
+			<arg line="-p ws -d ./release http://${ws_server}:${ws_port}/TestService?wsdl" />
+		</exec>
+	</target>
+
+	<target name="jar" depends="wsimport">
+		<jar destfile="../webservice_cxf/lib/ws.jar">
+			<fileset dir="${target}">
+				<include name="ws/*.class" />
+			</fileset>
+		</jar>
+	</target>
+</project>
