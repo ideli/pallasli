@@ -1,0 +1,13 @@
+{ 
+text: '.',
+children: [{
+	    text:'产品文档库',
+	    url:'bugfree/ext/document/productDocLib',
+	    leaf:true
+	},{
+	    text:'项目文档库',
+	    url:'bugfree/ext/document/projectDocLib',
+	    leaf:true
+	}
+]
+}

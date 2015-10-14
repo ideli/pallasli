@@ -1,0 +1,46 @@
+{ 
+text: '.',
+children: [{
+	    text:'新增产品',
+	    url:'bugfree/ext/product/addProduct',
+	    isDoc:true,
+	    leaf:true
+	},{
+	    text:'产品列表',
+	    url:'bugfree/ext/product/productList',
+	    leaf:true
+	},{
+	    text:'需求',
+	    url:'bugfree/ext/product/story',
+	    leaf:true
+	},{
+	    text:'计划',
+	    url:'bugfree/ext/product/plan',
+	    leaf:true
+	},{
+	    text:'发布',
+	    url:'bugfree/ext/product/release',
+	    leaf:true
+	},{
+	    text:'路线图',
+	    url:'bugfree/ext/product/roadmap',
+	    leaf:true
+	},{
+	    text:'文档',
+	    url:'bugfree/ext/product/doc',
+	    leaf:true
+	},{
+	    text:'概况',
+	    url:'bugfree/ext/product/info',
+	    leaf:true
+	},{
+	    text:'编辑',
+	    url:'bugfree/ext/product/edit',
+	    leaf:true
+	},{
+	    text:'模块',
+	    url:'bugfree/ext/product/modules',
+	    leaf:true
+	}
+]
+}

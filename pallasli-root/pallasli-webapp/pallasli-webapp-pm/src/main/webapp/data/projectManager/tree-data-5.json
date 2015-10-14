@@ -1,0 +1,25 @@
+{ 
+text: '.',
+children: [{
+	    text:'用户管理',
+	    url:'bugfree/ext/orgnization/userManager',
+	    leaf:true
+	},{
+	    text:'部门管理',
+	    url:'bugfree/ext/orgnization/department',
+	    leaf:true
+	},{
+	    text:'公司管理',
+	    url:'bugfree/ext/orgnization/company',
+	    leaf:true
+	},{
+	    text:'权限管理',
+	    url:'bugfree/ext/orgnization/authorityManager',
+	    leaf:true
+	},{
+	    text:'组织动态',
+	    url:'bugfree/ext/orgnization/dynamic',
+	    leaf:true
+	}
+]
+}

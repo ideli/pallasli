@@ -1,0 +1,42 @@
+{ 
+text: '.',
+children: [{
+	    text:'新增TODO',
+	    url:'bugfree/ext/dashboard/addTodo',
+	    isDoc:true,
+	    leaf:true
+	},{
+	    text:'我的TODO',
+	    url:'bugfree/ext/dashboard/todo',
+	    leaf:true
+	},{
+	    text:'我的任务',
+	    url:'bugfree/ext/dashboard/task',
+	    leaf:true
+	},{
+	    text:'我的bug',
+	    url:'bugfree/ext/dashboard/bug',
+	    leaf:true
+	},{
+	    text:'我的测试',
+	    url:'bugfree/ext/dashboard/test',
+	    leaf:true
+	},{
+	    text:'我的需求',
+	    url:'bugfree/ext/dashboard/story',
+	    leaf:true
+	},{
+	    text:'我的项目',
+	    url:'bugfree/ext/dashboard/project',
+	    leaf:true
+	},{
+	    text:'我的动态',
+	    url:'bugfree/ext/dashboard/dynamic',
+	    leaf:true
+	},{
+	    text:'我的档案',
+	    url:'bugfree/ext/dashboard/profile',
+	    leaf:true
+	}
+]
+}

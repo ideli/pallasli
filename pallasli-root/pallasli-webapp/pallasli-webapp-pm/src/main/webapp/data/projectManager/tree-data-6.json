@@ -1,0 +1,21 @@
+{ 
+text: '.',
+children: [{
+	    text:'缺陷管理',
+	    url:'bugfree/ext/testing/bug',
+	    leaf:true
+	},{
+	    text:'测试用例',
+	    url:'bugfree/ext/testing/testCase',
+	    leaf:true
+	},{
+	    text:'测试任务',
+	    url:'bugfree/ext/testing/testTask',
+	    leaf:true
+	},{
+	    text:'自定义字段',
+	    url:'bugfree/ext/testing/define',
+	    leaf:true
+	}
+]
+}
