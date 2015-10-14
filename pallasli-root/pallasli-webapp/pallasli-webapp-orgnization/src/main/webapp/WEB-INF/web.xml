@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+ 
+	<display-name>pallas_orgnization</display-name>
+    <distributable />
+     
+
+	<!-- To load the Spring context -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- To allow session-scoped beans in Spring -->
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+ 
+	<!-- Restlet adapter, used to expose modeler functionality through REST -->
+	<servlet>
+		<servlet-name>RestletServlet</servlet-name>
+		<servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+		<init-param>
+			<!-- Application class name -->
+			<param-name>org.restlet.application</param-name>
+			<param-value>org.activiti.rest.explorer.application.ExplorerRestApplication</param-value>
+		</init-param>
+	</servlet>
+  	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<!--<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>-->
+		<servlet-class>com.pallas.dispatch.spring.PallasDispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring-jsp-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>	
+  	<servlet>
+		<servlet-name>springMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>	
+	<servlet-mapping>
+		<servlet-name>springMVC</servlet-name>
+		<url-pattern>*.sp</url-pattern>
+	</servlet-mapping> 
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping> 
+
+	<!-- Catch all service requests -->
+	<servlet-mapping>
+		<servlet-name>RestletServlet</servlet-name>
+		<url-pattern>/activiti-modeler/service/*</url-pattern>
+	</servlet-mapping>
+
+
+<!-- 以下为DirectJNgine servlet 默认配置-->  
+  <servlet>  
+    <servlet-name>DjnServlet</servlet-name>  
+    <servlet-class>com.softwarementors.extjs.djn.servlet.DirectJNgineServlet</servlet-class>  
+     
+    <init-param>  
+      <param-name>debug</param-name>  
+      <param-value>true</param-value>  
+    </init-param>    
+  
+    <init-param>  
+      <param-name>providersUrl</param-name>  
+      <param-value>djn/directprovider</param-value>  
+    </init-param>  	
+	<!-- DirectJNgine servlet 默认配置-->  
+<!-- api域:对应下面的各个param-name的前缀，可以设置多个不同的域-->  
+    <init-param>  
+      <param-name>apis</param-name>  
+      <param-value>  
+        Pallas.orgnization  
+      </param-value>  
+    </init-param>  
+  
+<!-- Pallas.orgnization对应上面的api域。MyAction对应生成的js相应的文件夹.服务器运行后，将在MyAction/下存放自动生成的3个js文件。这里的名称分别为  
+    MyActionApi.js,MyActionApi-debug.js,MyActionApi-min.js  
+ -->   
+    <init-param>  
+      <param-name>Pallas.orgnization.apiFile</param-name>  
+      <param-value>extDirect/api/api.js</param-value>  
+    </init-param>  
+<!-- Pallas.orgnization.对应上面的域."Ext.zhouyang"为命名空间所对应的值。会在页面加载时候用上. -->  
+    <init-param>  
+      <param-name>Pallas.orgnization.apiNamespace</param-name>  
+      <param-value>Pallas.orgnization.api</param-value>  
+    </init-param>  
+<!-- Pallas.orgnization.对应上面的域. 要使用的类的全路径名 -->  
+    <init-param>  
+      <param-name>Pallas.orgnization.classes</param-name>  
+      <param-value>   
+      </param-value>  
+    </init-param>  
+      
+    <load-on-startup>2</load-on-startup>  
+  </servlet>   
+   
+  <servlet-mapping>  
+    <servlet-name>DjnServlet</servlet-name>  
+    <url-pattern>/djn/directprovider/*</url-pattern>  
+  </servlet-mapping>  
+</web-app>

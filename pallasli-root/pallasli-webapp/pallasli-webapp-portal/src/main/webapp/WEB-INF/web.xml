@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>pallas_portal</display-name>
+	<listener>
+    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    	
+    	<!--listener-class>com.pallas.portal.LoadOnStart</listener-class-->
+  	</listener>
+	 <servlet>
+		<servlet-name>dispatcher</servlet-name>
+		 <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> 
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring-jsp-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>	
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping> 
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>WEB-INF/application-context.xml</param-value>
+	</context-param>
+	<!-- 以下为DirectJNgine servlet 默认配置-->  
+  <servlet>  
+    <servlet-name>DjnServlet</servlet-name>  
+    <servlet-class>com.softwarementors.extjs.djn.servlet.DirectJNgineServlet</servlet-class>  
+     
+    <init-param>  
+      <param-name>debug</param-name>  
+      <param-value>true</param-value>  
+    </init-param>    
+  
+    <init-param>  
+      <param-name>providersUrl</param-name>  
+      <param-value>djn/directprovider</param-value>  
+    </init-param>  	
+	<!-- DirectJNgine servlet 默认配置-->  
+<!-- api域:对应下面的各个param-name的前缀，可以设置多个不同的域-->  
+    <init-param>  
+      <param-name>apis</param-name>  
+      <param-value>  
+        Pallas.portal  
+      </param-value>  
+    </init-param>  
+  
+<!-- Pallas.portal对应上面的api域。MyAction对应生成的js相应的文件夹.服务器运行后，将在MyAction/下存放自动生成的3个js文件。这里的名称分别为  
+    MyActionApi.js,MyActionApi-debug.js,MyActionApi-min.js  
+ -->   
+    <init-param>  
+      <param-name>Pallas.portal.apiFile</param-name>  
+      <param-value>extDirect/api/api.js</param-value>  
+    </init-param>  
+<!-- Pallas.portal.对应上面的域."Ext.zhouyang"为命名空间所对应的值。会在页面加载时候用上. -->  
+    <init-param>  
+      <param-name>Pallas.portal.apiNamespace</param-name>  
+      <param-value>Pallas.portal.api</param-value>  
+    </init-param>  
+<!-- Pallas.portal.对应上面的域. 要使用的类的全路径名 -->  
+    <init-param>  
+      <param-name>Pallas.portal.classes</param-name>  
+      <param-value>  
+       com.pallas.portal.direct.SysNavigationDirect,
+       com.pallas.portal.direct.ModuleNavigationDirect,
+       com.pallasli.chat.direct.ChatDirect
+      </param-value>  
+    </init-param>  
+      
+    <load-on-startup>2</load-on-startup>  
+  </servlet>   
+   
+  <servlet-mapping>  
+    <servlet-name>DjnServlet</servlet-name>  
+    <url-pattern>/djn/directprovider/*</url-pattern>  
+  </servlet-mapping>  
+	
+  <!-- PageOffice Begin -->
+  <servlet>
+    <servlet-name>poserver</servlet-name> 
+    <servlet-class>com.zhuozhengsoft.pageoffice.poserver.Server</servlet-class> 
+  </servlet>
+  <servlet-mapping> 
+    <servlet-name>poserver</servlet-name> 
+    <url-pattern>/poserver.zz</url-pattern> 
+  </servlet-mapping> 
+  <servlet-mapping> 
+    <servlet-name>poserver</servlet-name> 
+    <url-pattern>/poserver.do</url-pattern> 
+  </servlet-mapping> 
+  <servlet-mapping> 
+	<servlet-name>poserver</servlet-name> 
+	<url-pattern>/pageoffice.cab</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping> 
+	<servlet-name>poserver</servlet-name> 
+	<url-pattern>/popdf.cab</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping> 
+	<servlet-name>poserver</servlet-name> 
+	<url-pattern>/sealsetup.exe</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping> 
+     <servlet-name>poserver</servlet-name> 
+     <url-pattern>/posetup.exe</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>adminseal</servlet-name> 
+    <servlet-class>com.zhuozhengsoft.pageoffice.poserver.AdminSeal</servlet-class> 
+  </servlet>
+  <servlet-mapping> 
+    <servlet-name>adminseal</servlet-name> 
+    <url-pattern>/adminseal.do</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>adminseal</servlet-name> 
+    <url-pattern>/loginseal.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>adminseal</servlet-name> 
+    <url-pattern>/sealimage.do</url-pattern>
+  </servlet-mapping>
+  <mime-mapping>  
+  	<extension>mht</extension>  
+  	<mime-type>message/rfc822</mime-type>  
+  </mime-mapping>
+  <context-param>
+  	<param-name>adminseal-password</param-name>
+  	<param-value>111111</param-value>
+  </context-param>
+  
+  <!--<context-param>
+  	<param-name>posealdb-driver</param-name>
+  	<param-value>com.mysql.jdbc.Driver</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>posealdb-url</param-name>
+  	<param-value>jdbc:mysql://localhost:3306/sample</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>posealdb-username</param-name>
+  	<param-value>root</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>posealdb-password</param-name>
+  	<param-value>admin</param-value>
+  </context-param>-->
+  <!-- PageOffice End -->
+  
+	<!--filter>
+        <filter-name>urlFilter</filter-name>
+        <filter-class>com.pallas.webmvc.URLFilter</filter-class>
+    </filter>
+    
+	<filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>com.pallas.webmvc.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignore</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    
+	<filter>
+        <filter-name>userStateFilter</filter-name>
+        <filter-class>com.pallas.webmvc.UserStateFilter</filter-class>
+    </filter>
+    <filter-mapping>   
+        <filter-name>urlFilter</filter-name>   
+        <url-pattern>/auth.do</url-pattern>   
+    </filter-mapping>
+    <filter-mapping>   
+        <filter-name>encodingFilter</filter-name>   
+        <url-pattern>/*</url-pattern>   
+    </filter-mapping>
+    < filter-mapping>   
+        <filter-name>userStateFilter</filter-name>   
+        <url-pattern>/home.do</url-pattern>   
+    </filter-mapping-->
+    
+	<welcome-file-list>
+		<welcome-file>home.do</welcome-file>
+	</welcome-file-list>
+</web-app>
