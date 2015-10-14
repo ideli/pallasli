@@ -1,0 +1,11 @@
+
+.table .table-header{
+background-color: silver;
+}
+.table .table .table-header{
+background-color: blue;
+}
+.table-padding{
+	padding: 10px;
+	margin: 10px;
+}

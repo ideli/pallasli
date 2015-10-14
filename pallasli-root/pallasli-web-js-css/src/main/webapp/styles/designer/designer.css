@@ -1,0 +1,53 @@
+.btn-comp {
+		padding:0px;
+		margin:0px;
+		border-style:none;
+        background-color: #FFF;
+        background-image: url() ;
+    }
+    
+.icon-field-text {
+    background-image:url( ../../images/designer/field-text.gif ) !important;
+}
+.icon-field-textarea {
+    background-image:url( ../../images/designer/field-textarea.gif ) !important;
+}
+.icon-radio {
+    background-image:url( ../../images/designer/radio.gif ) !important;
+}
+.icon-checked {
+    background-image:url( ../../images/designer/checked.gif ) !important;
+}
+.icon-field-date {
+    background-image:url( ../../images/designer/field-date.gif ) !important;
+}
+.icon-combobox {
+    background-image:url( ../../images/designer/combobox.png ) !important;
+}
+.icon-button {
+    background-image:url( ../../images/designer/button.png ) !important;
+}
+
+.icon-form {
+    background-image:url( ../../images/designer/form.png ) !important;
+}
+
+.icon-panel {
+    background-image:url( ../../images/designer/panel.gif ) !important;
+}
+
+.icon-grid {
+    background-image:url( ../../images/designer/grid.png ) !important;
+}
+
+.icon-tree {
+    background-image:url( ../../images/designer/tree.png ) !important;
+}
+
+.icon-button {
+    background-image:url( ../../images/designer/button.png ) !important;
+}
+
+.icon-button {
+    background-image:url( ../../images/designer/button.png ) !important;
+}
