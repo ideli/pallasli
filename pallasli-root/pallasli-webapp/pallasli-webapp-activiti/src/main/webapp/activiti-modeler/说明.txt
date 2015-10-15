@@ -1,0 +1,22 @@
+Ext-----Activiti20
+oryx.debug.js-----不添加header   _generateHeader return;
+custom-style.css-----不添加header  north//cls		: 'x-panel-editor-north',
+
+.north_view .x-panel-body,
+.x-panel-editor-north .x-panel-body {
+	height:20px !important;
+}
+
+
+
+extends.css  重置样式
+
+添加汉化
+translation_zh_cn.js
+
+
+
+
+stencilset.json-------shape--shape_properties
+
+oryx.debug.js----------shapeSelect---->load shape_properties  to  datasouce---->grid----->afterEdit----->saveChanges
