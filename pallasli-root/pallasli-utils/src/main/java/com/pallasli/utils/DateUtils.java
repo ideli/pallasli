@@ -67,6 +67,7 @@ public class DateUtils {
 	//
 	// }
 
+	
 	public static void main(String[] args) {
 		try {
 			System.out.println(convertStringToDate("yyyy-MM-dd", "2012-02-03"));

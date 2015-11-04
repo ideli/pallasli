@@ -24,7 +24,7 @@ public class BpmUserManagerServiceImpl implements BpmUserManagerService {
 		List<UserInfo> userList = new ArrayList<UserInfo>();
 		for (User u : list) {
 			UserInfo user = new UserInfo();
-			user.setId(u.getId());
+			user.setId(Long.parseLong(u.getId()));
 			user.setName(u.getFirstName() + " " + u.getLastName());
 		}
 		return userList;
