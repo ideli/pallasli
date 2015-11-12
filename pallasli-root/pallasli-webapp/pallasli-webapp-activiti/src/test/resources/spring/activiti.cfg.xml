@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	 http://www.springframework.org/schema/context
+	 http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+	<bean id="appProperties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:app.properties" />
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<!-- Allow other PropertyPlaceholderConfigurer to run as well -->
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="${datasource.driver:org.h2.Driver}" />
+		<property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />
+		<property name="username" value="${datasource.username}" />
+		<property name="password" value="${datasource.password}" />
+		<property name="maxActive" value="${datasource.maxActive:8}" />
+		<property name="maxIdle" value="${datasource.maxIdle:8}" />
+		<property name="minIdle" value="${datasource.minIdle:0}" />
+		<property name="initialSize" value="${datasource.initialSize:0}" />
+		<property name="maxWait" value="${datasource.maxWait:-1}" />
+		<property name="poolPreparedStatements" value="${datasource.poolPreparedStatements:false}" />
+		<property name="maxOpenPreparedStatements" value="${datasource.maxOpenPreparedStatements:-1}" />
+		<property name="testOnBorrow" value="${datasource.testOnBorrow:true}" />
+		<property name="testOnReturn" value="${datasource.testOnReturn:false}" />
+		<property name="timeBetweenEvictionRunsMillis"
+			value="${datasource.timeBetweenEvictionRunsMillis:-1}" />
+		<property name="numTestsPerEvictionRun" value="${datasource.numTestsPerEvictionRun:3}" />
+		<property name="minEvictableIdleTimeMillis"
+			value="${datasource.minEvictableIdleTimeMillis:1800000}" />
+		<property name="testWhileIdle" value="${datasource.testWhileIdle:false}" />
+		<property name="removeAbandoned" value="${datasource.removeAbandoned:false}" />
+		<property name="removeAbandonedTimeout" value="${datasource.removeAbandonedTimeout:300}" />
+		<property name="logAbandoned" value="${datasource.logAbandoned:false}" />
+		<property name="defaultReadOnly" value="${datasource.defaultReadOnly:false}" />
+		<property name="defaultTransactionIsolation" value="${datasource.defaultTransactionIsolation:-1}" />
+		<property name="defaultAutoCommit" value="${datasource.defaultAutoCommit:true}" />
+		<property name="validationQuery"
+			value="${datasource.validationQuery:select 1 from dual}" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<import resource="classpath*:spring/activiti-engine.cfg.xml" />
+	<import resource="classpath*:spring/activiti-dao.cfg.xml" />
+
+</beans> 

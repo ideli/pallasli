@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="bpm">
+  <process id="sub" name="sub" isExecutable="true">
+    <startEvent id="sid-BAC57F5D-D962-4FA5-A7F3-E6536A7FC42E" activiti:formKey="bpmTest.weigqadd2"></startEvent>
+    <userTask id="sid-F0841269-6F77-4CDB-800E-1B1BDF1F8D07" name="sut1" activiti:atwa_iscustomformkey="false" activiti:atwa_appkey=" " activiti:atwa_allowselectuser="true" activiti:atwa_bpmbutton="BU1001,BU1002,BU1005,BU1007,BU1006" activiti:atwa_duedate="" activiti:atwa_nodeflag=""></userTask>
+    <sequenceFlow id="sid-EA7FA457-D158-4D2A-8CA2-87E70F5E1BD1" sourceRef="sid-BAC57F5D-D962-4FA5-A7F3-E6536A7FC42E" targetRef="sid-F0841269-6F77-4CDB-800E-1B1BDF1F8D07"></sequenceFlow>
+    <userTask id="sid-F230472E-8726-4BB8-8796-0D1E4F3F4052" name="sut2" activiti:atwa_iscustomformkey="false" activiti:atwa_appkey=" " activiti:atwa_allowselectuser="true" activiti:atwa_bpmbutton="BU1001,BU1005,BU1007,BU1006" activiti:atwa_duedate="" activiti:atwa_nodeflag=""></userTask>
+    <sequenceFlow id="sid-968FAF0F-52FC-467A-901B-9ACC9F1ACD93" sourceRef="sid-F0841269-6F77-4CDB-800E-1B1BDF1F8D07" targetRef="sid-F230472E-8726-4BB8-8796-0D1E4F3F4052"></sequenceFlow>
+    <userTask id="sid-AFF83B17-7FEA-44E6-8F20-47C12C950A50" name="sut3" activiti:atwa_iscustomformkey="false" activiti:atwa_appkey=" " activiti:atwa_allowselectuser="true" activiti:atwa_bpmbutton="BU1001,BU1002,BU1004,BU1005,BU1007,BU1006,BU1060" activiti:atwa_duedate="" activiti:atwa_nodeflag=""></userTask>
+    <sequenceFlow id="sid-5899A438-9B8A-4EB4-8CC3-F5CBD46275D3" sourceRef="sid-F230472E-8726-4BB8-8796-0D1E4F3F4052" targetRef="sid-AFF83B17-7FEA-44E6-8F20-47C12C950A50"></sequenceFlow>
+    <endEvent id="sid-38248E39-3923-4ECC-976C-B0086DDB7F30"></endEvent>
+    <sequenceFlow id="sid-F9FA0310-9766-450F-8A6F-F44D83B3BBD3" sourceRef="sid-AFF83B17-7FEA-44E6-8F20-47C12C950A50" targetRef="sid-38248E39-3923-4ECC-976C-B0086DDB7F30"></sequenceFlow>
+  </process> 
+</definitions>

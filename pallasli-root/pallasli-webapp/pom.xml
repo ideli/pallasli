@@ -19,5 +19,6 @@
   	<module>pallasli-webapp-jms</module>
   	<module>pallasli-webapp-log</module>
   	<module>pallasli-webapp-report</module>
+  	<module>pallasli-webapp-reporttest</module>
   </modules>
 </project>

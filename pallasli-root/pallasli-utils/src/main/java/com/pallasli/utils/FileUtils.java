@@ -1,14 +1,22 @@
 package com.pallasli.utils;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import com.pallasli.constant.SystemConstant;
+import com.pallasli.jdbc.Row;
 
 public class FileUtils {
 
@@ -19,18 +27,6 @@ public class FileUtils {
 	 * @return
 	 */
 	public static String readFileToString(String filepath) {
-		File file = readFile(filepath);
-		String content = readFileToString(file);
-		return content;
-	}
-
-	/**
-	 * 根据文件路径获取文件
-	 * 
-	 * @param filepath
-	 * @return
-	 */
-	public static File readFile(String filepath) {
 		File file = null;
 		if (filepath != null && !filepath.equals("")) {
 			try {
@@ -39,7 +35,8 @@ public class FileUtils {
 				e.printStackTrace();
 			}
 		}
-		return file;
+		String content = readFileToString(file);
+		return content;
 	}
 
 	/**
@@ -85,23 +82,6 @@ public class FileUtils {
 		return readFileToString(file, "utf-8");
 	}
 
-	public static boolean writeFile(String destFile, String content) {
-		File f = new File(destFile);
-		FileOutputStream ostream;
-		try {
-			ostream = new FileOutputStream(f);
-			ostream.write(content.getBytes());
-			ostream.flush();
-			ostream.close();
-			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
 	public static boolean createFile(String path, Boolean isDirectory) {
 		File file = new File(path);
 		try {
@@ -129,4 +109,383 @@ public class FileUtils {
 		ImageIO.write(image, toPath.substring(toPath.lastIndexOf(".") + 1), to);
 		return true;
 	}
+
+	private String data_dir = SystemConstant.DATA_PATH;
+	private final boolean rqDir = true;
+
+	private static long row = 0;
+	private static int handleCount = 0;
+
+	public String getFilePath(String fileName) {
+		return data_dir + SystemConstant.FILE_SEP + fileName;
+	}
+
+	public String getDataDir() {
+		return data_dir;
+	}
+
+	public String getDir() {
+		String dir = data_dir + SystemConstant.FILE_SEP
+				+ formatDate(new Date(), "yyyyMMdd");
+		if (createDir(dir)) {
+			return dir;
+		} else {
+			return ".";
+		}
+	}
+
+	public long getFileSize(String filePath) {
+		File f = new File(filePath);
+		if (f.exists()) {
+			return f.length();
+		} else {
+			return 0;
+		}
+	}
+
+	public long getFileRow(String filePath) {
+		int i_line = 0;
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(filePath), SystemConstant.CHARSET));
+			String Line = br.readLine();
+
+			while (Line != null) {
+				i_line++;
+				Line = br.readLine();
+			}
+		} catch (Exception e) {
+		}
+		return i_line;
+	}
+
+	public void ListFile(String dir) {
+		File[] fs = getDirFile(dir);
+		for (int i = 0; i < fs.length; i++) {
+			try {
+				if (fs[i].isDirectory()) {
+					ListFile(fs[i].getAbsolutePath());
+				} else if (fs[i].isFile()) {
+					FileHandle(fs[i]);
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public String getHandleResult() {
+		return "row = " + row + ", handleCount = " + handleCount;
+	}
+
+	private void FileHandle(File file) {
+		if (file.getName().lastIndexOf(".java") != -1) {
+			row += getFileRow(file.getAbsolutePath());
+			handleCount++;
+		}
+	}
+
+	public void createFile(String path, String filename) {
+		try {
+			File f = new File(path, filename);
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public void createFile(String filePath) {
+		try {
+			File f = new File(filePath);
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public void deleteFile(String filename) {
+		deleteFile(this.data_dir, filename);
+	}
+
+	public void deleteFile(String path, String filename) {
+		try {
+			File f = new File(path, filename);
+			if (f.exists()) {
+				f.delete();
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	public static boolean createDir(String dir) {
+		try {
+			File f = new File(dir);
+			if (!f.exists()) {
+				return f.mkdirs();
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public void deleteDir(String dir) {
+		try {
+			File f = new File(dir);
+			if (f.exists()) {
+				if (!f.delete()) {
+					File[] files = getDirFile(dir);
+					for (int i = 0; i < files.length; i++) {
+						if (files[i].isDirectory()) {
+							deleteDir(files[i].getAbsolutePath());
+						} else {
+							files[i].delete();
+						}
+					}
+					if (!f.delete()) {
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public File[] getDirFile(String path) {
+		File d = new File(path);
+		return d.listFiles();
+	}
+
+	public String readFile(String path, String filename) {
+		return readFile(path + SystemConstant.FILE_SEP + filename);
+	}
+
+	public String readFile(String filePathName) {
+		StringBuffer sb = new StringBuffer();
+		int i_line = 0;
+		try {
+			// FileReader fr = new FileReader(filePahtName);
+			// BufferedReader br = new BufferedReader(fr);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					new FileInputStream(filePathName), SystemConstant.CHARSET));
+			String Line = br.readLine();
+
+			while (Line != null) {
+				i_line++;
+				sb.append(Line);// .append("\n");
+				Line = br.readLine();
+			}
+			br.close();
+			// fr.close();
+		} catch (Exception e) {
+		}
+		return sb.toString().replaceAll("'", "\\\\\'");
+	}
+
+	public boolean writeFile(String str, String filePath) {
+		try {
+			/*
+			 * FileWriter fw = new FileWriter(filePath); fw.write(str);
+			 * fw.close();
+			 */
+			FileOutputStream fos = new FileOutputStream(filePath, true);
+			fos.write(str.getBytes(SystemConstant.CHARSET));
+			fos.close();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean writeFile(String str, String path, String filename) {
+		String filePath = path + SystemConstant.FILE_SEP + filename;
+		return writeFile(str, filePath);
+	}
+
+	public boolean appendFile(String str, String path, String filename) {
+		String filePath = path + SystemConstant.FILE_SEP + filename;
+		return appendFile(str, filePath);
+	}
+
+	public static boolean appendFile(String str, String filePath) {
+		try {
+			/*
+			 * FileWriter fw = new FileWriter(filePath, true); fw.write(str);
+			 * fw.close();
+			 */
+			FileOutputStream fos = new FileOutputStream(filePath, true);
+			fos.write(str.getBytes(SystemConstant.CHARSET));
+			fos.close();
+			return true;
+
+			/*
+			 * RandomAccessFile rf = new RandomAccessFile(path +
+			 * SystemConstants.FILE_SEP + filename, "rw"); rf.seek(rf.length());
+			 * rf.writeChars(str); rf.close(); return true;
+			 */
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public boolean writeByteFile(byte[] b, String path, String filename) {
+		try {
+			File file = new File(path + SystemConstant.FILE_SEP + filename);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileOutputStream fos = new FileOutputStream(file, true);
+			fos.write(b);
+			fos.close();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static String formatDate(Date date, String pattern) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		return sdf.format(date);
+	}
+
+	public boolean moveFile(String filename, String dir) {
+		File file = new File(filename);
+		File newFile = new File(dir + File.separator + file.getName());
+		System.out.println("newFile path:" + newFile.getAbsoluteFile());
+		return file.renameTo(newFile);
+	}
+
+	public String getFileName(String filePath) {
+		File file = new File(filePath);
+		return file.getName();
+	}
+
+	public String getFileName(int cmd) {
+		String str = String.valueOf(cmd);
+		str = StringUtils.repeat("0", (3 - str.length())) + str;
+		return data_dir + File.separator + str
+				+ DateUtils.formatDate(new Date(), "_yyyyMMdd_HHmmss_SS")
+				+ ".txt";
+	}
+
+	public String getRandFileaName(int cmd) {
+		String str = String.valueOf(cmd);
+		str = StringUtils.repeat("0", (3 - str.length())) + str;
+		return data_dir + File.separator + str + "_"
+				+ (new RandomGUID()).toString() + ".txt";
+	}
+
+	public String getFileName(String prefix, String postfix, String ext,
+			String pattern) {
+		return getFileName(prefix, postfix, ext, pattern, new Date());
+	}
+
+	public String getFileName(String prefix, String postfix, String ext,
+			String pattern, Date dt) {
+		return data_dir + File.separator + prefix
+				+ DateUtils.formatDate(dt, pattern) + postfix + "." + ext;
+	}
+
+	public void produceFile(List<Row> lst, String filename) throws Exception {
+		produceFile(lst, filename, "|", true);
+	}
+
+	public void produceFile(List<Row> lst, String filename, String separation)
+			throws Exception {
+		produceFile(lst, filename, separation, true);
+	}
+
+	public void produceFile(List<Row> lst, String filename, String separation,
+			boolean Upper) throws Exception {
+		produceFile(lst, filename, separation, Upper, null, null);
+	}
+
+	public void produceFile(List<Row> lst, String filename, String separation,
+			boolean Upper, int[] width, String[] mapNames) throws Exception {
+		if (Upper)
+			filename = filename.toUpperCase();
+
+		if (lst == null) {
+			appendFile("", data_dir, filename);
+		} else {
+			StringBuffer sb = new StringBuffer();
+
+			for (int k = 0, i = 0; i < lst.size(); i++, k++) {
+				Row row = lst.get(i);
+				if (width != null && (width.length != row.getColumnCount())
+						&& mapNames == null) {
+					throw new Exception(" ");
+				}
+				int colCount = mapNames != null ? mapNames.length : row
+						.getColumnCount();
+
+				if (k != 0)
+					sb.append("\r\n");
+				for (int j = 1; j <= colCount; j++) {
+					if (width != null) {
+						int tmp = j;
+						if (mapNames != null) {
+							j = row.getColumnIndex(mapNames[j - 1]);
+						}
+						if (row.getColumnType(j) == Types.DATE
+								|| row.getColumnType(j) == Types.TIME
+								|| row.getColumnType(j) == Types.TIMESTAMP) {
+							sb.append(StringUtils.FillWithChar(
+									row.getDateToString(j), width[tmp - 1],
+									' ', false)
+									+ (j == row.getColumnCount() ? ""
+											: separation));
+						} else if (row.getColumnType(j) == Types.REAL
+								|| row.getColumnType(j) == Types.FLOAT
+								|| row.getColumnType(j) == Types.DOUBLE
+								|| row.getColumnType(j) == Types.DECIMAL
+								|| row.getColumnType(j) == Types.NUMERIC) {
+							String value = row.getDefString(j);
+							if (value.lastIndexOf(".") == -1) {
+								// value += ".00";
+							} else if (value.indexOf(".") == value.length() - 2) {
+								value += "0";
+							}
+							sb.append(StringUtils.FillWithChar(value,
+									width[tmp - 1], '0', true)
+									+ (j == row.getColumnCount() ? ""
+											: separation));
+						} else if (row.getColumnType(j) == Types.TINYINT
+								|| row.getColumnType(j) == Types.SMALLINT
+								|| row.getColumnType(j) == Types.INTEGER
+								|| row.getColumnType(j) == Types.BIGINT) {
+							sb.append(StringUtils.FillWithChar(
+									row.getDefString(j), width[tmp - 1], '0',
+									true)
+									+ (j == row.getColumnCount() ? ""
+											: separation));
+						} else {
+							sb.append(StringUtils.FillWithChar(
+									row.getDefString(j), width[tmp - 1], ' ',
+									false)
+									+ (j == row.getColumnCount() ? ""
+											: separation));
+						}
+						// sb.append("["+ row.getColumnType(j) +
+						// ","+width[tmp-1]+"]");
+						j = tmp;
+					} else {
+						sb.append(row.getDefString(j)
+								+ (j == row.getColumnCount() ? "" : separation));
+					}
+				}
+				// sb.append("\r\n");
+				if (k >= 5000) {
+					appendFile(sb.toString(), data_dir, filename);
+					sb = new StringBuffer();
+					k = 0;
+				}
+			}
+			appendFile(sb.append("\r\n").toString(), data_dir, filename);
+		}
+	}
+
 }

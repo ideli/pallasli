@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="bpm">
+  <process id="main" name="main" isExecutable="true">
+    <startEvent id="s1" name="start" ></startEvent>
+    <userTask id="s2" name="ut_auto"  ></userTask>
+    <userTask id="s3" name="ut1" ></userTask>
+    <userTask id="s4" name="ut2" ></userTask>
+    <callActivity id="s5" name="ca" calledElement="sub"></callActivity>
+    <endEvent id="s6" name="end"></endEvent>
+    <sequenceFlow id="s8" sourceRef="s1" targetRef="s2"></sequenceFlow>
+    <sequenceFlow id="s7" sourceRef="s2" targetRef="s3"></sequenceFlow>
+    <sequenceFlow id="s9" sourceRef="s3" targetRef="s5"></sequenceFlow>
+    <sequenceFlow id="s10" sourceRef="s5" targetRef="s4"></sequenceFlow>
+    <sequenceFlow id="s11" sourceRef="s4" targetRef="s6"></sequenceFlow>
+  </process>
+   
+</definitions>

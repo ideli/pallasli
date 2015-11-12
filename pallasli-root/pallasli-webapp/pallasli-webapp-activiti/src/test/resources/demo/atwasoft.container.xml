@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd">
+  
+  <!-- <bean id="containerEnv" class="com.atwasoft.framework.container.ContainerEnv" factory-method="getInstance">
+  	<property name="webServicePort" value="${server.port:8081}" />
+  	<property name="dbTrace" value="${server.dbTrace:false}" />
+  	<property name="dbType" value="${datasource.dbType:oracle}" />
+  	<property name="appPoolSize" value="${server.appPoolSize:200}" />
+  	<property name="systemPoolSize" value="${server.systemPoolSize:1000}" />  	
+  	<property name="logCounter" value="${server.logCounter:100}" />
+  	<property name="monitor" value="${server.monitor:false}" />  
+  	<property name="containerConfigFile" value="${app.container:./config/jetty.xml}" />  		
+  </bean>
+        -->
+</beans>

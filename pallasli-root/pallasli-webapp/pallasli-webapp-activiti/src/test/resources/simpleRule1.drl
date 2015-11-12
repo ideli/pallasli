@@ -1,0 +1,25 @@
+package com.bpm.service.test;
+ 
+import com.bpm.service.BeanForRule
+ 
+
+rule "OrderItemCountZeroOrLess"
+     when
+        $otherOrder : BeanForRule( count <= 0)
+     then
+     	$otherOrder.setValid(false);          
+end
+
+rule "OrderItemCountZeroOrLess1"
+     when
+        $otherOrder1 : BeanForRule( count <= 0)
+     then
+     	$otherOrder1.setValid(false);          
+end
+ 
+rule "OrderItemCountGreaterThanZero"
+     when
+        $otherOrder : BeanForRule( count  > 0)
+     then
+     	$otherOrder.setValid(true);   
+end

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 
+1. 单机内存数据库 引擎
+2. mybatis内置事务
+3. 修改历史级别
+4. 自动创建数据库
+ 
+ -->
+ 
+	<bean id="processEngineConfiguration"
+		class="org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
+
+		<property name="databaseType" value="h2" />
+		<property name="databaseSchemaUpdate" value="true" />
+		<property name="jobExecutorActivate" value="false" />
+		<property name="history" value="full" />
+	</bean>
+</beans> 

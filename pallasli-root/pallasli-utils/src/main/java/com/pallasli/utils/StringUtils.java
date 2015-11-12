@@ -1,6 +1,53 @@
 package com.pallasli.utils;
 
 public class StringUtils {
+
+	public static String leftStr(String source, int maxByteLen, int flag)
+			throws Exception {
+		// log.debug("leftStr: source=" + source);
+		if (source == null || maxByteLen <= 0) {
+			return "";
+		}
+		byte[] bStr = source.getBytes("utf-8");
+		if (maxByteLen >= bStr.length)
+			return source;
+		String cStr = new String(bStr, maxByteLen - 1, 2);
+		if (cStr.length() == 1 && source.contains(cStr)) {
+			maxByteLen += flag;
+		}
+		return new String(bStr, 0, maxByteLen);
+	}
+
+	public static String repeat(String str, int num) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < num; i++) {
+			sb.append(str);
+		}
+		return sb.toString();
+	}
+
+	public static String repeat(char ch, int num) {
+		return repeat(String.valueOf(ch), num);
+	}
+
+	public static String FillWithChar(String src, int len, char ch, boolean left) {
+		if (src.length() >= len) {
+			try {
+				return leftStr(src, len, -1);// src.substring(0, len);
+			} catch (Exception e) {
+				return src;
+			}
+		} else {
+			StringBuffer sb = new StringBuffer();
+			if (left) {
+				sb.append(repeat(ch, len - src.getBytes().length)).append(src);
+			} else {
+				sb.append(src).append(repeat(ch, len - src.getBytes().length));
+			}
+			return sb.toString();
+		}
+	}
+
 	public static String replaceComma(String source) {
 		String token = ":";
 		int beginIndex = source.indexOf(token);
@@ -515,6 +562,151 @@ public class StringUtils {
 			return s;
 		}
 		return null;
+	}
+
+	public static String replaceInString(String in, String from, String to) {
+		if (in == null || from == null || to == null) {
+			return in;
+		}
+
+		StringBuffer newValue = new StringBuffer();
+		char[] inChars = in.toCharArray();
+		int inLen = inChars.length;
+		char[] fromChars = from.toCharArray();
+		int fromLen = fromChars.length;
+
+		for (int i = 0; i < inLen; i++) {
+			if (inChars[i] == fromChars[0] && (i + fromLen) <= inLen) {
+				boolean isEqual = true;
+				for (int j = 1; j < fromLen; j++) {
+					if (inChars[i + j] != fromChars[j]) {
+						isEqual = false;
+						break;
+					}
+				}
+				if (isEqual) {
+					newValue.append(to);
+					i += fromLen - 1;
+				} else {
+					newValue.append(inChars[i]);
+				}
+			} else {
+				newValue.append(inChars[i]);
+			}
+		}
+		return newValue.toString();
+	}
+
+	/**
+	 * ȥ���ַ���߿ո�
+	 * 
+	 * @param source
+	 *            Դ�ַ�
+	 * @return
+	 */
+	public static String LTrim(String source) {
+		if (source == null || source.length() == 0) {
+			return "";
+		}
+		if (source.charAt(0) != ' ') {
+			return source;
+		} else {
+			int i;
+			for (i = 0; i < source.length(); i++) {
+				if (source.charAt(i) != ' ') {
+					break;
+				}
+			}
+			return source.substring(i);
+		}
+	}
+
+	/**
+	 * ȥ���ַ��ұ߿ո�
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static String RTrim(String source) {
+		if (source == null || source.length() == 0) {
+			return "";
+		}
+		if (source.charAt(source.length() - 1) != ' ') {
+			return source;
+		} else {
+			int i;
+			for (i = source.length() - 1; i > 0; i--) {
+				if (source.charAt(i) != ' ') {
+					break;
+				}
+			}
+			return source.substring(0, i + 1);
+		}
+	}
+
+	/**
+	 * ȥ���ַ�ǰ��ո�
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static String Trim(String source) {
+		return LTrim(RTrim(source));
+	}
+
+	/**
+	 * �����ظ�������ַ�
+	 * 
+	 * @param str
+	 *            Ҫ�ظ����ַ�
+	 * @param number
+	 *            �ظ�����
+	 * @return
+	 */
+	public static String repeatString(String str, int number) {
+		str = getNullString(str);
+		if (number < 0) {
+			return "";
+		}
+		StringBuffer sb = new StringBuffer(str.length() * number);
+		for (int i = 0; i < number; i++) {
+			sb.append(str);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * ��������ǰ̨alert��ʾ���ַ�
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String getAlertString(String str) {
+		str = getNullString(str);
+		return str.replace((char) 10, ' ').replace((char) 13, ' ')
+				.replace('"', '\'');
+	}
+
+	public static String getNullString(String str) {
+		return (str == null) ? "" : str;
+	}
+
+	/**
+	 * ��HEX�����ֽ������е�ֵ
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	public static final String encodeHex(byte[] bytes) {
+		StringBuffer buff = new StringBuffer(bytes.length * 2);
+		String b;
+		for (int i = 0; i < bytes.length; i++) {
+			b = Integer.toHexString(bytes[i]);
+			// byte�������ֽڵģ��������Integer.toHexString����ֽ���չΪ4���ֽ�
+			buff.append(b.length() > 2 ? b.substring(6, 8) : b);
+			buff.append(" ");
+		}
+		return buff.toString();
 	}
 
 }
