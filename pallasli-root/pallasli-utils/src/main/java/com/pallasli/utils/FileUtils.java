@@ -8,15 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.jdbc.Row;
 
 public class FileUtils {
 
@@ -231,7 +228,7 @@ public class FileUtils {
 		}
 	}
 
-	public void deleteDir(String dir) {
+	public static void deleteDir(String dir) {
 		try {
 			File f = new File(dir);
 			if (f.exists()) {
@@ -253,16 +250,16 @@ public class FileUtils {
 		}
 	}
 
-	public File[] getDirFile(String path) {
+	public static File[] getDirFile(String path) {
 		File d = new File(path);
 		return d.listFiles();
 	}
 
-	public String readFile(String path, String filename) {
+	public static String readFile(String path, String filename) {
 		return readFile(path + SystemConstant.FILE_SEP + filename);
 	}
 
-	public String readFile(String filePathName) {
+	public static String readFile(String filePathName) {
 		StringBuffer sb = new StringBuffer();
 		int i_line = 0;
 		try {
@@ -285,7 +282,7 @@ public class FileUtils {
 		return sb.toString().replaceAll("'", "\\\\\'");
 	}
 
-	public boolean writeFile(String str, String filePath) {
+	public static boolean writeFile(String str, String filePath) {
 		try {
 			/*
 			 * FileWriter fw = new FileWriter(filePath); fw.write(str);
@@ -300,12 +297,12 @@ public class FileUtils {
 		}
 	}
 
-	public boolean writeFile(String str, String path, String filename) {
+	public static boolean writeFile(String str, String path, String filename) {
 		String filePath = path + SystemConstant.FILE_SEP + filename;
 		return writeFile(str, filePath);
 	}
 
-	public boolean appendFile(String str, String path, String filename) {
+	public static boolean appendFile(String str, String path, String filename) {
 		String filePath = path + SystemConstant.FILE_SEP + filename;
 		return appendFile(str, filePath);
 	}
@@ -387,105 +384,6 @@ public class FileUtils {
 			String pattern, Date dt) {
 		return data_dir + File.separator + prefix
 				+ DateUtils.formatDate(dt, pattern) + postfix + "." + ext;
-	}
-
-	public void produceFile(List<Row> lst, String filename) throws Exception {
-		produceFile(lst, filename, "|", true);
-	}
-
-	public void produceFile(List<Row> lst, String filename, String separation)
-			throws Exception {
-		produceFile(lst, filename, separation, true);
-	}
-
-	public void produceFile(List<Row> lst, String filename, String separation,
-			boolean Upper) throws Exception {
-		produceFile(lst, filename, separation, Upper, null, null);
-	}
-
-	public void produceFile(List<Row> lst, String filename, String separation,
-			boolean Upper, int[] width, String[] mapNames) throws Exception {
-		if (Upper)
-			filename = filename.toUpperCase();
-
-		if (lst == null) {
-			appendFile("", data_dir, filename);
-		} else {
-			StringBuffer sb = new StringBuffer();
-
-			for (int k = 0, i = 0; i < lst.size(); i++, k++) {
-				Row row = lst.get(i);
-				if (width != null && (width.length != row.getColumnCount())
-						&& mapNames == null) {
-					throw new Exception(" ");
-				}
-				int colCount = mapNames != null ? mapNames.length : row
-						.getColumnCount();
-
-				if (k != 0)
-					sb.append("\r\n");
-				for (int j = 1; j <= colCount; j++) {
-					if (width != null) {
-						int tmp = j;
-						if (mapNames != null) {
-							j = row.getColumnIndex(mapNames[j - 1]);
-						}
-						if (row.getColumnType(j) == Types.DATE
-								|| row.getColumnType(j) == Types.TIME
-								|| row.getColumnType(j) == Types.TIMESTAMP) {
-							sb.append(StringUtils.FillWithChar(
-									row.getDateToString(j), width[tmp - 1],
-									' ', false)
-									+ (j == row.getColumnCount() ? ""
-											: separation));
-						} else if (row.getColumnType(j) == Types.REAL
-								|| row.getColumnType(j) == Types.FLOAT
-								|| row.getColumnType(j) == Types.DOUBLE
-								|| row.getColumnType(j) == Types.DECIMAL
-								|| row.getColumnType(j) == Types.NUMERIC) {
-							String value = row.getDefString(j);
-							if (value.lastIndexOf(".") == -1) {
-								// value += ".00";
-							} else if (value.indexOf(".") == value.length() - 2) {
-								value += "0";
-							}
-							sb.append(StringUtils.FillWithChar(value,
-									width[tmp - 1], '0', true)
-									+ (j == row.getColumnCount() ? ""
-											: separation));
-						} else if (row.getColumnType(j) == Types.TINYINT
-								|| row.getColumnType(j) == Types.SMALLINT
-								|| row.getColumnType(j) == Types.INTEGER
-								|| row.getColumnType(j) == Types.BIGINT) {
-							sb.append(StringUtils.FillWithChar(
-									row.getDefString(j), width[tmp - 1], '0',
-									true)
-									+ (j == row.getColumnCount() ? ""
-											: separation));
-						} else {
-							sb.append(StringUtils.FillWithChar(
-									row.getDefString(j), width[tmp - 1], ' ',
-									false)
-									+ (j == row.getColumnCount() ? ""
-											: separation));
-						}
-						// sb.append("["+ row.getColumnType(j) +
-						// ","+width[tmp-1]+"]");
-						j = tmp;
-					} else {
-						sb.append(row.getDefString(j)
-								+ (j == row.getColumnCount() ? "" : separation));
-					}
-				}
-				// sb.append("\r\n");
-				if (k >= 5000) {
-					appendFile(sb.toString(), data_dir, filename);
-					sb = new StringBuffer();
-					k = 0;
-				}
-			}
-			appendFile(sb.append("\r\n").toString(), data_dir, filename);
-		}
 	}
 
 }

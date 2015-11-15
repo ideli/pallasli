@@ -1,13 +1,9 @@
-/*
- * ��ݿ⹤��
- */
 package com.pallasli.jdbc;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import lyt.soft.calldb.CallDbException;
-
+import com.pallasli.jdbc.exception.CallDbException;
 
 public class DbFactory {
 	private static final Object AbstractDbInterface = null;
@@ -15,7 +11,6 @@ public class DbFactory {
 	public DbFactory() {
 	}
 
-	
 	public String toString() {
 		return getClass().getName();
 	}
@@ -23,7 +18,6 @@ public class DbFactory {
 	public AbstractDbInterface getDbInterface(Class objClass,
 			String procedureName) throws CallDbException {
 
-		// ���Ʒ�ת
 		AbstractDbInterface object = null;
 		try {
 			object = (AbstractDbInterface) objClass.newInstance();

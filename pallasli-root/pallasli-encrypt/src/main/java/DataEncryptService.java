@@ -1,19 +1,17 @@
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataEncryptService {
 
 	private static DataEncryptService singleton;
 	private final EncryptArithmetic encryptArthmeticer;
 	private final String defaultKey;
-	private final Log logger;
+	private static final Logger logger = LoggerFactory
+			.getLogger(DataEncryptService.class);
 
 	private DataEncryptService() {
 		encryptArthmeticer = new EncryptArithmetic();
 		defaultKey = "78ueo7-33f-jinckour-8yu3";
-		logger = LogFactory.getLog(this.getClass());
 	}
 
 	public static DataEncryptService instance() {

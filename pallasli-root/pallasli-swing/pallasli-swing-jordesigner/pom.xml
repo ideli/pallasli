@@ -2,16 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-root</artifactId>
+    <artifactId>pallasli-swing</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>pallasli-encrypt</artifactId>
-  <dependencies>
-  <dependency>
-  
-    <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-basic</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </dependency>
-  </dependencies>
+  <artifactId>pallasli-swing-jordesigner</artifactId>
+  <packaging>war</packaging>
 </project>

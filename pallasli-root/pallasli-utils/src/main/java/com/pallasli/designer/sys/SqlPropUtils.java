@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class FileUtils {
+public class SqlPropUtils {
 	public File loadFile() {
 		return null;
 	}
@@ -25,7 +25,7 @@ public class FileUtils {
 
 	public static Properties getProperties(String path) {
 
-		String rootPath = "/" + FileUtils.class.getResource("/").getPath();
+		String rootPath = "/" + SqlPropUtils.class.getResource("/").getPath();
 		// 数据库配置文件
 		String filePath = rootPath + path;// + "database.properties";
 		Properties p = new Properties();
@@ -44,7 +44,7 @@ public class FileUtils {
 
 	public static List<String> loadSqlFile(String path) {
 
-		String rootPath = FileUtils.class.getResource("/").getPath();
+		String rootPath = SqlPropUtils.class.getResource("/").getPath();
 		String filePath = rootPath + path;// "init.sql";
 		// 从SQL文件中读取SQL语句，每行一条，末尾没有分号
 		List<String> sqlList = new ArrayList<String>();

@@ -16,9 +16,6 @@
         <dependent-module archiveName="pallasli-utils-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-utils/pallasli-utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="pallasli-jdbc-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-jdbc/pallasli-jdbc">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="pallasli-orgnization-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-orgnization/pallasli-orgnization">
             <dependency-type>uses</dependency-type>
         </dependent-module>

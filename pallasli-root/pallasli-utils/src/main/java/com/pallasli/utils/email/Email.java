@@ -10,10 +10,10 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.apache.commons.mail.SimpleEmail;
 import org.junit.Test;
 
-import com.pallasli.designer.sys.FileUtils;
+import com.pallasli.designer.sys.SqlPropUtils;
 
 public class Email {
-	Properties rc = FileUtils.getProperties("email.properties");
+	Properties rc = SqlPropUtils.getProperties("email.properties");
 
 	@Test
 	public void test() {

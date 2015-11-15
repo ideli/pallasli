@@ -1,6 +1,3 @@
-/*
- * ��ݿ�����
- */
 package com.pallasli.jdbc;
 
 import java.sql.CallableStatement;
@@ -15,50 +12,23 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import lyt.soft.calldb.sql.Column;
-import lyt.soft.calldb.sql.GjjmxDataSource;
-import lyt.soft.calldb.sql.Row;
-import lyt.soft.calldb.sql.UnsupportedTypeException;
-import lyt.soft.calldb.sql.column.DoubleColumn;
-import lyt.soft.calldb.sql.column.IntColumn;
-
-
-/**
- * <p>
- * Title: ��ݿ�����
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: wasoft
- * </p>
- * 
- * @version 1.0
- */
+import com.pallasli.jdbc.column.DoubleColumn;
+import com.pallasli.jdbc.column.IntColumn;
+import com.pallasli.jdbc.exception.CallDbException;
+import com.pallasli.jdbc.exception.UnsupportedTypeException;
 
 public class BasicOperation {
-	/**
-	 * 
-	 * @param ds
-	 *            ���Դ
-	 * @param databaseType
-	 *            ��ݿ�����
-	 * @throws CallDbException
-	 */
+
 	public BasicOperation(DataSource ds, int databaseType)
 			throws CallDbException {
 		if (ds == null) {
-			throw new CallDbException("BasicOperation: �������������Դ����ΪNULL!");
+			throw new CallDbException(
+					"BasicOperation: �������������Դ����ΪNULL!");
 		}
 		this.ds = ds;
 		this.databaseType = databaseType;
 	}
 
-	
 	public String toString() {
 		return getClass().getName();
 	}
@@ -261,8 +231,8 @@ public class BasicOperation {
 			}
 			String sqlStatement1 = sqlStatement;
 			if (sqlStatement.indexOf("order") != -1) {
-				sqlStatement1 = sqlStatement1.substring(0, sqlStatement1
-						.indexOf("order"));
+				sqlStatement1 = sqlStatement1.substring(0,
+						sqlStatement1.indexOf("order"));
 			}
 			rs = query("select count(*) cnt" + paramstr + " from ("
 					+ sqlStatement1 + ")", ResultSet.TYPE_FORWARD_ONLY,
@@ -637,7 +607,7 @@ public class BasicOperation {
 	private CallableStatement cstmt = null;
 	private String hjparameter = "";
 	private static org.apache.log4j.Logger xlog = org.apache.log4j.Logger
-			.getLogger(lyt.soft.calldb.ShareData.LOG_NAME);
+			.getLogger(ShareData.LOG_NAME);
 
 	/**
 	 * ����в�����ͬʱ����setSqlParameter��setSqlParameterType
@@ -842,7 +812,4 @@ public class BasicOperation {
 		hjparameter = parameter;
 	}
 
-	// --------------------------------------------------------------------------
-	public static void main(String[] args) {
-	}
 }

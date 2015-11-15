@@ -14,7 +14,7 @@ public class Load {
 	public void init() {
 		CompHtml.compInitMap.clear();
 
-		Properties p = FileUtils.getProperties("inithtml.properties");
+		Properties p = SqlPropUtils.getProperties("inithtml.properties");
 
 		Set<Object> keys = p.keySet();
 		Iterator<Object> it = keys.iterator();

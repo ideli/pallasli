@@ -35,7 +35,7 @@ public class FileUtilsTest {
 	@Test
 	public void readFileAsString() {
 		String filepath = "/Users/lyt1987/mysqlStart.sh";
-		File file = FileUtils.readFile(filepath);
+		File file = new File(filepath);
 		String content = FileUtils.readFileToString(file);
 		assertTrue(content != null && content.length() > 0);
 		String codeType = "utf-8";
@@ -46,7 +46,7 @@ public class FileUtilsTest {
 	@Test
 	public void readFile() {
 		String filepath = "/Users/lyt1987/mysqlStart.sh";
-		File file = FileUtils.readFile(filepath);
+		File file = new File(filepath);
 		assertTrue(file != null && file.exists());
 	}
 

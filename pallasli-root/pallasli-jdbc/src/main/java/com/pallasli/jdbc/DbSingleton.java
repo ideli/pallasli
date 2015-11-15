@@ -1,32 +1,11 @@
-/*
- * ������ݿ�Ψһ��
- */
 package com.pallasli.jdbc;
 
 import javax.sql.DataSource;
 
-import lyt.soft.calldb.CallDbException;
-import lyt.soft.calldb.ShareData;
-
-/**
- * <p>
- * Title: ������ݿ�Ψһ��
- * </p>
- * <p>
- * Description: ������ݿ�Ψһ��
- * </p>
- * <p>
- * Copyright: Copyright (c) 2008
- * </p>
- * <p>
- * Company: wasoft
- * </p>
- * 
- * @version 1.0
- */
+import com.pallasli.jdbc.exception.CallDbException;
 
 public class DbSingleton {
-	
+
 	public String toString() {
 		return getClass().getName();
 	}
@@ -38,9 +17,6 @@ public class DbSingleton {
 		return dbSingleton;
 	}
 
-	/**
-	 * ��ʼ����־����
-	 */
 	public static void setInitLog() throws CallDbException {
 		try {
 			if (initCount == 0) {
@@ -55,19 +31,17 @@ public class DbSingleton {
 		}
 	}
 
-	/** �õ��������ݿ����� */
-	public lyt.soft.calldb.BasicOperation getGjjDb() throws CallDbException {
+	public BasicOperation getGjjDb() throws CallDbException {
 		if (this.ds == null) {
 			throw new CallDbException("�������ݿ������������Ϣδ����!");
 		} else {
-			return new lyt.soft.calldb.BasicOperation(ds, databaseType);
+			return new BasicOperation(ds, databaseType);
 		}
 	}
 
-	/** �õ��������ݿ����� */
-	public lyt.soft.calldb.BasicOperation getTempDb(DataSource ds,
-			int databaseType) throws CallDbException {
-		return new lyt.soft.calldb.BasicOperation(ds, databaseType);
+	public BasicOperation getTempDb(DataSource ds, int databaseType)
+			throws CallDbException {
+		return new BasicOperation(ds, databaseType);
 	}
 
 	public void setDataSource(DataSource ds) {
@@ -99,16 +73,12 @@ public class DbSingleton {
 
 	private static DbSingleton dbSingleton = null;
 
-	/** ��ݿ⹤�� */
 	private DbFactory dbFactory = null;
 
-	/** ���Դ */
 	private DataSource ds = null;
-	/** ��ݿ����� */
-	private int databaseType = lyt.soft.calldb.BasicOperation.DB_TYPE_SYBASE;
-	/** ��ʱ���Դ */
+	private int databaseType = BasicOperation.DB_TYPE_SYBASE;
 	private final DataSource tempDs = null;
-	private final int tempDbType = lyt.soft.calldb.BasicOperation.DB_TYPE_SYBASE;
+	private final int tempDbType = BasicOperation.DB_TYPE_SYBASE;
 
 	private static org.apache.log4j.Logger xlog = null;
 	private static int initCount = 0;

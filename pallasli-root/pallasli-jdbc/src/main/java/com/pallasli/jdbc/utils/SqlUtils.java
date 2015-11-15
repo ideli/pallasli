@@ -11,9 +11,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.pallasli.jdbc.Row;
 import com.pallasli.jdbc.exception.NoSuchColumnException;
 import com.pallasli.jdbc.exception.UnsupportedConversionException;
-import com.sun.rowset.internal.Row;
 
 public class SqlUtils {
 	public static String like = " like ";
@@ -22,6 +25,8 @@ public class SqlUtils {
 	public static String ga = " > ";
 	public static String le = " < ";
 	public static String eq = " = ";
+
+	private static final Log log = LogFactory.getLog(SqlUtils.class);
 
 	public static enum ParaClass {
 		str, num, date

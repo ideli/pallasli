@@ -7,14 +7,14 @@ import java.util.Properties;
 
 import org.junit.Test;
 
-import com.pallasli.designer.sys.FileUtils;
+import com.pallasli.designer.sys.SqlPropUtils;
 
 public class DbOper {
 	static Connection conn = null;
 
 	public static void open() {
 
-		Properties p = FileUtils.getProperties("database.properties");
+		Properties p = SqlPropUtils.getProperties("database.properties");
 		String url = p.getProperty("jdbc.url");
 		String user = p.getProperty("jdbc.username");
 		String pwd = p.getProperty("jdbc.password");

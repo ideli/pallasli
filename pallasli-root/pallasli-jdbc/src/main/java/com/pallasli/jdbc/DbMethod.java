@@ -5,31 +5,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import lyt.soft.Constant;
-import lyt.soft.calldb.business.AbstractDbInterface;
-import lyt.soft.calldb.business.DbFactory;
-import lyt.soft.calldb.business.DbSingleton;
-import lyt.soft.calldb.sql.Row;
-import lyt.soft.model.xtgl.Dbtrace;
-import lyt.soft.model.xtgl.User;
-import lyt.soft.util.RandomGUID;
-
-/**
- * <p>
- * Title: �ͻ���ݿ���ýӿ�
- * </p>
- * <p>
- * Description: �ͻ���ݿ���ýӿ�
- * </p>
- * <p>
- * Copyright: Copyright (c) 2004
- * </p>
- * <p>
- * Company: wasoft
- * </p>
- * 
- * @version 1.0
- */
+import com.pallasli.jdbc.exception.CallDbException;
+import com.pallasli.utils.RandomGUID;
 
 public class DbMethod {
 	// --------------------------------------------------------------------------
@@ -37,12 +14,11 @@ public class DbMethod {
 	private static DbMethod dbMethod = null;
 	private final DbSingleton dbSingleton;
 	private boolean bDbtrace = false;
-	/** ���Դ���� */
 	private DataSource tempDs = null;
 	private int tempDbType = BasicOperation.DB_TYPE_SYBASE;
 
 	private static org.apache.log4j.Logger xlog = org.apache.log4j.Logger
-			.getLogger(lyt.soft.calldb.ShareData.LOG_NAME);
+			.getLogger(ShareData.LOG_NAME);
 
 	// --------------------------------------------------------------------------
 	private DbMethod() {
@@ -50,15 +26,6 @@ public class DbMethod {
 		dbSingleton = DbSingleton.makeDbSingleton();
 	}
 
-	/**
-	 * ��ʼ������
-	 * 
-	 * @param ds
-	 *            ���Դ
-	 * @param databaseType
-	 * @param path
-	 *            root path
-	 */
 	public DbMethod(DataSource tempDs, int tempDbType) throws CallDbException {
 		this.tempDs = tempDs;
 		this.tempDbType = tempDbType;
@@ -66,7 +33,6 @@ public class DbMethod {
 		DbSingleton.setInitLog();
 	}
 
-	
 	public String toString() {
 		return getClass().getName();
 	}
@@ -78,15 +44,6 @@ public class DbMethod {
 		return dbMethod;
 	}
 
-	/**
-	 * �������Դ����ݿ�����
-	 * 
-	 * @param ds
-	 *            ���Դ
-	 * @param databaseType
-	 * @param path
-	 *            root path
-	 */
 	public void setDataSource(DataSource ds, int databaseType)
 			throws CallDbException {
 		dbSingleton.setDataSource(ds);
@@ -94,28 +51,11 @@ public class DbMethod {
 		// dbSingleton.setInitLog();
 	}
 
-	/**
-	 * ִ����ݿ����
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 */
 	public void Execute(Class<?> objClass, String procedureName, Object obj)
 			throws CallDbException {
 		this.Execute(objClass, procedureName, obj, null);
 	}
 
-	/**
-	 * ִ����ݿ����
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 * @throws CallDbException
-	 */
 	public void Execute(Class<?> objClass, String procedureName, Object obj,
 			User user) throws CallDbException {
 		xlog.debug("====================");
@@ -159,31 +99,11 @@ public class DbMethod {
 		xlog.debug("Return Execute");
 	}
 
-	/**
-	 * ִ����ݿ�������н��
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 * @return �������
-	 * @throws CallDbException
-	 */
 	public List<Row> Open(Class<?> objClass, String procedureName, Object obj)
 			throws CallDbException {
 		return this.Open(objClass, procedureName, obj, null);
 	}
 
-	/**
-	 * ִ����ݿ�������н��
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 * @return �������
-	 * @throws CallDbException
-	 */
 	public List<Row> Open(Class<?> objClass, String procedureName, Object obj,
 			User user) throws CallDbException {
 		xlog.debug("Entry Open(" + procedureName + ", "
@@ -284,11 +204,6 @@ public class DbMethod {
 		return ret;
 	}
 
-	/**
-	 * �õ���ݿ�����
-	 * 
-	 * @return
-	 */
 	public int getDatabaseType() {
 		return dbSingleton.getDatabaseType();
 	}

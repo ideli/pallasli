@@ -9,5 +9,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>pallasli-swing-jsaperdesign</module>
+  	<module>pallasli-swing-jordesigner</module>
   </modules>
 </project>

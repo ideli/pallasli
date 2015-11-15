@@ -10,21 +10,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import lyt.soft.calldb.CallDbException;
-import lyt.soft.calldb.DbMethod;
-import lyt.soft.calldb.sql.GjjmxDataSource;
-import lyt.soft.calldb.sql.Row;
+import com.pallasli.jdbc.exception.CallDbException;
 
 /**
- * ������ݿ�ִ�з���
- * 
- * @author luojun
  * @version 1.0
  */
 public class TestDbMethod {
 	private DbMethod dbMethod = null;
 
-	// ���Բ���User��Execute
 	public void testExecute() throws CallDbException, Exception {
 		String[] names = { "DPTJCTJ",// 0
 				"ROLECHG",// 1
@@ -38,7 +31,6 @@ public class TestDbMethod {
 		// null));
 	}
 
-	// ���Դ�User��Execute
 	public void testExecute1() throws CallDbException, Exception {
 		String[] names = { "DPTJCRD",// 0
 				"DPTDWJKDZCHG",// 1
@@ -63,7 +55,6 @@ public class TestDbMethod {
 		// displayList(lst);
 	}
 
-	// ���Դ�User��Open
 	public void testOpen1() throws CallDbException, Exception {
 		String[] names = { "DPTSYSRZCX",// 0
 				"DPTPLJCDWCX",// 1
@@ -77,7 +68,6 @@ public class TestDbMethod {
 		// displayList(lst);
 	}
 
-	// ��ʾopen���ص����
 	private void displayList(List lst) throws Exception {
 		System.out.println("List size: " + lst.size());
 		Iterator itr = lst.iterator();
@@ -90,7 +80,6 @@ public class TestDbMethod {
 		}
 	}
 
-	// ��ȡ����
 	private static Context getInitialContext() throws SQLException {
 		Properties properties = null;
 		try {

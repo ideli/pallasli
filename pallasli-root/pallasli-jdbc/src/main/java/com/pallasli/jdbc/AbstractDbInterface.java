@@ -1,30 +1,16 @@
 package com.pallasli.jdbc;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 
-import lyt.soft.calldb.*;
-import lyt.soft.calldb.sql.Row;
-import lyt.soft.calldb.util.*;
-import lyt.soft.model.xtgl.User;
+import com.pallasli.jdbc.exception.CallDbException;
 
-
-
-/**
- * ������ݿ�ӿ�
- * <p>
- * Title: ������ݿ�ӿ�
- * </p>
- * <p>
- * Description: ������ݿ�ӿ�
- * 
- * @version 1.0
- */
 public abstract class AbstractDbInterface {
 	public AbstractDbInterface() {
 		AddOracleMethod();
@@ -38,19 +24,6 @@ public abstract class AbstractDbInterface {
 		this.databaseType = databaseType;
 	}
 
-	/**
-	 * ִ����ݿ�������н��
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 * @param cv
-	 *            ͨ�ñ�����
-	 * @param tempDs
-	 *            ��ʱ���Դ
-	 * @throws CallDbException
-	 */
 	public final void Execute(String procedureName, Object obj, User user,
 			DataSource tempDs, int tempDbType) throws CallDbException {
 		String s = "";
@@ -69,7 +42,7 @@ public abstract class AbstractDbInterface {
 				s = "executeMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
-			else {				
+			else {
 				s = "execute" + procedureName;
 			}
 			xlog.debug("Call Method is " + this.toString() + "." + s);
@@ -109,22 +82,8 @@ public abstract class AbstractDbInterface {
 		}
 	}
 
-	/**
-	 * ִ����ݿ�������н��
-	 * 
-	 * @param procedureName
-	 *            ���ù��Լ����
-	 * @param obj
-	 *            ����ֵ����
-	 * @param cv
-	 *            ͨ�ñ�����
-	 * @param tempDs
-	 *            ��ʱ���Դ
-	 * @return
-	 * @throws CallDbException
-	 */
 	@SuppressWarnings("unchecked")
-	public final List <Row> Open(String procedureName, Object obj, User user,
+	public final List<Row> Open(String procedureName, Object obj, User user,
 			DataSource tempDs, int tempDbType) throws CallDbException {
 		String s = "";
 		getBasicOperation(tempDs, tempDbType);
@@ -142,20 +101,20 @@ public abstract class AbstractDbInterface {
 				s = "openMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
-			else {				
+			else {
 				s = "open" + procedureName;
 			}
 			xlog.debug("Call Method is " + this.toString() + "." + s);
 
 			Method m = null;
-			List <Row> lst = null;
+			List<Row> lst = null;
 			if (user == null) {
 				m = this.getClass().getMethod(s, new Class[] { Object.class });
-				lst = (List <Row>) m.invoke(this, new Object[] { obj });
+				lst = (List<Row>) m.invoke(this, new Object[] { obj });
 			} else {
 				m = this.getClass().getMethod(s,
 						new Class[] { Object.class, User.class });
-				lst = (List <Row>) m.invoke(this, new Object[] { obj, user });
+				lst = (List<Row>) m.invoke(this, new Object[] { obj, user });
 			}
 			destroyOper(procedureName, obj);
 			return lst;
@@ -184,8 +143,9 @@ public abstract class AbstractDbInterface {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final List <Row> Open(String procedureName, Object obj, User user,
-			DataSource tempDs, int tempDbType, int pagesize, int pagenum) throws CallDbException {
+	public final List<Row> Open(String procedureName, Object obj, User user,
+			DataSource tempDs, int tempDbType, int pagesize, int pagenum)
+			throws CallDbException {
 		String s = "";
 		getBasicOperation(tempDs, tempDbType);
 		try {
@@ -202,19 +162,25 @@ public abstract class AbstractDbInterface {
 				s = "openMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
-			else {				
+			else {
 				s = "open" + procedureName;
 			}
 			xlog.debug("Call Method is " + this.toString() + "." + s);
 
 			Method m = null;
-			List <Row> lst = null;
+			List<Row> lst = null;
 			if (user == null) {
-				m = this.getClass().getMethod(s, new Class[] { Object.class, int.class, int.class });
-				lst = (List <Row>) m.invoke(this, new Object[] { obj, pagesize, pagenum });
+				m = this.getClass().getMethod(s,
+						new Class[] { Object.class, int.class, int.class });
+				lst = (List<Row>) m.invoke(this, new Object[] { obj, pagesize,
+						pagenum });
 			} else {
-				m = this.getClass().getMethod(s, new Class[] { Object.class, User.class, int.class, int.class });
-				lst = (List <Row>) m.invoke(this, new Object[] { obj, user, pagesize, pagenum });
+				m = this.getClass().getMethod(
+						s,
+						new Class[] { Object.class, User.class, int.class,
+								int.class });
+				lst = (List<Row>) m.invoke(this, new Object[] { obj, user,
+						pagesize, pagenum });
 			}
 			destroyOper(procedureName, obj);
 			return lst;
@@ -241,6 +207,7 @@ public abstract class AbstractDbInterface {
 			closeConnect();
 		}
 	}
+
 	// --------------------------------------------------------------------------
 	protected BasicOperation getBasicOperation(DataSource ds, int tempDbType)
 			throws CallDbException {
@@ -253,37 +220,32 @@ public abstract class AbstractDbInterface {
 				this.databaseType = tempDbType;
 				xlog.debug("get Temp BasicOperation");
 			}
-			if (this.databaseType == BasicOperation.DB_TYPE_SYBASE)
-			{								
-				try
-				{
-					if (getTranChained() == 1)					
-					{
+			if (this.databaseType == BasicOperation.DB_TYPE_SYBASE) {
+				try {
+					if (getTranChained() == 1) {
 						bo.execute("commit");
 						bo.execute("set chained off");
 					}
-				}
-				catch(Exception e)
-				{
+				} catch (Exception e) {
 					xlog.error("sybase chained error:" + e.getMessage());
 				}
 			}
 		}
 		return bo;
 	}
-	protected int getTranChained()
-	{
+
+	protected int getTranChained() {
 		int ret = 0;
-		try
-		{
+		try {
 			ResultSet rs = bo.query("select @@tranchained");
 			rs.next();
 			ret = rs.getInt(1);
 			rs.close();
+		} catch (Exception e) {
 		}
-		catch(Exception e){}
 		return ret;
 	}
+
 	protected void closeConnect() throws CallDbException {
 		xlog.debug("Entry closeConnect");
 		if (bo != null) {
@@ -366,29 +328,29 @@ public abstract class AbstractDbInterface {
 		}
 		return ret;
 	}
-	
-	protected String sqlCharIndex(String rhs, String lhs,String mds)
-	throws CallDbException {
-       String ret = "";
-       switch (databaseType) {
-       case BasicOperation.DB_TYPE_ORACLE:
-	       ret = " instr(" + rhs + ","+lhs+","+mds+")";
-	       break;
-       case BasicOperation.DB_TYPE_INFORMIX:
-	       throw new CallDbException("δʵ�ֵ���ݿ�����!");
-       case BasicOperation.DB_TYPE_MSSQLSERVER:
-	       throw new CallDbException("δʵ�ֵ���ݿ�����!");
-       case BasicOperation.DB_TYPE_DB2:
-	       ret = " position1(" + lhs + "," + rhs + ") ";
-	       break;
-       case BasicOperation.DB_TYPE_SYBASE:
-	       ret = "charindex("+lhs + ","+rhs+","+mds+")";
-	       break;
-       default:
-	   throw new CallDbException("δ�������ݿ�����!");
-     }
-     return ret;
-   }
+
+	protected String sqlCharIndex(String rhs, String lhs, String mds)
+			throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = " instr(" + rhs + "," + lhs + "," + mds + ")";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = " position1(" + lhs + "," + rhs + ") ";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "charindex(" + lhs + "," + rhs + "," + mds + ")";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
 
 	protected String sqlSubString(String lhs, String mds, String rhs)
 			throws CallDbException {
@@ -565,31 +527,30 @@ public abstract class AbstractDbInterface {
 			throw new CallDbException("δ�������ݿ�����!");
 		}
 		return ret;
-	}	
-	
-	protected String sqlStrInSelIsNull(String str) throws CallDbException{
-       String ret = "";
-       switch (databaseType)
-       {
-	      case BasicOperation.DB_TYPE_ORACLE:
-		     ret =" nvl(" + str + ",' ')";
-		     break;
-	      case BasicOperation.DB_TYPE_INFORMIX:
-		     throw new CallDbException("δʵ�ֵ���ݿ�����!");
-	      case BasicOperation.DB_TYPE_MSSQLSERVER:
-		     throw new CallDbException("δʵ�ֵ���ݿ�����!");
-	      case BasicOperation.DB_TYPE_DB2:
-              ret =" ifnull(" + str + ",' ')";
-		      break;
-	      case BasicOperation.DB_TYPE_SYBASE:
-		      ret = " isnull(" + str +",' ')";
-		      break;
-	      default:
-		      throw new CallDbException("δ�������ݿ�����!");
-       }
-       return ret;
-    }
-	
+	}
+
+	protected String sqlStrInSelIsNull(String str) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = " nvl(" + str + ",' ')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = " ifnull(" + str + ",' ')";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = " isnull(" + str + ",' ')";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
 	protected String sqlTrim(String lhs) throws CallDbException {
 		String ret = "";
 		switch (databaseType) {
@@ -611,208 +572,187 @@ public abstract class AbstractDbInterface {
 		}
 		return ret;
 	}
-	
-	protected String sqlDate(String sdate) throws CallDbException{
-       String ret = "";
-       switch(databaseType)
-      {
-         case BasicOperation.DB_TYPE_ORACLE:
-             ret = "to_date('" + sdate + "','yyyy-mm-dd')";
-             break;
-         case BasicOperation.DB_TYPE_INFORMIX:
-             throw new CallDbException("δʵ�ֵ���ݿ�����!");
-         case BasicOperation.DB_TYPE_MSSQLSERVER:
-             throw new CallDbException("δʵ�ֵ���ݿ�����!");
-         case BasicOperation.DB_TYPE_DB2:
-             ret = "'" + sdate + "'";
-             break;
-         case BasicOperation.DB_TYPE_SYBASE:
-             ret = "'"+sdate+"'";
-             break;
-         default:
-             throw new CallDbException("δ�������ݿ�����!");
-       }
-       return ret;
-    }
-	
-//  �ֶ�ת��
-    protected String sqlDateSwap(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "to_char(" + ldate + ",'yyyy-mm-dd')";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "varchar(" + ldate + ")";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret = "convert(char(8),"+ldate+",112)";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
-    
-//  �ֶ�ת��
-    protected String sqlDatetime(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "to_char(" + ldate + ",'yyyy-mm-dd hh24-mi-ss')";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "varchar(" + ldate + ")";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-        	ret = "convert(char(8),"+ldate+",112)";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
-    
-// ����ֵת���¶�ֵ
-    protected String sqlDateValueToYd(String sdate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "to_char('" + sdate + "','yyyymm')";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "substr(replace(varchar(" + sdate + "),'-',''),1,6)";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret = "convert(char(6),'"+sdate+"',112)";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
-//�����ֶ�ת���¶�
-    protected String sqlDateToYd(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "to_char(" + ldate + ",'yyyymm')";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "substr(replace(char(" + ldate + "),'-',''),1,6)";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret = "convert(char(6),"+ldate+",112)";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
-    
-//  �����ֶ�ת����
-    protected String sqlDateToY(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "to_char(" + ldate + ",'yyyy')";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "substr("+ldate + ",1,4)";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret = "convert(char(4),"+ldate+",112)";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
-    
-    protected String sqlDateMinus(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = "sysdate-"+ldate;
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "days(current timestamp)-days("+ldate+")";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret =" datediff(day,"+ldate+",getdate())";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
 
-    protected String sqlDateAdds(String ldate)
-        throws CallDbException
-    {
-      String ret = "";
-      switch(databaseType)
-      {
-        case BasicOperation.DB_TYPE_ORACLE:
-            ret = ldate+"-sysdate";
-            break;
-        case BasicOperation.DB_TYPE_INFORMIX:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_MSSQLSERVER:
-            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-        case BasicOperation.DB_TYPE_DB2:
-            ret = "days("+ldate+")-days(current timestamp)";
-            break;
-        case BasicOperation.DB_TYPE_SYBASE:
-            ret =" datediff(day,getdate(),"+ldate+")";
-            break;
-        default:
-            throw new CallDbException("δ�������ݿ�����!");
-        }
-        return ret;
-    }
+	protected String sqlDate(String sdate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_date('" + sdate + "','yyyy-mm-dd')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "'" + sdate + "'";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "'" + sdate + "'";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	// �ֶ�ת��
+	protected String sqlDateSwap(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char(" + ldate + ",'yyyy-mm-dd')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "varchar(" + ldate + ")";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(8)," + ldate + ",112)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	// �ֶ�ת��
+	protected String sqlDatetime(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char(" + ldate + ",'yyyy-mm-dd hh24-mi-ss')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "varchar(" + ldate + ")";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(8)," + ldate + ",112)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	// ����ֵת���¶�ֵ
+	protected String sqlDateValueToYd(String sdate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char('" + sdate + "','yyyymm')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "substr(replace(varchar(" + sdate + "),'-',''),1,6)";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(6),'" + sdate + "',112)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	// �����ֶ�ת���¶�
+	protected String sqlDateToYd(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char(" + ldate + ",'yyyymm')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "substr(replace(char(" + ldate + "),'-',''),1,6)";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(6)," + ldate + ",112)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	// �����ֶ�ת����
+	protected String sqlDateToY(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char(" + ldate + ",'yyyy')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "substr(" + ldate + ",1,4)";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(4)," + ldate + ",112)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	protected String sqlDateMinus(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "sysdate-" + ldate;
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "days(current timestamp)-days(" + ldate + ")";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = " datediff(day," + ldate + ",getdate())";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
+
+	protected String sqlDateAdds(String ldate) throws CallDbException {
+		String ret = "";
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = ldate + "-sysdate";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "days(" + ldate + ")-days(current timestamp)";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = " datediff(day,getdate()," + ldate + ")";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
+	}
 
 	protected String sqlCurrDateTime() throws CallDbException {
 		String ret = "";
@@ -835,28 +775,27 @@ public abstract class AbstractDbInterface {
 		}
 		return ret;
 	}
-	
+
 	protected String sqlTime(String ldate) throws CallDbException {
 		String ret = "";
-	      switch(databaseType)
-	      {
-	        case BasicOperation.DB_TYPE_ORACLE:
-	            ret = "to_char(" + ldate + ",'hh24-mi-ss')";
-	            break;
-	        case BasicOperation.DB_TYPE_INFORMIX:
-	            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-	        case BasicOperation.DB_TYPE_MSSQLSERVER:
-	            throw new CallDbException("δʵ�ֵ���ݿ�����!");
-	        case BasicOperation.DB_TYPE_DB2:
-	            ret ="time("+ldate +")";
-	            break;
-	        case BasicOperation.DB_TYPE_SYBASE:
-	            ret = "convert(char(8),"+ldate+",108)";
-	            break;
-	        default:
-	            throw new CallDbException("δ�������ݿ�����!");
-	        }
-	        return ret;
+		switch (databaseType) {
+		case BasicOperation.DB_TYPE_ORACLE:
+			ret = "to_char(" + ldate + ",'hh24-mi-ss')";
+			break;
+		case BasicOperation.DB_TYPE_INFORMIX:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_MSSQLSERVER:
+			throw new CallDbException("δʵ�ֵ���ݿ�����!");
+		case BasicOperation.DB_TYPE_DB2:
+			ret = "time(" + ldate + ")";
+			break;
+		case BasicOperation.DB_TYPE_SYBASE:
+			ret = "convert(char(8)," + ldate + ",108)";
+			break;
+		default:
+			throw new CallDbException("δ�������ݿ�����!");
+		}
+		return ret;
 	}
 
 	protected String sqlTrunc(String str) throws CallDbException {
@@ -880,21 +819,22 @@ public abstract class AbstractDbInterface {
 		return ret;
 	}
 
-	protected String sqlreplaceIsNull(String str,String str1) throws CallDbException {
+	protected String sqlreplaceIsNull(String str, String str1)
+			throws CallDbException {
 		String ret = "";
 		switch (databaseType) {
 		case BasicOperation.DB_TYPE_ORACLE:
-			ret = " nvl(" + str + ",'"+str1+"')";
+			ret = " nvl(" + str + ",'" + str1 + "')";
 			break;
 		case BasicOperation.DB_TYPE_INFORMIX:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_MSSQLSERVER:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_DB2:
-			ret = " ifnull(" + str + ",'"+str1+"') ";
+			ret = " ifnull(" + str + ",'" + str1 + "') ";
 			break;
 		case BasicOperation.DB_TYPE_SYBASE:
-			ret = " isnull(" + str + ",'"+str1+"')";
+			ret = " isnull(" + str + ",'" + str1 + "')";
 			break;
 		default:
 			throw new CallDbException("δ�������ݿ�����!");
@@ -926,51 +866,51 @@ public abstract class AbstractDbInterface {
 		return ret;
 	}
 
-	protected String sqlAddmonth(String str1,String str2) throws CallDbException {
+	protected String sqlAddmonth(String str1, String str2)
+			throws CallDbException {
 		String ret = ".";
 		switch (databaseType) {
 		case BasicOperation.DB_TYPE_ORACLE:
-			ret = "add_months("+str1+","+str2+")";
+			ret = "add_months(" + str1 + "," + str2 + ")";
 			break;
 		case BasicOperation.DB_TYPE_INFORMIX:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_MSSQLSERVER:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_DB2:
-			ret = str1+"+"+str2+" months";
+			ret = str1 + "+" + str2 + " months";
 			break;
 		case BasicOperation.DB_TYPE_SYBASE:
-			ret = "dateadd(month,"+str2+","+str1+")";
+			ret = "dateadd(month," + str2 + "," + str1 + ")";
 			break;
 		default:
 			throw new CallDbException("δ�������ݿ�����!");
 		}
 		return ret;
 	}
-	
-	protected String sqlAddday(String str1,String str2) throws CallDbException {
+
+	protected String sqlAddday(String str1, String str2) throws CallDbException {
 		String ret = ".";
 		switch (databaseType) {
 		case BasicOperation.DB_TYPE_ORACLE:
-			ret = str1+"+"+str2;
+			ret = str1 + "+" + str2;
 			break;
 		case BasicOperation.DB_TYPE_INFORMIX:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_MSSQLSERVER:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_DB2:
-			ret = str1+"+"+str2+" days";
+			ret = str1 + "+" + str2 + " days";
 			break;
 		case BasicOperation.DB_TYPE_SYBASE:
-			ret = "dateadd(dd,"+str2+","+str1+")";
+			ret = "dateadd(dd," + str2 + "," + str1 + ")";
 			break;
 		default:
 			throw new CallDbException("δ�������ݿ�����!");
 		}
 		return ret;
 	}
-	
-	
+
 	protected String sqlDbDot() throws CallDbException {
 		String ret = ".";
 		switch (databaseType) {
@@ -992,89 +932,92 @@ public abstract class AbstractDbInterface {
 		}
 		return ret;
 	}
-	
+
 	protected String sqlCharLength(String str) throws CallDbException {
 		String ret = ".";
 		switch (databaseType) {
 		case BasicOperation.DB_TYPE_ORACLE:
-			ret = "length("+str+")";
+			ret = "length(" + str + ")";
 			break;
 		case BasicOperation.DB_TYPE_INFORMIX:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_MSSQLSERVER:
 			throw new CallDbException("δʵ�ֵ���ݿ�����!");
 		case BasicOperation.DB_TYPE_DB2:
-			ret = "length("+str+")";
+			ret = "length(" + str + ")";
 			break;
 		case BasicOperation.DB_TYPE_SYBASE:
-			ret = "char_length("+str+")";
+			ret = "char_length(" + str + ")";
 			break;
 		default:
 			throw new CallDbException("δ�������ݿ�����!");
 		}
 		return ret;
 	}
-	
+
 	/**
-	  * ������֤
-	  *
-	  * @param str
-	  * @return
-	  */
-	 public boolean isDigital(String str) {
-	  return str == null || "".equals(str) ? false : str.matches("^[0-9]*$");
-	 }
-	 
+	 * ������֤
+	 *
+	 * @param str
+	 * @return
+	 */
+	public boolean isDigital(String str) {
+		return str == null || "".equals(str) ? false : str.matches("^[0-9]*$");
+	}
+
 	protected String sqlA008(String str) throws CallDbException {
-		String ret="";
-		String a008_dx="";//
-		String a008_xx="";//
-		
-		if(str.length()==15){
-			if (!isDigital(str)){
-				ret = "('"+str+"')";
+		String ret = "";
+		String a008_dx = "";//
+		String a008_xx = "";//
+
+		if (str.length() == 15) {
+			if (!isDigital(str)) {
+				ret = "('" + str + "')";
 				return ret;
 			}
-			String id17 = str.substring(0, 6) + "19" + str.substring(6, 15); 			
-			char[] code = { '1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2' }; // 11��
-			int[] factor = { 0, 2, 4, 8, 5, 10, 9, 7, 3, 6, 1, 2, 4, 8, 5, 10, 9, 7 }; // 18��;
+			String id17 = str.substring(0, 6) + "19" + str.substring(6, 15);
+			char[] code = { '1', '0', 'X', '9', '8', '7', '6', '5', '4', '3',
+					'2' }; // 11��
+			int[] factor = { 0, 2, 4, 8, 5, 10, 9, 7, 3, 6, 1, 2, 4, 8, 5, 10,
+					9, 7 }; // 18��;
 			int[] idcd = new int[18];
 			int i;
 			int j;
 			int sum;
 			int remainder;
-			for (i = 1; i < 18; i++){
+			for (i = 1; i < 18; i++) {
 				j = 17 - i;
 				idcd[i] = Integer.parseInt(id17.substring(j, j + 1));
 			}
 			sum = 0;
-			for (i = 1; i < 18; i++){
+			for (i = 1; i < 18; i++) {
 				sum = sum + idcd[i] * factor[i];
 			}
 			remainder = sum % 11;
 			String lastCheckBit = String.valueOf(code[remainder]);
-			
+
 			String sfz18 = id17 + lastCheckBit;
 			a008_dx = sfz18.toUpperCase();
 			a008_xx = sfz18.toLowerCase();
-			ret = "('"+str+"','"+sfz18+"','"+a008_dx+"','"+a008_xx+"')";
-		}else if(str.length()==18){
-			String sfz15 = str.substring(0,6) + str.substring(8,17);
+			ret = "('" + str + "','" + sfz18 + "','" + a008_dx + "','"
+					+ a008_xx + "')";
+		} else if (str.length() == 18) {
+			String sfz15 = str.substring(0, 6) + str.substring(8, 17);
 			a008_dx = str.toUpperCase();
 			a008_xx = str.toLowerCase();
-			ret = "('"+str+"','"+sfz15+"','"+a008_dx+"','"+a008_xx+"')";
-		}else{
-			ret = "('"+str+"')";
+			ret = "('" + str + "','" + sfz15 + "','" + a008_dx + "','"
+					+ a008_xx + "')";
+		} else {
+			ret = "('" + str + "')";
 		}
-		
-		
+
 		return ret;
 	}
 
-	protected String sqlZhzt()
-	{
+	protected String sqlZhzt() {
 		return "case when a070='��' then '0' else (case when a070='���' then '1' else (case when a070='��' then '2' else '3' end) end ) end a070";
 	}
+
 	protected void AddOracleMethod() {
 	}
 
@@ -1087,7 +1030,7 @@ public abstract class AbstractDbInterface {
 	protected int databaseType = BasicOperation.DB_TYPE_SYBASE;
 
 	protected static org.apache.log4j.Logger xlog = org.apache.log4j.Logger
-			.getLogger(lyt.soft.calldb.ShareData.LOG_NAME);
+			.getLogger(ShareData.LOG_NAME);
 
 	/** ״ֵ̬ */
 	protected static final short VL_ZERO = (short) 0;
@@ -1114,102 +1057,116 @@ public abstract class AbstractDbInterface {
 
 	protected static final double CHECK_DOUBLE = 0.00001;
 	// --------------------------------------------------------------------------
-	protected String[] mksqlexps = { "MK_CONCAT\\s*\\([^)]+\\s*\\)","sysdate","MK_GETSYSDATE","to_char\\s*\\([^)]+\\s*\\)",
-			"MK_GETDATE\\s*\\([^)]+\\s*\\)","MK_GETTIME\\s*\\([^)]+\\s*\\)", "MK_SUBSTR\\s*\\([^)]+\\s*\\)",
-			"MK_ADDMONTH\\s*\\([^)]+\\s*\\)", "MK_INSTR\\s*\\([^)]+\\s*\\)","MK_LENGTH", "MK_REPLACE\\s*\\([^)]+\\s*\\)",
-			"MK_GETYM\\s*\\([^)]+\\s*\\)", "MK_GETYEAR\\s*\\([^)]+\\s*\\)","MK_GETFULLDATE\\s*\\([^)]+\\s*\\)",
-			"MK_Auth_User\\s*\\([^)]+\\s*\\)","MK_Auth_User_Str\\s*\\([^)]+\\s*\\)","MK_GETDATETIME\\s*\\([^)]+\\s*\\)", 
-			"MK_AUTH\\s*\\([^)]+\\s*\\)","to_date\\s*\\([^)]+\\s*\\)"};
-	
+	protected String[] mksqlexps = { "MK_CONCAT\\s*\\([^)]+\\s*\\)", "sysdate",
+			"MK_GETSYSDATE", "to_char\\s*\\([^)]+\\s*\\)",
+			"MK_GETDATE\\s*\\([^)]+\\s*\\)", "MK_GETTIME\\s*\\([^)]+\\s*\\)",
+			"MK_SUBSTR\\s*\\([^)]+\\s*\\)", "MK_ADDMONTH\\s*\\([^)]+\\s*\\)",
+			"MK_INSTR\\s*\\([^)]+\\s*\\)", "MK_LENGTH",
+			"MK_REPLACE\\s*\\([^)]+\\s*\\)", "MK_GETYM\\s*\\([^)]+\\s*\\)",
+			"MK_GETYEAR\\s*\\([^)]+\\s*\\)",
+			"MK_GETFULLDATE\\s*\\([^)]+\\s*\\)",
+			"MK_Auth_User\\s*\\([^)]+\\s*\\)",
+			"MK_Auth_User_Str\\s*\\([^)]+\\s*\\)",
+			"MK_GETDATETIME\\s*\\([^)]+\\s*\\)", "MK_AUTH\\s*\\([^)]+\\s*\\)",
+			"to_date\\s*\\([^)]+\\s*\\)" };
+
 	protected String parse_replace(String sql) throws CallDbException {
 		// ���ڴ洢�滻����к��滻���sql���
 		StringBuffer sb = null;
-		for(int k=0;k<mksqlexps.length;k++){
-			sb=new StringBuffer();
+		for (int k = 0; k < mksqlexps.length; k++) {
+			sb = new StringBuffer();
 			Pattern p = Pattern.compile(mksqlexps[k]);
 			Matcher m = p.matcher(sql);
-		    while (m.find()) {
-			      String[] matchStrs = m.group().split(",");
-			     for (int i = 0; i < matchStrs.length; i++) {
-				     if (matchStrs[i].indexOf("(") > -1) {
-					     if(matchStrs.length>1){
-					        matchStrs[i] = matchStrs[i].substring(matchStrs[i].indexOf("(") + 1, matchStrs[i].length());
-					     }else{
-					    	 matchStrs[i] = matchStrs[i].substring(matchStrs[i].indexOf("(") + 1, matchStrs[i].length()-1);
-					     }
-				     } else if (matchStrs[i].indexOf(")") > -1) {
-					      matchStrs[i] = matchStrs[i].substring(0, matchStrs[i].indexOf(")"));
-				     }
-			     }
-			     String replacestr = "";
-			     replacestr = "(" + matchStrs[0];
-			     switch (k){
-			          case 0:         
-				           for (int j = 1; j < matchStrs.length; j++) {
-				      	      replacestr = replacestr + sqlPlus() + matchStrs[j];
-			       	       }
-				           replacestr = replacestr + ")";
-				           break;
-			          case 1:
-			    		  replacestr =sqlCurrDateTime();
-			    		  break;
-			          case 2:
-			    		  replacestr =sqlCurrDateTime();
-			    		  break;
-			          case 3:
-			    		  replacestr =sqlDateSwap(matchStrs[0]);
-			    		  break;
-			    	  case 4:
-			    		  replacestr =sqlDateSwap(matchStrs[0]);
-			    		  break;
-			    	  case 5:
-			    		  replacestr =sqlTime(matchStrs[0]);
-			    		  break;
-			    	  case 6:
-			    		  replacestr =sqlSubString(matchStrs[0],matchStrs[1],matchStrs[2]);
-			    		  break;
-			    	  case 7:
-			    		  replacestr =sqlAddmonth(matchStrs[0],matchStrs[1]);
-			    		  break;
-			    	  case 8:
-			    		  replacestr =sqlCharIndex(matchStrs[0],matchStrs[1],matchStrs[2]);
-			    		  break;
-			    	  case 9:
-			    		  replacestr =sqlCharLength(matchStrs[0]);
-			    		  break;
-			    	  case 10:
-			    		  replacestr =sqlReplace(matchStrs[0],matchStrs[1],matchStrs[2]);
-			    		  break;
-			    	  case 11:
-			    		  replacestr =sqlDateToYd(matchStrs[0]);
-			    		  break;
-			    	  case 12:
-			    		  replacestr =sqlDateToY(matchStrs[0]);
-			    		  break;
-			    	  case 13:
-			    		  replacestr =sqlDatetime(matchStrs[0]);
-			    		  break;
-			    	  case 14:
-			    		  break;
-			    	  case 15:
-			    		  break;
-			    	  case 16:
-			    		  replacestr =sqlDatetime(matchStrs[0]);
-			    		  break;
-			    	  case 17:
-			    		  break;
-			    	  case 18:
-			    		  replacestr =sqlDate(matchStrs[0]);
-			    		  break;
-			    	  default:
-			    		  throw new CallDbException("δ����ĺ���!");
-			    		  
-			     }
-			     m.appendReplacement(sb, replacestr);
-		     }
-		 m.appendTail(sb);
-		 sql=sb.toString();
+			while (m.find()) {
+				String[] matchStrs = m.group().split(",");
+				for (int i = 0; i < matchStrs.length; i++) {
+					if (matchStrs[i].indexOf("(") > -1) {
+						if (matchStrs.length > 1) {
+							matchStrs[i] = matchStrs[i].substring(
+									matchStrs[i].indexOf("(") + 1,
+									matchStrs[i].length());
+						} else {
+							matchStrs[i] = matchStrs[i].substring(
+									matchStrs[i].indexOf("(") + 1,
+									matchStrs[i].length() - 1);
+						}
+					} else if (matchStrs[i].indexOf(")") > -1) {
+						matchStrs[i] = matchStrs[i].substring(0,
+								matchStrs[i].indexOf(")"));
+					}
+				}
+				String replacestr = "";
+				replacestr = "(" + matchStrs[0];
+				switch (k) {
+				case 0:
+					for (int j = 1; j < matchStrs.length; j++) {
+						replacestr = replacestr + sqlPlus() + matchStrs[j];
+					}
+					replacestr = replacestr + ")";
+					break;
+				case 1:
+					replacestr = sqlCurrDateTime();
+					break;
+				case 2:
+					replacestr = sqlCurrDateTime();
+					break;
+				case 3:
+					replacestr = sqlDateSwap(matchStrs[0]);
+					break;
+				case 4:
+					replacestr = sqlDateSwap(matchStrs[0]);
+					break;
+				case 5:
+					replacestr = sqlTime(matchStrs[0]);
+					break;
+				case 6:
+					replacestr = sqlSubString(matchStrs[0], matchStrs[1],
+							matchStrs[2]);
+					break;
+				case 7:
+					replacestr = sqlAddmonth(matchStrs[0], matchStrs[1]);
+					break;
+				case 8:
+					replacestr = sqlCharIndex(matchStrs[0], matchStrs[1],
+							matchStrs[2]);
+					break;
+				case 9:
+					replacestr = sqlCharLength(matchStrs[0]);
+					break;
+				case 10:
+					replacestr = sqlReplace(matchStrs[0], matchStrs[1],
+							matchStrs[2]);
+					break;
+				case 11:
+					replacestr = sqlDateToYd(matchStrs[0]);
+					break;
+				case 12:
+					replacestr = sqlDateToY(matchStrs[0]);
+					break;
+				case 13:
+					replacestr = sqlDatetime(matchStrs[0]);
+					break;
+				case 14:
+					break;
+				case 15:
+					break;
+				case 16:
+					replacestr = sqlDatetime(matchStrs[0]);
+					break;
+				case 17:
+					break;
+				case 18:
+					replacestr = sqlDate(matchStrs[0]);
+					break;
+				default:
+					throw new CallDbException("δ����ĺ���!");
+
+				}
+				m.appendReplacement(sb, replacestr);
+			}
+			m.appendTail(sb);
+			sql = sb.toString();
 		}
 		return sb.toString();
-	}	
+	}
 }

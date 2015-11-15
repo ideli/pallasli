@@ -4,13 +4,10 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import lyt.soft.calldb.DbMethod;
-import lyt.soft.calldb.sql.GjjmxDataSource;
-import lyt.soft.util.FileHandler;
-import lyt.soft.util.ParseXML;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.pallasli.utils.FileUtils;
 
 public class InitEnv {
 	private static final Log log = LogFactory.getLog(InitEnv.class);
@@ -19,14 +16,9 @@ public class InitEnv {
 		return (initApp());
 	}
 
-	/**
-	 * ��ʼ��Ӧ�û���
-	 * 
-	 * @return �ɹ�����true
-	 */
 	private static boolean initApp() {
 		try {
-			if (!FileHandler.createDir(Constant.DATA_PATH)) {
+			if (!FileUtils.createDir(Constant.DATA_PATH)) {
 				log.error("������־Ŀ¼���ɹ���");
 				return false;
 			}
@@ -39,9 +31,9 @@ public class InitEnv {
 						+ System.getProperty("app.container");
 			}
 			log.debug("���������ļ�");
-			ParseXML px = new ParseXML();
-			px.parse(Constant.CONGFIG_FILE);
-			Properties prop = px.getProps();
+
+			Properties prop = com.pallasli.designer.sys.SqlPropUtils
+					.getProperties(Constant.CONGFIG_FILE);
 			System.out.println("Constant.CONGFIG_FILE=" + Constant.CONGFIG_FILE
 					+ "dbtye=" + Integer.parseInt(prop.getProperty("dbtype")));
 			Constant.POOL_SIZE = Integer
@@ -63,14 +55,14 @@ public class InitEnv {
 
 			DataSource ds = new GjjmxDataSource(driver, dburl, dbuser,
 					dbpassword, prop.getProperty("datasource-initialsize"),
-					prop.getProperty("datasource-maxactive"), prop
-							.getProperty("datasource-maxidle"), prop
-							.getProperty("datasource-minidle"), prop
-							.getProperty("datasource-maxwait"), prop
-							.getProperty("datasource-removeabandoned"), prop
-							.getProperty("datasource-removeabandonedtimeout"),
-					prop.getProperty("datasource-logabandoned"), prop
-							.getProperty("datasource-testonborrow"));
+					prop.getProperty("datasource-maxactive"),
+					prop.getProperty("datasource-maxidle"),
+					prop.getProperty("datasource-minidle"),
+					prop.getProperty("datasource-maxwait"),
+					prop.getProperty("datasource-removeabandoned"),
+					prop.getProperty("datasource-removeabandonedtimeout"),
+					prop.getProperty("datasource-logabandoned"),
+					prop.getProperty("datasource-testonborrow"));
 
 			DbMethod dm = DbMethod.makeDbSingleton();
 			dm.setDataSource(ds, dbtype);

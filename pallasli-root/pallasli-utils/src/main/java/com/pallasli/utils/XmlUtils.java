@@ -2,17 +2,13 @@ package com.pallasli.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
@@ -254,31 +250,31 @@ public class XmlUtils {
 		}
 	}
 
-	private Properties props;
-
-	public Properties getProps() {
-		return this.props;
-	}
-
-	public void parse(String filename) throws Exception {
-		ConfigParser handler = new ConfigParser();
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setNamespaceAware(false);
-		factory.setValidating(false);
-
-		SAXParser parser = factory.newSAXParser();
-		try {
-			FileInputStream is = new FileInputStream(new File(filename));
-			parser.parse(is, handler);
-			// parser.parse(filename, handler);
-			props = handler.getProps();
-		} catch (Exception e) {
-		} finally {
-			factory = null;
-			parser = null;
-			handler = null;
-		}
-	}
+	// private Properties props;
+	//
+	// public Properties getProps() {
+	// return this.props;
+	// }
+	//
+	// public void parse(String filename) throws Exception {
+	// ConfigParser handler = new ConfigParser();
+	// SAXParserFactory factory = SAXParserFactory.newInstance();
+	// factory.setNamespaceAware(false);
+	// factory.setValidating(false);
+	//
+	// SAXParser parser = factory.newSAXParser();
+	// try {
+	// FileInputStream is = new FileInputStream(new File(filename));
+	// parser.parse(is, handler);
+	// // parser.parse(filename, handler);
+	// props = handler.getProps();
+	// } catch (Exception e) {
+	// } finally {
+	// factory = null;
+	// parser = null;
+	// handler = null;
+	// }
+	// }
 
 	public String transFormer(String xmlFileName, String xslFileName) {
 		TransformerFactory tFactory = TransformerFactory.newInstance();
