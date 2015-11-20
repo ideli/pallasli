@@ -6,17 +6,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.pallas.sys.bean.Menu;
 import com.pallas.sys.direct.action.DatabaseAction;
-import com.pallas.sys.direct.action.MenuAction;
 import com.softwarementors.extjs.djn.config.annotations.DirectMethod;
 
 public class DatabaseDirectAction {
 	public DatabaseAction databaseAction = new DatabaseAction();
+
 	@DirectMethod(method = "loadTables")
-	public JsonArray loadTables(String key, boolean isRoot,
-			int childType, String menuTableName) {
+	public JsonArray loadTables(String key, boolean isRoot, int childType,
+			String menuTableName) {
 
 		JsonArray array = new JsonArray();
-		 
+
 		List<Menu> list = databaseAction.loadTables();
 		for (Menu menu : list) {
 
@@ -38,18 +38,21 @@ public class DatabaseDirectAction {
 		// }
 		return array;
 	}
-	@DirectMethod(method = "loadColumns")
-	public JsonObject loadColumns(  String tableName) {
 
-		JsonObject array =  databaseAction.loadColumns(tableName);
-		 
+	@DirectMethod(method = "loadColumns")
+	public JsonObject loadColumns(String tableName) {
+
+		JsonObject array = databaseAction.loadColumns(tableName);
+
 		return array;
 	}
-	@DirectMethod(method = "selectDataFromTable")
-	public JsonObject selectDataFromTable(  String tableName,String columns) {
 
-		JsonArray array =  databaseAction.selectDataFromTable(tableName,  columns);
-		JsonObject ret=new JsonObject();
+	@DirectMethod(method = "selectDataFromTable")
+	public JsonObject selectDataFromTable(String tableName, String columns) {
+
+		JsonArray array = databaseAction
+				.selectDataFromTable(tableName, columns);
+		JsonObject ret = new JsonObject();
 		ret.add("data", array);
 		return ret;
 	}

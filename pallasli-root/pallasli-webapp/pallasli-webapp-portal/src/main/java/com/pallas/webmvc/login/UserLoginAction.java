@@ -24,7 +24,7 @@ public class UserLoginAction implements Controller {
 		}
 		String ip = getRemoteIpAddr(request);
 		ModelAndView view = null;
-		byte[] b;
+		// byte[] b;
 		// BASE64Decoder decoder = new BASE64Decoder();
 		// b = decoder.decodeBuffer(password);
 		// password = new String(b);
@@ -78,15 +78,15 @@ public class UserLoginAction implements Controller {
 		return view;
 	}
 
-	private String computeRedirectUrl(String redirectUrl, String userToken) {
-		String url = redirectUrl;
-		if (url.indexOf("?") > -1) {
-			url = url + "&token=" + userToken + "&redirectUrl=" + redirectUrl;
-		} else {
-			url = url + "?token=" + userToken + "&redirectUrl=" + redirectUrl;
-		}
-		return url;
-	}
+	// private String computeRedirectUrl(String redirectUrl, String userToken) {
+	// String url = redirectUrl;
+	// if (url.indexOf("?") > -1) {
+	// url = url + "&token=" + userToken + "&redirectUrl=" + redirectUrl;
+	// } else {
+	// url = url + "?token=" + userToken + "&redirectUrl=" + redirectUrl;
+	// }
+	// return url;
+	// }
 
 	private String getRemoteIpAddr(HttpServletRequest request) {
 		String ip = request.getHeader("x-forwarded-for");
@@ -101,7 +101,7 @@ public class UserLoginAction implements Controller {
 		}
 		return ip;
 	}
-
-	private void notifyUserLogout(String username) {
-	}
+	//
+	// private void notifyUserLogout(String username) {
+	// }
 }

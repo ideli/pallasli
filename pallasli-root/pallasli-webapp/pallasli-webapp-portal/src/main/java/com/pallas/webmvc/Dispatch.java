@@ -10,12 +10,19 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class Dispatch extends DispatcherServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2466911916719711126L;
+
+	@Override
 	protected void doOptions(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		initCrossDomainHeaders(request, response);
 		super.doOptions(request, response);
 	}
 
+	@Override
 	protected void doService(HttpServletRequest arg0, HttpServletResponse arg1)
 			throws Exception {
 		initCrossDomainHeaders(arg0, arg1);

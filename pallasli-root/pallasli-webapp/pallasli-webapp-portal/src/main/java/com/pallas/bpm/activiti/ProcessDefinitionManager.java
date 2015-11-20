@@ -17,7 +17,6 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +56,7 @@ public class ProcessDefinitionManager {
 		editorNode.put("resourceId", "canvas");
 		ObjectNode stencilSetNode = objectMapper.createObjectNode();
 		stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
-		editorNode.put("stencilset", stencilSetNode);
+		// editorNode.put("stencilset", stencilSetNode);
 		Model modelData = repositoryService.newModel();
 
 		ObjectNode modelObjectNode = objectMapper.createObjectNode();
@@ -109,8 +108,7 @@ public class ProcessDefinitionManager {
 		bpmnBytes = new BpmnXMLConverter().convertToXML(model);
 
 		String processName = modelData.getName() + ".bpmn20.xml";
-		Deployment deployment = repositoryService.createDeployment()
-				.name(modelData.getName())
+		repositoryService.createDeployment().name(modelData.getName())
 				.addString(processName, new String(bpmnBytes)).deploy();
 		return true;
 	}

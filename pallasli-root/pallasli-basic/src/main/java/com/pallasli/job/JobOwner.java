@@ -16,6 +16,9 @@ public class JobOwner {
 	}
 
 	public void doJob() {
+		System.out.println(timerJob);
+		System.out.println(dateFormat);
+		System.out.println(hourOfDay + "" + minute + "" + second);
 	}
 
 }

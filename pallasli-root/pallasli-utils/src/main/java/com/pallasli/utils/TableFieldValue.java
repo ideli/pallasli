@@ -2,7 +2,7 @@ package com.pallasli.utils;
 
 public class TableFieldValue {
 	private String fieldName;
-	private Class fieldType;
+	private Class<?> fieldType;
 	private Object value;
 
 	public String getFieldName() {
@@ -13,11 +13,11 @@ public class TableFieldValue {
 		this.fieldName = fieldName;
 	}
 
-	public Class getFieldType() {
+	public Class<?> getFieldType() {
 		return fieldType;
 	}
 
-	public void setFieldType(Class fieldType) {
+	public void setFieldType(Class<?> fieldType) {
 		this.fieldType = fieldType;
 	}
 

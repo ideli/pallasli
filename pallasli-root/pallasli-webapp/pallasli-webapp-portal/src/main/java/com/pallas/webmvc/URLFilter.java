@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class URLFilter implements Filter {
 
@@ -23,7 +22,7 @@ public class URLFilter implements Filter {
 
 		HttpServletRequest request = (HttpServletRequest) req;
 
-		HttpServletResponse response = (HttpServletResponse) rep;
+		// HttpServletResponse response = (HttpServletResponse) rep;
 		String uri = request.getRequestURI();
 		String basPath = request.getContextPath();
 		if (uri.endsWith(basPath + "/login.do")) {

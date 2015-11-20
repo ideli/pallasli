@@ -13,7 +13,7 @@ public class ModuleMenuDirectAction {
 
 	@DirectMethod(method = "loadSysMenu")
 	public List<Menu> loadSysMenu(JsonArray data) {
-		JsonObject addNode = data.get(0).getAsJsonObject();
+		// JsonObject addNode = data.get(0).getAsJsonObject();
 		List<Menu> list = menuAction.loadSysMenu();
 		return list;
 	}

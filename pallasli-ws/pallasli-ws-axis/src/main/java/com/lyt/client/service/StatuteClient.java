@@ -9,7 +9,7 @@ public class StatuteClient {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String url = "http://localhost:8080/webserviceProject_axis/services/StatuteAxisWsdd";
+		String url = "http://localhost:10010/pallasli";
 		Service se = new Service();
 		try {
 			Call call = se.createCall();

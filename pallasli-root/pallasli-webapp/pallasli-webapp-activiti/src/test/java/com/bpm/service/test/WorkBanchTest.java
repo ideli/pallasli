@@ -14,9 +14,11 @@ public class WorkBanchTest extends PluggableActivitiTestCase {
 		List<String> myApplyedProcessIdList = new ArrayList<String>();
 		for (HistoricProcessInstance hi : instanceList) {
 			myApplyedProcessIdList.add(hi.getId());
+			historyService.createHistoricTaskInstanceQuery().processInstanceId(
+					hi.getId());
 		}
-		historyService.createHistoricTaskInstanceQuery().processInstanceIdIn(
-				myApplyedProcessIdList);
+		// historyService.createHistoricTaskInstanceQuery().processInstanceIdIn(
+		// myApplyedProcessIdList);
 	}
 
 	public void findMyHandledTask() {

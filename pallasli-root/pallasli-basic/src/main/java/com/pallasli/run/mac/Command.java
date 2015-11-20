@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
 
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ public class Command {
 			InputStream is = null;
 			InputStreamReader isr = null;
 			BufferedReader brStat = null;
-			StringTokenizer tokenStat = null;
+			// StringTokenizer tokenStat = null;
 			// Process process = run.exec("cd ~");
 			Process process = run.exec(command);
 			// Process

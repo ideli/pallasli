@@ -17,20 +17,13 @@ public class Email {
 
 	@Test
 	public void test() {
-		send();
 		try {
+			send();
 			sendEnclosure();
-		} catch (EmailException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
 			sendHtml();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (EmailException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

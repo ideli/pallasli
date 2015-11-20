@@ -84,6 +84,7 @@ public class UpLoad {
 	 * @return
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource")
 	public String JxtxtDrhm(String filepath, HttpServletRequest request)
 			throws IOException {
 		BufferedReader br = null;

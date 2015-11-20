@@ -108,7 +108,6 @@ public class FileUtils {
 	}
 
 	private String data_dir = SystemConstant.DATA_PATH;
-	private final boolean rqDir = true;
 
 	private static long row = 0;
 	private static int handleCount = 0;
@@ -146,7 +145,7 @@ public class FileUtils {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new FileInputStream(filePath), SystemConstant.CHARSET));
 			String Line = br.readLine();
-
+			br.close();
 			while (Line != null) {
 				i_line++;
 				Line = br.readLine();
@@ -261,7 +260,7 @@ public class FileUtils {
 
 	public static String readFile(String filePathName) {
 		StringBuffer sb = new StringBuffer();
-		int i_line = 0;
+		// int i_line = 0;
 		try {
 			// FileReader fr = new FileReader(filePahtName);
 			// BufferedReader br = new BufferedReader(fr);
@@ -271,7 +270,7 @@ public class FileUtils {
 			String Line = br.readLine();
 
 			while (Line != null) {
-				i_line++;
+				// i_line++;
 				sb.append(Line);// .append("\n");
 				Line = br.readLine();
 			}

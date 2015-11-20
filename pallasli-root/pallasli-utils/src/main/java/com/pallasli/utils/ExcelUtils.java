@@ -82,7 +82,7 @@ public class ExcelUtils {
 				if (row != null) {
 					int cells = row.getPhysicalNumberOfCells();
 
-					for (short c = 0; c < cells; c++) {
+					for (int c = 0; c < cells; c++) {
 						HSSFCell cell = row.getCell(c);
 						if (cell != null) {
 							String value = null;

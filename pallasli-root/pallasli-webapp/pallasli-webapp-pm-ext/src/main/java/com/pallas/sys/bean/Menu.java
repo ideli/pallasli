@@ -5,6 +5,11 @@ import java.io.Serializable;
 /** @author Hibernate CodeGenerator */
 public class Menu implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5263160292859750142L;
+
 	/** identifier field */
 	private Long id;
 

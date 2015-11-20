@@ -15,9 +15,9 @@ public class UserLoginAction implements Controller {
 	public ModelAndView handleRequest(HttpServletRequest arg0,
 			HttpServletResponse arg1) throws Exception {
 		arg0.setCharacterEncoding("UTF-8");
-		String source = arg0.getParameter("source");
-		String redirectUrl = arg0.getParameter("redirectUrl");
-		String action = arg0.getParameter("action");
+		// String source = arg0.getParameter("source");
+		// String redirectUrl = arg0.getParameter("redirectUrl");
+		// String action = arg0.getParameter("action");
 
 		String userName = arg0.getParameter("userName");
 		String password = arg0.getParameter("password");

@@ -1,5 +1,6 @@
 package com.pallas.sys.sso.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,8 @@ public class SsoServerUserCertification {
 					+ Long.parseLong(ips[2]) * 255 + Integer.parseInt(ips[3]);
 			String sql = "select address from t_mk_sys_ipaddress where startip<="
 					+ lip + " and endip>=" + lip + " order by (endip-startip)";
-			List<List<String>> addr = null;
+			sql += sql;
+			List<List<String>> addr = new ArrayList<List<String>>();
 			return addr.get(0).get(0);
 
 		} catch (Exception e) {

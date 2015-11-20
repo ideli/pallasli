@@ -25,6 +25,7 @@
 		<module>pallasli-annotation</module>
 		<module>pallasli-encrypt</module>
 		<module>pallasli-swing</module>
+		<module>pallasli-component</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

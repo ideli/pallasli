@@ -5,6 +5,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
@@ -18,12 +22,22 @@ public class ZipUtils {
 		zip(zipFileName, new File(inputFileName));
 	}
 
-	public static void zip(String zipFileName, File inputFile) throws Exception {
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
-				zipFileName));
-		zip(out, inputFile, "");
-		System.out.println("zip done");
+	/**
+	 * @param zipFilePath
+	 *            打包文件存放路径
+	 * @param inputFolderName
+	 *            需要打包的文件夹
+	 * @throws Exception
+	 */
+	public static void zip(String zipFileName, File inputFolder)
+			throws Exception {
+		FileOutputStream fileOut = new FileOutputStream(zipFileName);
+		ZipOutputStream out = new ZipOutputStream(fileOut);
+		zip(out, inputFolder, "");
+		out.flush();
+		fileOut.flush();
 		out.close();
+		fileOut.close();
 	}
 
 	private static void zip(ZipOutputStream out, File f, String base)
@@ -67,5 +81,84 @@ public class ZipUtils {
 		}
 		bis.close();
 		zos.close();
+	}
+
+	/**
+	 * 解压缩zip包
+	 * 
+	 * @param zipFilePath
+	 *            zip文件路径
+	 * @param targetPath
+	 *            解压缩到的位置，如果为null或空字符串则默认解压缩到跟zip包同目录跟zip包同名的文件夹下
+	 * @throws IOException
+	 */
+	public void unzip(String zipFilePath, String targetPath) throws IOException {
+		byte[] buf = new byte[20480];
+		int readSize = -1;
+		ZipInputStream zis = null;
+		FileOutputStream fos = null;
+		ZipFile zipFile = null;
+		try {
+			zipFile = new ZipFile(zipFilePath);
+			zipFile.close();
+			// 判断目标目录是否存在，不存在则创建
+			File newdir = new File(targetPath);
+			if (!newdir.exists()) {
+				newdir.mkdirs();
+			}
+			zis = new ZipInputStream(new FileInputStream(new File(zipFilePath)));
+
+			ZipEntry zipEntry = zis.getNextEntry();
+			while (null != zipEntry) {
+				String zipEntryName = zipEntry.getName().replace('\\', '/');
+
+				// 判断zipEntry是否为目录，如果是，则创建
+				if (!zipEntryName.trim().equals("")) {
+					if (zipEntry.isDirectory()) {
+						int indexNumber = zipEntryName.lastIndexOf('/');
+						File entryDirs = new File(targetPath
+								+ zipEntryName.substring(0, indexNumber));
+						entryDirs.mkdirs();
+						entryDirs = null;
+					} else {
+						try {
+							fos = new FileOutputStream(targetPath
+									+ zipEntryName);
+							while ((readSize = zis.read(buf, 0, 20480)) != -1) {
+								fos.write(buf, 0, readSize);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						} finally {
+							try {
+								if (null != fos) {
+									fos.close();
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				zipEntry = zis.getNextEntry();
+			}
+		} catch (ZipException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (null != zis) {
+					zis.close();
+				}
+				if (null != fos) {
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
