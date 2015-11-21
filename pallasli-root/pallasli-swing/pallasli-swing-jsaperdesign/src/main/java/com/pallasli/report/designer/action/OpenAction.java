@@ -1,5 +1,6 @@
 package com.pallasli.report.designer.action;
 
+import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
 
 /**
@@ -14,10 +15,14 @@ import javax.swing.JFileChooser;
  * @author lyt
  * 
  */
-public class OpenAction {
-	public static void main(String[] args) {
-		JFileChooser chooser = new JFileChooser();
-		chooser.show();
-		chooser.setVisible(true);
+public class OpenAction extends AbstractAction {
+	public OpenAction(AbstractButton action) {
+		super(action);
 	}
+
+	public void execute() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.showOpenDialog(mainFrame);
+	}
+
 }

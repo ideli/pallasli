@@ -13,7 +13,6 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -29,10 +28,13 @@ import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.pallasli.report.designer.tooloper.AboutDesignerDialog;
-import com.pallasli.report.designer.tooloper.NewFileDialog;
-import com.pallasli.report.designer.tooloper.PageSettingDialog;
-import com.pallasli.report.designer.tooloper.ReportPropsSettingDialog;
+import com.pallasli.report.designer.action.AboutDesignerAction;
+import com.pallasli.report.designer.action.ExitAction;
+import com.pallasli.report.designer.action.NewAction;
+import com.pallasli.report.designer.action.OpenAction;
+import com.pallasli.report.designer.action.PageSettingAction;
+import com.pallasli.report.designer.action.ReportPropsSettingAction;
+import com.pallasli.report.designer.action.SaveAsAction;
 
 public class Main extends JFrame {
 
@@ -93,31 +95,14 @@ public class Main extends JFrame {
 		menuBar.add(mnf);
 
 		JMenuItem menu2 = new JMenuItem("新建");
-		menu2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NewFileDialog dialog = new NewFileDialog();
-				dialog.setLocationRelativeTo(Main.getInstance());
-				dialog.setVisible(true);
-				// dialog.setLocation(300, 300);
-			}
-		});
+		new NewAction(menu2);
 		mnf.add(menu2);
 		JMenuItem menu3 = new JMenuItem("打开");
-		menu3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.showOpenDialog(Main.getInstance());
-			}
-		});
+		new OpenAction(menu3);
 		mnf.add(menu3);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("另存为");
-		mntmNewMenuItem_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.showSaveDialog(Main.getInstance());
-			}
-		});
+		new SaveAsAction(mntmNewMenuItem_3);
 		mnf.add(mntmNewMenuItem_3);
 
 		JMenuItem mntmNewMenuItem = new JMenuItem("保存");
@@ -130,26 +115,14 @@ public class Main extends JFrame {
 		mnf.add(separator);
 
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("页面设置");
-		mntmNewMenuItem_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				PageSettingDialog dialog = new PageSettingDialog();
-				dialog.setLocationRelativeTo(Main.getInstance());
-				dialog.setVisible(true);
-			}
-		});
+		new PageSettingAction(mntmNewMenuItem_4);
 		mnf.add(mntmNewMenuItem_4);
 
 		JSeparator separator_1 = new JSeparator();
 		mnf.add(separator_1);
 
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("报表属性");
-		mntmNewMenuItem_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ReportPropsSettingDialog dialog = new ReportPropsSettingDialog();
-				dialog.setLocationRelativeTo(Main.getInstance());
-				dialog.setVisible(true);
-			}
-		});
+		new ReportPropsSettingAction(mntmNewMenuItem_5);
 		mnf.add(mntmNewMenuItem_5);
 
 		JSeparator separator_2 = new JSeparator();
@@ -171,11 +144,7 @@ public class Main extends JFrame {
 		mnf.add(separator_3);
 
 		JMenuItem menuItem_9 = new JMenuItem("退出");
-		menuItem_9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		new ExitAction(menuItem_9);
 		mnf.add(menuItem_9);
 
 		JSeparator separator_4 = new JSeparator();
@@ -290,14 +259,7 @@ public class Main extends JFrame {
 		menuBar.add(mnh);
 
 		JMenuItem menuItem_11 = new JMenuItem("关于设计器");
-		menuItem_11.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				AboutDesignerDialog dialog = new AboutDesignerDialog();
-				dialog.setLocationRelativeTo(Main.getInstance());
-				dialog.setVisible(true);
-			}
-		});
+		new AboutDesignerAction(menuItem_11);
 		mnh.add(menuItem_11);
 
 		JPanel panel_3 = new JPanel();

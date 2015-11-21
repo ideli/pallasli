@@ -13,8 +13,6 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import com.pallasli.constant.SystemConstant;
-
 public class FileUtils {
 
 	/**
@@ -107,13 +105,15 @@ public class FileUtils {
 		return true;
 	}
 
-	private String data_dir = SystemConstant.DATA_PATH;
+	private static String data_dir = "/Users/lyt1987";
+	private static String file_sep = "/";
+	private static String charset = "utf-8";
 
 	private static long row = 0;
 	private static int handleCount = 0;
 
 	public String getFilePath(String fileName) {
-		return data_dir + SystemConstant.FILE_SEP + fileName;
+		return data_dir + file_sep + fileName;
 	}
 
 	public String getDataDir() {
@@ -121,8 +121,7 @@ public class FileUtils {
 	}
 
 	public String getDir() {
-		String dir = data_dir + SystemConstant.FILE_SEP
-				+ formatDate(new Date(), "yyyyMMdd");
+		String dir = data_dir + file_sep + formatDate(new Date(), "yyyyMMdd");
 		if (createDir(dir)) {
 			return dir;
 		} else {
@@ -143,7 +142,7 @@ public class FileUtils {
 		int i_line = 0;
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(filePath), SystemConstant.CHARSET));
+					new FileInputStream(filePath), charset));
 			String Line = br.readLine();
 			br.close();
 			while (Line != null) {
@@ -255,7 +254,7 @@ public class FileUtils {
 	}
 
 	public static String readFile(String path, String filename) {
-		return readFile(path + SystemConstant.FILE_SEP + filename);
+		return readFile(path + file_sep + filename);
 	}
 
 	public static String readFile(String filePathName) {
@@ -266,7 +265,7 @@ public class FileUtils {
 			// BufferedReader br = new BufferedReader(fr);
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(filePathName), SystemConstant.CHARSET));
+					new FileInputStream(filePathName), charset));
 			String Line = br.readLine();
 
 			while (Line != null) {
@@ -288,7 +287,7 @@ public class FileUtils {
 			 * fw.close();
 			 */
 			FileOutputStream fos = new FileOutputStream(filePath, true);
-			fos.write(str.getBytes(SystemConstant.CHARSET));
+			fos.write(str.getBytes(charset));
 			fos.close();
 			return true;
 		} catch (Exception e) {
@@ -297,12 +296,12 @@ public class FileUtils {
 	}
 
 	public static boolean writeFile(String str, String path, String filename) {
-		String filePath = path + SystemConstant.FILE_SEP + filename;
+		String filePath = path + file_sep + filename;
 		return writeFile(str, filePath);
 	}
 
 	public static boolean appendFile(String str, String path, String filename) {
-		String filePath = path + SystemConstant.FILE_SEP + filename;
+		String filePath = path + file_sep + filename;
 		return appendFile(str, filePath);
 	}
 
@@ -313,7 +312,7 @@ public class FileUtils {
 			 * fw.close();
 			 */
 			FileOutputStream fos = new FileOutputStream(filePath, true);
-			fos.write(str.getBytes(SystemConstant.CHARSET));
+			fos.write(str.getBytes(charset));
 			fos.close();
 			return true;
 
@@ -329,7 +328,7 @@ public class FileUtils {
 
 	public boolean writeByteFile(byte[] b, String path, String filename) {
 		try {
-			File file = new File(path + SystemConstant.FILE_SEP + filename);
+			File file = new File(path + file_sep + filename);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
