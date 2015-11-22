@@ -9,13 +9,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.pallasli.bpm.service.ModelService;
+import com.pallasli.bpm.service.ProcessDefinitionService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:activitiContext.xml")
 public class BpmServiceTest {
 
 	@Autowired
-	private BpmService bpmService;
+	private ModelService modelService;
+	@Autowired
+	private ProcessDefinitionService defineService;
 
 	@Test
 	public void createProcessDefinition() {
@@ -26,7 +30,7 @@ public class BpmServiceTest {
 
 	@Test
 	public void saveProcessDefinition() {
-		String source0 = bpmService.getEditorSource("1062501");
+		String source0 = modelService.getEditorSource("1062501");
 		System.out.println(source0);
 		Assert.assertTrue(source0.trim().endsWith("{}"));
 
@@ -38,10 +42,10 @@ public class BpmServiceTest {
 		ObjectNode stencilSetNode = objectMapper.createObjectNode();
 		stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
 		editorNode.put("stencilset", stencilSetNode);
-		String id = bpmService.saveProcessDefinition("1062501", "key",
+		String id = defineService.saveProcessDefinition("1062501", "key",
 				"new_name", "category", "description", editorNode);
 
-		String source = bpmService.getEditorSource("1062501");
+		String source = modelService.getEditorSource("1062501");
 		System.out.println(source);
 		Assert.assertTrue(source.length() > 10);
 

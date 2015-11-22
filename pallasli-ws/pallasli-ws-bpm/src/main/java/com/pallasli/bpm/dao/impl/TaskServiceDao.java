@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.pallas.activiti.bean.InstanceInfo;
-import com.pallas.activiti.bean.TaskInfo;
+import com.pallasli.bpm.bean.InstanceInfo;
+import com.pallasli.bpm.bean.TaskInfo;
 
 public class TaskServiceDao {
 
-	public List<TaskInfo> findTaskInfos(String user, int state,
-			String keyword, Date s, Date e, int firstNumber, int pageSize) {
+	public List<TaskInfo> findTaskInfos(String user, int state, String keyword,
+			Date s, Date e, int firstNumber, int pageSize) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -20,7 +20,5 @@ public class TaskServiceDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
- 
 
 }

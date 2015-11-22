@@ -2,7 +2,7 @@ package com.pallasli.bpm.dao.impl;
 
 import java.util.List;
 
-import com.pallas.activiti.bean.RemarkInfo;
+import com.pallasli.bpm.bean.RemarkInfo;
 
 public class HistoryServiceDao {
 

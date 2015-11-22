@@ -6,7 +6,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.pallas.activiti.bean.InstanceInfo;
+import com.pallasli.bpm.bean.InstanceInfo;
 
 public class InstanceServiceDao {
 	@Autowired
@@ -38,13 +38,13 @@ public class InstanceServiceDao {
 		String processInstanceId = execEntity.getProcessInstanceId();
 
 		InstanceInfo info = new InstanceInfo();
-		info.setBusinessKey(businessKey);
-		info.setCurrentActivityId(currentActivityId);
-		info.setCurrentActivityName(currentActivityName);
-		info.setProcessBusinessKey(processBusinessKey);
-		info.setProcessDefinitionKey(processDefinitionKey);
-		info.setProcessDefinitionName(processDefinitionName);
-		info.setProcessInstanceId(processInstanceId);
+		// info.setBusinessKey(businessKey);
+		// info.setCurrentActivityId(currentActivityId);
+		// info.setCurrentActivityName(currentActivityName);
+		// info.setProcessBusinessKey(processBusinessKey);
+		// info.setProcessDefinitionKey(processDefinitionKey);
+		// info.setProcessDefinitionName(processDefinitionName);
+		// info.setProcessInstanceId(processInstanceId);
 
 		return info;
 	}

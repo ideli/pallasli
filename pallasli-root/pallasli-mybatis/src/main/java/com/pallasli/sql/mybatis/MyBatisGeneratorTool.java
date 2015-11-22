@@ -21,9 +21,10 @@ import org.mybatis.generator.internal.DefaultShellCallback;
  */
 public class MyBatisGeneratorTool {
 	public static void main(String[] args) {
+		MybatisOperation.instance().createTable();
 		List<String> warnings = new ArrayList<String>();
 		boolean overwrite = true;
-		String genCfg = "/generatorConfig.xml"; // src的一级目录下
+		String genCfg = "/generator.xml"; // src的一级目录下
 		File configFile = new File(MyBatisGeneratorTool.class.getResource(
 				genCfg).getFile());
 		ConfigurationParser cp = new ConfigurationParser(warnings);

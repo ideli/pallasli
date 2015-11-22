@@ -27,15 +27,7 @@ public class InstanceService {
 			@WebParam(name = "processDefinitionKey") String processDefinitionKey,
 			@WebParam(name = "businessKey") String businessKey,
 			@WebParam(name = "variables") Map<String, Object> variables) {
-		try {
-
-			return instanceServiceDao.startProcessInstance(user,
-					processDefinitionKey, businessKey, variables);
-
-		} catch (Exception e) {
-			log.error("start process error:{}", e);
-			throw new PallasActivitiExecption("发起流程失败");
-		}
+		return null;
 
 	}
 
@@ -55,7 +47,6 @@ public class InstanceService {
 			@WebParam(name = "user") String user,
 			@WebParam(name = "processKey") String processKey,
 			@WebParam(name = "instanceId") String instanceId) {
-		return instanceServiceDao.openProcessInstance(user, processKey,
-				instanceId);
+		return null;
 	}
 }

@@ -1,6 +1,5 @@
 package com.pallasli.bpm.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -19,16 +18,7 @@ public class ModelService {
 	 */
 	@WebMethod
 	public String getEditorSource(@WebParam(name = "modelId") String modelId) {
-		byte[] bytes = repositoryServiceDao.getEditorSource(modelId);
-		String ret = "{}";
-		try {
-			if (bytes != null) {
-				ret = new String(bytes, "utf-8");
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return ret;
+		return null;
 	}
 
 	/**
@@ -48,8 +38,7 @@ public class ModelService {
 			@WebParam(name = "firstNumber") int firstResult,
 			@WebParam(name = "pageNumber") int pageSize) {
 
-		return definitionServiceDao.findProcessModelInfo(keyword, firstResult,
-				pageSize);
+		return null;
 	}
 
 	/**
@@ -61,7 +50,7 @@ public class ModelService {
 	 */
 	@WebMethod
 	public boolean deleteProcessModel(@WebParam(name = "modelId") String modelId) {
-		return repositoryServiceDao.deleteProcessModel(modelId);
+		return false;
 	}
 
 	/**
@@ -79,8 +68,7 @@ public class ModelService {
 	public String copyProcessModel(@WebParam(name = "name") String name,
 			@WebParam(name = "description") String description,
 			@WebParam(name = "modelId") String modelId) {
-		return repositoryServiceDao
-				.copyProcessModel(name, description, modelId);
+		return null;
 	}
 
 	/**
@@ -91,9 +79,9 @@ public class ModelService {
 	 * @return
 	 */
 	@WebMethod
-	public ModelXMLInfo exportProcessModelInfo(
+	public ModelInfo exportProcessModelInfo(
 			@WebParam(name = "modelId") String modelId) {
-		return repositoryServiceDao.exportProcessModelInfo(modelId);
+		return null;
 	}
 
 	/**
@@ -104,10 +92,9 @@ public class ModelService {
 	 * @return
 	 */
 	@WebMethod
-	public boolean importProcessModelInfo(ModelXMLInfo modelXMLInfo,
+	public boolean importProcessModelInfo(ModelInfo modelXMLInfo,
 			boolean isOverride) {
-		return repositoryServiceDao.importProcessModelInfo(modelXMLInfo,
-				isOverride);
+		return false;
 	}
 
 	/**
@@ -119,7 +106,7 @@ public class ModelService {
 	 */
 	@WebMethod
 	public boolean deployProcessModel(@WebParam(name = "modelId") String modelId) {
-		return repositoryServiceDao.deleteProcessModel(modelId);
+		return false;
 	}
 
 	/**
@@ -131,6 +118,6 @@ public class ModelService {
 	@WebMethod
 	public boolean unDeployProcessModel(
 			@WebParam(name = "modelId") String modelId) {
-		return repositoryServiceDao.unDeployProcessModel(modelId);
+		return false;
 	}
 }

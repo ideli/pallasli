@@ -12,20 +12,27 @@
     </settings>  
     <typeAliases>  
         <!--给实体类起一个别名 user -->  
-        <typeAlias type="com.pallas.sys.bean.User" alias="SysUser" />  
+        <!--typeAlias type="com.pallas.sys.bean.User" alias="SysUser" /-->  
     </typeAliases> 
     <environments default="development"> 
        <environment id="development"> 
            <transactionManager type="jdbc"/> 
+           <!-- mysql
            <dataSource type="POOLED"> 
               <property name="driver" value="com.mysql.jdbc.Driver"/> 
               <property name="url" value="jdbc:mysql://localhost:3306/pallas?useUnicode=true&amp;characterEncoding=utf8"/> 
               <property name="username" value="root"/> 
               <property name="password" value="root"/> 
+           </dataSource>  -->
+           <dataSource type="POOLED"> 
+              <property name="driver" value="org.h2.Driver"/> 
+              <property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000"/> 
+              <property name="username" value="sa"/> 
+              <property name="password" value=""/> 
            </dataSource> 
        </environment> 
     </environments> 
     <mappers> 
-        <mapper resource="org/mybatis/table/T_SYS_USER.xml" /> 
+        <!--mapper resource="org/mybatis/table/T_SYS_USER.xml" /--> 
     </mappers> 
 </configuration>

@@ -22,6 +22,6 @@ public class RemarkService {
 	public List<RemarkInfo> getRemarkList(
 			@WebParam(name = "processKey") String processKey,
 			@WebParam(name = "instanceId") String instanceId) {
-		return historyServiceDao.getRemarkList(instanceId);
+		return null;
 	}
 }

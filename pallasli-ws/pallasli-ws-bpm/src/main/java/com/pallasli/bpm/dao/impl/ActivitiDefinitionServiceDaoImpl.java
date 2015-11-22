@@ -2,8 +2,8 @@ package com.pallasli.bpm.dao.impl;
 
 import java.util.List;
 
-import com.pallas.activiti.bean.ModelInfo;
-import com.pallas.activiti.bean.NodeInfo;
+import com.pallasli.bpm.bean.ModelInfo;
+import com.pallasli.bpm.bean.NodeInfo;
 
 public class ActivitiDefinitionServiceDaoImpl {
 
@@ -13,7 +13,7 @@ public class ActivitiDefinitionServiceDaoImpl {
 		return null;
 	}
 
-	public List<ModelInfo> findProcessModelInfo( String keyword,
+	public List<ModelInfo> findProcessModelInfo(String keyword,
 			int firstResult, int pageSize) {
 		// TODO Auto-generated method stub
 		return null;

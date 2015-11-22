@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.pallas.activiti.exception.PallasActivitiExecption;
+import com.pallasli.bpm.bean.ModelInfo;
+import com.pallasli.bpm.exception.BpmExecption;
 
 @Transactional
 public class RepositoryServiceDao {
@@ -79,7 +80,7 @@ public class RepositoryServiceDao {
 		} catch (Exception e) {
 			errorMessage = "流程新建出错";
 			log.error(errorMessage, e);
-			throw new PallasActivitiExecption(errorMessage);
+			throw new BpmExecption(errorMessage);
 		}
 	}
 
@@ -94,15 +95,13 @@ public class RepositoryServiceDao {
 		return null;
 	}
 
-	public boolean importProcessModelInfo(
-			com.pallas.activiti.bean.ModelXMLInfo modelXMLInfo,
+	public boolean importProcessModelInfo(ModelInfo modelXMLInfo,
 			boolean isOverride) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public com.pallas.activiti.bean.ModelXMLInfo exportProcessModelInfo(
-			String modelId) {
+	public ModelInfo exportProcessModelInfo(String modelId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

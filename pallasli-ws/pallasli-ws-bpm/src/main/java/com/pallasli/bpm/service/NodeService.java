@@ -24,8 +24,7 @@ public class NodeService {
 	public List<NodeInfo> getNextNodeList(@WebParam(name = "user") String user,
 			@WebParam(name = "processKey") String processKey,
 			@WebParam(name = "instanceId") String instanceId) {
-		return definitionServiceDao.getNextNodeList(user, processKey,
-				instanceId);
+		return null;
 	}
 
 	/**
@@ -43,7 +42,6 @@ public class NodeService {
 	public List<NodeInfo> getBackNodeList(@WebParam(name = "user") String user,
 			@WebParam(name = "processKey") String processKey,
 			@WebParam(name = "instanceId") String instanceId) {
-		return definitionServiceDao.getNextNodeList(user, processKey,
-				instanceId);
+		return null;
 	}
 }

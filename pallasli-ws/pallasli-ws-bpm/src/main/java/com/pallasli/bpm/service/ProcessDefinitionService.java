@@ -3,6 +3,8 @@ package com.pallasli.bpm.service;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class ProcessDefinitionService {
 	/**
 	 * 创建流程设计图
@@ -21,8 +23,7 @@ public class ProcessDefinitionService {
 			@WebParam(name = "name") String name,
 			@WebParam(name = "category") String category,
 			@WebParam(name = "description") String description) {
-		return repositoryServiceDao.createProcessDefinition(key, name,
-				category, description);
+		return null;
 	}
 
 	@WebMethod
@@ -33,7 +34,6 @@ public class ProcessDefinitionService {
 			@WebParam(name = "category") String category,
 			@WebParam(name = "description") String description,
 			@WebParam(name = "JsonNode") JsonNode editorNode) {
-		return repositoryServiceDao.saveProcessDefinition(modelId, key, name,
-				category, description, editorNode);
+		return null;
 	}
 }

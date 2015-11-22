@@ -1,8 +1,5 @@
 package com.pallasli.bpm.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,29 +39,7 @@ public class TaskService {
 			@WebParam(name = "firstNumber") int firstNumber,
 			@WebParam(name = "pageSize") int pageSize) {
 
-		Date s = null;
-		Date e = null;
-
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-		if (!StringUtils.isBlank(startTime)) {
-			try {
-				s = df.parse(startTime);
-			} catch (ParseException e1) {
-				log.warn("时间格式不正确", e1);
-			}
-		}
-
-		if (!StringUtils.isBlank(endTime)) {
-			try {
-				s = df.parse(endTime);
-			} catch (ParseException e1) {
-				log.warn("时间格式不正确", e1);
-			}
-		}
-
-		return taskServiceDao.findTaskInfos(user, state, keyword, s, e,
-				firstNumber, pageSize);
+		return null;
 	}
 
 	/**
@@ -82,6 +57,6 @@ public class TaskService {
 	public InstanceInfo completeTask(@WebParam(name = "user") String user,
 			@WebParam(name = "taskId") String taskId,
 			@WebParam(name = "variables") Map<String, Object> variables) {
-		return taskServiceDao.completeTask(user, taskId, variables);
+		return null;
 	}
 }

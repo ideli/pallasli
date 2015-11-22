@@ -14,40 +14,42 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.google.gson.JsonObject;
-import com.mixky.app.ApplicationParameters;
-import com.mixky.system.ContextHolder;
-import com.mixky.toolkit.FileTool;
-import com.oreilly.servlet.MultipartRequest;
 
 /**
  * @author singing
  *
  */
 @SuppressWarnings("serial")
-public class FileUpload2FolderServlet  extends HttpServlet {
+public class FileUpload2FolderServlet extends HttpServlet {
 
-	private static Log logger = LogFactory.getLog(FileUpload2FolderServlet.class);
+	private static Log logger = LogFactory
+			.getLog(FileUpload2FolderServlet.class);
 
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-	throws ServletException, IOException {
+			throws ServletException, IOException {
 		doPost(request, response);
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		MultipartRequest multi;
 		try {
-			multi = new MultipartRequest(request, ApplicationParameters.instance().getFileUploadPath(),
+			String fileUploadPath = "";
+			multi = new MultipartRequest(request, fileUploadPath,
 					20 * 1024 * 1024, "UTF-8");
 
 			String targetFolderName = multi.getParameter("targetFolder");
 			String newName = multi.getParameter("newName");
-			
-			String targetFolderPath = ContextHolder.instance().getRealPath(targetFolderName);
+
+			String targetFolderPath = ContextHolder.instance().getRealPath(
+					targetFolderName);
 			File targetFolder = new File(targetFolderPath);
-			if (!targetFolder.exists()){
+			if (!targetFolder.exists()) {
 				targetFolder.mkdir();
 			}
 
@@ -56,22 +58,23 @@ public class FileUpload2FolderServlet  extends HttpServlet {
 
 			Enumeration<String> em = multi.getFileNames();
 			while (em.hasMoreElements()) {
-				String fileFiledName = (String) em.nextElement();
+				String fileFiledName = em.nextElement();
 				java.io.File file = multi.getFile(fileFiledName);
 
-				if (newName == null ) {
-					FileTool.copyFile(file.getAbsolutePath(), targetFolderPath + "/" + file.getName());
+				if (newName == null) {
+					FileTool.copyFile(file.getAbsolutePath(), targetFolderPath
+							+ "/" + file.getName());
 				} else {
-					FileTool.copyFile(file.getAbsolutePath(), targetFolderPath + "/" + newName);
+					FileTool.copyFile(file.getAbsolutePath(), targetFolderPath
+							+ "/" + newName);
 				}
-				
 
 				json.addProperty("message", "上传完毕. " + file.length() + " 字节.");
-				logger.debug( "上传完毕. " + file.length() + " 字节.");
+				logger.debug("上传完毕. " + file.length() + " 字节.");
 
 				file.delete();
 				json.addProperty("success", true);
-			}				
+			}
 
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(json.toString());

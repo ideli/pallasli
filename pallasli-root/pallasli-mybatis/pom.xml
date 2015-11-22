@@ -9,6 +9,10 @@
 	<artifactId>pallasli-mybatis</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>pallasli-basic</artifactId>
 			<version>${project.version}</version>
@@ -20,6 +24,11 @@
 		<dependency>
 		  <groupId>org.mybatis.generator</groupId>
 		  <artifactId>mybatis-generator-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 		</dependency>
 	</dependencies>
 </project>
