@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+	"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="thread-clustersync" class="com.mixky.cluster.ClusterSync">
+		<property name="runners">
+			<map>
+				<entry key="T_MK_SYS_USERCONFIG" value-ref="UserConfigSyncRunner"/>
+				<entry key="CACHE-UPDATE" value-ref="CacheDataSyncRunner"/>
+				<!--<entry key="USER-LOGOUT" value-ref="SsoUserLogoutSyncRunner"/>
+				-->
+				<entry key="USERSCOPE-UPDATE" value-ref="UserScopeSyncRunner"/>
+				<entry key="APPLICATION-UPDATE" value-ref="ApplicationDesignObjectSyncRunner"/>
+				<entry key="WORKFLOW-UPDATE" value-ref="FlowDesignObjectSyncRunner"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="UserConfigSyncRunner" class="com.mixky.cluster.sync.UserConfigSyncRunner"/>
+	<bean id="CacheDataSyncRunner" class="com.mixky.cluster.sync.PortalCacheDataSyncRunner"/>
+	<!--<bean id="SsoUserLogoutSyncRunner" class="com.mixky.cluster.sync.SsoUserLogoutSyncRunner"/>
+	-->
+	<bean id="UserScopeSyncRunner" class="com.mixky.cluster.sync.UserScopeSyncRunner"/>
+	<bean id="ApplicationDesignObjectSyncRunner" class="com.mixky.cluster.sync.ApplicationDesignObjectSyncRunner"/>
+	<bean id="FlowDesignObjectSyncRunner" class="com.mixky.cluster.sync.FlowDesignObjectSyncRunner"/>
+	
+	<bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="thread-clustersync"/>
+        </property>
+        <property name="targetMethod">
+            <value>doClusterSync</value>
+        </property>
+    </bean>
+    
+	<!-- 定义触发的时间 -->
+	<!-- 
+    <bean id="cron" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="jobtask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0/5 * * * * ? </value>
+        </property>
+    </bean>
+     -->
+    <bean id="taskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="jobtask"/>
+		<property name="startDelay" value="10000"/><!-- 延迟10秒加载 -->
+		<property name="repeatInterval" value="60000"/><!-- 每分钟运行一次 -->
+	</bean>
+    
+	<!-- 任务调度器 -->
+    <bean autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="taskTrigger"/>
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 基于数据库环境的数据同步（为保持程序结构一致，沿用mq使用的消息产生机制。） -->
+    <bean id="mixky-common-message-producer" class="com.mixky.mq.activemq.producer.MixkyCommonMessageProducer"/>
+</beans>

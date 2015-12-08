@@ -19,11 +19,7 @@ import com.pallasli.ftp.extClass.FtpFile;
 import com.pallasli.ftp.extClass.ProgressArg;
 import com.pallasli.ftp.panel.queue.DownloadPanel;
 
-/**
- * FTP文件管理模块的FTP文件下载队列的线程
- * 
- * @author Li Zhong Wei
- */
+@SuppressWarnings("restriction")
 public class DownThread extends Thread {
 	private final FtpPanel ftpPanel; // FTP资源管理面板
 	private final FtpClient ftpClient; // FTP控制类
@@ -50,10 +46,10 @@ public class DownThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (FtpProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		new Thread() { // 创建保持服务器通讯的线程
+			@Override
 			public void run() {
 				while (conRun) {
 					try {
@@ -110,8 +106,8 @@ public class DownThread extends Thread {
 				FileOutputStream fout = new FileOutputStream(downFile, true);
 				// 计算文件大小
 				double fileLength = file.getLongSize() / Math.pow(1024, 2);
-				ProgressArg progressArg = new ProgressArg((int) (file
-						.getLongSize() / 1024), 0, 0);
+				ProgressArg progressArg = new ProgressArg(
+						(int) (file.getLongSize() / 1024), 0, 0);
 				String size = String.format("%.4f MB", fileLength);
 				Object[] row = new Object[] { ftpFileStr, size,
 						downFile.getAbsolutePath(), ftpClient.getServer(),
@@ -157,6 +153,7 @@ public class DownThread extends Thread {
 		}
 	}
 
+	@Override
 	public void run() { // 线程业务方法
 		while (conRun) {
 			try {

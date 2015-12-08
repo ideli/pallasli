@@ -16,6 +16,7 @@ public abstract class AbstractDbInterface {
 		AddOracleMethod();
 	}
 
+	@Override
 	public String toString() {
 		return getClass().getName();
 	}
@@ -24,7 +25,7 @@ public abstract class AbstractDbInterface {
 		this.databaseType = databaseType;
 	}
 
-	public final void Execute(String procedureName, Object obj, User user,
+	public final void Execute(String procedureName, Object obj,
 			DataSource tempDs, int tempDbType) throws CallDbException {
 		String s = "";
 		getBasicOperation(tempDs, tempDbType);
@@ -32,13 +33,11 @@ public abstract class AbstractDbInterface {
 			initOper(procedureName, obj);
 
 			// ---------- Oracle ----------
-			if (databaseType == BasicOperation.DB_TYPE_ORACLE
-					&& XTool.arrayIndexOf(arrOracle, procedureName) >= VL_ZERO) {
+			if (databaseType == BasicOperation.DB_TYPE_ORACLE) {
 				s = "executeOracle" + procedureName;
 			}
 			// ---------- MsSql ----------
-			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER
-					&& XTool.arrayIndexOf(arrMsSql, procedureName) >= VL_ZERO) {
+			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER) {
 				s = "executeMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
@@ -48,14 +47,8 @@ public abstract class AbstractDbInterface {
 			xlog.debug("Call Method is " + this.toString() + "." + s);
 
 			Method m = null;
-			if (user == null) {
-				m = this.getClass().getMethod(s, new Class[] { Object.class });
-				m.invoke(this, new Object[] { obj });
-			} else {
-				m = this.getClass().getMethod(s,
-						new Class[] { Object.class, User.class });
-				m.invoke(this, new Object[] { obj, user });
-			}
+			m = this.getClass().getMethod(s, new Class[] { Object.class });
+			m.invoke(this, new Object[] { obj });
 
 			destroyOper(procedureName, obj);
 		} catch (NoSuchMethodException err) {
@@ -83,7 +76,7 @@ public abstract class AbstractDbInterface {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final List<Row> Open(String procedureName, Object obj, User user,
+	public final List<Row> Open(String procedureName, Object obj,
 			DataSource tempDs, int tempDbType) throws CallDbException {
 		String s = "";
 		getBasicOperation(tempDs, tempDbType);
@@ -91,13 +84,11 @@ public abstract class AbstractDbInterface {
 			initOper(procedureName, obj);
 
 			// ---------- Oracle ----------
-			if (databaseType == BasicOperation.DB_TYPE_ORACLE
-					&& XTool.arrayIndexOf(arrOracle, procedureName) >= VL_ZERO) {
+			if (databaseType == BasicOperation.DB_TYPE_ORACLE) {
 				s = "openOracle" + procedureName;
 			}
 			// ---------- MsSql ----------
-			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER
-					&& XTool.arrayIndexOf(arrMsSql, procedureName) >= VL_ZERO) {
+			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER) {
 				s = "openMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
@@ -108,14 +99,8 @@ public abstract class AbstractDbInterface {
 
 			Method m = null;
 			List<Row> lst = null;
-			if (user == null) {
-				m = this.getClass().getMethod(s, new Class[] { Object.class });
-				lst = (List<Row>) m.invoke(this, new Object[] { obj });
-			} else {
-				m = this.getClass().getMethod(s,
-						new Class[] { Object.class, User.class });
-				lst = (List<Row>) m.invoke(this, new Object[] { obj, user });
-			}
+			m = this.getClass().getMethod(s, new Class[] { Object.class });
+			lst = (List<Row>) m.invoke(this, new Object[] { obj });
 			destroyOper(procedureName, obj);
 			return lst;
 		} catch (NoSuchMethodException err) {
@@ -143,7 +128,7 @@ public abstract class AbstractDbInterface {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final List<Row> Open(String procedureName, Object obj, User user,
+	public final List<Row> Open(String procedureName, Object obj,
 			DataSource tempDs, int tempDbType, int pagesize, int pagenum)
 			throws CallDbException {
 		String s = "";
@@ -152,13 +137,11 @@ public abstract class AbstractDbInterface {
 			initOper(procedureName, obj);
 
 			// ---------- Oracle ----------
-			if (databaseType == BasicOperation.DB_TYPE_ORACLE
-					&& XTool.arrayIndexOf(arrOracle, procedureName) >= VL_ZERO) {
+			if (databaseType == BasicOperation.DB_TYPE_ORACLE) {
 				s = "openOracle" + procedureName;
 			}
 			// ---------- MsSql ----------
-			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER
-					&& XTool.arrayIndexOf(arrMsSql, procedureName) >= VL_ZERO) {
+			else if (databaseType == BasicOperation.DB_TYPE_MSSQLSERVER) {
 				s = "openMsSql" + procedureName;
 			}
 			// ---------- Sybase or General----------
@@ -169,19 +152,10 @@ public abstract class AbstractDbInterface {
 
 			Method m = null;
 			List<Row> lst = null;
-			if (user == null) {
-				m = this.getClass().getMethod(s,
-						new Class[] { Object.class, int.class, int.class });
-				lst = (List<Row>) m.invoke(this, new Object[] { obj, pagesize,
-						pagenum });
-			} else {
-				m = this.getClass().getMethod(
-						s,
-						new Class[] { Object.class, User.class, int.class,
-								int.class });
-				lst = (List<Row>) m.invoke(this, new Object[] { obj, user,
-						pagesize, pagenum });
-			}
+			m = this.getClass().getMethod(s,
+					new Class[] { Object.class, int.class, int.class });
+			lst = (List<Row>) m.invoke(this, new Object[] { obj, pagesize,
+					pagenum });
 			destroyOper(procedureName, obj);
 			return lst;
 		} catch (NoSuchMethodException err) {

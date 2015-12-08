@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.gson.JsonObject;
 import com.pallasli.authority.orgnization.DataEncryptService;
 import com.pallasli.bean.User;
 import com.pallasli.sql.mybatis.MybatisOperation;
@@ -16,6 +17,18 @@ public class UserManager {
 	public static UserManager instance() {
 		singlon = new UserManager();
 		return singlon;
+	}
+
+	public JsonObject saveUserConfig(String key, JsonObject json, User user) {
+		return null;
+	}
+
+	public JsonObject getUserConfig(String key, User user) {
+		return null;
+	}
+
+	public JsonObject delUserConfig(String key, User user) {
+		return null;
 	}
 
 	public User getUserByName(String userName) {

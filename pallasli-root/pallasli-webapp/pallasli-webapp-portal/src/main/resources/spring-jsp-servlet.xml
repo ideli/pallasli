@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+	
+	<bean id="jspUrlMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+	
+	<!--门户界面-->
+	<bean name="/home.do" class="com.mixky.portal.action.PortalHomeAction"/>
+	<bean name="/login.do" class="com.mixky.portal.sso.action.UserLoginAction"/>
+	<bean name="/auth.do" class="com.mixky.portal.sso.action.UserLoginAction"/>
+	<bean name="/logout.do" class="com.mixky.portal.sso.action.UserLogoutAction"/>
+	<bean name="/console.do" class="com.mixky.portal.action.ConsoleAction"/>
+	<bean name="/portlet.do" class="com.mixky.portal.action.PortletAction"/>
+	<bean name="/jsppage.do" class="com.mixky.portal.action.JspPageAction"/>
+	<!--管理工具界面-->
+	<bean name="/administrator.do" class="com.mixky.administrator.action.AdministratorHomeAction"/>
+	<bean name="/administrator/desktop/portalmenu.ui.do" class="com.mixky.administrator.action.PortalMenuUiAction"/>
+	<bean name="/administrator/dictionary/dictionary.ui.do" class="com.mixky.administrator.action.DictionaryUiAction"/>
+	<bean name="/administrator/organization/dept.ui.do" class="com.mixky.administrator.action.DepartmentUiAction"/>
+	<bean name="/administrator/organization/role.ui.do" class="com.mixky.administrator.action.RoleUiAction"/>
+	<bean name="/administrator/organization/user.ui.do" class="com.mixky.administrator.action.UserUiAction"/>
+	<bean name="/administrator/organization/user.detail.ui.do" class="com.mixky.administrator.action.UserDetailUiAction"/>
+	<bean name="/administrator/organization/org.chart.do" class="com.mixky.administrator.action.OrgChartAction"/>
+	<bean name="/administrator/designobject/properties.do" class="com.mixky.administrator.action.PropertiesAction"/>
+	<bean name="/administrator/designobject/propertygrid.do" class="com.mixky.administrator.action.PropertyGridAction"/>
+	<bean name="/administrator/designobject/objectgrideditor.do" class="com.mixky.administrator.action.ObjectGridEditorAction"/>
+	<bean name="/administrator/designobject/objectgriddetaileditor.do" class="com.mixky.administrator.action.ObjectGridDetailEditorAction"/>
+	<bean name="/administrator/authority/menuauth.list.do" class="com.mixky.administrator.action.MenuAuthorityListAction"/>
+	<bean name="/administrator/authority/moduleroleauth.list.do" class="com.mixky.administrator.action.ModuleRoleAuthorityListAction"/>
+	<bean name="/administrator/workflow/workflow.do" class="com.mixky.administrator.action.WorkFlowAction"/>
+	<bean name="/administrator/workflow/node.do" class="com.mixky.administrator.action.WorkFlowNodeAction"/>
+	<bean name="/administrator/workflow/route.do" class="com.mixky.administrator.action.WorkFlowRouteAction"/>
+	<bean name="/administrator/workflow/relation.do" class="com.mixky.administrator.action.WorkFlowRelationAction"/>
+	
+</beans>

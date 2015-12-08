@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<params>	
+	<protocol>http</protocol>	
+	<server>192.168.5.140</server>
+	<port>80</port>
+</params>

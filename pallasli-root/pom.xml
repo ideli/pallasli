@@ -76,7 +76,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<!-- Activiti最低要求JDK1.5 -->
+					<!-- 最低要求JDK1.7 -->
 					<source>1.7</source>
 					<target>1.7</target>
 					<showWarnings>true</showWarnings>

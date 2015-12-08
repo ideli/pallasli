@@ -1,28 +1,29 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-webapp</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>pallasli-webapp-reporttest</artifactId>
-  <packaging>war</packaging>
-  <dependencies>
-  <dependency>
-  
-    <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-report</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-	<groupId>com.itextpdf</groupId>
-	<artifactId>itext-asian</artifactId>
-	<version>5.2.0</version>
-</dependency>
-<dependency>
-	<groupId>net.sf.jasperreports</groupId>
-	<artifactId>jasperreports-fonts</artifactId>
-	<version>6.0.0</version>
-</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.pallasli</groupId>
+		<artifactId>pallasli-webapp</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>pallasli-webapp-reporttest</artifactId>
+	<packaging>war</packaging>
+	<dependencies>
+		<dependency>
+
+			<groupId>com.pallasli</groupId>
+			<artifactId>pallasli-report</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-asian</artifactId>
+			<version>5.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>6.0.0</version>
+		</dependency>
+	</dependencies>
 </project>

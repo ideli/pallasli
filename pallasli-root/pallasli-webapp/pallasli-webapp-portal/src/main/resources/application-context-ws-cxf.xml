@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+    
+    <!-- The service bean -->
+    <bean id="cacheDataServiceImp" class="com.mixky.ws.implement.CacheDataServiceImp" />
+<!--    <bean id="ssoDataServiceImp" class="com.mixky.ws.implement.SsoDataServiceImp" />-->
+    <bean id="portalDataSyncImp" class="com.mixky.ws.implement.PortalDataSyncImp">
+		<property name="providers">
+			<map>
+				<entry key="SYNC_TYPE_DICTIONARY">
+					<ref bean="syncDataDictionaryProvider"/>
+				</entry>
+				<entry key="SYNC_TYPE_ROLEAUTH">
+					<ref bean="syncDataRoleUserAuthProvider"/>
+				</entry>
+				<entry key="SYNC_TYPE_SSOUSER">
+					<ref bean="syncDataSsoUserProvider"/>
+				</entry>
+				<entry key="SYNC_TYPE_WORKFLOW">
+					<ref bean="syncDataWorkFlowProvider"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="syncDataRoleUserAuthProvider" class="com.mixky.ws.implement.provider.SyncDataRoleUserAuthProvider"/>
+	<bean id="syncDataSsoUserProvider" class="com.mixky.ws.implement.provider.SyncDataSsoUserProvider"/>
+	<bean id="syncDataWorkFlowProvider" class="com.mixky.ws.implement.provider.SyncDataWorkFlowProvider"/>
+ 	<bean id="syncDataDictionaryProvider" class="com.mixky.ws.implement.provider.SyncDataDictionaryProvider"/> 
+
+	<!-- Aegis data binding -->
+    <bean id="aegisBean"
+        class="org.apache.cxf.aegis.databinding.AegisDatabinding"
+        scope="prototype"/> 
+    <bean id="jaxws-and-aegis-service-factory"
+        class="org.apache.cxf.jaxws.support.JaxWsServiceFactoryBean"
+        scope="prototype">
+        <property name="dataBinding" ref="aegisBean"/>
+        <property name="serviceConfigurations">
+            <list>
+              <bean class="org.apache.cxf.jaxws.support.JaxWsServiceConfiguration"/>
+              <bean class="org.apache.cxf.aegis.databinding.AegisServiceConfiguration"/>
+              <bean class="org.apache.cxf.service.factory.DefaultServiceConfiguration"/> 
+            </list>
+        </property>
+    </bean>
+
+    <!-- Service endpoint -->
+    <!-- See http://incubator.apache.org/cxf/faq.html regarding CXF + Spring AOP -->
+    <jaxws:endpoint id="cacheDataService" implementor="com.mixky.ws.implement.CacheDataServiceImp" address="/cacheDataService">
+        <jaxws:serviceFactory>
+            <ref bean="jaxws-and-aegis-service-factory"/>
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>
+	
+<!--    <jaxws:endpoint id="ssoDataService" implementor="com.mixky.ws.implement.SsoDataServiceImp" address="/ssoDataService">
+        <jaxws:serviceFactory>
+            <ref bean="jaxws-and-aegis-service-factory"/>
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>-->
+	
+    <jaxws:endpoint id="portalDataSyncService" implementor="com.mixky.ws.implement.PortalDataSyncImp" address="/portalDataSyncService">
+        <jaxws:serviceFactory>
+            <ref bean="jaxws-and-aegis-service-factory"/>
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>
+	
+    <jaxws:endpoint id="portalTodoMessageService" implementor="com.mixky.ws.implement.TodoMessageServiceImp" address="/portalTodoMessageService">
+        <jaxws:serviceFactory>
+            <ref bean="jaxws-and-aegis-service-factory"/>
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>
+	
+	<jaxws:endpoint id="IMMessageService" implementor="com.wasoft.websocket.ws.IMService" address="/IMService">
+        <jaxws:serviceFactory>
+            <ref bean="jaxws-and-aegis-service-factory"/>
+        </jaxws:serviceFactory>
+    </jaxws:endpoint>
+</beans>

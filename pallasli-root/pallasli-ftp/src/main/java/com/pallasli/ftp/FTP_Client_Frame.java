@@ -46,7 +46,7 @@ import com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel;
 /**
  * @author lzwJava
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({ "deprecation", "serial", "restriction" })
 public class FTP_Client_Frame extends javax.swing.JFrame {
 	FtpClient ftpClient;
 	private JPasswordField PassField;
@@ -87,7 +87,8 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		// 创建显示主窗体菜单项
 		MenuItem showMenuItem = new MenuItem("显示主窗体");
 		showMenuItem.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				FTP_Client_Frame.this.setExtendedState(JFrame.NORMAL);
 				FTP_Client_Frame.this.setVisible(true);
@@ -97,7 +98,8 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		// 创建退出菜单项
 		MenuItem exitMenuItem = new MenuItem("退出");
 		exitMenuItem.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
@@ -169,15 +171,18 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 
 		setTitle("FTP上传下载");
 		addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
 			public void windowOpened(java.awt.event.WindowEvent evt) {
 				formWindowOpened(evt);
 			}
 
+			@Override
 			public void windowIconified(final WindowEvent e) {
 				setVisible(false);
 			}
 		});
 		addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentResized(java.awt.event.ComponentEvent evt) {
 				formComponentResized(evt);
 			}
@@ -217,6 +222,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 
 		serverTextField.setText("192.168.1.128");
 		serverTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
 				LinkFTPKeyPressed(evt);
 			}
@@ -230,6 +236,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		userTextField.setMaximumSize(new java.awt.Dimension(200, 2147483647));
 		userTextField.setPreferredSize(new java.awt.Dimension(100, 21));
 		userTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
 				LinkFTPKeyPressed(evt);
 			}
@@ -243,6 +250,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		PassField.setMaximumSize(new java.awt.Dimension(200, 2147483647));
 		PassField.setPreferredSize(new java.awt.Dimension(100, 21));
 		PassField.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
 				LinkFTPKeyPressed(evt);
 			}
@@ -256,6 +264,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		portTextField.setMaximumSize(new java.awt.Dimension(100, 2147483647));
 		portTextField.setPreferredSize(new java.awt.Dimension(50, 21));
 		portTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
 				LinkFTPKeyPressed(evt);
 			}
@@ -267,6 +276,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 		linkButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 		linkButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 		linkButton.addActionListener(new java.awt.event.ActionListener() {
+			@Override
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				linkButtonActionPerformed(evt);
 			}
@@ -319,7 +329,8 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 				java.awt.event.InputEvent.CTRL_MASK));
 		ftpManageMenuItem.setText("FTP站点管理(S)");
 		ftpManageMenuItem.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("action");
 				FtpSiteDialog dialog = new FtpSiteDialog(FTP_Client_Frame.this);
@@ -349,7 +360,8 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 				java.awt.event.InputEvent.CTRL_MASK));
 		exitMenuItem.setText("退出(X)");
 		exitMenuItem.addActionListener(new ActionListener() {
-			
+
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
@@ -523,6 +535,7 @@ public class FTP_Client_Frame extends javax.swing.JFrame {
 
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(new NimbusLookAndFeel());

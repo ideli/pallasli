@@ -35,6 +35,7 @@ import com.pallasli.ftp.extClass.FtpClient;
 import com.pallasli.ftp.extClass.FtpFile;
 import com.pallasli.ftp.panel.FTPTableCellRanderer;
 
+@SuppressWarnings({ "restriction", "serial" })
 public class FtpPanel extends javax.swing.JPanel {
 
 	FtpClient ftpClient;
@@ -130,14 +131,15 @@ public class FtpPanel extends javax.swing.JPanel {
 		ftpDiskTable.getTableHeader().setReorderingAllowed(false);
 		ftpDiskTable.setDoubleBuffered(true);
 		ftpDiskTable.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				ftpDiskTableMouseClicked(evt);
 			}
 		});
 		scrollPane.setViewportView(ftpDiskTable);
 		scrollPane.getViewport().setBackground(Color.WHITE);
-		ftpDiskTable.getColumnModel().getColumn(0).setCellRenderer(
-				FTPTableCellRanderer.getCellRanderer());
+		ftpDiskTable.getColumnModel().getColumn(0)
+				.setCellRenderer(FTPTableCellRanderer.getCellRanderer());
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(
 				ftpDiskTable.getModel());
 		TableStringConverter converter = new TableConverter();
@@ -193,6 +195,7 @@ public class FtpPanel extends javax.swing.JPanel {
 		model.setRowCount(0);
 		// 创建一个线程类
 		Runnable runnable = new Runnable() {
+			@Override
 			public synchronized void run() {
 				ftpDiskTable.clearSelection();
 				try {
@@ -242,6 +245,7 @@ public class FtpPanel extends javax.swing.JPanel {
 		this.ftpClient = ftpClient;
 		// 以30秒为间隔与服务器保持通讯
 		final Timer timer = new Timer(3000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
 					final FtpClient ftpClient = FtpPanel.this.ftpClient;
@@ -251,7 +255,6 @@ public class FtpPanel extends javax.swing.JPanel {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (FtpProtocolException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}

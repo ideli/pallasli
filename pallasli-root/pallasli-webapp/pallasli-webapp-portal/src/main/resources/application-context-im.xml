@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<bean id="mixky-im-manager" class="com.mixky.app.im.service.IMManager">
+		<property name="imservice">
+			<ref bean="mixky-im-service"/>
+		</property>
+	</bean>
+	<bean id="mixky-im-service" class="com.mixky.app.im.service.InstantMessageService">
+		<property name="service">
+			<ref bean="mixky-im-webservice"/>
+		</property>
+	</bean>
+	<bean id="mixky-im-webservice" class="com.mixky.app.im.service.MessageService">
+		<property name="domainName">
+			<value>${im.domainName}</value>
+		</property>
+		<property name="serviceURL">
+			<value>${im.url}</value>
+		</property>
+		<property name="oaUrl">
+			<value>${im.oaurl}</value>
+		</property>
+	</bean>
+	
+</beans>

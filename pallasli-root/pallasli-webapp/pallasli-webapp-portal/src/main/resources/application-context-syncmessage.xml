@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+	"http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans>
+	<bean id="thread-syncmessage" class="com.mixky.system.SyncSend"/>
+	
+	<bean id="schedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref local="thread-syncmessage"/>
+        </property>
+        <property name="targetMethod">
+            <value>doSyncMessage</value>
+        </property>
+    </bean>
+    
+	<!-- 定义触发的时间 -->
+	<!-- cronExpression
+	每隔5秒执行一次：*/5 * * * * ? 
+	每隔1分钟执行一次：0 */1 * * * ? 
+	每天23点执行一次：0 0 23 * * ? 
+	每天凌晨1点执行一次：0 0 1 * * ? 
+	每月1号凌晨1点执行一次：0 0 1 1 * ? 
+	每月最后一天23点执行一次：0 0 23 L * ? 
+	每周星期天凌晨1点实行一次：0 0 1 ? * L 
+	在26分、29分、33分执行一次：0 26,29,33 * * * ? 
+	每天的0点、13点、18点、21点都执行一次：0 0 0,13,18,21 * * ?
+	-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="schedulerJobDetail"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 * */2 * * ?</value>   <!--定时触发   -->
+        </property>
+    </bean>
+    
+	<!-- 任务调度器 -->
+    <bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref local="cronTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

@@ -11,96 +11,100 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.mixky.system.ContextHolder;
-import com.mixky.toolkit.FileTool;
-
 public class DesignerCssFileBuilder {
-	
+
 	private static DesignerCssFileBuilder singleton;
-	
+
 	private Log LOG = LogFactory.getLog(this.getClass());
-	
+
 	/**
 	 * 基路径.
 	 */
 	private String basePath;
-	
+
 	/**
 	 * CSS名称中路径部分用于定位的基路径.
 	 */
 	private String cssClassBasePath;
-	
+
 	private String template;
-	
+
 	DesignerCssFileBuilder() {
 		URL url = getClass().getResource("cssTemplate.txt");
 		if (url == null) {
 			throw new RuntimeException("cssTemplate.txt missing!");
 		}
-		
+
 		try {
 			InputStream is = url.openStream();
-			template = FileTool.readFromStream(is);
+			// template = FileTool.readFromStream(is);
 		} catch (IOException e) {
 			LOG.error("读取CSS模板定义文件时出错!", e);
 			throw new RuntimeException(e);
 		}
-		
+
 	}
-	
-	public static DesignerCssFileBuilder instance(){
-		if(singleton == null){
+
+	public static DesignerCssFileBuilder instance() {
+		if (singleton == null) {
 			singleton = new DesignerCssFileBuilder();
 		}
 		return singleton;
 	}
-	
+
 	public void buildIconCss() {
-		basePath = ContextHolder.instance().getRealPath("/resources/icon/");
-		cssClassBasePath = ContextHolder.instance().getRealPath("/resources/icon/");
-		String dirname = ContextHolder.instance().getRealPath("/resources/icon/");
-		File dir = new File(dirname);
-		String cssFileName = ContextHolder.instance().getRealPath("/resources/css/") + "mixky.awsoft.icon.css";
-		try {
-			buildIconCss(dir, cssFileName);
-		} catch (IOException e) {
-			LOG.error("初始化图片的css文件失败", e);
-		}
+		// basePath = ContextHolder.instance().getRealPath("/resources/icon/");
+		// cssClassBasePath =
+		// ContextHolder.instance().getRealPath("/resources/icon/");
+		// String dirname =
+		// ContextHolder.instance().getRealPath("/resources/icon/");
+		// File dir = new File(dirname);
+		// String cssFileName =
+		// ContextHolder.instance().getRealPath("/resources/css/") +
+		// "mixky.awsoft.icon.css";
+		// try {
+		// buildIconCss(dir, cssFileName);
+		// } catch (IOException e) {
+		// LOG.error("初始化图片的css文件失败", e);
+		// }
 	}
-	
+
 	/**
 	 * 创建指定目录下图片的css文件
+	 * 
 	 * @param dir
 	 * @param cssFileName
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private void buildIconCss(File dir, String cssFileName) throws IOException {
 		List<File> files = computeAllImageFiles(dir);
-		
+
 		StringBuffer sb = new StringBuffer(8192);
 		for (File file : files) {
 			sb.append(computeCssCode(file));
 		}
 		String text = sb.toString();
-		
+
 		File cssFile = new File(cssFileName);
-		FileTool.writeToFile(text, cssFile);
+		// FileTool.writeToFile(text, cssFile);
 	}
 
 	/**
-	 * 在模板的基础上替换，得到修改后的内容。要替换的变量：
-	 * %fileName%：
-	 * %fileNameWithoutExt%：
+	 * 在模板的基础上替换，得到修改后的内容。要替换的变量： %fileName%： %fileNameWithoutExt%：
 	 * %relativePath%
 	 */
 	private String computeCssCode(File file) {
 		String result = template;
 		result = result.replaceAll("%fileName%", file.getName());
-		result = result.replaceAll("%fileNameWithoutExt%", FileTool.getFileNameWithoutExt(file.getName()));
-		result = result.replaceAll("%relativePath%", FileTool.getSubPath(basePath, file));
-		
-		String relativePathForCSSClass = FileTool.getSubPath(cssClassBasePath, file).replace('/', '-');
-		result = result.replaceAll("%relativeForCSSClass%", relativePathForCSSClass);
+		// result = result.replaceAll("%fileNameWithoutExt%",
+		// FileTool.getFileNameWithoutExt(file.getName()));
+		// result = result.replaceAll("%relativePath%",
+		// FileTool.getSubPath(basePath, file));
+		//
+		// String relativePathForCSSClass =
+		// FileTool.getSubPath(cssClassBasePath, file).replace('/', '-');
+		// result = result.replaceAll("%relativeForCSSClass%",
+		// relativePathForCSSClass);
 		return result;
 	}
 
@@ -119,7 +123,7 @@ public class DesignerCssFileBuilder {
 		}
 		return files;
 	}
-	
+
 }
 
 /**
@@ -128,8 +132,8 @@ public class DesignerCssFileBuilder {
 class SuffixFileFilter implements FileFilter {
 
 	private String[] suffixs;
-	private static String[] globalIngoreDirNames = {"CVS", ".svn"};
-	
+	private static String[] globalIngoreDirNames = { "CVS", ".svn" };
+
 	SuffixFileFilter(String suffix) {
 		if (suffix == null) {
 			throw new IllegalArgumentException("suffix must not null!");
@@ -155,14 +159,14 @@ class SuffixFileFilter implements FileFilter {
 			}
 			return true;
 		}
-		
+
 		// 文件的情况
-		for (String suffix: suffixs) {
+		for (String suffix : suffixs) {
 			if (file.getName().endsWith(suffix)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 }

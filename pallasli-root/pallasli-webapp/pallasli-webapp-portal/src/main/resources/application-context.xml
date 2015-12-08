@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+	
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	
+	<bean id="configBean" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>/WEB-INF/classes/param.properties</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-application-parameters" class="com.mixky.app.ApplicationParameters">
+		<property name="applicationName">
+			<value>北京安泰伟奥信息技术有限公司内部OA系统</value>
+		</property>
+		<property name="applicationServerType">
+			<value>tomcat</value>
+		</property>
+		<property name="fileUploadPath">
+			<value>/upload</value>
+		</property>
+		<property name="resourcePath">
+			<value>/resources</value>
+		</property>
+		<property name="useIdentifyCode">
+			<value>false</value>
+		</property>
+		<property name="applicationCode">
+			<value>portal</value>
+		</property>
+		<property name="sncode">
+			<value>702920F1941664FDAEA7A4A73A19591DB5992E3404CAB96569C7067CC17DA41774DCD0E85E854A3B</value>
+		</property>	
+		<property name="dataSources">
+			<map>
+				<entry key="mkPortal">
+					<ref bean="mkPortal-datasource"/>
+				</entry>
+			</map>
+		</property>
+		
+		<property name="applicationLoginPath">
+			<value>portal/sso/login</value>
+		</property>
+		<property name="applicationHomePath">
+			<value>portal/home</value>
+		</property>
+		<property name="applicationRunMode">
+			<value>release</value>
+		</property>	
+		<property name="jsCompress">
+			<value>false</value>
+		</property>	
+		<property name="userConfigFolder">
+			<value>/resources/userconfigs</value>
+		</property>	
+		<property name="handSignFolder">
+			<value>resources/userconfigs/handsign</value>
+		</property>	
+		<property name="clusterSyncWithDb">
+			<value>false</value>
+		</property>
+		<!-- 是否启用CA false为不启用-->
+		<property name="caflag">
+			<value>false</value>
+		</property>
+		<!-- 是否同步单位版-->
+		<property name="unitSync">
+			<value>true</value>
+		</property>
+		<!-- Cert ip  -->
+		<property name="certIP">
+			<value>${cert.Ip}</value>
+		</property>
+		<!-- Cert port  -->
+		<property name="cerPort">
+			<value>${cert.Port}</value>
+		</property>
+		<!-- OA ws  -->
+		<property name="OAWSIP">
+			<value>${OA.wsIp}</value>
+		</property>
+		<property name="OAWSPort">
+			<value>${OA.wsPort}</value>
+		</property>
+		<!-- 人力资源 ws  -->
+		<property name="hrWSIP">
+			<value>${hr.wsIp}</value>
+		</property>
+		<property name="hrWSPort">
+			<value>${hr.wsPort}</value>
+		</property>
+	</bean>
+
+	<bean id="mkPortal-datasource" class="com.garage.xdatasource.XDataSource">
+		<property name="isDefault">
+			<value>true</value>
+		</property>
+		<property name="dbType">
+			<value>${jdbc.dbtype}</value>
+		</property>
+		<property name="jdbcDriverClassName">
+			<value>${jdbc.driverClassName}</value>
+			<!--<value>com.mysql.jdbc.Driver</value>-->
+		</property>
+		<property name="jdbcConnectionUrl">
+			<value>${jdbc.url}</value>
+			<!--<value>jdbc:mysql://localhost/mixkyoa</value>-->
+		</property>
+		<property name="jdbcUserName">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="jdbcUserPass">
+			<value>${jdbc.password}</value>
+		</property>
+		<property name="binaryImplementClass">
+			<value>${jdbc.binaryimp}</value>
+		</property>
+		<property name="blobbuffersize">
+			<value>1024000</value>
+		</property>
+		<property name="clobbuffersize">
+			<value>1024000</value>
+		</property>
+		<property name="dbcpMaxIdle">
+			<value>1</value>
+		</property>
+		<property name="dbcpMaxWait">
+			<value>-1</value>
+		</property>
+		<property name="dbcpMaxActive">
+			<value>64</value>
+		</property>
+	</bean>
+	<bean id="mixky-ssouser-certification" class="com.mixky.portal.sso.certification.SsoServerUserCertification">
+		<!-- <property name="userCertificationImp" ref="user-ssocertification-viacookie"/> -->
+		<property name="userCertificationImp" ref="user-ssocertification-viasession"/>
+	</bean>
+	<bean id="user-ssocertification-viacookie" class="com.mixky.portal.sso.certification.UserCertificationViaCookie">
+		<property name="DOMAIN_NAME">
+			<value></value>
+		</property>
+	</bean>
+	<bean id="user-ssocertification-viasession" class="com.mixky.portal.sso.certification.UserCertificationViaSession"/>
+	
+	<bean id="mixky-user-certification" class="com.mixky.engine.certification.MixkyUserCertification">
+		<property name="userCertificationImp" ref="user-certification-viassoserver"/>
+	</bean>
+	<bean id="user-certification-viassoserver" class="com.mixky.app.certification.UserCertificationWithSsoServer"/>
+	
+	<bean id="user-certification-ssousertokencontainer" class="com.mixky.portal.sso.certification.SsoUserTokenContainer"/>
+	
+ 	<bean id="mixky-dbaccess" class="com.mixky.common.database.MixkyDataAccess">
+		<property name="dataAccessTemplateImp" ref="garage-dbaccess-implement"/>
+		<property name="dataCacheRules">
+			<list>
+				<ref bean="mixky-dbcache-user"/>
+				<ref bean="mixky-dbcache-dept"/>
+				<ref bean="mixky-dbcache-role"/>
+				<ref bean="mixky-dbcache-role-user"/>
+				<ref bean="mixky-dbcache-dept-user"/>
+				<ref bean="mixky-dbcache-dictionary"/>
+				<ref bean="mixky-dbcache-dictionarydata"/>
+				<ref bean="mixky-dbcache-menu"/>
+				<ref bean="mixky-dbcache-modulerole"/>
+				<ref bean="mixky-dbcache-job"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="garage-dbaccess-implement" class="com.mixky.common.database.GarageDataAccessTemplate"/>
+	
+	<bean id="mixky-dbcache-user" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_user</value>
+		</property>
+		<property name="where">
+			<value>
+				<![CDATA[(f_type=0 or f_type=2 or trim(grbh) is not null)]]>
+			</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.User</value>
+		</property>
+		<property name="indexs">
+			<list>
+				<value>f_name</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-dept" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_dept</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.Dept</value>
+		</property>
+		<property name="where">
+			<value>trim(jglbbm) is not null</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-role" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_role</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.Role</value>
+		</property>
+		<property name="where">
+			<value>f_application_code is null or f_application_code=' ' or f_application_code='portal'</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-role-user" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_role_user</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.RoleUser</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-dept-user" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_dept_user</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.DeptUser</value>
+		</property>
+		<property name="where">
+			<value>trim(grbh) is not null</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-dictionary" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_dictionary</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.dictionary.Dictionary</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-dictionarydata" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_dictionary_data</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.dictionary.DictionaryData</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-menu" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_menu</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.desktop.PortalMenu</value>
+		</property>
+		<property name="where">
+			<value>f_application_code is null or f_application_code='' or f_application_code='portal'</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-dbcache-modulerole" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>t_mk_sys_module_role</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.authority.dao.ModuleRoleAuth</value>
+		</property>
+		<property name="where">
+			<value>
+				<![CDATA[f_applicationkey<>'unitapp']]>
+			</value>
+		</property>
+	</bean>
+	<bean id="mixky-dbcache-job" class="com.garage.xdatabase.cache.TableCacheConfig">
+		<property name="tablename">
+			<value>hr_jobxx</value>
+		</property>
+		<property name="classname">
+			<value>com.mixky.engine.organization.dao.HrJob</value>
+		</property>
+	</bean>
+	<bean id="mixky-jsonfile-serializer" class="com.mixky.common.json.serialize.JsonFileSerializer">
+		<property name="fileRoot">
+			<value>resources/designs</value>
+		</property>
+	</bean>
+	
+	<bean id="mixky-applicationdata-access" class="com.mixky.ws.access.ApplicationDataSyncServiceAccess">
+		<property name="serviceUrl">
+			<value>${ws.wsdl.appDataSyncUrl}</value>
+		</property>
+	</bean>
+	<!-- 如需同步单位版，放开此脚本 
+	<bean id="mixky-unitdatasync-access" class="com.wa.datas.access.ws.UnitDataSyncServiceAccess">
+		<property name="serviceUrl" value="${ws.syncunit.wsdl}"></property>
+	</bean>-->
+	<!--  end -->
+	
+	<bean id="mixky-designobject-types" class="com.mixky.common.json.MixkyDesignObjectTypes">
+		<property name="serializedClasses">
+			<map>
+				<entry key="application" value="com.mixky.engine.design.application.Application"/>
+				<entry key="flow" value="com.mixky.engine.design.workflow.Flow"/>
+				<entry key="node" value="com.mixky.engine.design.workflow.Node"/>
+				<entry key="route" value="com.mixky.engine.design.workflow.Route"/>
+				<entry key="relation" value="com.mixky.engine.design.workflow.Relation"/>
+				
+				<entry key="module" value="com.mixky.engine.design.module.Module"/>
+				<entry key="action" value="com.mixky.engine.design.Action"/>
+				<entry key="modulemenu" value="com.mixky.engine.design.module.ModuleMenu"/>
+				<entry key="modulerole" value="com.mixky.engine.design.module.ModuleRole"/>
+				<entry key="documenttype" value="com.mixky.engine.design.module.DocumentType"/>
+				<entry key="portlet" value="com.mixky.engine.design.module.Portlet"/>
+				
+				<entry key="field" value="com.mixky.engine.design.store.Field"/>
+				<entry key="table" value="com.mixky.engine.design.store.Table"/>
+				<entry key="tableform" value="com.mixky.engine.design.store.TableForm"/>
+				
+				<entry key="query" value="com.mixky.engine.design.view.Query"/>
+				<entry key="view" value="com.mixky.engine.design.view.View"/>
+				<entry key="group" value="com.mixky.engine.design.view.Group"/>
+				<entry key="column" value="com.mixky.engine.design.view.Column"/>
+				<entry key="viewparameter" value="com.mixky.engine.design.view.ViewParameter"/>
+				
+				<entry key="panel" value="com.mixky.engine.design.document.Panel"/>
+				<entry key="identity" value="com.mixky.engine.design.document.Identity"/>
+				<entry key="state" value="com.mixky.engine.design.document.State"/>
+				<entry key="substate" value="com.mixky.engine.design.document.SubState"/>
+				<entry key="authoritymap" value="com.mixky.engine.design.document.AuthorityMap"/>
+				<entry key="document" value="com.mixky.engine.design.document.Document"/>
+			</map>
+		</property>
+	</bean>
+	<import resource="application-context-activemq.xml"/>	
+	<import resource="application-context-im-jobs.xml"/>	
+	<import resource="application-context-syncmessage.xml"/>
+	<import resource="application-context-ws-cxf.xml"/>	
+	<!-- 
+	<import resource="application-context-jobs.xml"/> -->
+</beans>

@@ -1,0 +1,12 @@
+下面是第三步，让IE支持CSS3。在cv选择器的最后，增加一句话
+behavior: url(/public/ie-css3.htc);
+
+#cv {
+    width: 600px; height: 400px;
+    background: #000;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 0 40px #222;
+    behavior: url(/public/ie-css3.htc);
+}

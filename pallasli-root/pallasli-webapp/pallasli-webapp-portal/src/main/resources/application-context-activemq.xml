@@ -1,0 +1,65 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://activemq.apache.org/schema/core   http://activemq.apache.org/schema/core/activemq-core-5.0.0.xsd">
+	
+	<bean id="configBean" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>/WEB-INF/classes/param.properties</value>
+		</property>
+	</bean>
+	
+	<!--
+	    使用spring的listenerContainer，消息用持久化保存，服务器重启不会丢失
+	-->
+	<!--  embedded ActiveMQ Broker -->
+	<amq:broker useJmx="false" persistent="true">
+		<amq:persistenceAdapter>
+			<amq:amqPersistenceAdapter directory="amq"/>
+		</amq:persistenceAdapter>
+		<amq:transportConnectors>
+			<amq:transportConnector uri="${ws.jms.transportConnectorUri}" />
+		</amq:transportConnectors>
+	</amq:broker>
+     
+     <!-- 连接外部的activeMQ -->
+	<amq:connectionFactory id="jmsConnectionFactory" brokerURL="${ws.jms.brokerURL}" />
+
+    <!--  ActiveMQ destinations  -->
+	<!--  使用topic方式-->
+<!--	<amq:topic name="CACHE-UPDATE" physicalName="JMS-CACHE-UPDATE" />
+	<amq:topic name="SSO-LOGOUT" physicalName="JMS-SSO-LOGOUT" />-->
+	<amq:topic name="MIXKY-COMMON-MESSAGE" physicalName="JMS-MIXKY-COMMON-MESSAGE" />
+	
+	<!--  Spring JmsTemplate config -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory">
+			<!--  lets wrap in a pool to avoid creating a connection per send -->
+			<bean class="org.springframework.jms.connection.SingleConnectionFactory">
+				<property name="targetConnectionFactory" ref="jmsConnectionFactory" />
+			</bean>
+		</property>
+		<!-- custom MessageConverter -->
+		<property name="messageConverter" ref="defaultMessageConverter" />
+	</bean>
+
+	<!-- converter  -->
+	<bean id="defaultMessageConverter" class="com.mixky.mq.activemq.DefaultMessageConverter" />
+
+	<!-- POJO which send Message uses  Spring JmsTemplate -->
+<!--	<bean id="cache-update-msg-producer" class="com.mixky.mq.activemq.producer.CacheUpdateMessageProducer">
+		<property name="template" ref="jmsTemplate" />
+		<property name="destination" ref="CACHE-UPDATE" />
+	</bean>
+	
+	<bean id="sso-logout-msg-producer" class="com.mixky.mq.activemq.producer.SsoUserLogoutMessageProducer">
+		<property name="template" ref="jmsTemplate" />
+		<property name="destination" ref="SSO-LOGOUT" />
+	</bean>
+	-->
+	<bean id="mixky-common-message-producer" class="com.mixky.mq.activemq.producer.MixkyCommonMessageProducer">
+		<property name="template" ref="jmsTemplate" />
+		<property name="destination" ref="MIXKY-COMMON-MESSAGE" />
+	</bean>
+</beans>
