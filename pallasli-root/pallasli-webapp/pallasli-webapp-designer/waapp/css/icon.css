@@ -1,0 +1,180 @@
+.icon-common-add {
+	background-image: url(../icon/common/add.png) !important;
+}
+.icon-common-apply {
+	background-image: url(../icon/common/apply.png) !important;
+}
+.icon-common-cancel {
+	background-image: url(../icon/common/cancel.png) !important;
+}
+.icon-common-checked {
+	background-image: url(../icon/common/checked.png) !important;
+}
+.icon-common-confirm {
+	background-image: url(../icon/common/confirm.png) !important;
+}
+.icon-common-copy {
+	background-image: url(../icon/common/copy.png) !important;
+}
+.icon-common-delete {
+	background-image: url(../icon/common/delete.gif) !important;
+}
+.icon-common-down {
+	background-image: url(../icon/common/down.gif) !important;
+}
+.icon-common-edit {
+	background-image: url(../icon/common/edit.png) !important;
+}
+.icon-common-exit {
+	background-image: url(../icon/common/exit.png) !important;
+}
+.icon-common-export {
+	background-image: url(../icon/common/export.png) !important;
+}
+.icon-common-extend {
+	background-image: url(../icon/common/extend.gif) !important;
+}
+.icon-common-import {
+	background-image: url(../icon/common/import.gif) !important;
+}
+.icon-common-json {
+	background-image: url(../icon/common/json.png) !important;
+}
+.icon-common-open {
+	background-image: url(../icon/common/open.gif) !important;
+}
+.icon-common-paste {
+	background-image: url(../icon/common/paste.gif) !important;
+}
+.icon-common-quit {
+	background-image: url(../icon/common/quit.png) !important;
+}
+.icon-common-refresh {
+	background-image: url(../icon/common/refresh.png) !important;
+}
+.icon-common-rename {
+	background-image: url(../icon/common/rename.gif) !important;
+}
+.icon-common-return {
+	background-image: url(../icon/common/return.gif) !important;
+}
+.icon-common-rowadded {
+	background-image: url(../icon/common/rowadded.png) !important;
+}
+.icon-common-rowchanged {
+	background-image: url(../icon/common/rowchanged.png) !important;
+}
+.icon-common-rowdeleted {
+	background-image: url(../icon/common/rowdeleted.png) !important;
+}
+.icon-common-save {
+	background-image: url(../icon/common/save.png) !important;
+}
+.icon-common-search {
+	background-image: url(../icon/common/search.png) !important;
+}
+.icon-common-skin {
+	background-image: url(../icon/common/skin.png) !important;
+}
+.icon-common-up {
+	background-image: url(../icon/common/up.gif) !important;
+}
+.icon-designer-authoritymap {
+	background-image: url(../icon/designer/authoritymap.gif) !important;
+}
+.icon-designer-class {
+	background-image: url(../icon/designer/class.gif) !important;
+}
+.icon-designer-column {
+	background-image: url(../icon/designer/column.gif) !important;
+}
+.icon-designer-dictionary {
+	background-image: url(../icon/designer/dictionary.gif) !important;
+}
+.icon-designer-dictionarydata {
+	background-image: url(../icon/designer/dictionarydata.gif) !important;
+}
+.icon-designer-dictionaryfolder {
+	background-image: url(../icon/designer/dictionaryfolder.gif) !important;
+}
+.icon-designer-dictionarys {
+	background-image: url(../icon/designer/dictionarys.gif) !important;
+}
+.icon-designer-document {
+	background-image: url(../icon/designer/document.gif) !important;
+}
+.icon-designer-emptydoc {
+	background-image: url(../icon/designer/emptydoc.gif) !important;
+}
+.icon-designer-field {
+	background-image: url(../icon/designer/field.gif) !important;
+}
+.icon-designer-flow {
+	background-image: url(../icon/designer/flow.png) !important;
+}
+.icon-designer-flowinstences {
+	background-image: url(../icon/designer/flowinstences.gif) !important;
+}
+.icon-designer-group {
+	background-image: url(../icon/designer/group.gif) !important;
+}
+.icon-designer-identity {
+	background-image: url(../icon/designer/identity.gif) !important;
+}
+.icon-designer-importfield {
+	background-image: url(../icon/designer/importfield.gif) !important;
+}
+.icon-designer-menuauthfolder {
+	background-image: url(../icon/designer/menuauthfolder.gif) !important;
+}
+.icon-designer-menufolder {
+	background-image: url(../icon/designer/menufolder.gif) !important;
+}
+.icon-designer-module {
+	background-image: url(../icon/designer/module.gif) !important;
+}
+.icon-designer-moduleauthorityfolder {
+	background-image: url(../icon/designer/moduleauthorityfolder.png) !important;
+}
+.icon-designer-modulefolder {
+	background-image: url(../icon/designer/modulefolder.gif) !important;
+}
+.icon-designer-modulemenu {
+	background-image: url(../icon/designer/modulemenu.gif) !important;
+}
+.icon-designer-modulerole {
+	background-image: url(../icon/designer/modulerole.gif) !important;
+}
+.icon-designer-moduleroleauthfolder {
+	background-image: url(../icon/designer/moduleroleauthfolder.gif) !important;
+}
+.icon-designer-node {
+	background-image: url(../icon/designer/node.gif) !important;
+}
+.icon-designer-panel {
+	background-image: url(../icon/designer/panel.gif) !important;
+}
+.icon-designer-portlet {
+	background-image: url(../icon/designer/portlet.png) !important;
+}
+.icon-designer-relation {
+	background-image: url(../icon/designer/relation.gif) !important;
+}
+.icon-designer-route {
+	background-image: url(../icon/designer/route.png) !important;
+}
+.icon-designer-state {
+	background-image: url(../icon/designer/state.gif) !important;
+}
+.icon-designer-table {
+	background-image: url(../icon/designer/table.gif) !important;
+}
+.icon-designer-tableform {
+	background-image: url(../icon/designer/tableform.gif) !important;
+}
+.icon-designer-view {
+	background-image: url(../icon/designer/view.gif) !important;
+}
+.icon-designer-viewparameter {
+	background-image: url(../icon/designer/viewparameter.gif) !important;
+}

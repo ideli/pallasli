@@ -1,0 +1,35 @@
+{
+	"f_views":
+	{
+		"classpath":"view",
+		"data":
+		[
+			{
+				"f_single_select":false,
+				"f_page_size":0,
+				"f_issummary":false,
+				"f_enable_favorite":false,
+				"f_url":"app/bpmgl/bpm_view",
+				"f_isquery":false,
+				"f_caption":"流程设计",
+				"f_name":"vBpmSj",
+				"f_key":"vBpmSj",
+				"f_class":"view",
+				"f_i_parent":
+				{
+					"classpath":"query",
+					"data":"waBpmZx.qryBpmSj"
+				}
+			}
+		]
+	},
+	"f_caption":"流程设计",
+	"f_name":"qryBpmSj",
+	"f_key":"qryBpmSj",
+	"f_class":"query",
+	"f_i_parent":
+	{
+		"classpath":"module",
+		"data":"waBpmZx"
+	}
+}

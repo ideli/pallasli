@@ -1,0 +1,11 @@
+{
+	"f_caption":"t_test",
+	"f_i_parent":
+	{
+		"classpath":"module",
+		"data":"waTest"
+	},
+	"f_class":"table",
+	"f_key":"t_test",
+	"f_name":"t_test"
+}

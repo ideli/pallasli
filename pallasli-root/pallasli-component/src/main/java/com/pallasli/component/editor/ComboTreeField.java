@@ -1,15 +1,16 @@
 package com.pallasli.component.editor;
 
 import com.google.gson.JsonObject;
-import com.mixky.engine.design.store.Field;
-import com.mixky.engine.design.store.IFieldEditor;
-import com.mixky.toolkit.JsonObjectTool;
+import com.pallasli.component.Field;
+import com.pallasli.component.IFieldEditor;
+import com.pallasli.component.JsonObjectTool;
 
 public class ComboTreeField extends IFieldEditor {
 
-	public JsonObject getEditor(Field field){
+	@Override
+	public JsonObject getEditor(Field field) {
 		JsonObject json = new JsonObject();
-		String applicationkey = this.getApplicationKey(field);
+		String applicationkey = IFieldEditor.getApplicationKey();
 		json.addProperty("xtype", "combotree");
 		json.addProperty("anchor", "100%");
 		json.addProperty("name", field.getF_key());
@@ -22,7 +23,7 @@ public class ComboTreeField extends IFieldEditor {
 
 		JsonObjectTool.applyJson(json, field.getF_config());
 		json.addProperty("applicationkey", applicationkey);
-		
+
 		return json;
 	}
 }

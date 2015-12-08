@@ -1,9 +1,9 @@
 package com.pallasli.component.editor;
 
 import com.google.gson.JsonObject;
-import com.mixky.engine.design.store.Field;
-import com.mixky.engine.design.store.IFieldEditor;
-import com.mixky.toolkit.JsonObjectTool;
+import com.pallasli.component.Field;
+import com.pallasli.component.IFieldEditor;
+import com.pallasli.component.JsonObjectTool;
 
 public class BoxField extends IFieldEditor {
 
