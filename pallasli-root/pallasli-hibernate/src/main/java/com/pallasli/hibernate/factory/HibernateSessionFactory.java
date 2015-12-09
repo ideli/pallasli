@@ -1,4 +1,4 @@
-package com.pallasli.hibernate421.factory;
+package com.pallasli.hibernate.factory;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

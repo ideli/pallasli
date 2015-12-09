@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.Database;
 import com.pallas.design.dao.DatabaseDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class DatabaseDAOImpl implements DatabaseDAO {
 	@Override

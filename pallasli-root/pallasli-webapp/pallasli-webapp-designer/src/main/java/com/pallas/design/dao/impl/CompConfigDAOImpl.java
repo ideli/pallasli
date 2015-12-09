@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.CompConfig;
 import com.pallas.design.dao.CompConfigDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class CompConfigDAOImpl implements CompConfigDAO {
 

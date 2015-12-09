@@ -1,4 +1,4 @@
-package com.pallasli.hibernate421.factory;
+package com.pallasli.hibernate.factory;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

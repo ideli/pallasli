@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.PageType;
 import com.pallas.design.dao.PageTypeDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class PageTypeDAOImpl implements PageTypeDAO {
 

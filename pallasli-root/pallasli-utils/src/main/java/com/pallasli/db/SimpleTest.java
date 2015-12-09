@@ -1,14 +1,58 @@
 package com.pallasli.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bson.Document;
 import org.junit.Test;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 
 public class SimpleTest {
+	@Test
+	public void startWithoutAuth() {
+		MongoClientURI uri = new MongoClientURI(
+				"mongodb://localhost:27017/local", MongoClientOptions.builder()
+						.cursorFinalizerEnabled(false));
+		MongoClient client = new MongoClient(uri);
+		MongoDatabase db = client.getDatabase("local");
+		MongoCollection<Document> collection = db.getCollection("system.users");
+		List<Document> foundDocument = collection.find().into(
+				new ArrayList<Document>());
+		System.out.println(foundDocument);
+
+	}
+
+	@Test
+	public void startWithAuth() {
+		MongoClient client = null;
+		ServerAddress serverAddress = new ServerAddress("127.0.0.1", 27017);
+		List<ServerAddress> seeds = new ArrayList<ServerAddress>();
+		seeds.add(serverAddress);
+		MongoCredential credentials = MongoCredential
+				.createScramSha1Credential("admin", "admin",
+						"admin".toCharArray());
+		List<MongoCredential> credentialsList = new ArrayList<MongoCredential>();
+		credentialsList.add(credentials);
+		client = new MongoClient(seeds, credentialsList);
+		MongoDatabase db = client.getDatabase("admin");
+		// MongoIterable<Document> collections=db.listCollections();
+		MongoCollection<Document> collection = db.getCollection("system.users");
+		List<Document> foundDocument = collection.find().into(
+				new ArrayList<Document>());
+		System.out.println(foundDocument);
+	}
 
 	@Test
 	public void main() {

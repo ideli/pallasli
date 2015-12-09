@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.Page;
 import com.pallas.design.dao.PageDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class PageDAOImpl implements PageDAO {
 

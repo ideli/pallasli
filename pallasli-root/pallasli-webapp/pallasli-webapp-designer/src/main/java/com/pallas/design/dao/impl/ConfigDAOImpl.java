@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.Config;
 import com.pallas.design.dao.ConfigDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class ConfigDAOImpl implements ConfigDAO {
 

@@ -20,6 +20,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -484,15 +485,22 @@ public class Main extends JFrame {
 		panel_5.add(verticalBox_2);
 
 		JTabbedPane tabbedPane_3 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_3.setPreferredSize(new Dimension(180, 250));
 		verticalBox_2.add(tabbedPane_3);
 
-		JPanel panel_10 = new JPanel();
+		JScrollPane panel_10 = new JScrollPane();
 		tabbedPane_3.addTab("New tab", null, panel_10, null);
 		panel_10.setPreferredSize(new Dimension(10, 200));
 
+		JPanel panel_13 = new JPanel();
+		panel_13.setBackground(Color.WHITE);
+		FlowLayout flowLayout_4 = (FlowLayout) panel_13.getLayout();
+		flowLayout_4.setAlignment(FlowLayout.LEFT);
+		panel_10.setViewportView(panel_13);
+
 		JTree tree_1 = new JTree();
-		tree_1.setPreferredSize(new Dimension(200, 190));
-		panel_10.add(tree_1);
+		panel_13.add(tree_1);
+		tree_1.setAutoscrolls(true);
 
 		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
 		verticalBox_2.add(tabbedPane_2);

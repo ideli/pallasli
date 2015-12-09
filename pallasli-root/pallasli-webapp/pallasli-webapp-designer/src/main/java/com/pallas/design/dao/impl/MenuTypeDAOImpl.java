@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.MenuType;
 import com.pallas.design.dao.MenuTypeDAO;
-import com.pallasli.hibernate421.factory.HibernateSessionFactory;
+import com.pallasli.hibernate.factory.HibernateSessionFactory;
 
 public class MenuTypeDAOImpl implements MenuTypeDAO {
 
