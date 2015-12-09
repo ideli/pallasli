@@ -23,19 +23,19 @@ public class InstanceServiceDao {
 
 	private InstanceInfo getInstaceInfoFrom(ExecutionEntity execEntity) {
 
-		String activityId = execEntity.getActivityId();//
-		String businessKey = execEntity.getBusinessKey();//
-		String currentActivityId = execEntity.getCurrentActivityId();
-		String currentActivityName = execEntity.getCurrentActivityName();
-		String deleteReason = execEntity.getDeleteReason();
-		String deploymentId = execEntity.getDeploymentId();
-		String id = execEntity.getId();
-		String name = execEntity.getName();
-		String processBusinessKey = execEntity.getProcessBusinessKey();
-		String processDefinitionId = execEntity.getProcessDefinitionId();
-		String processDefinitionKey = execEntity.getProcessDefinitionKey();
-		String processDefinitionName = execEntity.getProcessDefinitionName();
-		String processInstanceId = execEntity.getProcessInstanceId();
+		// String activityId = execEntity.getActivityId();//
+		// String businessKey = execEntity.getBusinessKey();//
+		// String currentActivityId = execEntity.getCurrentActivityId();
+		// String currentActivityName = execEntity.getCurrentActivityName();
+		// String deleteReason = execEntity.getDeleteReason();
+		// String deploymentId = execEntity.getDeploymentId();
+		// String id = execEntity.getId();
+		// String name = execEntity.getName();
+		// String processBusinessKey = execEntity.getProcessBusinessKey();
+		// String processDefinitionId = execEntity.getProcessDefinitionId();
+		// String processDefinitionKey = execEntity.getProcessDefinitionKey();
+		// String processDefinitionName = execEntity.getProcessDefinitionName();
+		// String processInstanceId = execEntity.getProcessInstanceId();
 
 		InstanceInfo info = new InstanceInfo();
 		// info.setBusinessKey(businessKey);

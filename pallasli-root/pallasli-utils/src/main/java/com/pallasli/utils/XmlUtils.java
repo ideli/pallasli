@@ -50,7 +50,7 @@ public class XmlUtils {
 				fieldSetter = ("" + fieldSetter.charAt(0)).toUpperCase()
 						+ fieldSetter.substring(1);
 				fieldSetter = "set" + fieldSetter;
-				Class[] paraTypes = new Class[] { String.class };
+				// Class[] paraTypes = new Class[] { String.class };
 				try {
 					// Method method = cls.getMethod(fieldSetter, paraTypes);
 					// String[] paraValues = new String[] {
@@ -98,8 +98,8 @@ public class XmlUtils {
 				fieldSetter = ("" + fieldSetter.charAt(0)).toUpperCase()
 						+ fieldSetter.substring(1);
 				fieldSetter = "set" + fieldSetter;
-				Class[] paraTypes = new Class[] { String.class };
 				try {
+					Class[] paraTypes = new Class[] { String.class };
 					Method method = cls.getMethod(fieldSetter, paraTypes);
 					String[] paraValues = new String[] { attr.getStringValue() };
 					method.invoke(obj, paraValues);

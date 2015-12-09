@@ -4,14 +4,11 @@
 package com.pallasli.ftp;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
-/**
- * @author Li Zhong Wei 断开按钮的动作处理类
- */
+@SuppressWarnings("serial")
 class CutLinkAction extends AbstractAction {
 	private FTP_Client_Frame frame; // 父窗体的引用对象
 
@@ -36,6 +33,7 @@ class CutLinkAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		frame.ftpPanel.stopDownThread(); // 停止下载线程
 		frame.localPanel.stopUploadThread(); // 停止上传线程
@@ -49,8 +47,7 @@ class CutLinkAction extends AbstractAction {
 			frame.ftpClient = null;
 		}
 		// 设置上传按钮不可用
-		frame.localPanel.getActionMap().get("uploadAction").setEnabled(
-				false);
+		frame.localPanel.getActionMap().get("uploadAction").setEnabled(false);
 		// 设置下载按钮不可用
 		frame.ftpPanel.getActionMap().get("downAction").setEnabled(false);
 		setEnabled(false); // 设置本按钮（断开）不可用

@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 /**
  * 重命名按钮的动作处理器
  */
+@SuppressWarnings("serial")
 class RennameAction extends AbstractAction {
 	private LocalPanel localPanel; // 本地资源管理面板的引用
 
@@ -33,6 +34,7 @@ class RennameAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 获取本地资源表格的选择行号
 		int selRow = this.localPanel.localDiskTable.getSelectedRow();

@@ -24,6 +24,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
+@SuppressWarnings("serial")
 public class TestUtils extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
@@ -65,11 +66,13 @@ public class TestUtils extends JFrame {
 	MouseInputListener mouseHandler = new MouseInputAdapter() {
 		Point startPoint;
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			startPoint = e.getPoint();
 			current = new Rectangle();
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent e) {
 			makeRectangle(startPoint, e.getPoint());
 			if (current.width > 0 && current.height > 0) {
@@ -79,6 +82,7 @@ public class TestUtils extends JFrame {
 			}
 		}
 
+		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (current != null) {
 				makeRectangle(startPoint, e.getPoint());

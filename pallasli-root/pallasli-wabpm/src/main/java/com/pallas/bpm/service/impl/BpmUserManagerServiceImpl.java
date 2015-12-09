@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.User;
-import org.activiti.engine.test.ActivitiRule;
-import org.junit.Rule;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pallas.bpm.service.BpmUserManagerService;
@@ -33,33 +31,28 @@ public class BpmUserManagerServiceImpl implements BpmUserManagerService {
 	@Override
 	public List<GroupInfo> findGroupList(String keyword, int pageSize,
 			int pageNum) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<UserInfo> findGroupListByUser(String userId, int pageSize,
 			int pageNum) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<GroupInfo> findUserListByGroup(String groupId, int pageSize,
 			int pageNum) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean addGroupUser(String groupId, String userId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean removeGroupUser(String groupId, String userId) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("unchecked")
 public class DropUtils {
 	public static DropTarget initDrop(JComponent dropComp) {
 		// dragComp表示要接受拖拽的控件

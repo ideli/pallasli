@@ -4,10 +4,10 @@ import org.junit.Test;
 
 public class StringUtilsTest {
 	@Test
-	public  void main( ) {
+	public void main() {
 		String a = "昆仑武";
 		String b = "少林寺";
-		int jmlen = b.length();
+		// int jmlen = b.length();
 		for (int i = 0; i < a.length(); i++) {
 			char c = a.charAt(i);
 			char d = b.charAt(i);

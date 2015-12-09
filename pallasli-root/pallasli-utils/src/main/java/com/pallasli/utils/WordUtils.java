@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.poi.poifs.filesystem.DirectoryEntry;
-import org.apache.poi.poifs.filesystem.DocumentEntry;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 public class WordUtils {
@@ -20,7 +19,7 @@ public class WordUtils {
 				+ "2013000001                             2013     07     08");
 		fileCon.append("\n\r\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
-		new WordUtils().exportDoc(destFile, fileCon.toString());
+		WordUtils.exportDoc(destFile, fileCon.toString());
 
 		// ##################根据Word模板导出单个Word文档###################################################
 		// Map<String, String> map = new HashMap<String, String>();
@@ -90,8 +89,7 @@ public class WordUtils {
 				ByteArrayInputStream bais = new ByteArrayInputStream(b);
 				POIFSFileSystem poifs = new POIFSFileSystem();
 				DirectoryEntry directory = poifs.getRoot();
-				DocumentEntry documentEntry = directory.createDocument(
-						"WordDocument", bais);
+				directory.createDocument("WordDocument", bais);
 				FileOutputStream ostream = new FileOutputStream(path);
 				poifs.writeFilesystem(ostream);
 				bais.close();

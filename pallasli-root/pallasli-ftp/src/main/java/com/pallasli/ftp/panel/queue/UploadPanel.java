@@ -12,6 +12,7 @@ import javax.swing.table.TableColumn;
 import com.pallasli.ftp.extClass.ProgressArg;
 import com.pallasli.ftp.panel.QueueTableCellRanderer;
 
+@SuppressWarnings("serial")
 public class UploadPanel extends JPanel {
 	private JTable uploadTable = new JTable(); // 表格组件
 	private JScrollPane scrollPane = new JScrollPane();
@@ -45,6 +46,7 @@ public class UploadPanel extends JPanel {
 	 */
 	public void addRow(final Object[] values) {
 		Runnable runnable = new Runnable() {
+			@Override
 			public void run() {
 				model.insertRow(0, values); // 向表格的数据模型添加数据
 			}

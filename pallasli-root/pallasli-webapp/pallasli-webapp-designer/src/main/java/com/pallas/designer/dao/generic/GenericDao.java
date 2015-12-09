@@ -15,6 +15,7 @@ import com.pallasli.utils.StringUtils;
 public class GenericDao<T extends BaseModel> extends BaseDao {
 	public T model;
 
+	@SuppressWarnings("unchecked")
 	public List<TableFieldValue> getTableFieldsAndValues(T model) {
 		List<TableFieldValue> list = new ArrayList<TableFieldValue>();
 		Class<T> cls = (Class<T>) model.getClass();
@@ -78,7 +79,7 @@ public class GenericDao<T extends BaseModel> extends BaseDao {
 
 		List<TableFieldValue> list = getTableFieldsAndValues(model);
 		for (TableFieldValue fv : list) {
-			Class cls = fv.getFieldType();
+			Class<?> cls = fv.getFieldType();
 			if (cls.equals(String.class)) {
 				fields += fv.getFieldName() + ",";
 				values += "'" + fv.getValue() + "',";

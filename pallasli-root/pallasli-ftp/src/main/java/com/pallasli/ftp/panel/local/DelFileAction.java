@@ -14,6 +14,7 @@ import com.pallasli.ftp.extClass.DiskFile;
 /**
  * 删除本地文件的动作处理器
  */
+@SuppressWarnings("serial")
 class DelFileAction extends AbstractAction {
 	private LocalPanel localPanel; // 本地资源管理面板的引用对象
 
@@ -37,6 +38,7 @@ class DelFileAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 获取表格选择的所有行
 		final int[] selRows = this.localPanel.localDiskTable.getSelectedRows();
@@ -57,10 +59,9 @@ class DelFileAction extends AbstractAction {
 						if (file.isFile()) { // 如果删除的是文件
 							boolean delete = file.delete(); // 调用删该文件的方法
 							if (!delete) {
-								JOptionPane.showMessageDialog(localPanel, file
-										.getAbsoluteFile()
-										+ "文件无法删除。", "删除文件",
-										JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(localPanel,
+										file.getAbsoluteFile() + "文件无法删除。",
+										"删除文件", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
 						} else if (file.isDirectory()) { // 如果删除的是文件夹
@@ -72,10 +73,9 @@ class DelFileAction extends AbstractAction {
 							}
 							boolean delete = file.delete();// 最后删除该文件夹
 							if (!delete) { // 如果成功删除
-								JOptionPane.showMessageDialog(localPanel, file
-										.getAbsoluteFile()
-										+ "文件夹无法删除。", "删除文件",
-										JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(localPanel,
+										file.getAbsoluteFile() + "文件夹无法删除。",
+										"删除文件", JOptionPane.ERROR_MESSAGE);
 								return; // 返回方法的调用处
 							}
 						}
@@ -90,6 +90,7 @@ class DelFileAction extends AbstractAction {
 				 * 
 				 * @see java.lang.Runnable#run()
 				 */
+				@Override
 				public void run() {
 					File parent = null;
 					// 遍历表格的选择内容

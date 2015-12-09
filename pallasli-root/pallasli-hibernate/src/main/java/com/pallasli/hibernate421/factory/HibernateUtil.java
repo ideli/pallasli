@@ -1,7 +1,9 @@
-package com.pallasli.hibernate.factory;
+package com.pallasli.hibernate421.factory;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
  * 这个类不但在它的静态初始化过程（仅当加载这个类的时候被 JVM 执行一次）中产生全局的org.hibernate.SessionFactory，
@@ -26,7 +28,9 @@ public class HibernateUtil {
 			Configuration cfg = new Configuration().configure().setProperty(
 					"hibernate.current_session_context_class", "thread");
 
-			return cfg.buildSessionFactory();
+			ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+					.applySettings(cfg.getProperties()).buildServiceRegistry();
+			return cfg.buildSessionFactory(serviceRegistry);
 		} catch (Throwable ex) {
 			// Make sure you log the exception, as it might be swallowed
 			System.err.println("Initial SessionFactory creation failed." + ex);

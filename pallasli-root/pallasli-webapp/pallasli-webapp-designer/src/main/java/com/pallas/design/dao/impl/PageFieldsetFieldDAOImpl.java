@@ -6,7 +6,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.PageFieldsetField;
 import com.pallas.design.dao.PageFieldsetFieldDAO;
-import com.pallasli.hibernate.factory.HibernateSessionFactory;
+import com.pallasli.hibernate421.factory.HibernateSessionFactory;
 
 public class PageFieldsetFieldDAOImpl implements PageFieldsetFieldDAO {
 

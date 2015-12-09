@@ -16,7 +16,6 @@ public class SimpleTest {
 		try {
 			mg = new Mongo();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// 查询所有的Database

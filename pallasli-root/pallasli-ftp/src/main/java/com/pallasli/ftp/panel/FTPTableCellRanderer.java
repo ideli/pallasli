@@ -15,9 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import com.pallasli.ftp.extClass.FileInterface;
 import com.pallasli.ftp.extClass.FtpFile;
 
-/**
- * @author Li Zhong Wei 渲染本地资源和FTP资源表格组件的渲染器
- */
+@SuppressWarnings("serial")
 public class FTPTableCellRanderer extends DefaultTableCellRenderer {
 	private final ImageIcon folderIcon = new ImageIcon(getClass().getResource(
 			"/com/lzw/ftp/res/folderIcon.JPG")); // 文件夹图标

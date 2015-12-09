@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class TableReportBuildingGuide extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();

@@ -7,10 +7,7 @@ package com.pallasli.ftp.extClass;
 
 import java.io.File;
 
-/**
- * 
- * @author lzwJava
- */
+@SuppressWarnings("serial")
 public class DiskFile extends java.io.File implements FileInterface {
 
 	public DiskFile() {

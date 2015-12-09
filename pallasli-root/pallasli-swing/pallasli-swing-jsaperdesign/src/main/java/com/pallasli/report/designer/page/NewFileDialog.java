@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.pallasli.report.designer.Main;
 
+@SuppressWarnings("serial")
 public class NewFileDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -77,6 +78,7 @@ public class NewFileDialog extends JDialog {
 					JRadioButton rdbtnNewRadioButton = new JRadioButton("空白报表");
 					rdbtnNewRadioButton.setActionCommand("0");
 					rdbtnNewRadioButton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							selectReportType = arg0.getActionCommand();
 						}
@@ -100,6 +102,7 @@ public class NewFileDialog extends JDialog {
 					rdbtnNewRadioButton_1.setActionCommand("1");
 					rdbtnNewRadioButton_1
 							.addActionListener(new ActionListener() {
+								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									selectReportType = arg0.getActionCommand();
 								}
@@ -122,6 +125,7 @@ public class NewFileDialog extends JDialog {
 					rdbtnNewRadioButton_2.setActionCommand("2");
 					rdbtnNewRadioButton_2
 							.addActionListener(new ActionListener() {
+								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									selectReportType = arg0.getActionCommand();
 								}
@@ -163,6 +167,7 @@ public class NewFileDialog extends JDialog {
 			{
 				JButton okButton = new JButton("创建");
 				okButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent arg0) {
 
 						if (selectReportType.equals("0")) {
@@ -200,6 +205,7 @@ public class NewFileDialog extends JDialog {
 			{
 				JButton cancelButton = new JButton("取消");
 				cancelButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						setVisible(false);
 					}

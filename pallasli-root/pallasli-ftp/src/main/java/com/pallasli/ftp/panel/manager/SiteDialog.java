@@ -19,8 +19,9 @@ import javax.swing.border.EmptyBorder;
 import com.pallasli.ftp.extClass.SiteInfoBean;
 
 /**
- * @author Li Zhong Wei 创建维护FTP站点的对话框
+ * 创建维护FTP站点的对话框
  */
+@SuppressWarnings("serial")
 public class SiteDialog extends JDialog implements ActionListener {
 
 	private FtpSiteDialog dialog; // 保存父窗体的引用对象
@@ -139,6 +140,7 @@ public class SiteDialog extends JDialog implements ActionListener {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand(); // 获取按钮的command属性
 		if (command.equals("ok")) { // 如果是确定按钮

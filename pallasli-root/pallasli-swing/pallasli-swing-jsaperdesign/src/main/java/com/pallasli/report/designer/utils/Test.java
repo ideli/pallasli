@@ -28,6 +28,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 
+@SuppressWarnings("serial")
 public class Test extends JFrame implements DropTargetListener {
 	private JEditorPane textPane = new JEditorPane();
 
@@ -58,6 +59,7 @@ public class Test extends JFrame implements DropTargetListener {
 		test.setVisible(true);
 		test.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		test.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosed(WindowEvent e) {
 				System.exit(0);
 			}
@@ -104,6 +106,7 @@ public class Test extends JFrame implements DropTargetListener {
 		}
 	}
 
+	@Override
 	public void drop(DropTargetDropEvent e) {
 		try {
 			DataFlavor stringFlavor = DataFlavor.stringFlavor;
@@ -132,15 +135,19 @@ public class Test extends JFrame implements DropTargetListener {
 		}
 	}
 
+	@Override
 	public void dragEnter(DropTargetDragEvent e) {
 	}
 
+	@Override
 	public void dragExit(DropTargetEvent e) {
 	}
 
+	@Override
 	public void dragOver(DropTargetDragEvent e) {
 	}
 
+	@Override
 	public void dropActionChanged(DropTargetDragEvent e) {
 	}
 }

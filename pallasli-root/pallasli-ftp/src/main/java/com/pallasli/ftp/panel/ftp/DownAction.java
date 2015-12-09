@@ -11,6 +11,7 @@ import com.pallasli.ftp.extClass.FtpFile;
 /**
  * 下载按钮的动作处理器
  */
+@SuppressWarnings("serial")
 class DownAction extends AbstractAction {
 	private final FtpPanel ftpPanel;
 
@@ -35,6 +36,7 @@ class DownAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 获取FTP资源表格的所有选择行
 		final int[] selRows = ftpPanel.ftpDiskTable.getSelectedRows();

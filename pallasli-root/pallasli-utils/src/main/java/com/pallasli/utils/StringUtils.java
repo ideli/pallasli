@@ -75,7 +75,7 @@ public class StringUtils {
 			int beginIndex) {
 		if (source.length() - 1 != beginIndex) {
 			int endIndex = source.indexOf(token, beginIndex + 1);
-			String interceptString = source.substring(beginIndex, endIndex);
+			source = source.substring(beginIndex, endIndex);
 
 		}
 		return source;

@@ -30,7 +30,7 @@ public class MixkyDesignObjectTypes implements BeanPostProcessor {
 	public Class<?> getRegisteredClass(String classpath) {
 		if ((this.serializedClasses != null)
 				&& (this.serializedClasses.containsKey(classpath))) {
-			String classname = (String) this.serializedClasses.get(classpath);
+			String classname = this.serializedClasses.get(classpath);
 			if ((classname != null) && (!("".equals(classname))))
 				try {
 					return Class.forName(classname);
@@ -48,11 +48,12 @@ public class MixkyDesignObjectTypes implements BeanPostProcessor {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T createDesignObject(String classpath) {
-		Class classType = getRegisteredClass(classpath);
+		Class<T> classType = (Class<T>) getRegisteredClass(classpath);
 		if (classType != null)
 			try {
-				return (T) classType.newInstance();
+				return classType.newInstance();
 			} catch (InstantiationException e) {
 				this.logger.warn("创建类型为[" + classpath
 						+ "]的设计对象失败, InstantiationException." + e.getCause());
@@ -69,12 +70,14 @@ public class MixkyDesignObjectTypes implements BeanPostProcessor {
 		return null;
 	}
 
+	@Override
 	public Object postProcessAfterInitialization(Object arg0, String arg1)
 			throws BeansException {
 		singleton = this;
 		return arg0;
 	}
 
+	@Override
 	public Object postProcessBeforeInitialization(Object arg0, String arg1)
 			throws BeansException {
 		singleton = this;

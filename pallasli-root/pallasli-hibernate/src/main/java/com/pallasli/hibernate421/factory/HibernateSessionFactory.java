@@ -1,9 +1,11 @@
-package com.pallasli.hibernate.factory;
+package com.pallasli.hibernate421.factory;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateSessionFactory {
 
@@ -33,7 +35,10 @@ public class HibernateSessionFactory {
 				// cfg.setProperty(
 				// "hibernate.current_session_context_class", "thread");
 
-				sessionFactory = cfg.buildSessionFactory();
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(cfg.getProperties())
+						.buildServiceRegistry();
+				sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			}
 			session = sessionFactory.openSession();
 			threadLocal.set(session);
@@ -50,8 +55,10 @@ public class HibernateSessionFactory {
 				// 非web配置
 				// cfg.setProperty(
 				// "hibernate.current_session_context_class", "thread");
-
-				sessionFactory = cfg.buildSessionFactory();
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(cfg.getProperties())
+						.buildServiceRegistry();
+				sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			}
 			session = sessionFactory.openSession();
 			threadLocal.set(session);
@@ -75,7 +82,10 @@ public class HibernateSessionFactory {
 				// cfg.setProperty(
 				// "hibernate.current_session_context_class", "thread");
 
-				sessionFactory = cfg.buildSessionFactory();
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(cfg.getProperties())
+						.buildServiceRegistry();
+				sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			}
 			session = sessionFactory.openSession();
 			threadLocal.set(session);
@@ -99,7 +109,10 @@ public class HibernateSessionFactory {
 				// cfg.setProperty(
 				// "hibernate.current_session_context_class", "thread");
 
-				sessionFactory = cfg.buildSessionFactory();
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(cfg.getProperties())
+						.buildServiceRegistry();
+				sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			}
 			session = sessionFactory.openSession();
 			threadLocal.set(session);
@@ -123,7 +136,10 @@ public class HibernateSessionFactory {
 				// cfg.setProperty(
 				// "hibernate.current_session_context_class", "thread");
 
-				sessionFactory = cfg.buildSessionFactory();
+				ServiceRegistry serviceRegistry = new ServiceRegistryBuilder()
+						.applySettings(cfg.getProperties())
+						.buildServiceRegistry();
+				sessionFactory = cfg.buildSessionFactory(serviceRegistry);
 			}
 			session = sessionFactory.openSession();
 			threadLocal.set(session);

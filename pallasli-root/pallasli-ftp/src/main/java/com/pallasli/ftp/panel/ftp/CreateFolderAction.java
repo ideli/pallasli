@@ -1,7 +1,6 @@
 package com.pallasli.ftp.panel.ftp;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -10,6 +9,7 @@ import javax.swing.JOptionPane;
 /**
  * 创建文件夹按钮的动作处理器
  */
+@SuppressWarnings("serial")
 class CreateFolderAction extends AbstractAction {
 	private FtpPanel ftpPanel;
 
@@ -33,6 +33,7 @@ class CreateFolderAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 接收用户输入的新建文件夹的名称
 		String folderName = JOptionPane.showInputDialog("请输入文件夹名称：");
@@ -42,7 +43,7 @@ class CreateFolderAction extends AbstractAction {
 		// 发送创建文件夹的命令
 		ftpPanel.ftpClient.sendServer("MKD " + folderName + "\r\n");
 		// 读取FTP服务器的命令返回码
- ftpPanel.ftpClient.readServerResponse();
+		ftpPanel.ftpClient.readServerResponse();
 		if (read == 257) // 如果返回码等于257（路径名建立完成）
 			// 提示文件夹创建成功
 			JOptionPane.showMessageDialog(ftpPanel, folderName + "文件夹，创建成功。",

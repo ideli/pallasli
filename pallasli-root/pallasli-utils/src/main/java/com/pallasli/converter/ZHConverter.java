@@ -12,29 +12,26 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-
 public class ZHConverter {
 
-
 	private Properties charMap = new Properties();
-	private Set conflictingSets  = new HashSet();
+	private Set<String> conflictingSets = new HashSet<String>();
 
 	public static final int TRADITIONAL = 0;
 	public static final int SIMPLIFIED = 1;
 	private static final int NUM_OF_CONVERTERS = 2;
 	private static final ZHConverter[] converters = new ZHConverter[NUM_OF_CONVERTERS];
-	private static final String[]  propertyFiles = new String[2];
+	private static final String[] propertyFiles = new String[2];
 
 	static {
 		propertyFiles[TRADITIONAL] = "zh2Hant.properties";
 		propertyFiles[SIMPLIFIED] = "zh2Hans.properties";
 	}
 
-
-
 	/**
 	 *
-	 * @param converterType 0 for traditional and 1 for simplified
+	 * @param converterType
+	 *            0 for traditional and 1 for simplified
 	 * @return
 	 */
 	public static ZHConverter getInstance(int converterType) {
@@ -42,9 +39,10 @@ public class ZHConverter {
 		if (converterType >= 0 && converterType < NUM_OF_CONVERTERS) {
 
 			if (converters[converterType] == null) {
-				synchronized(ZHConverter.class) {
+				synchronized (ZHConverter.class) {
 					if (converters[converterType] == null) {
-						converters[converterType] = new ZHConverter(propertyFiles[converterType]);
+						converters[converterType] = new ZHConverter(
+								propertyFiles[converterType]);
 					}
 				}
 			}
@@ -60,15 +58,14 @@ public class ZHConverter {
 		return instance.convert(text);
 	}
 
-
 	private ZHConverter(String propertyFile) {
 
-	    InputStream is = null;
+		InputStream is = null;
 
+		is = getClass().getResourceAsStream(propertyFile);
 
-	    is = getClass().getResourceAsStream(propertyFile);
-
-		//File propertyFile = new File("C:/Temp/testMDB/TestTranslator/abc.txt");
+		// File propertyFile = new
+		// File("C:/Temp/testMDB/TestTranslator/abc.txt");
 		if (is != null) {
 			BufferedReader reader = null;
 			try {
@@ -76,7 +73,6 @@ public class ZHConverter {
 				charMap.load(reader);
 			} catch (FileNotFoundException e) {
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				try {
@@ -92,8 +88,8 @@ public class ZHConverter {
 	}
 
 	private void initializeHelper() {
-		Map stringPossibilities = new HashMap();
-		Iterator iter = charMap.keySet().iterator();
+		Map<String, Integer> stringPossibilities = new HashMap<String, Integer>();
+		Iterator<Object> iter = charMap.keySet().iterator();
 		while (iter.hasNext()) {
 			String key = (String) iter.next();
 			if (key.length() >= 1) {
@@ -101,7 +97,8 @@ public class ZHConverter {
 				for (int i = 0; i < (key.length()); i++) {
 					String keySubstring = key.substring(0, i + 1);
 					if (stringPossibilities.containsKey(keySubstring)) {
-						Integer integer = (Integer)(stringPossibilities.get(keySubstring));
+						Integer integer = (stringPossibilities
+								.get(keySubstring));
 						stringPossibilities.put(keySubstring, new Integer(
 								integer.intValue() + 1));
 
@@ -113,10 +110,10 @@ public class ZHConverter {
 			}
 		}
 
-		iter = stringPossibilities.keySet().iterator();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
-			if (((Integer)(stringPossibilities.get(key))).intValue() > 1) {
+		Iterator<String> iter2 = stringPossibilities.keySet().iterator();
+		while (iter2.hasNext()) {
+			String key = iter2.next();
+			if ((stringPossibilities.get(key)).intValue() > 1) {
 				conflictingSets.add(key);
 			}
 		}
@@ -137,8 +134,9 @@ public class ZHConverter {
 				outString.append(charMap.get(stackString.toString()));
 				stackString.setLength(0);
 			} else {
-				CharSequence sequence = stackString.subSequence(0, stackString.length()-1);
-				stackString.delete(0, stackString.length()-1);
+				CharSequence sequence = stackString.subSequence(0,
+						stackString.length() - 1);
+				stackString.delete(0, stackString.length() - 1);
 				flushStack(outString, new StringBuilder(sequence));
 			}
 		}
@@ -148,21 +146,19 @@ public class ZHConverter {
 		return outString.toString();
 	}
 
-
 	private void flushStack(StringBuilder outString, StringBuilder stackString) {
-		while (stackString.length() > 0){
+		while (stackString.length() > 0) {
 			if (charMap.containsKey(stackString.toString())) {
-					outString.append(charMap.get(stackString.toString()));
-					stackString.setLength(0);
+				outString.append(charMap.get(stackString.toString()));
+				stackString.setLength(0);
 
-				} else {
-					outString.append("" + stackString.charAt(0));
-					stackString.delete(0, 1);
+			} else {
+				outString.append("" + stackString.charAt(0));
+				stackString.delete(0, 1);
 			}
 
 		}
 	}
-
 
 	String parseOneChar(String c) {
 
@@ -173,10 +169,10 @@ public class ZHConverter {
 		return c;
 	}
 
-	public static void main(String[] args) throws Exception { 
-		String a=new ZHConverter(propertyFiles[TRADITIONAL]).convert("应该");
+	public static void main(String[] args) throws Exception {
+		String a = new ZHConverter(propertyFiles[TRADITIONAL]).convert("应该");
 		System.out.println(a);
-		a=new ZHConverter(propertyFiles[SIMPLIFIED]).convert("應該");
+		a = new ZHConverter(propertyFiles[SIMPLIFIED]).convert("應該");
 		System.out.println(a);
 	}
 

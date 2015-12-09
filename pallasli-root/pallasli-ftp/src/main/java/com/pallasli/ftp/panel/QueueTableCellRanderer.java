@@ -13,15 +13,14 @@ import javax.swing.table.TableCellRenderer;
 
 import com.pallasli.ftp.extClass.ProgressArg;
 
-/**
- * @author lzwJava
- */
+@SuppressWarnings("serial")
 public class QueueTableCellRanderer extends JProgressBar implements
 		TableCellRenderer {
 	public QueueTableCellRanderer() {
 		setStringPainted(true);
 	}
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		if (value instanceof ProgressArg) {

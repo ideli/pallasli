@@ -200,7 +200,7 @@ public class FileUtils {
 	}
 
 	public void deleteFile(String filename) {
-		deleteFile(this.data_dir, filename);
+		deleteFile(data_dir, filename);
 	}
 
 	public void deleteFile(String path, String filename) {

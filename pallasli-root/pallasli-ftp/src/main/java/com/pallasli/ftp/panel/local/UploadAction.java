@@ -12,6 +12,7 @@ import com.pallasli.ftp.extClass.FtpFile;
 /**
  * 上传文件的动作处理器
  */
+@SuppressWarnings("serial")
 class UploadAction extends AbstractAction {
 	private LocalPanel localPanel; // 本地资源管理面板的引用
 
@@ -36,6 +37,7 @@ class UploadAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(java.awt.event.ActionEvent evt) {
 		// 获取用户选择的多个文件或文件夹
 		int[] selRows = this.localPanel.localDiskTable.getSelectedRows();

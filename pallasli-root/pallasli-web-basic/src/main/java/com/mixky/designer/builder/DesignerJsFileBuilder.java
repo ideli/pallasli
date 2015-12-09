@@ -82,6 +82,7 @@ public class DesignerJsFileBuilder {
 				}
 				fis = new FileInputStream(fileList[i]);
 				InputStreamReader isReader = new InputStreamReader(fis, charset);
+				isReader.close();
 				// 输出注释头
 				StringBuffer strbuffer = new StringBuffer();
 				strbuffer.append("\r\n");
@@ -97,6 +98,7 @@ public class DesignerJsFileBuilder {
 					osw.write(buffer, 0, current);
 					osw.flush();
 				}
+				ps.close();
 			}
 			osw.close();
 		} catch (Exception e) {

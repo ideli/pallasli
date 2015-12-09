@@ -29,7 +29,7 @@ import com.pallasli.ftp.FTP_Client_Frame;
 import com.pallasli.ftp.extClass.SiteInfoBean;
 
 /**
- * @author lzwJava 连接到FTP站点的对话框
+ * 连接到FTP站点的对话框
  */
 public class FtpLinkDialog extends JDialog implements ActionListener {
 	private Properties siteInfo = new Properties();
@@ -118,6 +118,7 @@ public class FtpLinkDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 		SiteInfoBean bean = (SiteInfoBean) list.getSelectedValue();

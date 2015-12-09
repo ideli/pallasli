@@ -48,6 +48,7 @@ public class BpmServiceTest {
 		String source = modelService.getEditorSource("1062501");
 		System.out.println(source);
 		Assert.assertTrue(source.length() > 10);
+		Assert.assertEquals("", id);
 
 	}
 

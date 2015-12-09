@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.Fieldset;
 import com.pallas.design.dao.FieldsetDAO;
-import com.pallasli.hibernate.factory.HibernateSessionFactory;
+import com.pallasli.hibernate421.factory.HibernateSessionFactory;
 
 public class FieldsetDAOImpl implements FieldsetDAO {
 

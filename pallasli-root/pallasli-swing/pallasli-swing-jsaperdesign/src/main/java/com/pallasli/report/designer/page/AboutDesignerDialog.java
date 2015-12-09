@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class AboutDesignerDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -60,6 +61,7 @@ public class AboutDesignerDialog extends JDialog {
 			{
 				JButton okButton = new JButton("确定");
 				okButton.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
 					}

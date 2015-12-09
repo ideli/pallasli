@@ -1,20 +1,18 @@
 package org.activiti.designer.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.FileInputStream;
 
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.test.ActivitiRule;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -30,7 +28,6 @@ import com.pallas.bpm.service.BpmUserManagerService;
 import com.pallas.bpm.service.bean.ProcessInstanceInfo;
 import com.pallas.bpm.service.bean.TaskInfo;
 import com.pallas.bpm.service.bean.UserInfo;
-import com.pallas.bpm.service.impl.BpmUserManagerServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:activiti.cfg.xml")

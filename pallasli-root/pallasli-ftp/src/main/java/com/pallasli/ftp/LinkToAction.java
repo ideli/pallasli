@@ -7,9 +7,7 @@ import javax.swing.Icon;
 
 import com.pallasli.ftp.panel.manager.FtpLinkDialog;
 
-/**
- * @author Li Zhong Wei 连接到按钮的动作类
- */
+@SuppressWarnings("serial")
 class LinkToAction extends AbstractAction {
 	private final FTP_Client_Frame client_Frame;
 
@@ -33,8 +31,10 @@ class LinkToAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 创建连接到FTP站点对话框
-		FtpLinkDialog dialog = new FtpLinkDialog(this.client_Frame);
+		new FtpLinkDialog(this.client_Frame);
+
 	}
 }

@@ -36,6 +36,7 @@ import com.pallasli.report.designer.action.PageSettingAction;
 import com.pallasli.report.designer.action.ReportPropsSettingAction;
 import com.pallasli.report.designer.action.SaveAsAction;
 
+@SuppressWarnings("rawtypes")
 public class Main extends JFrame {
 
 	private JPanel contentPane;
@@ -45,6 +46,7 @@ public class Main extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Main frame = new Main();
@@ -316,6 +318,7 @@ public class Main extends JFrame {
 		toolBar_2.add(btnNewButton_3);
 		btnNewButton_3.setPreferredSize(new Dimension(23, 23));
 		btnNewButton_3.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
@@ -366,6 +369,7 @@ public class Main extends JFrame {
 		btnNewButton_5.setIcon(new ImageIcon(Main.class
 				.getResource("/designer/icons/tool/new.gif")));
 		btnNewButton_5.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
@@ -454,6 +458,7 @@ public class Main extends JFrame {
 		btnNewButton_7.setPreferredSize(new Dimension(200, 9));
 		btnNewButton_7.setEnabled(false);
 		btnNewButton_7.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
@@ -524,6 +529,7 @@ public class Main extends JFrame {
 				new String[] { "\u4E8B\u4EF6\u540D", "\u5C5E\u6027\u503C" }) {
 			Class[] columnTypes = new Class[] { String.class, String.class };
 
+			@Override
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}

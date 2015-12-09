@@ -27,8 +27,9 @@ import com.pallasli.ftp.extClass.FtpClient;
 import com.pallasli.ftp.extClass.FtpFile;
 
 /**
- * @author Li Zhong Wei 任务队列控制面板
+ * 任务队列控制面板
  */
+@SuppressWarnings("serial")
 public class QueuePanel extends JPanel implements ActionListener {
 	private JTable queueTable = new JTable(); // 显示任务队列的表格组件
 	private JScrollPane scrollPane = new JScrollPane();
@@ -68,6 +69,7 @@ public class QueuePanel extends JPanel implements ActionListener {
 			 * 
 			 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 			 */
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (localQueue.size() + ftpQueue.size() == queueTable
 						.getRowCount()) // 如果队列大小没有改变
@@ -124,6 +126,7 @@ public class QueuePanel extends JPanel implements ActionListener {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		final String command = e.getActionCommand();
 		if (command.equals("stop&start")) {// 处理暂停按钮事件
@@ -198,7 +201,7 @@ public class QueuePanel extends JPanel implements ActionListener {
 					ListSelectionModel selModel = queueTable
 							.getSelectionModel(); // 获取表格的选择模型
 					selModel // 设置选择模型的单选模式
-							.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					int dsize = localQueue.size(); // 获取本地上传队列的大小
 					int drow = queueTable.getSelectedRow();// 获取队列表格的当前选择行号
 					int queueVal = localQueue.size() - dsize;
@@ -232,7 +235,7 @@ public class QueuePanel extends JPanel implements ActionListener {
 			for (int i = 0; i < size; i++) { // 遍历下载队列
 				Object[] que = ftpQueue.get(i);
 				FtpFile file = (FtpFile) que[0]; // 获取每个下载任务的FTP文件对象
-				if (file.getAbsolutePath().equals(value)) {// 
+				if (file.getAbsolutePath().equals(value)) {//
 					ListSelectionModel selModel = queueTable
 							.getSelectionModel(); // 获取任务队列表格的选择模型
 					// 设置模型使用单选模式

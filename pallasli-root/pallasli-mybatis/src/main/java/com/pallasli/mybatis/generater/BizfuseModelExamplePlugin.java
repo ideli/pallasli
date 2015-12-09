@@ -1,6 +1,5 @@
 package com.pallasli.mybatis.generater;
 
-
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -91,7 +90,7 @@ public class BizfuseModelExamplePlugin extends PluginAdapter {
 		topLevelClass.setSuperClass(fqjt);
 		topLevelClass.addImportedType(fqjt);
 
-		List fields = topLevelClass.getFields();
+		List<?> fields = topLevelClass.getFields();
 		int i = 0;
 		while (i < fields.size()) {
 			Field field = (Field) fields.get(i);
@@ -101,7 +100,7 @@ public class BizfuseModelExamplePlugin extends PluginAdapter {
 				++i;
 		}
 
-		List methods = topLevelClass.getMethods();
+		List<?> methods = topLevelClass.getMethods();
 		i = 0;
 		while (i < methods.size()) {
 			Method method = (Method) methods.get(i);

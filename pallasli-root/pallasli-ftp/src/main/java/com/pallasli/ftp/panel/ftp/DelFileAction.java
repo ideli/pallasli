@@ -2,7 +2,6 @@ package com.pallasli.ftp.panel.ftp;
 
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +17,7 @@ import com.pallasli.ftp.panel.local.LocalPanel;
 /**
  * FTP面板的删除按钮的动作处理器
  */
+@SuppressWarnings("serial")
 class DelFileAction extends AbstractAction {
 	private FtpPanel ftpPanel;
 
@@ -36,6 +36,7 @@ class DelFileAction extends AbstractAction {
 		this.ftpPanel = ftpPanel;
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 获取显示FTP资源列表的表格组件当前选择的所有行
 		final int[] selRows = ftpPanel.ftpDiskTable.getSelectedRows();
@@ -91,6 +92,7 @@ class DelFileAction extends AbstractAction {
 				 * 
 				 * @see java.lang.Runnable#run()
 				 */
+				@Override
 				public void run() {
 					// 遍历显示FTP资源的表格的所有选择行
 					for (int i = 0; i < selRows.length; i++) {

@@ -49,6 +49,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+@SuppressWarnings("serial")
 class DragTree extends JTree implements DragGestureListener,
 		DragSourceListener, DropTargetListener {
 	BufferedImage ghostImage;
@@ -75,9 +76,11 @@ class DragTree extends JTree implements DragGestureListener,
 		setModel(createTreeModel());
 
 		addTreeExpansionListener(new TreeExpansionListener() {
+			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
 			}
 
+			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
 				TreePath path = e.getPath();
 
@@ -94,6 +97,7 @@ class DragTree extends JTree implements DragGestureListener,
 		});
 		this.setCellRenderer(new DefaultTreeCellRenderer() {
 
+			@Override
 			public Component getTreeCellRendererComponent(JTree tree,
 					Object value, boolean selected, boolean expanded,
 					boolean leaf, int row, boolean hasFocus) {
@@ -126,6 +130,7 @@ class DragTree extends JTree implements DragGestureListener,
 		// or collapsed
 		// if the user lingers on it for more than a short time
 		hoverTimer = new Timer(1000, new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (lastPath == null) {
 					return;
@@ -142,6 +147,7 @@ class DragTree extends JTree implements DragGestureListener,
 
 		this.addKeyListener(new KeyAdapter() {
 
+			@Override
 			public void keyPressed(KeyEvent e) {
 				int code = e.getKeyCode();
 				int modifiers = e.getModifiers();
@@ -184,6 +190,7 @@ class DragTree extends JTree implements DragGestureListener,
 		});
 	}
 
+	@Override
 	public void dragGestureRecognized(DragGestureEvent e) {
 		// drag anything ...
 
@@ -239,24 +246,29 @@ class DragTree extends JTree implements DragGestureListener,
 				this); // drag source listener
 	}
 
+	@Override
 	public void dragDropEnd(DragSourceDropEvent e) {
 		ghostImage = null;
 		sourceNode = null;
 	}
 
+	@Override
 	public void dragEnter(DragSourceDragEvent e) {
 	}
 
+	@Override
 	public void dragExit(DragSourceEvent e) {
 		if (!DragSource.isDragImageSupported()) {
 			repaint(ghostRect.getBounds());
 		}
 	}
 
+	@Override
 	public void dragOver(DragSourceDragEvent e) {
 
 	}
 
+	@Override
 	public void dropActionChanged(DragSourceDragEvent e) {
 	}
 
@@ -274,10 +286,12 @@ class DragTree extends JTree implements DragGestureListener,
 		return new DefaultTreeModel(rootNode);
 	}
 
+	@Override
 	public void dragEnter(DropTargetDragEvent dtde) {
 
 	}
 
+	@Override
 	public void dragOver(DropTargetDragEvent dtde) {
 
 		Point pt = dtde.getLocation();
@@ -307,10 +321,12 @@ class DragTree extends JTree implements DragGestureListener,
 		}
 	}
 
+	@Override
 	public void dropActionChanged(DropTargetDragEvent dtde) {
 
 	}
 
+	@Override
 	public void drop(DropTargetDropEvent e) {
 		try {
 			DataFlavor stringFlavor = DataFlavor.stringFlavor;
@@ -399,6 +415,7 @@ class DragTree extends JTree implements DragGestureListener,
 		}
 	}
 
+	@Override
 	public void dragExit(DropTargetEvent dte) {
 
 	}
@@ -411,10 +428,12 @@ class FileNode extends DefaultMutableTreeNode {
 		setUserObject(file);
 	}
 
+	@Override
 	public boolean getAllowsChildren() {
 		return isDirectory();
 	}
 
+	@Override
 	public boolean isLeaf() {
 		return !isDirectory();
 	}
@@ -432,6 +451,7 @@ class FileNode extends DefaultMutableTreeNode {
 		return file.isDirectory();
 	}
 
+	@Override
 	public String toString() {
 		File file = (File) getUserObject();
 		String filename = file.toString();

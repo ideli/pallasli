@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 import com.pallas.design.bean.Table;
 import com.pallas.design.dao.TableDAO;
-import com.pallasli.hibernate.factory.HibernateSessionFactory;
+import com.pallasli.hibernate421.factory.HibernateSessionFactory;
 
 public class TableDAOImpl implements TableDAO {
 

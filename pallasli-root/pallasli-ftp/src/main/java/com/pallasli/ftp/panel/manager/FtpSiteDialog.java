@@ -29,12 +29,10 @@ import javax.swing.border.BevelBorder;
 import com.pallasli.ftp.FTP_Client_Frame;
 import com.pallasli.ftp.extClass.SiteInfoBean;
 
-/**
- * @author lzwJava
- * 
- */
+@SuppressWarnings("serial")
 public class FtpSiteDialog extends JDialog implements ActionListener {
 	private Properties siteInfo = new Properties(); // 站点属性对象
+	@SuppressWarnings("rawtypes")
 	private JList list; // 显示站点的列表组件
 	private FTP_Client_Frame frame; // 主窗体的引用对象
 	private static final File FILE = new File("data/siteInfo.data");// 存储属性的文件对象
@@ -135,6 +133,7 @@ public class FtpSiteDialog extends JDialog implements ActionListener {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand(); // 获取单击的维护按钮
 		if (command.equals("add")) { // 如果是添加按钮
@@ -161,9 +160,10 @@ public class FtpSiteDialog extends JDialog implements ActionListener {
 	 * 添加站点信息的方法
 	 */
 	public void addSite(SiteInfoBean bean) {
-		siteInfo.setProperty(bean.getId() + "", bean.getSiteName() + ","
-				+ bean.getServer() + "," + bean.getPort() + ","
-				+ bean.getUserName());
+		siteInfo.setProperty(
+				bean.getId() + "",
+				bean.getSiteName() + "," + bean.getServer() + ","
+						+ bean.getPort() + "," + bean.getUserName());
 		try {
 			FileOutputStream out = new FileOutputStream(FILE);
 			siteInfo.store(out, "FTP站点数据");

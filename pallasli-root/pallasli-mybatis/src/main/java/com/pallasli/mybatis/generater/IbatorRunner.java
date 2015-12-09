@@ -23,17 +23,17 @@ import org.mybatis.generator.internal.util.messages.Messages;
 import org.mybatis.generator.logging.LogFactory;
 
 public class IbatorRunner {
-	private static final String CONFIG_FILE = "-configfile";
-	private static final String OVERWRITE = "-overwrite";
-	private static final String CONTEXT_IDS = "-contextids";
-	private static final String TABLES = "-tables";
-	private static final String VERBOSE = "-verbose";
-	private static final String FORCE_JAVA_LOGGING = "-forceJavaLogging";
-	private static final String HELP_1 = "-?";
-	private static final String HELP_2 = "-h";
+	public static final String CONFIG_FILE = "-configfile";
+	public static final String OVERWRITE = "-overwrite";
+	public static final String CONTEXT_IDS = "-contextids";
+	public static final String TABLES = "-tables";
+	public static final String VERBOSE = "-verbose";
+	public static final String FORCE_JAVA_LOGGING = "-forceJavaLogging";
+	public static final String HELP_1 = "-?";
+	public static final String HELP_2 = "-h";
 
 	public static void main(String[] args) {
-		String error;
+		// String error;
 		DefaultShellCallback shellCallback;
 		if (args.length == 0) {
 			usage();
@@ -41,7 +41,7 @@ public class IbatorRunner {
 			return;
 		}
 
-		Map arguments = parseCommandLine(args);
+		Map<?, ?> arguments = parseCommandLine(args);
 
 		if (arguments.containsKey("-?")) {
 			usage();
@@ -54,7 +54,7 @@ public class IbatorRunner {
 			return;
 		}
 
-		List<String> warnings = new ArrayList();
+		List<String> warnings = new ArrayList<String>();
 
 		String configfile = (String) arguments.get("-configfile");
 		File configurationFile = new File(configfile);
@@ -63,7 +63,7 @@ public class IbatorRunner {
 			return;
 		}
 
-		Set fullyqualifiedTables = new HashSet();
+		Set<String> fullyqualifiedTables = new HashSet<String>();
 		if (arguments.containsKey("-tables")) {
 			StringTokenizer st = new StringTokenizer(
 					(String) arguments.get("-tables"), ",");
@@ -75,7 +75,7 @@ public class IbatorRunner {
 
 		}
 
-		Set contexts = new HashSet();
+		Set<String> contexts = new HashSet<String>();
 		if (arguments.containsKey("-contextids")) {
 			StringTokenizer st = new StringTokenizer(
 					(String) arguments.get("-contextids"), ",");
@@ -155,8 +155,8 @@ public class IbatorRunner {
 	}
 
 	private static Map<String, String> parseCommandLine(String[] args) {
-		List<String> errors = new ArrayList();
-		Map arguments = new HashMap();
+		List<String> errors = new ArrayList<String>();
+		Map<String, String> arguments = new HashMap<String, String>();
 
 		for (int i = 0; i < args.length; ++i)
 			if ("-configfile".equalsIgnoreCase(args[i])) {

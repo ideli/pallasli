@@ -27,7 +27,7 @@ public class TinyMCEField extends IFieldEditor {
 				+ "theme_advanced_toolbar_align : 'left',"
 				+ "theme_advanced_statusbar_location : '',"
 				+ "theme_advanced_resizing : true,language:'zh-cn'}";
-		// json.add("tinymceSettings", new JsonFunction(tinymceSettings));
+		json.addProperty("tinymceSettings", tinymceSettings);
 		json.addProperty("value", " ");
 
 		JsonObjectTool.applyJson(json, field.getF_config());

@@ -29,7 +29,7 @@ public class CompDirectAction {
 
 	@DirectMethod(method = "loadCompsByType")
 	public List<Comp> loadCompsByType(JsonArray data) {
-		JsonObject addNode = data.get(0).getAsJsonObject();
+		// JsonObject addNode = data.get(0).getAsJsonObject();
 		CompType compType = new CompType();
 		List<Comp> list = compService.loadCompsByType(compType);
 		return list;
@@ -37,7 +37,7 @@ public class CompDirectAction {
 
 	@DirectMethod(method = "loadComps")
 	public List<Comp> loadComps(JsonArray data) {
-		JsonObject addNode = data.get(0).getAsJsonObject();
+		// JsonObject addNode = data.get(0).getAsJsonObject();
 		List<Comp> list = compService.loadComps();
 		return list;
 	}
@@ -99,10 +99,11 @@ public class CompDirectAction {
 		while (data.get(i) != null) {
 
 			JsonObject addNode = dataArr.get(i).getAsJsonObject();
-			String menuCaption = addNode.has("menuCaption") ? addNode.get(
-					"menuCaption").getAsString() : " ";
-			String menuName = addNode.has("menuName") ? addNode.get("menuName")
-					.getAsString() : " ";
+			// String menuCaption = addNode.has("menuCaption") ? addNode.get(
+			// "menuCaption").getAsString() : " ";
+			// String menuName = addNode.has("menuName") ?
+			// addNode.get("menuName")
+			// .getAsString() : " ";
 			String compName = addNode.has("compName") ? addNode.get("compName")
 					.getAsString() : " ";
 			String configName = addNode.has("configName") ? addNode.get(

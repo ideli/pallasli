@@ -9,8 +9,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
 /**
- * @author Li Zhong Wei 刷新本地资源列表的动作处理器
+ * 刷新本地资源列表的动作处理器
  */
+@SuppressWarnings("serial")
 class RefreshAction extends AbstractAction {
 	private LocalPanel localPanel; // 本地资源管理面板的引用
 
@@ -34,6 +35,7 @@ class RefreshAction extends AbstractAction {
 	 * 
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		this.localPanel.refreshCurrentFolder(); // 调用管理面板的刷新方法
 	}
