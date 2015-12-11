@@ -20,7 +20,8 @@ import org.mybatis.generator.internal.DefaultShellCallback;
  * 
  */
 public class MyBatisGeneratorTool {
-	public static void main(String[] args) {
+
+	public static void run() {
 		MybatisOperation.instance().createTable();
 		List<String> warnings = new ArrayList<String>();
 		boolean overwrite = true;
