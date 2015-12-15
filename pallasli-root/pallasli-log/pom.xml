@@ -6,12 +6,19 @@
 		<artifactId>pallasli-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>pallasli-chat</artifactId>
+	<artifactId>pallasli-log</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>pallasli-basic</artifactId>
-			<version>${project.version}</version>
-		</dependency> 
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+			</dependency>
 	</dependencies>
 </project>

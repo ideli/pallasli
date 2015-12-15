@@ -1,0 +1,2 @@
+将maven依赖下载到lib包
+mvn dependency:copy-dependencies -DoutputDirectory=lib  -DincludeScope=runtime

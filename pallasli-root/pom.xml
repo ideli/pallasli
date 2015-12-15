@@ -26,6 +26,12 @@
 		<module>pallasli-encrypt</module>
 		<module>pallasli-swing</module>
 		<module>pallasli-component</module>
+		<module>pallasli-log</module>
+		<module>pallasli-testng</module>
+		<module>pallasli-poi</module>
+		<module>pallasli-jfreechart</module>
+		<module>pallasli-lucene</module>
+		<module>pallasli-easymock</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -6,12 +6,17 @@
 		<artifactId>pallasli-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>pallasli-chat</artifactId>
+	<artifactId>pallasli-poi</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>pallasli-basic</artifactId>
-			<version>${project.version}</version>
-		</dependency> 
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency> 
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.12</version>
+		</dependency>
 	</dependencies>
 </project>

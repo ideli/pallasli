@@ -1,0 +1,238 @@
+从数据库查询读取数据的SQL语句返回的结果集的数据。 SELECT语句的标准方法来选择从一个数据库中的行并查来在一个结果集。java.sql.ResultSet接口表示一个数据库查询的结果集。
+
+一个ResultSet对象维护一个游标指向当前行的结果集。术语“结果集”是指包含在ResultSet对象中的行和列的数据。
+
+ResultSet接口的方法可分为三类：
+
+导航方法：用于移动光标.
+
+获取方法：用于查看当前行的光标所指向的列中的数据。
+
+更新方法：用于更新当前行的列中的数据。这些更新然后可以在基础数据库中，以及更新。
+
+将光标移动基于ResultSet的属性。所创建生成ResultSet相应的声明时，这些属性被指定。
+
+JDBC提供下列连接方法来创建所需的ResultSet语句：
+
+createStatement(int RSType, int RSConcurrency);
+
+prepareStatement(String SQL, int RSType, int RSConcurrency);
+
+prepareCall(String sql, int RSType, int RSConcurrency);
+
+第一个参数表示ResultSet对象的类型，第二个参数是2的ResultSet常量，用于指定一个结果集是否为只读或可更新之一。
+
+ResultSet的类型：
+可能的RSType如下，如果不指定ResultSet类型，将自动获得一个是TYPE_FORWARD_ONLY。
+
+Type	描述
+ResultSet.TYPE_FORWARD_ONLY	游标只能向前移动的结果集。
+ResultSet.TYPE_SCROLL_INSENSITIVE	游标可以向前和向后滚动，结果集不是别人向创建结果集后发生的数据库更改敏感。
+ResultSet.TYPE_SCROLL_SENSITIVE.	游标可以向前和向后滚动，结果集是别人向创建结果集后发生的数据库更改敏感。 并发性的ResultSet：
+可能的RSConcurrency如下，如果不指定任何并发类型，将自动获得一个为CONCUR_READ_ONLY。
+
+并发	描述
+ResultSet.CONCUR_READ_ONLY	创建结果集只读。这是默认的
+ResultSet.CONCUR_UPDATABLE	创建一个可更新的结果集。
+到目前为止已写入的例子可以写成如下的初始化一个Statement对象来创建一个只进，只读的ResultSet对象：
+
+try {
+   Statement stmt = conn.createStatement(
+                           ResultSet.TYPE_FORWARD_ONLY,
+                           ResultSet.CONCUR_READ_ONLY);
+}
+catch(Exception ex) {
+   ....
+}
+finally {
+   ....
+}
+导航结果集：
+有几种方法在ResultSet接口涉及移动光标，包括：
+
+S.N.	方法 & 描述
+1	public void beforeFirst() throws SQLException 
+将光标移动到正好位于第一行之前
+2	public void afterLast() throws SQLException 
+将光标移动到刚刚结束的最后一行
+3	public boolean first() throws SQLException 
+将光标移动到第一行
+4	public void last() throws SQLException 
+将光标移动到最后一行。
+5	public boolean absolute(int row) throws SQLException 
+将光标移动到指定的行
+6	public boolean relative(int row) throws SQLException 
+从它目前所指向向前或向后移动光标行的给定数量。
+7	public boolean previous() throws SQLException 
+将光标移动到上一行。上一行关闭的结果集此方法返回false
+8	public boolean next() throws SQLException 
+将光标移动到下一行。如果没有更多的行结果集中的此方法返回false
+9	public int getRow() throws SQLException 
+返回的行号，该光标指向的行.
+10	public void moveToInsertRow() throws SQLException 
+将光标移动到一个特殊的行，可以用来插入新行插入到数据库中的结果集。当前光标位置被记住.
+11	public void moveToCurrentRow() throws SQLException 
+移动光标返回到当前行，如果光标在当前插入行，否则，这个方法不执行任何操作
+为了更好地理解，建议学习导航示例代码
+
+查看结果集：
+ResultSet接口中含有几十种用于获取当前行的数据的方法。
+
+有一个get方法为每个可能的数据类型，并且每个get方法有两个版本:
+
+即需要在一个列名。
+
+即需要在列中索引。
+
+例如，如果有兴趣查看的列包含一个整数，需要使用ResultSet调用getInt()方法之一：
+
+S.N.	方法 & 描述
+1	public int getInt(String columnName) throws SQLException
+返回整数的当前行中名为ColumnName列
+2	public int getInt(int columnIndex) throws SQLException
+返回整数的当前行中指定列的索引。列索引从1开始，意味着一个行的第一列是1，行的第二列是2，依此类推。
+与此类似的还有get方法在ResultSet接口为每个八个Java原始类型，以及常见的类型比如java.lang.String，java.lang.Object和java.net.URL
+
+也有用于获取SQL数据类型java.sql.Date，java.sql.Time，java.sql.Timestamp，java.sql.Clob，java.sql.Blob中的方法。检查有关使用这些SQL数据类型的详细信息的文档。
+
+为了更好地理解，建议学习 查看 - 示例代码.
+
+更新的结果集：
+ResultSet接口中包含的更新方法用于更新的结果集的数据的集合。
+
+由于get方法，有两种更新方法为每种数据类型：
+
+即需要在一个列名。
+
+即需要在列中索引。
+
+例如，要更新一个结果集的当前行的String列，可以使用下面的updateString（）方法之一：
+
+S.N.	方法& 描述
+1	public void updateString(int columnIndex, String s) throws SQLException
+指定列中的字符串更改为s的值。
+2	public void updateString(String columnName, String s) throws SQLException
+类似于前面的方法，不同之处在于由它的名称，而不是它的索引指定的列。
+有更新方法八个原始数据类型，以及字符串，对象，URL，并在java.sql包中的SQL数据类型。
+
+更新结果集中的行改变当前行的列中的ResultSet对象，而不是基础数据库中。要更新更改数据库中的一行，需要调用下面的方法之一。
+
+S.N.	方法 & 描述
+1	public void updateRow()
+通过更新数据库中相应的行更新当前行。
+2	public void deleteRow()
+从数据库中删除当前行
+3	public void refreshRow()
+刷新在结果集的数据，以反映最新变化在数据库中。
+4	public void cancelRowUpdates()
+取消所做的当前行的任何更新。
+5	public void insertRow()
+插入一行到数据库中。当光标指向插入行此方法只能被调用。
+
+
+
+
+
+
+
+boolean execute(String SQL) : 返回一个布尔值true，如果ResultSet对象可以被检索，否则返回false。使用这个方法来执行SQL DDL语句，或当需要使用真正的动态SQL。
+
+int executeUpdate(String SQL) : 返回受影响的SQL语句执行的行数。使用此方法来执行，而希望得到一些受影响的行的SQL语句 - 例如，INSERT，UPDATE或DELETE语句。
+
+ResultSet executeQuery(String SQL) : 返回ResultSet对象。当希望得到一个结果集使用此方法，就像使用一个SELECT语句。
+
+
+ String sql = "CREATE DATABASE STUDENTS";
+      stmt.executeUpdate(sql);
+
+  String sql = "DROP DATABASE STUDENTS";
+      stmt.executeUpdate(sql);
+
+
+
+
+
+SQLException方法：
+
+一个SQLException既可以发生在驱动程序和数据库。当这样的异常时，SQLException类型的对象将被传递到catch子句。
+通过SQLException对象有以下几种方法可用于获取更多的关于异常的信息：
+
+方法	描述
+getErrorCode()	获取与异常关联的错误号。
+getMessage()	获取的JDBC驱动程序的错误处理错误消息的驱动程序，或获取Oracle错误号和消息的数据库错误。
+getSQLState()	获取XOPEN SQLSTATE字符串。对于JDBC驱动程序错误，没有有用的信息，从该方法返回。对于一个数据库错误，五位的XOPEN SQLSTATE代码返回。这种方法可以返回null。
+getNextException()	获取异常链中的下一个Exception对象。
+printStackTrace()	打印当前的异常，或可抛出，并回溯到标准错误流。
+printStackTrace(PrintStream s)	打印此抛出对象及其回溯到指定的打印流。
+printStackTrace(PrintWriter w)	打印此抛出对象及其回溯您指定打印作家。
+
+
+
+
+
+JDBC - 数据类型:
+
+下表总结了默认的JDBC数据类型的Java数据类型转换，当调用PreparedStatement或CallableStatement对象的setXXX()方法，或ResultSet.updateXXX()方法。
+
+SQL	JDBC/Java	setXXX	updateXXX
+VARCHAR	java.lang.String	setString	updateString
+CHAR	java.lang.String	setString	updateString
+LONGVARCHAR	java.lang.String	setString	updateString
+BIT	boolean	setBoolean	updateBoolean
+NUMERIC	java.math.BigDecimal	setBigDecimal	updateBigDecimal
+TINYINT	byte	setByte	updateByte
+SMALLINT	short	setShort	updateShort
+INTEGER	int	setInt	updateInt
+BIGINT	long	setLong	updateLong
+REAL	float	setFloat	updateFloat
+FLOAT	float	setFloat	updateFloat
+DOUBLE	double	setDouble	updateDouble
+VARBINARY	byte[ ]	setBytes	updateBytes
+BINARY	byte[ ]	setBytes	updateBytes
+DATE	java.sql.Date	setDate	updateDate
+TIME	java.sql.Time	setTime	updateTime
+TIMESTAMP	java.sql.Timestamp	setTimestamp	updateTimestamp
+CLOB	java.sql.Clob	setClob	updateClob
+BLOB	java.sql.Blob	setBlob	updateBlob
+ARRAY	java.sql.Array	setARRAY	updateARRAY
+REF	java.sql.Ref	SetRef	updateRef
+STRUCT	java.sql.Struct	SetStruct	updateStruct
+JDBC3.0的增强支持BLOB，CLOB，ARRAY，REF数据类型。的ResultSet对象UPDATEBLOB()，updateCLOB()，updateArray()和updateRef()方法，使您可以在服务器上直接操作相应的数据。
+
+setXXX()和updateXXX()方法，可以转换成特定的Java类型到特定的JDBC数据类型。setObject()和updateObject()方法，几乎所有的Java类型映射到JDBC数据类型。
+
+ResultSet对象提供相应的getXXX()方法为每个数据类型来检索列值。每一种方法，可以使用与列名或由它的序号位置。
+
+SQL	JDBC/Java	setXXX	getXXX
+VARCHAR	java.lang.String	setString	getString
+CHAR	java.lang.String	setString	getString
+LONGVARCHAR	java.lang.String	setString	getString
+BIT	boolean	setBoolean	getBoolean
+NUMERIC	java.math.BigDecimal	setBigDecimal	getBigDecimal
+TINYINT	byte	setByte	getByte
+SMALLINT	short	setShort	getShort
+INTEGER	int	setInt	getInt
+BIGINT	long	setLong	getLong
+REAL	float	setFloat	getFloat
+FLOAT	float	setFloat	getFloat
+DOUBLE	double	setDouble	getDouble
+VARBINARY	byte[ ]	setBytes	getBytes
+BINARY	byte[ ]	setBytes	getBytes
+DATE	java.sql.Date	setDate	getDate
+TIME	java.sql.Time	setTime	getTime
+TIMESTAMP	java.sql.Timestamp	setTimestamp	getTimestamp
+CLOB	java.sql.Clob	setClob	getClob
+BLOB	java.sql.Blob	setBlob	getBlob
+ARRAY	java.sql.Array	setARRAY	getARRAY
+REF	java.sql.Ref	SetRef	getRef
+STRUCT	java.sql.Struct	SetStruct	getStruct
+
+
+ 
+清理环境： 
+明确地关闭所有的数据库资源，对依赖于JVM的垃圾收集如下：
+
+//STEP 6: Clean-up environment
+rs.close();
+stmt.close();
+conn.close();
