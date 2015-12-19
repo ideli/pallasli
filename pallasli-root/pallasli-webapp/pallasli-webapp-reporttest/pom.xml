@@ -15,7 +15,7 @@
 			<artifactId>pallasli-report</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+		<dependency> 
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-asian</artifactId>
 			<version>5.2.0</version>

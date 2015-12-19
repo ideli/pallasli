@@ -32,6 +32,8 @@
 		<module>pallasli-jfreechart</module>
 		<module>pallasli-lucene</module>
 		<module>pallasli-easymock</module>
+		<module>pallasli-jasperreport-font</module>
+		<module>pallasli-mysql</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
