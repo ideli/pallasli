@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+ "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>综合应用定制开发工具-设计工具</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="stylesheet" type="text/css" href="../pallas-js-css/scripts/ext/4.2.1/resources/css/ext-all.css"/>
+<script type="text/javascript" src="../pallas-js-css/scripts/ext/4.2.1/ext-all.js"></script>
+<script type="text/javascript" src="extDirect/djn/djn-remote-call-support.js"></script>
+	<script type="text/javascript" src="extDirect/ejn/ejn-assert.js"></script>
+	<script type="text/javascript" src="extDirect/api/api.js"></script>
+	
+    <link rel="stylesheet" type="text/css" href="extDesigner/waapp/css/designer.css" />
+    <link rel="stylesheet" type="text/css" href="extDesigner/waapp/css/icon.css" />
+   
+<script type="text/javascript">
+Pallas.extDesigner.api.REMOTING_API.enableBuffer = 0;
+Ext.Direct.addProvider(Pallas.extDesigner.api.REMOTING_API);
+
+	Ext.Loader.setPath({
+		'Pallas.extDesigner.waapp' : 'extDesigner/waapp/js'
+	});
+	Ext.require([ 'Ext.direct.*', 'Ext.data.*', 'Ext.tree.*',
+	              'Ext.EventManager' ,'Ext.ModelManager',
+	              'Pallas.extDesigner.waapp.plugin.propertygrid.Grid',
+	              'Pallas.extDesigner.waapp.field.JsonObject',
+	              'Pallas.extDesigner.waapp.field.JsonObject1',
+	  			'Pallas.extDesigner.waapp.field.JsonObjectPicker',
+	              'Pallas.extDesigner.waapp.field.Textbox',
+		  			'Pallas.extDesigner.waapp.field.TextboxPicker',
+		              'Pallas.extDesigner.waapp.field.DesignObject',
+			  			'Pallas.extDesigner.waapp.field.DesignObjectPicker',
+	  			'Pallas.extDesigner.waapp.config.ApplicationInfo']); 
+	Ext.onReady(function() {
+		OutlineDirect.getOutline("","",function(){
+			
+		});
+			//document.body.oncontextmenu=function(e){
+			//	return false;
+			//};
+		Ext.apply(Pallas.extDesigner.waapp.config.ApplicationInfo, { 
+			username : "沈伟",
+			departmentname : "网厅单位",
+			title:"综合应用定制开发工具"
+		});
+			 Ext.create('Pallas.extDesigner.waapp.App' );
+		//	Ext.create('Ext.container.Viewport', {
+			//	layout:"fit",
+				//	items: {xtype:"jsonobject1" } 
+				//items:{layout:'anchor',items:[{xtype:"jsonobject",width:700},{xtype:"panel",height:200},{xtype:"jsonobject1" }]}
+		//	items:	p
+			//});
+
+	});
+</script>
+</head>
+</html>

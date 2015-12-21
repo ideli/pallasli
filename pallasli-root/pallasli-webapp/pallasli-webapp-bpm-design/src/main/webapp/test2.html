@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+ "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>工作平台</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="stylesheet" type="text/css" href="../pallas-js-css/scripts/ext/4.2.1/resources/css/ext-all.css"/>
+<script type="text/javascript" src="../pallas-js-css/scripts/ext/4.2.1/ext-all.js"></script>
+   
+<script type="text/javascript">
+
+	Ext.Loader.setPath({
+		'Pallas.extDesigner' : 'extDesigner'
+	});
+	Ext.require([ 'Ext.direct.*', 'Ext.data.*', 'Ext.tree.*' ]); 
+	Ext.onReady(function() {
+		
+		
+			document.body.oncontextmenu=function(e){
+				return false;
+			};
+			Ext.create('Ext.panel.Panel', {
+				renderTo:Ext.getBody(),
+				layout:"column",
+				items:[
+
+						Ext.create('Pallas.extDesigner.shape.field.Checkbox', {}),
+						Ext.create('Pallas.extDesigner.shape.field.ComboBox', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Date', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Display', {}),
+						Ext.create('Pallas.extDesigner.shape.field.File', {}), 
+						Ext.create('Pallas.extDesigner.shape.field.Hidden', {}),
+						Ext.create('Pallas.extDesigner.shape.field.HtmlEditor', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Number', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Radio', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Text', {}), 
+						Ext.create('Pallas.extDesigner.shape.field.TextArea', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Time', {}),
+						Ext.create('Pallas.extDesigner.shape.field.Trigger', {}),
+						
+						
+						Ext.create('Pallas.extDesigner.shape.panel.Panel', {}),
+						Ext.create('Pallas.extDesigner.shape.panel.FormPanel', {}),
+						Ext.create('Pallas.extDesigner.shape.panel.Grid', {}),
+						Ext.create('Pallas.extDesigner.shape.panel.TreePanel', {}) 
+						
+					]
+			})
+
+	});
+</script>
+</head>
+<body>
+<div id="test" width=300 height=300 ></div>
+<div id="test2" width=300 height=300 ></div>
+</body>
+</html>

@@ -34,6 +34,7 @@
 		<module>pallasli-easymock</module>
 		<module>pallasli-jasperreport-font</module>
 		<module>pallasli-mysql</module>
+		<module>pallasli-h2</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

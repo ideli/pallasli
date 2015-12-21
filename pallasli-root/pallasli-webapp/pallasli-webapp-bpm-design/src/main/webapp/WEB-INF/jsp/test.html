@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Expires" CONTENT="0">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link rel="stylesheet" type="text/css"
+	href="../extjs/ext-3.2.1/resources/css/ext-all.css" />
+
+<script type="text/javascript"
+	src="../extjs/ext-3.2.1/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="../extjs/ext-3.2.1/ext-all-debug.js"></script>
+<script type="text/javascript"
+	src="../extjs/ext-3.2.1/locale/ext-lang-zh_CN.js"></script>
+
+
+
+<style type="text/css">
+.drap-input {
+	border : 0px;
+	cursor :pointer;
+	background : #Fcccc3;
+	color : blue;
+	padding : 0px;
+	margin-left : 5px;
+	margin-top : 2px;
+}
+.delete-input {
+	cursor :pointer;
+    background:transparent;
+    height : 30px;
+    background-image:url(../images/folder.png);
+	color : green;
+	padding : 1px;
+	width : auto;
+	margin : 5px;
+}
+</style>
+</head>
+
+
+<script language=javascript>
+	Ext.override(Ext.data.Store,{ 
+		addField: function(field){ 
+			if(typeof field == 'string'){ 
+				field = {name: field}; 
+			} 
+			this.recordType.prototype.fields.replace(field); 
+			if(typeof field.defaultValue != 'undefined'){ 
+				this.each(function(r){ 
+					if(typeof r.data[field.name] == 'undefined'){ 
+						r.data[field.name] = field.defaultValue; 
+					} 
+				}); 
+			} 
+		}, 
+		removeField: function(name){ 
+			this.recordType.prototype.fields.removeKey(name); 
+			this.each(function(r){ 
+				delete r.data[name]; 
+			}); 
+		} 
+	}); 
+	Ext.override(Ext.grid.ColumnModel,{ 
+		addColumn: function(column, colIndex){ 
+			if(typeof column == 'string'){ 
+				column = {header: column, dataIndex: column}; 
+			} 
+			var config = this.config; 
+			this.config = []; 
+			if(typeof colIndex == 'number'){ 
+				config.splice(colIndex, 0, column); 
+			}else{ 
+				colIndex = config.push(column); 
+			} 
+			this.setConfig(config); 
+			return colIndex; 
+		}, 
+		removeColumn: function(colIndex){  
+			this.config.remove(this.config[colIndex]); 
+			this.setConfig(this.config); 
+		} 
+	}); 
+	Ext.override(Ext.grid.GridPanel,{ 
+		addColumn: function(field, column, colIndex){ 
+			if(!column){ 
+				if(field.dataIndex){ 
+					column = field; 
+					field = field.dataIndex; 
+				} else{ 
+					column = field.name || field; 
+				} 
+			} 
+			this.store.addField(field); 
+			this.colModel.addColumn(column, colIndex); 
+		}, 
+		removeColumn: function(name, colIndex){ 
+			this.store.removeField(name); 
+			if(typeof colIndex != 'number'){ 
+				colIndex = this.colModel.findColumnIndex(name); 
+			} 
+			if(colIndex >= 0){ 
+				this.colModel.removeColumn(colIndex); 
+			} 
+		} 
+	}); 
+		　　 
+		　　 
+	
+		
+	Ext.grid.HeaderRemoveDropZone = Ext.extend(Ext.dd.DropZone, {
+		    proxyOffsets : [-4, -9],
+		    fly: Ext.Element.fly,
+		    
+		    constructor : function(desc, grid, hd, hd2){
+		        this.desc = desc; 
+		        this.grid = grid; 
+		        this.view = grid.getView();
+		         
+		        this.ddGroup = "gridHeader" + this.grid.getGridEl().id;
+		        
+		        
+		        Ext.grid.HeaderRemoveDropZone.superclass.constructor.call(this, desc.getEl().dom);
+		    },
+
+		    getTargetFromEvent : function(e){
+
+		        var t = Ext.lib.Event.getTarget(e);
+		        return { node:t};
+		    },
+
+		    onNodeEnter: function(target, dd, e, dragData) {
+		        delete this.dropOK;
+		        if (!target) {
+		            return;
+		        }
+		        this.dropOK = true;
+		        //Ext.fly(target.node).addClass('x-drop-target-active');
+		    },
+		    onNodeOver: function(target, dd, e, dragData) {
+		        return this.dropOK ? this.dropAllowed : this.dropNotAllowed;
+		    },
+		    onNodeOut: function(target, dd, e, dragData) {
+		       // Ext.fly(target.node).removeClass('x-drop-target-active');
+		    },
+		    onNodeDrop: function(target, dd, e, dragData) {
+		        var t =  this.grid.colModel.getColumnById(
+		        		this.grid.colModel.getColumnId(dragData.header.cellIndex)
+		        );
+		        
+		        if (this.dropOK) {
+		        	this.grid.removeColumn( t.name,dragData.header.cellIndex);
+		            return true;
+		        }
+		    }
+		});
+		
+		
+		
+		
+		
+		
+	Ext.ux.CellFieldDropZone = Ext.extend(Ext.dd.DropZone, {
+	    constructor: function(){},
+	    init: function(grid) {
+	        if (grid.rendered) {
+	            this.grid = grid;
+	            this.view = grid.getView();
+	            this.store = grid.getStore();
+	            console.log(this.view);
+	            Ext.ux.CellFieldDropZone.superclass.constructor.call(this, this.view.scroller);
+	        } else {
+	            grid.on('render', this.init, this);
+	        }
+	    },
+	    containerScroll: true,
+
+	    getTargetFromEvent: function(e) {
+ 
+	    	
+	    	return {
+                node: this.grid,
+                record: {},
+                fieldName: ""
+            };
+	    	
+	    	
+//	      Ascertain whether the mousemove is within a grid cell
+	        var t = e.getTarget(this.view.cellSelector);
+	        if (t) {
+	            var rowIndex = this.view.findRowIndex(t);
+	            var columnIndex = this.view.findCellIndex(t);
+	            if ((rowIndex !== false) && (columnIndex !== false)) {
+	                return {
+	                    node: t,
+	                    record: this.store.getAt(rowIndex),
+	                    fieldName: this.grid.getColumnModel().getDataIndex(columnIndex)
+	                };
+	            }
+	        }
+	    },
+
+	//  On Node enter, see if it is valid for us to drop the field on that type of column.
+	    onNodeEnter: function(target, dd, e, dragData) {
+	        delete this.dropOK;
+	        if (!target) {
+	            return;
+	        }
+	        
+	        
+	        var cIndex=this.grid.colModel.findColumnIndex(dragData.field.name);
+	        
+			if(cIndex<0){
+			    this.dropOK = true;
+			    Ext.fly(target.node).addClass('x-drop-target-active');
+			}
+ 
+	    },
+	    onNodeOver: function(target, dd, e, dragData) {
+	        return this.dropOK ? this.dropAllowed : this.dropNotAllowed;
+	    },
+	    onNodeOut: function(target, dd, e, dragData) {
+	        Ext.fly(target.node).removeClass('x-drop-target-active');
+	    },
+
+	//  Process the drop event if we have previously ascertained that a drop is OK.
+	    onNodeDrop: function(target, dd, e, dragData) {
+	        if (this.dropOK) {
+	        	this.grid.addColumn( {header: dragData.field.value, name: dragData.field.name ,dataIndex: dragData.field.name});
+	            return true;
+	        }
+	    }
+	});
+	
+	
+	
+	Ext.ux.PanelFieldDragZone = Ext.extend(Ext.dd.DragZone, {
+	    constructor: function(){},
+
+	//  Call the DRagZone's constructor. The Panel must have been rendered.
+	    init: function(panel) {
+	        if (panel.nodeType) {
+	            Ext.ux.PanelFieldDragZone.superclass.init.apply(this, arguments);
+	        } else {
+	            if (panel.rendered) {
+	                Ext.ux.PanelFieldDragZone.superclass.constructor.call(this, panel.getEl());
+	                var i = Ext.fly(panel.getEl()).select('input');
+	                i.unselectable();
+	            } else {
+	                panel.on('afterlayout', this.init, this, {single: true});
+	            }
+	        }
+	    },
+
+	    scroll: false,
+
+	//  On mousedown, we ascertain whether it is on one of our draggable Fields.
+	//  If so, we collect data about the draggable object, and return a drag data
+	//  object which contains our own data, plus a "ddel" property which is a DOM
+	//  node which provides a "view" of the dragged data.
+	    getDragData: function(e) {
+	        var t = e.getTarget('input');
+	        if (t) {
+	            e.stopEvent();
+
+//	          Ugly code to "detach" the drag gesture from the input field.
+//	          Without this, Opera never changes the mouseover target from the input field
+//	          even when dragging outside of the field - it just keeps selecting.
+	            if (Ext.isOpera) {
+	                Ext.fly(t).on('mousemove', function(e1){
+	                    t.style.visibility = 'hidden';
+	                    (function(){
+	                        t.style.visibility = '';
+	                    }).defer(1);
+	                }, null, {single:true});
+	            }
+
+//	          Get the data we are dragging: the Field
+//	          create a ddel for the drag proxy to display
+	            var f = Ext.getCmp(t.id);
+	            var d = document.createElement('div');
+	            d.className = 'x-form-label';
+	            d.appendChild(document.createTextNode(t.value));
+	            //Ext.fly(d).setWidth(f.getEl().getWidth());
+	            return {
+	                field: f,
+	                ddel: d
+	            };
+	        }
+	    },
+
+	//  The coordinates to slide the drag proxy back to on failed drop.
+	    getRepairXY: function() {
+	    	return {x:100,y:50};
+	       // return this.dragData.field.getEl().getXY();
+	    }
+	});
+	
+	
+	Ext.onReady(function(){
+	
+
+    var myData = {
+		records : [
+			{ name : "Rec 0", column1 : "0", column2 : "0" },
+			{ name : "Rec 1", column1 : "1", column2 : "1" },
+			{ name : "Rec 2", column1 : "2", column2 : "2" },
+			{ name : "Rec 3", column1 : "3", column2 : "3" },
+			{ name : "Rec 4", column1 : "4", column2 : "4" },
+			{ name : "Rec 5", column1 : "5", column2 : "5" },
+			{ name : "Rec 6", column1 : "6", column2 : "6" },
+			{ name : "Rec 7", column1 : "7", column2 : "7" },
+			{ name : "Rec 8", column1 : "8", column2 : "8" },
+			{ name : "Rec 9", column1 : "9", column2 : "9" }
+		]
+	};
+
+
+	// Generic fields array to use in both store defs.
+	var fields = [
+		{name: 'name', mapping : 'name'},
+		{name: 'cccccc', mapping : 'column1'},
+		{name: 'column2', mapping : 'column2'}
+	];
+ 
+	var cols = [
+		{ id : 'name', header: "Record Name", width: 160, sortable: true, dataIndex: 'name'},
+		{header: "ddddddd", width: 50, sortable: true, dataIndex: 'cccccc'},
+		{header: "column2", width: 50, sortable: true, dataIndex: 'column2'}
+	];
+	var cols2 = [
+	    		{ id : 'name', header: "Record Name", width: 160, sortable: true, dataIndex: 'name'},
+	    		{header: "ddddddd", width: 50, sortable: true, dataIndex: 'cccccc'},
+	    		{header: "column2", width: 50, sortable: true, dataIndex: 'column2'}
+	    	];
+  
+    
+    var firstFormPanel=new Ext.form.FormPanel({
+    	ddGroup          : 'firstFormPanel',
+    	enableDragDrop   : true,
+    	flex:1,
+    	layout:"column",
+        plugins: new Ext.ux.PanelFieldDragZone(),
+    	items:[
+		{
+            xtype: 'textfield',
+        	width : 12*4,
+            cls:"drap-input",
+            hideLabel:true,
+            name: "dwmc",
+            value:'单位名称'
+        },{
+            xtype: 'textfield',
+            cls:"drap-input",
+        	width : 12*6,
+            hideLabel:true,
+            name: "zjlx",
+            value: '证件类型单位'
+        },{
+            xtype: 'textfield',
+            cls:"drap-input",
+        	width : 12*8,
+            hideLabel:true,
+            name: "zjhm",
+            value: "证件号码单位名称"
+        },{
+            xtype: 'displayfield',
+            cls:"delete-input",
+            id:"test",
+            hideLabel:true,
+            value: "回收站"
+        }]
+    	
+    });
+
+    var thirdGridStore = new Ext.data.JsonStore({
+        fields : fields,
+		root   : 'records'
+    });
+    var thirdGrid = new Ext.grid.GridPanel({
+            store            : thirdGridStore,
+            columns          : cols2,
+    	enableDragDrop   : true,
+    	flex:3,
+        plugins: new Ext.ux.CellFieldDropZone(),
+            stripeRows       : true,
+            title            : 'Third Grid'
+        });
+
+
+	var displayPanel = new Ext.Panel({
+		width        : 1250,
+		height       : 100,
+		layout       : 'hbox',
+		renderTo     : 'panel',
+		layoutConfig : { align : 'stretch' },
+		items        : [ firstFormPanel,thirdGrid]
+	});
+	
+	new Ext.Panel({
+		width        : 1250,
+		height       : 300,
+		layout       : 'hbox',
+		renderTo     : 'panel2',
+		layoutConfig : { align : 'stretch' },
+		items        : [  ]
+	});
+	
+	
+ 		var descComp=Ext.getCmp("test");//firstFormPanel;
+        var gridHeaderRevomeDropTargetEl =descComp.getEl();
+        new Ext.grid.HeaderRemoveDropZone(descComp,thirdGrid, thirdGrid.getView().mainHd.dom);
+        
+        var thirdGridDropTarget = new Ext.dd.DropTarget(gridHeaderRevomeDropTargetEl, {
+                ddGroup    : "gridHeader1" + thirdGrid.getGridEl().id,
+                notifyDrop : function(ddSource, e, data){
+                	thirdGrid.removeColumn(ddSource.name,ddSource.index);
+                	return;
+                }
+        });
+	
+	});
+	
+	</script>
+<div id="panel"></div>
+<div id="panel2"></div>
+
+</body>
+</html>
