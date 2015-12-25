@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.pallasli</groupId>
-		<artifactId>pallasli-root</artifactId>
+		<artifactId>pallasli-study-root</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>pallasli-h2</artifactId>
@@ -16,5 +16,10 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>com.pallasli</groupId>
+	        <artifactId>pallasli-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency> 
+	</dependencies> 
 </project>

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.junit.Test;
 
 import com.pallasli.db.bean.Component;
 import com.pallasli.designer.sys.ConvertUtilsExtend;
@@ -16,7 +15,6 @@ import com.pallasli.designer.sys.SqlPropUtils;
 
 public class DatabaseIniter {
 	// 根据SQL脚本初始化数据库。
-	@Test
 	public void initDatabase() {
 		ConvertUtilsExtend.init();
 		List<String> sqlList = SqlPropUtils.loadSqlFile("init.sql");
@@ -38,7 +36,6 @@ public class DatabaseIniter {
 		}
 	}
 
-	@Test
 	public void select() {
 		ConvertUtilsExtend.init();
 		Connection c = DbOper.getConn();

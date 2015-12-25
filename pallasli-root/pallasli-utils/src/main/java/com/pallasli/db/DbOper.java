@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.junit.Test;
-
 import com.pallasli.designer.sys.SqlPropUtils;
 
 public class DbOper {
@@ -44,7 +42,6 @@ public class DbOper {
 		}
 	}
 
-	@Test
 	public void test() throws Exception {
 		open();
 		close();
