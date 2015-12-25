@@ -11,7 +11,6 @@
 		<module>pallasli-chat</module>
 		<module>pallasli-wabpm</module>
 		<module>pallasli-hibernate</module>
-		<module>pallasli-mybatis</module>
 		<module>pallasli-orgnization</module>
 		<module>pallasli-web-basic</module>
 		<module>pallasli-web-js-css</module>
@@ -21,21 +20,16 @@
 		<module>pallasli-ftp</module>
 		<module>pallasli-jdbc</module>
 		<module>pallasli-report</module>
-		<module>pallasli-schedule</module>
 		<module>pallasli-annotation</module>
 		<module>pallasli-encrypt</module>
 		<module>pallasli-swing</module>
 		<module>pallasli-component</module>
-		<module>pallasli-log</module>
 		<module>pallasli-testng</module>
-		<module>pallasli-poi</module>
-		<module>pallasli-jfreechart</module>
 		<module>pallasli-lucene</module>
 		<module>pallasli-easymock</module>
-		<module>pallasli-jasperreport-font</module>
-		<module>pallasli-mysql</module>
-		<module>pallasli-h2</module>
-		<module>pallasli-study-root</module>
+        <module>pallasli-jasperreport-font</module>
+        <module>pallasli-study-root</module>
+        <module>pallasli-ws</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

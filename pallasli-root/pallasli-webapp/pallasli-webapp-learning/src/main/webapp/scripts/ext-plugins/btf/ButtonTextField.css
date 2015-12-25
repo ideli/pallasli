@@ -1,0 +1,30 @@
+/**
+ * @author taoyuan
+ */
+/*
+ * ButtonTextField component styles
+ */
+.x-form-bft-wrap {
+    position: relative;
+    height: 22px;
+}
+.x-form-bft-wrap .x-form-bft {
+	position: absolute;
+	right: 0;
+	-moz-opacity: 0;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+    height: 22px;
+}
+.x-form-bft-wrap .x-form-bft-btn {
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+.x-form-bft-wrap .x-form-bft-text {
+    position: absolute;
+    left: 0;
+    z-index: 3;
+    color: #777;
+}

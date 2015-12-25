@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gdo>
+  <package name="physics.app.model">
+  	 <class name="ManageRefUsersRoles" table="MANAGE_REF_USERS_ROLES">
+  	 	
+      <field name="id" type="Long" primary-key="true"/>
+     
+    </class>
+  </package>
+</gdo>

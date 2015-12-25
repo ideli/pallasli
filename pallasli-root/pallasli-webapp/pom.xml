@@ -22,5 +22,6 @@
   	<module>pallasli-webapp-reporttest</module>
   	<module>pallasli-webapp-jordisplay</module>
   	<module>pallasli-webapp-bpm-design</module>
+  	<module>pallasli-webapp-learning</module>
   </modules>
 </project>

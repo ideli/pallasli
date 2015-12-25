@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>TabControl Demo</title>
+		
+		<link rel="stylesheet" type="text/css" href="../../ext/resources/css/ext-all.css" />
+	   <!-- GC -->
+	 	<!-- LIBS -->
+	 	<script type="text/javascript" src="../../ext/adapter/ext/ext-base.js"></script>
+	 	<!-- ENDLIBS -->
+	
+	    <script type="text/javascript" src="../../ext/ext-all.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../ext/shared/examples.css" />
+		
+		<script language="javascript" src="ArrayList.js"></script>
+		<script language="javascript" src="ObjectRegistry.js"></script>
+		<script language="javascript" src="TabControl.js"></script>
+		<script>
+		TabRegistry.register(new Ext.ux.TabPage({
+			title: "111",
+			onSave: function(tag) {
+				this.fireAfterSave(true, {}, tag);
+			}
+		}));
+		TabRegistry.register(new Ext.ux.TabPage({
+			title: "222",
+			onSave: function(tag) {
+				this.fireAfterSave(true, {}, tag);
+			}				
+		}));
+		TabRegistry.register(new Ext.ux.TabPage({
+			title: "333",
+			disabled: true,
+			onSave: function(tag) {
+				this.fireAfterSave(true, {}, tag);
+			}				
+		}));
+		
+		Ext.onReady(function() {
+		    var pbar = new Ext.ProgressBar({
+				width: 200,
+		        text:'处理中....'
+		    });
+			var tabControl = new Ext.ux.TabControl({
+		        region: 'center',
+		        frame:true,
+				afterSave: function(page, success, data) {
+					alert(page.title);
+				},
+				onComplete: function(tag, success, count, step) {
+					var i = step/count;
+					tag.updateProgress(i,  '已完成 ' +Math.round(100*i)+'%');
+				}
+			});
+			new Ext.Panel({
+				renderTo: 'tabcontrol',
+				layout: 'border',
+		        width:450,
+				height: 300,	
+				items: tabControl,
+				tbar: [{
+					text: 'Save',
+					handler: function() {
+						pbar.reset(true);
+						pbar.show();
+						tabControl.save(pbar);
+					}
+				}, pbar]				
+			});
+			tabControl.loadPages();
+			tabControl.update({
+				taskId: 123
+			});
+		});
+		
+		</script>
+    </head>
+    <body>
+        <h1>TabControl Demo</h1>
+		<div id="tabcontrol"/>
+    </body>
+</html>

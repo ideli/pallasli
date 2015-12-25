@@ -11,5 +11,12 @@
       <module>pallasli-mongodb</module>
       <module>pallasli-h2</module>
       <module>pallasli-mysql</module>
+      <module>pallasli-jfreechart</module>
+      <module>pallasli-log4j</module>
+      <module>pallasli-mybatis</module>
+      <module>pallasli-poi</module>
+      <module>pallasli-quartz</module>
+      <module>pallasli-web-start</module>
+      <module>pallasli-junit</module>
   </modules>
 </project>
