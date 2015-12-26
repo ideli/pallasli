@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pallasli前端设计器</title>
+<link rel="stylesheet"
+	href="../dependences/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="../dependences/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css"
+	href="../styles/designer/design.css" rel="">
+</head>
+<body>
+	<!-- 设计工具容器 --开始 -->
+	<div class="design-container">
+		<!-- 菜单栏--开始 -->
+		<div class="design-menu">
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+
+					<ul class="nav navbar-nav">
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" role="button" aria-haspopup="true"
+							aria-expanded="false">文件(file)<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">新建(new)</a></li>
+								<li><a href="#">打开(open))</a></li>
+								<li><a href="#">保存(save)</a></li>
+								<li><a href="#">另存(saveAs)</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#">最近(recent)</a></li>
+							</ul></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" role="button" aria-haspopup="true"
+							aria-expanded="false">编辑(edit)<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">撤销(undo)</a></li>
+								<li><a href="#">重做(redo))</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#">复制(copy)</a></li>
+								<li><a href="#">剪切(cut)</a></li>
+								<li><a href="#">粘贴(past)</a></li>
+								<li><a href="#">删除(delete)</a></li>
+							</ul></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown" role="button" aria-haspopup="true"
+							aria-expanded="false">工具(tool)<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">工具栏(toolbar)</a></li>
+								<li><a href="#">布局栏(layoutbar))</a></li>
+								<li><a href="#">配置栏(configbar)</a></li>
+							</ul></li>
+						<li><a href="#">预览(preview)</a></li>
+					</ul>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse"
+						id="bs-example-navbar-collapse-1">
+
+						<form class="navbar-form navbar-left" role="search">
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="Search">
+							</div>
+							<button type="submit" class="btn btn-default">搜索</button>
+						</form>
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#">切换空间</a></li>
+							<li><a href="#">退出</a></li>
+						</ul>
+					</div>
+					<!-- /.navbar-collapse -->
+				</div>
+				<!-- /.container-fluid -->
+			</nav>
+
+		</div>
+		<!-- 菜单栏 --结束 -->
+		<div>
+			<!-- 功能树 --开始 -->
+			<div class="design-function">
+				<ul>
+					<li>表单一
+						<ul>
+							<li>组件1</li>
+							<li>组件2</li>
+							<li>组件3</li>
+							<li>组件4</li>
+						</ul>
+					</li>
+					<li>按钮一</li>
+					<li>按钮二</li>
+					<li>按钮三</li>
+					<li>表单二
+						<ul>
+							<li>组件5</li>
+							<li>组件6</li>
+							<li>组件7</li>
+							<li>组件8</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<!-- 功能树  --结束 -->
+			<!-- 设计区 --开始 -->
+			<div class="design-design">
+				<!-- 工具栏 --开始 -->
+				<!-- 组件分类域 -->
+				<div class="design-component-type-area">
+					<u class="nav">
+						<li><a href="#">默认(default)</a></li>
+						<li><a href="#">行为(behavior)</a></li>
+						<li><a href="#">按钮(button)</a></li>
+						<li><a href="#">图表(chart)</a></li>
+						<li><a href="#">容器(container)</a></li>
+						<li><a href="#">数据(data)</a></li>
+						<li><a href="#">表单(form)</a></li>
+						<li><a href="#">表格(grid)</a></li>
+						<li><a href="#">菜单(menu)</a></li>
+						<li><a href="#">模型(model)</a></li>
+						<li><a href="#">资源(resouce)</a></li>
+						<li><a href="#">主题(theme)</a></li>
+						<li><a href="#">树(tree)</a></li>
+						<li><a href="#">视图(view)</a></li>
+					</u>
+				</div>
+				<div class="design-component-area">
+					<u class="nav">
+						<li><a href="#">chart axis</a><u class="dropdown">
+								<li><a href="#">Application</a></li>
+								<li><a href="#">行为(behavior)</a></li>
+								<li><a href="#">按钮(button)</a></li>
+								<li><a href="#">图表(chart)</a></li>
+								<li><a href="#">容器(container)</a></li>
+								<li><a href="#">数据(data)</a></li>
+								<li><a href="#">表单(form)</a></li>
+								<li><a href="#">表格(grid)</a></li>
+								<li><a href="#">菜单(menu)</a></li>
+								<li><a href="#">模型(model)</a></li>
+								<li><a href="#">资源(resouce)</a></li>
+								<li><a href="#">主题(theme)</a></li>
+								<li><a href="#">树(tree)</a></li>
+								<li><a href="#">视图(view)</a></li>
+						</u></li>
+ 
+						<li><a href="#">按钮(button)</a><u class="nav">
+								<li><a href="#">Application</a></li>
+								<li><a href="#">行为(behavior)</a></li>
+								<li><a href="#">按钮(button)</a></li>
+								<li><a href="#">图表(chart)</a></li>
+								<li><a href="#">容器(container)</a></li>
+								<li><a href="#">数据(data)</a></li>
+								<li><a href="#">表单(form)</a></li>
+								<li><a href="#">表格(grid)</a></li>
+								<li><a href="#">菜单(menu)</a></li>
+								<li><a href="#">模型(model)</a></li>
+								<li><a href="#">资源(resouce)</a></li>
+								<li><a href="#">主题(theme)</a></li>
+								<li><a href="#">树(tree)</a></li>
+								<li><a href="#">视图(view)</a></li>
+						</u></li> 
+						<li><a href="#">按钮(button)</a><u class="nav">
+								<li><a href="#">Application</a></li>
+								<li><a href="#">行为(behavior)</a></li>
+								<li><a href="#">按钮(button)</a></li>
+								<li><a href="#">图表(chart)</a></li>
+								<li><a href="#">容器(container)</a></li>
+								<li><a href="#">数据(data)</a></li>
+								<li><a href="#">表单(form)</a></li>
+								<li><a href="#">表格(grid)</a></li>
+								<li><a href="#">菜单(menu)</a></li>
+								<li><a href="#">模型(model)</a></li>
+								<li><a href="#">资源(resouce)</a></li>
+								<li><a href="#">主题(theme)</a></li>
+								<li><a href="#">树(tree)</a></li>
+								<li><a href="#">视图(view)</a></li>
+						</u></li> 
+					</u>
+				</div>
+				<div class="design-toolbar">
+					<fieldset>
+						<legend>面板</legend>
+						<span>普通容器</span> <span>表单</span> <span>字段区域</span> <span>工具栏</span>
+					</fieldset>
+					<fieldset>
+						<legend>控件</legend>
+						<span>文本框</span> <span>文本域</span> <span>下拉框</span> <span>单选框</span>
+						<span>复选框</span> <span>按钮</span> <span>菜单项</span>
+					</fieldset>
+					<fieldset>
+						<legend>树</legend>
+						<span>树</span> <span>节点</span> <span>叶子</span>
+					</fieldset>
+					<fieldset>
+						<legend>表格</legend>
+						<span>表格</span> <span>行</span> <span>列</span> <span>分页</span>
+					</fieldset>
+				</div>
+				<!-- 工具栏--结束-->
+				<!-- 布局配置 --开始 -->
+				<div class="design-layout">
+					<div class="form-group">
+						<label>布局方式:</label>
+						<div>
+							<input type="text" />
+						</div>
+					</div>
+				</div>
+				<!-- 布局配置 --结束-->
+			</div>
+			<!-- 设计区 --开始 -->
+			<!-- 预览区 --开始 -->
+			<div class="design-view"></div>
+		</div>
+		<!-- 预览区 --结束 -->
+		<div class="body-footer">
+			<!--版权信息开始-->
+			<span>Copyright </span>
+			<!--版权信息结束-->
+		</div>
+		<!-- 设计工具容器 --结束 -->
+</body>
+<script data-main="../scripts/dragJs/1.0/main"
+	src="../dependences/requireJs/require.js"></script>
+</html>

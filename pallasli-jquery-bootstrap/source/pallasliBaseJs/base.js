@@ -1,0 +1,9 @@
+pallasli.dataType={
+		"string":1,
+		"int":2,
+		"float":3,
+		"array":4,
+		"json":5,
+		"object":6,
+		"boolean":7
+}

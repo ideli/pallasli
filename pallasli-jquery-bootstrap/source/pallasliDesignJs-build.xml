@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Activiti BPM Editor" default="js.concat">
+	<!-- Editor properties *************************************************** -->
+	<property name="root" value="." />
+	<property name="src" value="${root}/pallasliDesignJs" /> 
+	<property name="destdir" value="${root}/../dist" />
+	<property name="target" value="target" />
+	<property name="temp" value="temp" />
+	<property name="js.filename" value="pallasliJquery.js"/>
+	<property name="js.min.filename" value="pallasliJquery.min.js"/>
+	<!-- parses plugin xml
+	<xmlproperty file="${root}/plugins.xml" collapseAttributes="true" />-->
+	<!-- 合并js-->
+	<target name="js.concat">
+		<concat destfile='${destdir}/pallasliDesignJs.js' encoding="utf-8">
+			<filelist id="coresourcefiles" dir="${src}">
+				<file name='properties/button.js' />
+				<file name='properties/fieldset.js' />
+				<file name='properties/panel.js' />
+				<file name='properties/tab.js' /> 
+			</filelist>
+			<fileset dir="${src}" includes="properties/field/*.js"/>
+			<fileset dir="${src}" includes="properties/table/*.js"/>
+			<fileset dir="${src}" includes="properties/panel/*.js"/>
+			<fileset dir="${src}" includes="drag/*.js"/>
+			<fileset dir="${src}" includes="drag/**/*.js"/>
+			<!-- load all sources from plugins defined in the plugins.xml
+			<filelist dir="${src}/Plugins/" files="${config.plugins.plugin.source}" />-->
+		</concat>
+		<copy todir="${webdestdir}" preservelastmodified="true">
+					<fileset dir="${destdir}">
+						<include name="${js.filename}"/>
+					</fileset>
+		</copy> 
+	</target> 
+	 
+</project>

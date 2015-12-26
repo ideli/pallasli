@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<project name="today" default="all" basedir="."><!-- '.'表示当前目录-->  
+    <!---------以下定义变量 -------->  
+    <property name="base" value=".."></property>  
+    <property name="jsFolder" value="${base}/teach_left_main"></property>  
+    <property name="cfolder" value="mypress"></property>  
+    <property name="mjs" value="${jsFolder}/${cfolder}/megre.js"></property>  
+    <property name="cjs" value="${jsFolder}/${cfolder}/c.js"></property>  
+      
+    <!-------------------------------------------------------------  
+        三步骤:1.新建目录 2.合并多个JS 3.再压缩  
+        target createF 是创建等下要存放合并的js和压缩后的js  
+        target megerJS 把多个js合并起来，放到你创建的文件夹中  
+        target CompressJs 把合并好的js进行压缩  
+        depends标签表示依赖,要先走createF,COmpressJs才会走all  
+        ${name}里面对应定义的变量  
+    --------------------------------------------------------------->  
+    <target name="all" depends="createF,CompressJs"></target>  
+    <!--<target name="all" depends="createF,megerJS,CompressJs"></target>-->  
+    <target name="createF">  
+        <echo message="start createF" />  
+            <mkdir dir="${jsFolder}/${cfolder}" />  
+        <echo message="end createF" />  
+    </target>  
+      
+    <!-------------------------------------------------  
+    当然,第二步合并js,你也可以不用,直接压缩  
+    --------------------------------------------------->  
+    <!--  
+    <target name="megerJS">  
+            <echo message="start megerJS" />  
+            <concat destfile="${mjs}" encoding="UTF-8">  
+                <path path="${jsFolder}/core.js" />   
+                <path path="${jsFolder}/lookup_dis.js" />   
+                <path path="${jsFolder}/1.js" />   
+            </concat>  
+            <echo message="end megerJS"/>  
+    </target>  
+    -->  
+    <target name="CompressJs">  
+        <echo message="start CompressJs" />  
+            <java jar="compiler.jar" fork="true">  
+                <!--<arg value="--js=${mjs}" />  这里则变成导入所有的js-->  
+                    <arg value="--js=${jsFolder}/base.js" />  
+                    <arg value="--js=${jsFolder}/lookup_dis.js" />  
+                    <arg value="--js=${jsFolder}/1.js" />  
+                <arg value="--js_output_file=${cjs}"/>  
+            </java>  
+        <echo message="end CompressJs" />  
+    </target>  
+</project> 

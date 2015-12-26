@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!--  manifest=" cache/cache.manifest" -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet"
+	href="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet"
+	href="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/jquery/1.11.3/jquery.min.js"></script>
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/jquery-validation/1.14.0/jquery.validate.js"></script>
+<script src="../dist/pallasliWebJs.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$ready(function() {
+		var grid = new Pallasli.panel.Grid({
+			xtype : "grid",
+			region : "west",
+			title:"title",
+			tbar:[{text:"增加",handler:function(){
+				var dialog=new Pallasli.window.Dialog({
+					
+				});
+				dialog.show();
+			
+			}}],
+			fbar:[{text:"确定",handler:function(){alert(1)}}],
+			width : 200,
+			idProperty : "",
+			thead : [ {
+				title : "cl1",
+				text : "列1"
+			}, {
+				title : "cl2",
+				text : "列2"
+			}, {
+				title : "cl3",
+				text : "列3"
+			}, {
+				title : "cl4",
+				text : "列4"
+			}, {
+				title : "cl5",
+				text : "列5"
+			}, {
+				title : "cl6",
+				text : "列6"
+			} ],
+			theadGroup : [{colspan:2,text:"两列"},{colspan:1,text:"1列"},{colspan:3,text:"3列"}],
+			data : [],
+
+		});
+
+
+		new Pallasli.window.ViewPort({
+			items : [ grid ]
+		});
+
+		grid.addGridRow({cl1:1,cl2:2});
+		grid.alterRow({});
+		grid.deleteRow({});
+	})
+</script>
+</head>
+<body>
+
+</body>
+
+</html>

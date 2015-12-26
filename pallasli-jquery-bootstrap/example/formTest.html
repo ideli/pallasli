@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN" > <!--  manifest=" cache/cache.manifest" -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet"
+	href="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet"
+	href="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/jquery/1.11.3/jquery.min.js"></script>
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/jquery-validation/1.14.0/jquery.validate.js"></script>
+<script src="../dist/pallasliWebJs.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="../../../pallasli/pallasli-root/pallasli-web-js-css/src/main/webapp/dependences/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$ready(function() {
+		var main = new Pallasli.window.IFrame({
+			xtype : "iframe",
+			name:"mainPage"
+		});
+		var headerbar = new Pallasli.bar.HeaderBar({
+			
+		});
+		var toolbar = new Pallasli.bar.ToolBar({
+			
+		});
+			var header = new Pallasli.panel.nav.Nav({
+			xtype : "tree",
+			items : [ {
+				xtype:"img",
+				src : "http://www.htmleaf.com/templets/default/images/logo.png"
+			},  {
+				xtype:"imgbar",
+				items : [ {
+					xtype:"img",
+					src : "http://www.htmleaf.com/templets/default/images/logo.png"
+				}]
+			}, {
+				xtype:"menu",
+				text : "menu"
+			}, {
+				url : "engine/view.html?jsurl=../initjs/fields.js",
+				target:"mainPage",
+				text : "字段设置"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "接口设置"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "页面设置"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "系统设置"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "组件定义"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "预览效果"
+			}, {
+				url : "engine/view.html?jsurl=initjs/fields.js",
+				text : "切换空间"
+			} ]
+		});
+
+	
+		new Pallasli.window.ViewPort({
+			items : [headerbar,toolbar, header, main ]
+		});
+
+	})
+</script>
+</head>
+<body>
+    <ul class="nav nav-tabs">
+  <li role="presentation" class="active" ><a  tabindex="-3" href="#">Home</a></li>
+  <li role="presentation"  ><a  tabindex="-2" href="#">Profile</a></li>
+  <li role="presentation" ><a  tabindex="-1" href="#">Messages</a></li>
+</ul>
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary btn-lg"
+		data-toggle="modal" data-target="#myModal">Launch demo modal
+	</button>
+
+	<!-- Modal -->
+	<zyzd class="modal " id="myModal"  >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				</div>
+				<div class="modal-body">...</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</zyzd>
+<button type="button" class="btn btn-default" > <span
+   class="glyphicon glyphicon-align-left"  ></span>Left Align
+   </button>
+   <button class="btn btn-primary" type="button" data-toggle="collapse"
+  data-target="#collapseExample" aria-expanded="false"
+   aria-controls="collapseExample"> Button with data-target </button>
+  <div class="row">
+  <div class="col-sm-2 col-md-2">
+   
+  </div>
+</div> <zyzd class="thumbnail">
+      <img src="../src/main/webapp/img/top_bg.jpg" alt="..." class="img">
+      <div class="caption">
+        <p >Thumbnail label</p>
+        <p>...</p>
+        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+      </div>
+    </zyzd>
+    
+    
+    <script type="text/javascript">  
+var result=document.getElementById("result");  
+var file=document.getElementById("file");  
+  
+//判断浏览器是否支持FileReader接口  
+if(typeof FileReader == 'undefined'){  
+    result.InnerHTML="<p>你的浏览器不支持FileReader接口！</p>";  
+    //使选择控件不可操作  
+    file.setAttribute("disabled","disabled");  
+}  
+  
+function readAsDataURL(){  
+    //检验是否为图像文件  
+    var file = document.getElementById("file").files[0];  
+    if(!/image\/\w+/.test(file.type)){  
+        alert("看清楚，这个需要图片！");  
+        return false;  
+    }  
+    var reader = new FileReader();  
+    //将文件以Data URL形式读入页面  
+    reader.readAsDataURL(file);  
+    reader.onload=function(e){  
+        var result=document.getElementById("result");  
+        //显示文件  
+        result.innerHTML='<img src="' + this.result +'" alt="" />';  
+    }  
+}  
+  
+function readAsBinaryString(){  
+    var file = document.getElementById("file").files[0];  
+    var reader = new FileReader();  
+    //将文件以二进制形式读入页面  
+    reader.readAsBinaryString(file);  
+    reader.onload=function(f){  
+        var result=document.getElementById("result");  
+        //显示文件  
+        result.innerHTML=this.result;  
+    }  
+}  
+  
+function readAsText(){  
+    var file = document.getElementById("file").files[0];  
+    var reader = new FileReader();  
+    //将文件以文本形式读入页面  
+    reader.readAsText(file);  
+    reader.onload=function(f){  
+        var result=document.getElementById("result");  
+        //显示文件  
+        result.innerHTML=this.result;  
+    }  
+}  
+</script>  
+<p contenteditable="true">  
+    <label>请选择一个文件：</label>  
+    <input type="file" id="file" />  
+    <input  type="button" value="读取图像" onclick="readAsDataURL()" />  
+    <input type="button" value="读取二进制数据" onclick="readAsBinaryString()" />  
+    <input type="button" value="读取文本文件" onclick="readAsText()" />  
+    
+    <label>请选择一个文件：</label>  
+</p>  
+<div id="result" name="result"></div>  
+</body>
+ 
+<script type="text/javascript">
+
+window.addEventListener('message',function(e){
+	                  if(e.source!=window.parent) return; 
+	                  window.parent.postMessage("red",'*');
+	              },false); 
+
+
+//new Pallasli.window.Dialog({}).showDialog({});
+	/**
+	、FileReader接口的方法
+
+FileReader接口有4个方法，其中3个用来读取文件，另一个用来中断读取。无论读取成功或失败，方法并不会返回读取结果，这一结果存储在result属性中。
+
+
+FileReader接口的方法
+方法名 	参数	描述
+readAsBinaryString	file	将文件读取为二进制编码
+readAsText	file,[encoding]	将文件读取为文本
+readAsDataURL	file	将文件读取为DataURL
+abort	(none)	终端读取操作
+2、FileReader接口事件
+FileReader接口包含了一套完整的事件模型，用于捕获读取文件时的状态。
+
+
+FileReader接口的事件
+事件	描述
+onabort	中断
+onerror	出错
+onloadstart	开始
+onprogress	正在读取
+onload	成功读取
+onloadend	读取完成，无论成功失败
+	**/
+</script>
+</html>
