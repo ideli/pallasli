@@ -28,6 +28,7 @@ public class BpmServiceTest {
 		// Assert.assertEquals("1062501", id);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	public void saveProcessDefinition() {
 		String source0 = modelService.getEditorSource("1062501");

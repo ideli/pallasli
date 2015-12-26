@@ -16,7 +16,10 @@
         <dependent-module archiveName="pallasli-orgnization-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-orgnization/pallasli-orgnization">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="pallasli-mybatis-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-mybatis/pallasli-mybatis">
+        <dependent-module archiveName="pallasli-jdbc-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-jdbc/pallasli-jdbc">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="pallasli-study-mybatis-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-study-mybatis/pallasli-study-mybatis">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="pallasli-webapp-pm-ext"/>

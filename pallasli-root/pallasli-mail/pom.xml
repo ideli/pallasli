@@ -1,9 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.pallasli</groupId>
 	<artifactId>pallasli-mail</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
@@ -12,4 +10,9 @@
 			<version>1.5.0-b01</version>
 		</dependency>
 	</dependencies> 
+	<parent>
+		<groupId>com.pallasli</groupId>
+		<artifactId>pallasli-root</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 </project> 

@@ -1,7 +1,0 @@
-
-
-start mysqld-opt.exe
-mysql -uroot -proot
-create database lyt
-create tabel.....
-mysqladmin -uroot -proot shutdown

@@ -21,6 +21,7 @@ public class JspPageAction implements Controller {
 			path = ContextVariablesContainer.instance()
 					.replaceContextVariables(path);
 			view = new ModelAndView(path);
+			@SuppressWarnings("unchecked")
 			Map<String, String[]> params = httpRequest.getParameterMap();
 			Iterator<String> keys = params.keySet().iterator();
 			while (keys.hasNext()) {

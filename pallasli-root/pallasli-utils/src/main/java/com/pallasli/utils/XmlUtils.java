@@ -99,9 +99,9 @@ public class XmlUtils {
 						+ fieldSetter.substring(1);
 				fieldSetter = "set" + fieldSetter;
 				try {
-					Class[] paraTypes = new Class[] { String.class };
+					Class<?>[] paraTypes = new Class[] { String.class };
 					Method method = cls.getMethod(fieldSetter, paraTypes);
-					String[] paraValues = new String[] { attr.getStringValue() };
+					Object[] paraValues = new String[] { attr.getStringValue() };
 					method.invoke(obj, paraValues);
 				} catch (Exception e) {
 				}

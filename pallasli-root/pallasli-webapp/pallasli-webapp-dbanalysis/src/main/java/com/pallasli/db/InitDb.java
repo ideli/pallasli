@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings({ "serial", "unused" })
 public class InitDb extends HttpServlet {
 	private static final Logger log = LoggerFactory.getLogger(InitDb.class);
 	private static final String DB_PRE = "pallasli_test_";

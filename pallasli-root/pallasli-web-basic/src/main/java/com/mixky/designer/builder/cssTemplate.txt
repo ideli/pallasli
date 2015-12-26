@@ -1,3 +1,0 @@
-.icon-%relativeForCSSClass%%fileNameWithoutExt% {
-	background-image: url(../icon/%relativePath%%fileName%) !important;
-}

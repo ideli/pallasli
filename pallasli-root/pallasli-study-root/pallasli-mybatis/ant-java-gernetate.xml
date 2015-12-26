@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<project name="sample" basedir="." default="notify">
-  <target name="notify">
-    <java fork="true" failonerror="yes"  classpath="mybatis.generator" classname="Generate">
-      <arg line="admin@test.com"/>
-    </java>
-  </target>
-</project>

@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.h2.tools.Server;
-
 public class BaseDao {
 	private final String DRIVER = "org.h2.Driver";
 	// private final String URL = "jdbc:h2:~/test";
@@ -26,7 +24,7 @@ public class BaseDao {
 	 * 
 	 * @return
 	 */
-	private Server server;
+	// private Server server;
 
 	protected Connection getConn() {
 		try {

@@ -57,7 +57,7 @@
 		</dependency> 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>pallasli-mybatis</artifactId>
+			<artifactId>pallasli-jdbc</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

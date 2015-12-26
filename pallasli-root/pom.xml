@@ -7,28 +7,23 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>pallasli-annotation</module>
 		<module>pallasli-basic</module>
 		<module>pallasli-chat</module>
-		<module>pallasli-wabpm</module>
-		<module>pallasli-hibernate</module>
-		<module>pallasli-orgnization</module>
-		<module>pallasli-web-basic</module>
-		<module>pallasli-web-js-css</module>
-		<module>pallasli-webapp</module>
-		<module>pallasli-utils</module>
-		<module>pallasli-context</module>
-		<module>pallasli-ftp</module>
-		<module>pallasli-jdbc</module>
-		<module>pallasli-report</module>
-		<module>pallasli-annotation</module>
-		<module>pallasli-encrypt</module>
-		<module>pallasli-swing</module>
 		<module>pallasli-component</module>
-		<module>pallasli-testng</module>
-		<module>pallasli-lucene</module>
-		<module>pallasli-easymock</module>
+		<module>pallasli-context</module>
+		<module>pallasli-encrypt</module>
+		<module>pallasli-ftp</module>
         <module>pallasli-jasperreport-font</module>
+		<module>pallasli-jdbc</module>
+		<module>pallasli-lucene</module>
+		<module>pallasli-mail</module>
+		<module>pallasli-orgnization</module>
         <module>pallasli-study-root</module>
+        <module>pallasli-swing</module>
+		<module>pallasli-utils</module>
+		<module>pallasli-wabpm</module>
+        <module>pallasli-webapp</module>
         <module>pallasli-ws</module>
 	</modules>
 	<properties>
@@ -57,7 +52,7 @@
 		<commons-logging.version>1.0.4</commons-logging.version>
 		<commons-pool.version>1.5.4</commons-pool.version>
 		<commons-lang.version>2.4</commons-lang.version>
-		<ant.version>1.8.3</ant.version>
+		<ant.version>1.9.4</ant.version>
 		<pageoffice.version>1.0.0</pageoffice.version>
 		<jaxen.version>1.1.4</jaxen.version>
 		<flexjson.version>2.0</flexjson.version>

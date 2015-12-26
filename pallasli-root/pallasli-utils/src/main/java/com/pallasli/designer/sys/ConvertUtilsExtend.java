@@ -7,7 +7,8 @@ public class ConvertUtilsExtend extends ConvertUtils {
 	public static void init() {
 		ConvertUtils.register(new Converter() {
 			@Override
-			public Object convert(Class type, Object value) {
+			public Object convert(@SuppressWarnings("rawtypes") Class type,
+					Object value) {
 				if (value == null) {
 					return null;
 				}

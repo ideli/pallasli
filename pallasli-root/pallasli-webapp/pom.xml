@@ -8,20 +8,21 @@
   <artifactId>pallasli-webapp</artifactId>
   <packaging>pom</packaging>
   <modules>
-  	<module>pallasli-webapp-portal</module>
+    <module>pallasli-web-basic</module>
+  	<module>pallasli-web-study</module>
+  	<module>pallasli-webapp-activiti</module>
+  	<module>pallasli-webapp-bpm-design</module>
+  	<module>pallasli-webapp-dbanalysis</module>
+  	<module>pallasli-webapp-designer</module>
+  	<module>pallasli-webapp-jms</module>
+  	<module>pallasli-webapp-learning</module>
+  	<module>pallasli-webapp-log</module>
+  	<module>pallasli-webapp-orgnization</module>
   	<module>pallasli-webapp-pm</module>
   	<module>pallasli-webapp-pm-ext</module>
-  	<module>pallasli-webapp-dbanalysis</module>
-  	<module>pallasli-webapp-activiti</module>
-  	<module>pallasli-webapp-orgnization</module>
-  	<module>pallasli-webapp-designer</module>
-  	<module>pallasli-webapp-servermanager</module>
-  	<module>pallasli-webapp-jms</module>
-  	<module>pallasli-webapp-log</module>
+  	<module>pallasli-webapp-portal</module>
   	<module>pallasli-webapp-report</module>
   	<module>pallasli-webapp-reporttest</module>
-  	<module>pallasli-webapp-jordisplay</module>
-  	<module>pallasli-webapp-bpm-design</module>
-  	<module>pallasli-webapp-learning</module>
+  	<module>pallasli-webapp-servermanager</module>
   </modules>
 </project>

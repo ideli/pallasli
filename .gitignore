@@ -20,3 +20,11 @@
 *.class
 
 pallasli-root/pallasli-webapp/pallasli-webapp-portal/webapp/*
+
+pallasli-jquery-bootstrap/*
+
+pallasli-root/pallasli-study-root/*
+
+pallasli-root/pallasli-webapp/*
+
+pallasli-root/pallasli-web-js-css/*
