@@ -1,0 +1,38 @@
+Hibernate 需要知道怎样去加载（load）和存储（store）持久化类的对象。这正是 Hibernate 映
+射文件发挥作用的地方。映射文件告诉 Hibernate 它应该访问数据库（database）里面的哪个表
+（table）及应该使用表里面的哪些字段（column）。
+一个映射文件的基本结构看起来像这样：
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.hibernate.tutorial.domain">
+[...]
+</hibernate-mapping>
+
+
+映射文件
+注意 Hibernate 的 DTD 是非常复杂的。你的编辑器或者 IDE 里使用它来自动完成那些用来映
+射的 XML 元素（element）和属性（attribute）。你也可以在文本编辑器里打开 DTD — 这是
+最简单的方式来概览所有的元素和 attribute，并查看它们的缺省值以及注释。注意 Hibernate
+不会从 web 加载 DTD 文件，但它会首先在应用程序的 classpath 中查找。DTD 文件已包括在
+hibernate3.jar 里，同时也在 Hibernate 发布包的 src/ 目录下。
+
+
+
+id 元素是对 identifier 属性的声明。name="id" 映射属性声明了 JavaBean 属性的名称并告诉Hibernate 使用 getId() 和 setId() 方法来访问这个属性。column 属性告诉 Hibernate EVENTS表的哪个字段持有主键值。
+嵌套的 generator 元素指定标识符的生成策略（也就是标识符值是怎么产生的）。在这个例子里，我们选择 native，它提供了取决于数据库方言的可移植性。Hibernate 数据库生成的、全局性唯一的以及应用程序分配的标识符。标识符值的生成也是 Hibernate 的扩展功能之一，你可以插入自己的策略。
+最后我们在映射文件里面包含需要持久化属性的声明。默认情况下，类里面的属性都被视为非持久化的：
+ 
+和 id 元素一样，property 元素的 name 属性告诉 Hibernate 使用哪个 getter 和 setter 方法。
+在此例中，Hibernate 会寻找 getDate()、setDate()、getTitle() 和 setTitle() 方法。
+注意
+为什么 date 属性的映射含有 column attribute，而 title 却没有？当没有设定column attribute 的时候，Hibernate 缺省地使用 JavaBean 的属性名作为字段名。对于 title，这样工作得很好。然而，date 在多数的数据库里，是一个保留关键字，所以我们最好把它映射成一个不同的名字。
+另一有趣的事情是 title 属性缺少一个 type attribute。我们在映射文件里声明并使用的类型，
+却不是我们期望的那样，是 Java 数据类型，同时也不是 SQL 数据库的数据类型。这些类型就是
+所谓的 Hibernate 映射类型（mapping types），它们能把 Java 数据类型转换到 SQL 数据类
+型，反之亦然。再次重申，如果在映射文件中没有设置 type 属性的话，Hibernate 会自己试着去
+确定正确的转换类型和它的映射类型。在某些情况下这个自动检测机制（在 Java 类上使用反射
+机制）不会产生你所期待或需要的缺省值。date 属性就是个很好的例子，Hibernate 无法知道这
+个属性（java.util.Date 类型的）应该被映射成：SQL date，或 timestamp，还是 time 字段。在
+此例中，把这个属性映射成 timestamp 转换器，这样我们预留了日期和时间的全部信息。

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<knowledges> 
+  <!--Thisis a test for dom4j -->  
+  <maxId>2</maxId>  
+  <knowledge> 
+    <id>1</id>  
+    <caption>hibernate.cfg.xml</caption>  
+    <content>配置文件</content> 
+  </knowledge>  
+  <knowledge>
+    <id>2</id>
+    <caption>hibernate.cfg.xml</caption>
+    <content>配置文件的一种方式</content>
+  </knowledge>
+</knowledges>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="myproject" basedir="." default="main">
+	<property name="repo.dir" value="/Users/lyt1987/Desktop/study/01_maven/repo" />
+	<target name="buildjar">
+		<jar destfile="${web.dir}/lib/util.jar" basedir="${build.dir}/classes" includes="faxapp/util/**" excludes="**/Test.class" />
+	</target>
+	<path id="lib_classpath">
+		<fileset dir="${repo.dir}/com/pallasli/pallasli-basic/0.0.1-SNAPSHOT/">
+			<include name="pallasli-basic-0.0.1-SNAPSHOT.jar" />
+		</fileset>
+		<fileset dir="${repo.dir}/com/pallasli/pallasli-mybatis/0.0.1-SNAPSHOT/">
+			<include name="pallasli-mybatis-0.0.1-SNAPSHOT.jar" />
+		</fileset>
+		<fileset dir="${repo.dir}/org/mybatis/generator/mybatis-generator-core/1.3.1/">
+			<include name="mybatis-generator-core-1.3.1.jar" />
+		</fileset>
+		<fileset dir="${repo.dir}/org/mybatis/mybatis/3.2.5/">
+			<include name="mybatis-3.2.5.jar" />
+		</fileset>
+	</path>
+	<target name="main">
+		<java classname="mybatis.generator.Generate" classpathref="lib_classpath">
+			<arg value="123" />
+		</java>
+
+	</target>
+</project>

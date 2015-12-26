@@ -1,0 +1,68 @@
+在java中获得文件的路径在我们做上传文件操作时是不可避免的。
+
+ 
+
+web 上运行 
+1:
+this.getClass().getClassLoader().getResource("/").getPath(); 
+this.getClass().getClassLoader().getResource("").getPath();  得到的是 ClassPath的绝对URI路径。
+如：/D:/jboss-4.2.2.GA/server/default/deploy/hp.war/WEB-INF/classes/
+
+System.getProperty("user.dir");
+
+this.getClass().getClassLoader().getResource(".").getPath();    得到的是 项目的绝对路径。
+如：/D:/jboss-4.2.2.GA/server/default/deploy/hp.war
+
+
+2:
+this.getClass().getResource("/").getPath(); 
+this.getClass().getResource("").getPath(); 得到的是当前类 文件的URI目录。不包括自己！
+如：/D:/jboss-4.2.2.GA/server/default/deploy/hp.war/WEB-INF/classes/com/jebel/helper/
+
+this.getClass().getResource(".").getPath();   X 不 能运行
+
+
+3:
+Thread.currentThread().getContextClassLoader().getResource("/").getPath()
+Thread.currentThread().getContextClassLoader().getResource("").getPath()  得到的是 ClassPath的绝对URI路径。
+如：/D:/jboss-4.2.2.GA/server/default/deploy/hp.war/WEB-INF/classes/
+
+Thread.currentThread().getContextClassLoader().getResource(".").getPath()  得到的是 项目的绝对路径。
+如：/D:/jboss-4.2.2.GA/server/default/deploy/hp.war
+
+ 
+
+ 
+
+
+在本地运行中
+
+1：
+this.getClass().getClassLoader().getResource("").getPath(); 
+this.getClass().getClassLoader().getResource(".").getPath();   得到的是 ClassPath的绝对URI路径。
+如:/D:/myProjects/hp/WebRoot/WEB-INF/classes
+this.getClass().getClassLoader().getResource(".").getPath();  X 不 能运行
+
+2：
+this.getClass().getResource("").getPath(); 
+this.getClass().getResource(".").getPath(); 得到的是当前类 文件的URI目录。不包括自己！
+如：/D:/myProjects/hp/WebRoot/WEB-INF/classes/com/jebel/helper/
+
+/D:/myProjects/hp/WebRoot/WEB-INF/classes/    得到的是 ClassPath的绝对URI路径。
+如:/D:/myProjects/hp/WebRoot/WEB-INF/classes
+
+ 
+
+3：
+Thread.currentThread().getContextClassLoader().getResource(".").getPath()
+Thread.currentThread().getContextClassLoader().getResource("").getPath() 得到的是 ClassPath的绝对URI路径。。
+如:/D:/myProjects/hp/WebRoot/WEB-INF/classes
+
+Thread.currentThread().getContextClassLoader().getResource("/").getPath()    X 不 能运行
+
+
+ 
+
+最后 
+    在Web应用程序中，我们一般通过ServletContext.getRealPath（"/"）方法得到Web应用程序的根目录的绝对路径。
+还有request.getContextPath();  在Weblogic中要用request.getServletContext().getContextPath();但如果打包成war部署到Weblogic服务器，项目内部并没有文件结构的概念，用这种方式是始终得到null，获取不到路径，目前还没有找到具体的解决方案。

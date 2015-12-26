@@ -1,0 +1,49 @@
+..\usr\local\apache2\bin\Apache.exe -t
+if errorlevel 0 goto CONTINUE 
+echo.
+pause
+exit
+
+:CONTINUE 
+start usr\local\apache2\bin\Apache.exe -f conf/httpd.conf  -d usr/local/apache2
+
+
+
+
+
+
+
+
+创建MySQL服务
+..\mysql\mysql\bin\mysqld-opt.exe --install MySQLS1 
+启动MySQL服务
+net start MySQLS1
+登录MySQL数据库
+..\mysql\mysql\bin\mysql -uroot -proot < test.sql
+
+创建Apache服务
+..\mysql\apache2\bin\Apache.exe -k install -n "ApacheS1"
+启动Apache服务
+net start  ApacheS1
+
+
+
+
+
+
+停mysql服务
+net stop MySQLS1
+卸载服务
+..\mysql\mysql\bin\mysqld-opt.exe --remove MySQLS1
+
+停apache服务
+net stop ApacheS1
+卸载服务
+..\mysql\apache2\bin\Apache.exe -k uninstall -n "ApacheS1"
+
+
+
+netstat -anp tcp---端口查看
+
+
+

@@ -1,0 +1,2 @@
+.file-box{ position:absolute; width:55px;height: 35px; overflow: hidden;}  
+.file-box .file{ position:absolute; cursor:pointer;  top:0px; right:-55px;font-size:22px;   filter:alpha(opacity:0);opacity: 0;  } 

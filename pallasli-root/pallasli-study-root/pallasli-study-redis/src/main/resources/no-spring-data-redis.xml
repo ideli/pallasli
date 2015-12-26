@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">  
+<!-- 
+1，context:property-placeholder 和 context:component-scan 前面解释过啦。
+
+2，配置了一个ShardedJedisPool，在jdeis里 还有个JedisPool。这两个的区别:
+
+一个是分片形式，可以连接有主备的redis服务端，一个是单个的。详细后续学习
+ 
+3，因为不使用spring-data-redis的封装，所以自己要自己封装一个
+ -->
+    <context:property-placeholder location="classpath:redis.properties" />  
+    <context:component-scan base-package="com.d.work.main">
+    </context:component-scan>
+        <context:component-scan base-package="com.d.work.redis">
+    </context:component-scan>
+    <bean id="jedisPoolConfig" class="com.pallasli.redis.nosdr.JedisPoolConfig">
+        <property name="maxActive" value="50" />
+        <property name="maxIdle" value="8" />
+        <property name="maxWait" value="1000" />
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <!-- <property name="testWhileIdle" value="true"/> -->
+    </bean>
+
+    <bean id="shardedJedisPool" class="com.pallasli.redis.nosdr.ShardedJedisPool"  scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean class="com.pallasli.redis.nosdr.JedisShardInfo">
+                    <constructor-arg name="host" value="${redis.host}" />
+                    <constructor-arg name="port" value="${redis.port}" />
+                    <constructor-arg name="timeout" value="${redis.timeout}" />
+                    <constructor-arg name="weight" value="1" />
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+</beans>

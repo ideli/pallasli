@@ -1,0 +1,29 @@
+请注意，这个配置文件指定了一个不同的 DTD。
+注意这个 XML 配置使用了一个不同的 DTD。在这里，我们配置了 Hibernate 的SessionFactory
+— 一个关联于特定数据库全局的工厂（factory）。如果你要使用多个数据库，就要用多个的
+<session-factory>，通常把它们放在多个配置文件中（为了更容易启动）。
+签名 4 个 property 元素包含了 JDBC 连接所必需的配置。方言 property 元素指定了 Hibernate
+生成的特定 SQL 语句。
+最开始的 4 个 property 元素包含必要的 JDBC 连接信息。方言（dialect）的 property 元素指
+明 Hibernate 生成的特定 SQL 变量。你很快会看到，Hibernate 对持久化上下文的自动 session
+管理就会派上用场。 打开 hbm2ddl.auto 选项将自动生成数据库模式（schema）－ 直接加入数据
+库中。当然这个选项也可以被关闭（通过去除这个配置选项）或者通过 Ant 任务 SchemaExport 的
+帮助来把数据库 schema 重定向到文件中。最后，在配置中为持久化类加入映射文件。
+
+用Hibernate开发遇到"No CurrentSessionContextconfigured"错误
+
+ 
+
+ 
+
+在使用SessionFactory的getCurrentSession方法时遇到如下错误，经过检查，原因如下：
+
+是因为在hibernate.cfg.xml文件中忘记进行了如下设置：hibernate.current_session_context_class
+
+如果是在web容器中运行hibernate，则在hibernate.cfg.xml中加入这句话：
+
+<propertyname="hibernate.current_session_context_class">jta</property>
+
+如果是在一个单独的需要进行JDBC连接的javaapplication中运行hibernate，则这样设置：
+
+<propertyname="hibernate.current_session_context_class">thread</property>

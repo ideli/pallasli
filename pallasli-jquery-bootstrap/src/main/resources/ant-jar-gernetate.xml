@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<project name= "myproject" basedir= "." default="main">
+    <path id="lib_classpath">
+        <fileset dir="/Users/lyt1987/Desktop/study/01_maven/repo/com/pallasli/pallasli-mybatis/0.0.1-SNAPSHOT/">
+            <include name="pallasli-mybatis-0.0.1-SNAPSHOT.jar"/>
+        </fileset>
+    </path>
+    <target name="main">        
+        <java classname="mybatis.generator.Generate"  classpathref="lib_classpath">
+           <arg value="123"/>
+        </java>
+
+    </target>
+</project>

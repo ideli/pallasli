@@ -1,0 +1,37 @@
+﻿[
+	{id: "base", name: "Base"},
+	
+	{id: "ajax", name: "Ajax", pid: "base"},
+	{id: "json", name: "JSON", pid: "base"},
+	{id: "date", name: "Date", pid: "base", checked: true},
+	{id: "control", name: "Control", pid: "base"},
+
+	{id: "forms", name: "Forms", pid: "base"},
+	
+	{id: "button", name: "Button", pid: "forms"},
+	{id: "listbox", name: "ListBox", pid: "forms"},
+	{id: "checkboxlist", name: "CheckBoxList", pid: "forms"},
+	
+	{id: "lists", name: "Lists"},
+	
+	{id: "datagrid", name: "DataGrid", pid: "lists"},			
+	{id: "tree", name: "Tree", pid: "lists"},
+	{id: "treegrid", name: "TreeGrid ", pid: "lists"},
+
+	{id: "layouts", name: "Layouts"},
+	
+	{id: "panel", name: "Panel", pid: "layouts"},
+	{id: "splitter", name: "Splitter", pid: "layouts"},
+	{id: "layout", name: "Layout ", pid: "layouts"},
+
+	{id: "navigations", name: "Navigations"},
+			
+	{id: "toolbar", name: "Toolbar", pid: "navigations"},
+	{id: "tabs", name: "Tabs", pid: "navigations"},
+	{id: "outlookbar", name: "OutlookBar", pid: "navigations"},
+	{id: "menu", name: "Menu", pid: "navigations"},
+	{id: "pager", name: "Pager", pid: "navigations"},
+
+	{id: "other", name: "Other", isLeaf: false, asyncLoad: false}
+
+]

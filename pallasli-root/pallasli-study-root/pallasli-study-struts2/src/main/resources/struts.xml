@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- @ResultPath只适用于类级别。在全局范围内应用它，可以在 struts.xml 文件中进行配置。 -->
+	<constant name="struts.convention.result.path" value="/" />
+	<!-- 开发模式时，每次调用都会重载配置文件 -->
+	<constant name="struts.devMode" value="false" />
+	<!-- 设置所有动作类的后缀 默认为.action -->
+	<constant name="struts.action.extension" value="html" />
+	<!-- 配置资源 -->
+	<constant name="struts.custom.i18n.resources" value="global" />
+	<package name="default" namespace="/" extends="struts-default">
+	</package>
+	<include file="struts-user.xml"></include>
+	<include file="struts-audit.xml"></include>
+	<include file="struts-customer.xml"></include>
+</struts> 

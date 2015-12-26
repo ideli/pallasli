@@ -1,0 +1,10 @@
+
+--运行前先编译代码，exec：java不会自动编译代码，你需要手动执行mvn compile来完成编译。
+mvn compile
+--编译完成后，执行exec运行main方法。 
+--不需要传递参数：
+mvn exec:java -Dexec.mainClass="com.hello.Application"
+--需要传递参数：
+mvn exec:java -Dexec.mainClass="com.hello.Application" -Dexec.args="arg0 arg1 arg2"
+--指定对classpath的运行时依赖：
+mvn exec:java -Dexec.mainClass="com.hello.Application" -Dexec.classpathScope=runtime

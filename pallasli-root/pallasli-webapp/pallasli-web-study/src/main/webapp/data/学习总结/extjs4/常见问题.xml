@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<knowledges>
+  <!--Thisis a test for dom4j -->
+  <maxId>1</maxId>
+  <knowledge>
+    <id>id_knowledge_0000000001</id>
+    <caption>Cannot read property 'addCls' of null</caption>
+    <content>&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;Cannot read property 'addCls' of null&amp;nbsp;&lt;br&gt;&lt;/p&gt;&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;一般出现在这种场景下&lt;/p&gt;&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;create a window ,window的 Ext.define 时的 items 你写的是 Ext.create出来的某个组件，而不是{xtype:'xxx'}这种形式&lt;/p&gt;&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;当window关闭时，它会把把自己内部包含的组件也destroy掉，这样你第二次 create 这个window的时候 内部 引用的那个组件已经被销毁了，就错误产生了。&lt;/p&gt;&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;但是你如果是{xtype:'xxx'}这种形式的话 那么 每一次 create 都会重新创建内部组件。&lt;/p&gt;&lt;p style="color: rgb(51, 51, 51); font-family: Arial; font-size: 14px; line-height: 26px; "&gt;所以 建议是 内部 items 里 保持{xtype:'xxx'}形式定义子组件&lt;/p&gt;</content>
+  </knowledge>
+</knowledges>

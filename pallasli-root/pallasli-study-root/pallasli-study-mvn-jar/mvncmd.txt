@@ -1,0 +1,90 @@
+#按照依赖到本地资源库
+mvn install:install-file -Dfile=c:\kaptcha-{version}.jar -DgroupId=com.google.code -DartifactId=kaptcha -Dversion={version} -Dpackaging=jar
+
+
+#创建jar项目
+mvn archetype:generate -DgroupId=com.yiibai -DartifactId=NumberGenerator -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+#创建web项目
+mvn archetype:generate -DgroupId=com.yiibai -DartifactId=CounterWebApp -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+#将项目eclipse化
+#jar项目 
+mvn eclipse:eclipse
+#web项目
+mvn eclipse:eclipse -Dwtpversion=2.0
+
+#测试并打包项目
+mvn package
+
+#cmd运行jar包
+java -cp target/NumberGenerator-1.0-SNAPSHOT.jar com.yiibai.App
+
+#运行jetty
+mvn jetty:run
+
+
+#运行tomcat
+mvn tomcat:run
+mvn tomcat7:deploy 
+mvn tomcat7:undeploy 
+mvn tomcat7:redeploy
+
+#创建项目文档站点
+mvn site
+
+#部署站点
+mvn site:deploy
+
+#测试（单个文件）
+mvn test
+mvn -Dtest=TestApp2 test
+
+#将项目安装到本地资源
+mvn clean install
+
+ 
+mvn release:clean
+它清除以防工作区的最后一个释放的过程并不顺利。
+
+mvn release:rollback
+回滚是为了以防工作空间代码和配置更改的最后一个释放的过程并不顺利。
+
+mvn release:prepare
+执行多个操作次数
+
+检查是否有任何未提交的本地更改或不
+
+确保没有快照依赖
+
+更改应用程序的版本并删除快照从版本，以释放
+
+更新文件到 SVN.
+
+运行测试用例
+
+提交修改后POM文件
+
+标签代码在subversion中
+
+增加版本号和附加快照以备将来发行
+
+提交修改后的POM文件到SVN。
+
+mvn release:perform
+检查出使用前面定义的标签代码并运行Maven的部署目标来部署战争或内置工件档案库。
+
+让我们打开命令控制台，到 C: > MVN >bus-core-api 目录并执行以下命令mvn命令。
+
+C:MVNus-core-api>mvn release:prepare
+Maven将开始建设该项目。一旦构建成功运行以下命令mvn命令。
+
+C:MVNus-core-api>mvn release:perform
+一旦构建成功，您可以在资料库验证上传的JAR文件。
+
+
+
+
+
+
+

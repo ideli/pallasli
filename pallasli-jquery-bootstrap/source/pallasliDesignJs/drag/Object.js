@@ -1,0 +1,4 @@
+dragJs.Object=function(cfg){   
+};
+
+ 

@@ -1,0 +1,23 @@
+编译java文件
+javac First.java 
+调试类
+javac demo.java -g
+设置类目标
+javac demo.java -d c:myclasses 
+
+运行类
+java -classpath C:javaMyClasse1;C:javaMyClass2 utility.testapp.main
+运行jar
+java -classpath C:javamyclasses.jar utility.testapp.main
+
+
+
+
+
+
+
+
+
+
+
+

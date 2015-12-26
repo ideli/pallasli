@@ -1,0 +1,45 @@
+{  
+  text:'学习总结',  
+  expanded:true,  
+  children:[  {  
+			    text:'ExtJs4',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'布局',  
+						      leaf:true  
+						    },{  
+						      text:'组件',  
+						      leaf:true  
+					        },{  
+						      text:'代理',  
+						      leaf:true  
+					        }
+					    ] 
+			  },{  
+			    text:'mysql',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'数据库搭建',  
+						      leaf:true  
+						    },{  
+						      text:'语句',  
+						      leaf:true  
+					        },{  
+						      text:'函数',  
+						      leaf:true  
+					        }
+					    ]  
+			  },{  
+			    text:'maven',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'环境搭建',  
+						      leaf:true  
+						    },{  
+						      text:'命令',  
+						      leaf:true  
+					        }
+					    ] 
+			  }
+			]  
+}  

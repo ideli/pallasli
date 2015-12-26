@@ -1,0 +1,169 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+<!--
+.design-container {
+	height: 100%;
+}
+
+.design-menu {
+	background-color: silver;
+}
+
+.design-function { 
+	--display: none;
+	background-color: lightgray;
+	width: 15%;
+	float: left;
+}
+
+.design-design { -
+	-display: none;
+	width: 20%;
+	float: right;
+}
+
+.design-toolbar { -
+	-display: none;
+	background-color: gray;
+}
+
+.design-layout { -
+	-display: none;
+	background-color: lightgray;
+}
+
+.design-view {
+	overflow: scroll;
+}
+
+.form-group {
+	position: relative;
+	margin: 10px;
+}
+
+.form-group label {
+	float: left;
+}
+
+.form-group div {
+}
+-->
+</style>
+</head>
+<body>
+	<!-- 设计工具容器 --开始 -->
+	<div class="design-container">
+		<!-- 菜单栏--开始 -->
+		<div class="design-menu" >
+			<span>工具栏</span> <span>布局栏</span> <span>编辑</span> <span>保存</span>
+		</div>
+		<!-- 菜单栏 --结束 -->
+		<!-- 功能树 --开始 -->
+		<div class="design-function"> 
+			<ul>
+				<li>表单一
+					<ul>
+						<li>组件1</li>
+						<li>组件2</li>
+						<li>组件3</li>
+						<li>组件4</li>
+					</ul>
+				</li>
+				<li>按钮一</li>
+				<li>按钮二</li>
+				<li>按钮三</li>
+				<li>表单二
+					<ul>
+						<li>组件5</li>
+						<li>组件6</li>
+						<li>组件7</li>
+						<li>组件8</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!-- 功能树  --结束 -->
+		<!-- 设计区 --开始 -->
+		<div class="design-design">
+			<!-- 工具栏 --开始 -->
+			<div class="design-toolbar">
+				<fieldset>
+					<legend>面板</legend>
+					<span>普通容器</span> <span>表单</span> <span>字段区域</span> <span>工具栏</span>
+				</fieldset>
+				<fieldset>
+					<legend>控件</legend>
+					<span>文本框</span> <span>文本域</span> <span>下拉框</span> <span>单选框</span>
+					<span>复选框</span> <span>按钮</span> <span>菜单项</span>
+				</fieldset>
+				<fieldset>
+					<legend>树</legend>
+					<span>树</span> <span>节点</span> <span>叶子</span>
+				</fieldset>
+				<fieldset>
+					<legend>表格</legend>
+					<span>表格</span> <span>行</span> <span>列</span> <span>分页</span>
+				</fieldset>
+			</div>
+			<!-- 工具栏--结束-->
+			<!-- 布局配置 --开始 -->
+			<div class="design-layout">
+				<div class="form-group">
+					<label>布局方式:</label>
+					<div>
+						<input type="text" />
+					</div>
+				</div>
+			</div>
+			<!-- 布局配置 --结束-->
+		</div>
+		<!-- 设计区 --开始 -->
+		<!-- 预览区 --开始 -->
+		<div class="design-view">
+			 
+		</div>
+		<!-- 预览区 --结束 -->
+	</div>
+	<!-- 设计工具容器 --结束 -->
+
+
+	<script
+		src="../../dependences/jquery/1.11.3/jquery.min.js"></script>
+	<script
+		src="drag.js"></script>
+	<script type="text/javascript">
+		changeDivHeight = function() {
+			var designToolbar = $(".design-toolbar");
+			var designLayout = $(".design-layout");
+			var designFunction = $(".design-function");
+			var designDesign = $(".design-design");
+			designView.css("height", document.documentElement.clientHeight - 45
+					+ "px");
+			designDesign.css("height", document.documentElement.clientHeight
+					- 45 + "px");
+			designToolbar.css("height", 245 + "px");
+			designLayout.css("height", document.documentElement.clientHeight
+					- 290 + "px");
+			designFunction.css("height", document.documentElement.clientHeight
+					- 45 + "px");
+		}
+		var designContainer = $(".design-container");
+		var designMenu = $(".design-menu");
+		var designView = $(".design-view");
+		designMenu.css("height", "25px");
+		changeDivHeight();
+		window.onresize = function() {
+			changeDivHeight();
+		};
+
+		dragJs.initDragComp($(".design-toolbar span"));
+		
+
+		dragJs.initDropZone($(".design-view"));
+		dragJs.initDropZone($(".design-view div"));
+	</script>
+</body>
+</html>

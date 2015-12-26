@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nodes> 
+  <maxId>8</maxId>  
+  <node> 
+    <id>0</id>  
+    <node> 
+      <id>1</id>  
+      <text>ext</text>  
+      <leaf type="boolean">false</leaf>  
+      <expanded type="boolean">true</expanded>  
+      <node> 
+        <id>7</id>  
+        <text>test</text>  
+        <leaf>false</leaf>  
+        <expanded>true</expanded>  
+        <node>
+          <id>8</id>
+          <text>test</text>
+          <leaf>true</leaf>
+          <expanded>false</expanded>
+        </node>
+      </node> 
+    </node>  
+    <node> 
+      <id>5</id>  
+      <text>pageOffice</text>  
+      <leaf type="boolean">false</leaf>  
+      <expanded type="boolean">true</expanded>  
+      <node> 
+        <id>6</id>  
+        <text>pageOffice</text>  
+        <leaf type="boolean">true</leaf> 
+      </node> 
+    </node> 
+  </node> 
+</nodes>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+	<script>
+		function change(ulid){
+			stopPropagation();
+			var open=document.getElementById(ulid).style.display;
+			if(open=='none'){
+				document.getElementById(ulid).style.display='block';
+				document.getElementById(ulid).parentNode.style.listStyleImage="URL('images/folder-open.gif')";	
+			}else{
+				document.getElementById(ulid).style.display='none';
+				document.getElementById(ulid).parentNode.style.listStyleImage="URL('images/folder.gif')";
+			}
+			console.log(document.getElementById(ulid).style);
+		};
+		function stopPropagation(){
+			var e=window.event;
+			e.cancelBubble=true;
+			e.stopPropagation();
+		};
+	</script>
+	<style>
+		ul li {
+			list-style-type:none;
+			list-style-image:URL('images/folder-open.gif');
+			cursor:hand;
+		}
+		li[class="leaf"]{
+			list-style-type:none;
+			list-style-image:none;
+		}
+		ul li[class="leaf"] a { 
+			text-decoration: none; 
+			color: #777; 
+			background: #fff; 
+			padding: 0px; 
+			margin:0px;
+		} 
+		ul,ul li{ 
+			margin-left:8px; 
+			margin-top:0px; 
+			margin-bottom:0px; 
+			padding:0;
+		} 
+		li[class="leaf"]{ 
+			margin-left:0px; 
+			margin-top:0px; 
+			margin-bottom:0px; 
+			padding:0;
+		} 
+	</style>
+<head>
+	<body>
+		<ul>

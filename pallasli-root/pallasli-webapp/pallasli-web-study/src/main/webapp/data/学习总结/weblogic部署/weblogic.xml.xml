@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<knowledges> 
+  <!--Thisis a test for dom4j -->  
+  <maxId>3</maxId>   
+  <knowledge> 
+    <id>2</id>  
+    <caption>传参乱码配置</caption>  
+    <content>&amp;lt;charset-params&amp;gt; &lt;br&gt;&amp;lt;input-charset&amp;gt; &lt;br&gt;&amp;lt;resource-path&amp;gt;/*&amp;lt;/resource-path&amp;gt; &lt;br&gt;&amp;lt;java-charset-name&amp;gt;UTF-8&amp;lt;/java-charset-name&amp;gt; &lt;br&gt;&amp;lt;/input-charset&amp;gt; &lt;br&gt;&amp;lt;/charset-params&amp;gt;</content> 
+  </knowledge>  
+  <knowledge>
+    <id>3</id>
+    <caption>jar包冲突配置</caption>
+    <content>&lt;div&gt;&amp;lt;jsp-descriptor&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;lt;jsp-param&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;lt;param-name&amp;gt;keepgenerated&amp;lt;/param-name&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;lt;param-value&amp;gt;true&amp;lt;/param-value&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;lt;/jsp-param&amp;gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;lt;/jsp-descriptor&amp;gt;&lt;/div&gt;</content>
+  </knowledge>
+</knowledges>

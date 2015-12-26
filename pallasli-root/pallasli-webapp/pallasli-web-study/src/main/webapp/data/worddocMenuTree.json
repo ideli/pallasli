@@ -1,0 +1,53 @@
+{  
+  text:'word小记',  
+  expanded:true,  
+  children:[  {  
+			    text:'Ext',  
+			    fileId:'1',
+			    expanded:true,  
+			    children:[ {  
+						      text:'test', 
+			    			  fileId:'2',
+						      leaf:true 
+						    },{  
+						      text:'test的', 
+			    			  fileId:'3', 
+						      leaf:true  
+					        }
+					    ] 
+			  },{  
+			    text:'oracle',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'数据库搭建',  
+						      leaf:true  
+						    },{  
+						      text:'语句',  
+						      leaf:true  
+					        },{  
+						      text:'函数',  
+						      leaf:true  
+					        }
+					    ]  
+			  },{  
+			    text:'java',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'java基础',  
+						      leaf:true  
+						    },{  
+						      text:'命令',  
+						      leaf:true  
+					        }
+					    ] 
+			  },{  
+			    text:'pageOffice',  
+			    expanded:true,  
+			    children:[ {  
+						      text:'pageOffice',  
+						      leaf:true  
+						    }
+					    ] 
+			  }
+			]  
+}  

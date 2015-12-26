@@ -1,0 +1,550 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>HTML5 拖放API - 龙神幽虚洞天 - ITeye技术网站</title>
+    <meta name="description" content="在HTML5中，已经支持在浏览器与其他应用程序之间的数据互相拖动，同时也大大简化了有关于拖放方面的代码。  实现拖放的步骤  在HTML5中要想实现拖放操作，至少要经过两个步骤：  将想要拖放的对象元素的draggable属性设为true（draggable=&quot;true&quot;）。这样才能将该元素进行拖放。另外，img元素和a元素（必须指定href属性）默认允许拖放。  编写与拖放有关 ..." />
+    <meta name="keywords" content="HTML5, Drag, Drop HTML5 拖放API" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="ITeye" />
+    <link href="/rss" rel="alternate" title="龙神幽虚洞天" type="application/rss+xml" />
+    <link href="http://www.iteye.com/stylesheets/blog.css?1439457290" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.iteye.com/stylesheets/themes/blog/purple.css?1326191326" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.iteye.com/javascripts/application.js?1358214518" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-535605-1']);
+  _gaq.push(['_setDomainName', 'iteye.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <link href="http://www.iteye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1348819953" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.iteye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1325907333" type="text/javascript"></script>
+<script src="http://www.iteye.com/javascripts/hotkey.js?1324994303" type="text/javascript"></script>
+  <script src="http://www.iteye.com/javascripts/code_favorites.js?1358214518" type="text/javascript"></script>
+<script src="http://www.iteye.com/javascripts/weiboshare.js?1324994303" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.iteye.com/" class="homepage">首页</a>
+  <a href="http://www.iteye.com/news">资讯</a>
+  <a href="http://www.iteye.com/magazines">精华</a>
+  <a href="http://www.iteye.com/forums">论坛</a>
+  <a href="http://www.iteye.com/ask">问答</a>
+  <a href="http://www.iteye.com/blogs">博客</a>
+  <a href="http://www.iteye.com/blogs/subjects">专栏</a>
+  <a href="http://www.iteye.com/groups">群组</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a target="_blank" href="http://job.iteye.com/iteye">招聘</a>
+    <a href="http://www.iteye.com/search">搜索</a>
+  </div>
+</div>
+
+      <div id="user_nav">
+      <a href="/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="/login">登录</a>
+    <a href="/signup" class="nobg">注册</a>
+  </div>
+
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name">
+          <h1><a href="/">龙神幽虚洞天</a></h1>
+        </div>
+        <div id='fd'></div>
+        <div id="blog_navbar">
+          <ul>
+            <li class='blog_navbar_for'><a href="http://lucifinilhades.iteye.com"><strong>博客</strong></a></li>
+            <li ><a href="/weibo">微博</a></li>
+            <li ><a href="/album">相册</a></li>
+            <li ><a href="/link">收藏</a></li>
+            <li ><a href="/blog/guest_book">留言</a></li>
+            <li ><a href="/blog/profile">关于我</a></li>
+          </ul>
+    
+          <div class="search">
+            <form action="/blog/search" method="get">
+              <input class="search_text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" value="" />
+              <input class="submit_search" type="submit" value="" />
+            </form>
+          </div> 
+          <div id="fd"></div>         
+        </div>
+      </div>
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+
+          
+
+
+<div class="h-entry" style='display:none'>
+  <a href="http://lucifinilhades.iteye.com" class="p-author" target="_blank">lucifinilhades</a>
+</div>
+
+
+<div class="blog_main">
+  <div class="blog_title">
+    <h3>
+      <a href="/blog/1198742">HTML5 拖放API</a>
+      <em class="actions">      </em>
+    </h3>
+    <ul class='blog_categories'><strong>博客分类：</strong> <li><a href="/category/179376">HTML5/CSS3</a></li> </ul>
+        <div class='news_tag'><a href="http://www.iteye.com/blogs/tag/HTML5">HTML5</a><a href="http://www.iteye.com/blogs/tag/Drag">Drag</a><a href="http://www.iteye.com/blogs/tag/Drop">Drop</a>&nbsp;</div>
+  </div>
+
+  <div id="blog_content" class="blog_content">
+    <p>在HTML5中，已经支持在浏览器与其他应用程序之间的数据互相拖动，同时也大大简化了有关于拖放方面的代码。</p>
+<h1>实现拖放的步骤</h1>
+<p>在HTML5中要想实现拖放操作，至少要经过两个步骤：</p>
+<ol>
+<li>将想要拖放的对象元素的draggable属性设为true（draggable="true"）。这样才能将该元素进行拖放。另外，img元素和a元素（必须指定href属性）默认允许拖放。</li>
+<li>编写与拖放有关的事件处理代码。关于拖放存在的几个事件如下所示。</li>
+</ol>
+<table border="1">
+拖放的相关事件<br>
+
+<tr>
+<td>事件<br>
+</td>
+<td>产生事件的元素<br>
+</td>
+<td>描述<br>
+</td>
+</tr>
+
+<tr>
+<td>dragstart<br>
+</td>
+<td>被拖放的元素。<br>
+</td>
+<td>开始拖放操作。<br>
+</td>
+</tr>
+<tr>
+<td>drag<br>
+</td>
+<td>被拖放的元素。<br>
+</td>
+<td>拖放过程中。<br>
+</td>
+</tr>
+<tr>
+<td>dragenter<br>
+</td>
+<td>拖放过程中鼠标经过的元素。<br>
+</td>
+<td>被拖放的元素开始进入本元素的范围内。<br>
+</td>
+</tr>
+<tr>
+<td>dragover<br>
+</td>
+<td>拖放过程中鼠标经过的元素。</td>
+<td>被拖放的元素正在本元素范围内移动。<br>
+</td>
+</tr>
+<tr>
+<td>dragleave<br>
+</td>
+<td>拖放过程中鼠标经过的元素。</td>
+<td>被拖放的元素离开本元素的范围。<br>
+</td>
+</tr>
+<tr>
+<td>drop<br>
+</td>
+<td>拖放的目标元素。<br>
+</td>
+<td>有其他元素被拖放到了本元素中。<br>
+</td>
+</tr>
+<tr>
+<td>dragend<br>
+</td>
+<td>拖放的目标元素。<br>
+</td>
+<td>拖放操作结束。<br>
+</td>
+</tr>
+
+</table>
+<p>拖放示例如下，为使用方便，为jQuery增加如下函数：</p>
+<pre class="js" name="code">jQuery.fn.dragstart = function(handler) {
+	return this.each(function() {
+		this.addEventListener("dragstart", handler, false);
+	});
+};
+
+jQuery.fn.drag = function(handler) {
+	return this.each(function() {
+		this.addEventListener("drag", handler, false);
+	});
+};
+
+jQuery.fn.dragenter = function(handler) {
+	return this.each(function() {
+		this.addEventListener("dragenter", handler, false);
+	});
+};
+
+jQuery.fn.dragover = function(handler) {
+	return this.each(function() {
+		this.addEventListener("dragover", handler, false);
+	});
+};
+
+jQuery.fn.dragleave = function(handler) {
+	return this.each(function() {
+		this.addEventListener("dragleave", handler, false);
+	});
+};
+
+jQuery.fn.drop = function(handler) {
+	var handler1 = function(event) {
+		handler(event);
+		event.preventDefault();
+		event.stopPropagation();
+	};
+	return this.each(function() {
+		this.addEventListener("drop", handler, false);
+	});
+};
+
+jQuery.fn.dragend = function(handler) {
+	var handler1 = function(event) {
+		handler(event);
+		event.preventDefault();
+	};
+	return this.each(function() {
+		this.addEventListener("dragend", handler, false);
+	});
+};</pre>
+<p>拖放操作所使用的示例HTML页面代码如下：</p>
+<pre class="html" name="code">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-cn" dir="ltr"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;施放示例&lt;/title&gt;
+    &lt;script type="text/javascript" src="../js/jquery-1.6.4.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="../js/dragdrop.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;简单拖放示例&lt;/h1&gt;
+    &lt;div id="dragme" draggable="true" style="width:200px; border:1px solid gray; "&gt;请施放&lt;/div&gt;
+    &lt;div id="text" style="width:200px; height:200px; border:1px solid gray; "&gt;&lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>进行拖放操作的JavaScript代码如下：</p>
+<pre class="js" name="code">$(function() {
+ 	$(document).dragover(function(event) {
+		event.preventDefault();
+	});
+
+	$("#dragme").dragstart(function(event) {
+		var dt = event.dataTransfer;
+		dt.effectAllowed = 'all';
+		dt.setData("text/plain", "Hello World.");
+	});
+	
+	$("#text").dragend(function(event) {}).drop(function(event) {
+		var dt = event.dataTransfer;
+		var text = dt.getData("text/plain");
+		$(this).append(text);
+	}); 
+});</pre>
+<p>代码要点说明：</p>
+<ul>
+<li>开始拖动（dragstart事件发生）时，把要拖动的数据存入DataTransfer对象（setData()方法）。DataTransfer对象专门用来存放拖放时要携带的数据，它可以被设置为拖动事件对象的dataTransfer属性。setData()方法中的第一个参数为携带数据的数据各类的字符串，第二个参数为要携带的数据。第一个参数中表示数据各类的字符串里只能填入类似“text/plain”或“text/html”的表示MIME类型的文字，不能填入其他文字。</li>
+<li>如果把“dt.setData("text/plain", "Hello World.")”改为“dt.setData("text/plain", this.id)”，因为把被拖动元素的id当成了参数，所以携带的数据就是被拖动元素中的数据了，因为浏览器在使用getData()方法读取数据时会自动读取该元素中的数据。</li>
+<li>针对拖放的目标元素，必须在dragend或dragover事件内调用“event.preventDefault()”方法。因为默认情况下，拖放的目标元素是不允许接受元素的，为了把元素拖放到其中，必须把默认处理关闭。</li>
+<li>目标元素接受到被拖放的元素后，执行getData()方法从DataTransfer那里获得数据。getData()方法的参数为setData()方法中指定的数据种类。</li>
+<li>要实现拖放过程，还必须在目标元素的drop事件中关闭默认处理（拒绝被拖放），否则目标元素不能接受被拖放的元素。</li>
+<li>要实现拖放过程，还必须设定整个页面为不执行默认处理（拒绝被拖放），否则拖放处理也不能被实现。因为页面是先于其他元素接受拖放的，如果页面上拒绝拖放，则页面上其他元素就都不能接受拖放了。</li>
+<li>要使用元素可以被拖放，首先必须把该元素的draggable属性设为true。另外，为了让这个示例在所有支持拖放API的浏览器中都能正常运行，需要指定“-webkit-user-drag:element”这种Webkit特有的CSS属性。</li>
+<li>本示例中的数据种类使用了“text/plain”这个MIME类型，也可以从其他使用同样MIME类型的应用程序中把该类型的数据拖动到目标元素中。现在支持拖动处理的MIME的类型有：“text/plain（文本文字）”、“text/html（HTML文字）”、“text/xml（XML文字）”、“text/uri-list（URL列表，每个URL为一行）”。</li>
+</ul>
+<h1>DataTransfer对象的属性与方法</h1>
+<p>如果DataTransfer对象的属性和方法使用得好，可以实现定制拖放图标，让它只支持特定拖放（例如复制、移动等），甚至可以实现更复杂的拖放操作：</p>
+<ul>
+<li>dropEffect属性：表示拖放操作的视觉效果，允许对其进行值的设定。该效果必须在用effectAllowed属性指定的允许的视觉效果的范围内，允许指定的值为none、copy、link、move。</li>
+<li>effectAllowed属性：用来指定当元素被拖放时所允许的视觉效果，可以指定的值为：none、copy、copyLink、copyMove、link、linkMove、move、all、unintialize。</li>
+<li>type属性：存入数据的种类，字符串的伪数组。</li>
+<li>void clearData(DOMString format)方法：清除DataTransfer对象中存放的数据，如果省略参数，则清除全部数据。</li>
+<li>void setData(DOMString format, DOMString data)方法：向DataTransfer对象内存入数据。</li>
+<li>DOMString getData(DOMString format)方法：从DataTransfer对象中读数据。</li>
+<li>void setDragImage(Element image, long x, long y)方法：用img元素来设置拖放图标（部分浏览器中可以用canvas等其他元素来设置）。<br>
+</li>
+</ul>
+<p>setData()方法在拖放开始时向dataTransfer对象中存入数据，它用type属性来指定数据MIME类型，而getData()方法在拖动结束时读取dataTransfer对象中的数据。clearData()方法可以用来清除DataTransfer对象内的数据。</p>
+<h1>设定拖放时的视觉效果</h1>
+<p>dropEffect属性与effectAllowed属性结合起来可以设定拖放时的视觉效果。effectAllowed属性表示当一个元素被拖动时所允许的视觉效果，一般在ondragstart事件中设定，允许设定的值为none、copy、copyLink、copyMove、link、linkMove、move、all、unintialize。dropEffect属性表示实际拖放时的视觉效果，一般在ondragover事件中指定，允许设定的值为none、copy、link、move。dropEffect属性所表示的实际视觉效果必须在effectAllowed属性所表示的允许的视觉效果范围内。规则如下所示：</p>
+<ol>
+<li>如果effectAllowed属性设定为none，则不允许拖放元素。</li>
+<li>如果不dropEffect属性设定为none，则不允许被拖放到目标元素中。</li>
+<li>如果effectAllowed属性设定为all或不设定，则dropEffect属性允许被设定为任何值，并且按指定的视觉效果进行显示。</li>
+<li>如果effectAllowed属性设定为具体效果（不为none、all），dropEffect属性也设定了具体视觉效果，则两个具体效果值必须完全相等，否则不允许将被拖放元素拖放到目标元素中。</li>
+</ol>
+<pre class="js" name="code">$("#dragme").dragstart(function(event) {
+    var dt = event.dataTransfer;
+    dt.effectAllowed = 'copy';
+    dt.setData("text/plain", "Hello.");
+});
+
+$("#text").dragover(function(event) {
+    var dt = event.dataTransfer;
+    dt.dropEffect = 'copy';
+    event.preventDefault();
+});</pre>
+<h1>自定义拖放图标</h1>
+<p>除了上面所说的使用effectAllowed属性与dropEffect属性外，HTML5中还允许自定义拖放图标——指的是在用鼠标拖动元素的过程中，位于鼠标指针下部的小图标。</p>
+<p>DataTransfer对象有一个setDragImage()方法，该方法有三个参数，第一个参数image设定为拖放图标的图标元素，第二个参数为拖放图标离鼠标指针的x轴方向的位移量，第三个参数是拖放图标离鼠标指针的y轴方向的位移量。</p>
+<pre class="js" name="code">$('#dragme').dragstart(function(event) {
+    var dt = event.dataTransfer;
+    dt.setDragImage($('img').attr("src", "images/img1.jpg")[0], -10, -10);
+    dt.setData("text/plain", "Welcome");
+});
+</pre>
+  </div>
+
+  
+
+  
+  
+  <IFRAME SRC="/iframe_ggbd/187" SCROLLING=no WIDTH=468 HEIGHT=60 FRAMEBORDER=0></IFRAME>
+  
+  <div id="bottoms" class="clearfix">
+    
+    <div id="share_weibo">分享到：
+      <a data-type='sina' href="javascript:;" title="分享到新浪微博"><img src="/images/sina.jpg"></a>
+      <a data-type='qq' href="javascript:;" title="分享到腾讯微博"><img src="/images/tec.jpg"></a>
+    </div>
+  </div>
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/1190393" class="next" title="jQuery 事件模型【2】">jQuery 事件模型【2】</a>
+      |
+      <a href="/blog/1197826" class="pre" title="HTML5 文件API">HTML5 文件API</a>
+    </div>
+  </div>
+  <div class="blog_bottom">
+    <ul>
+      <li>2011-10-17 19:43</li>
+      <li>浏览 2673</li>
+      <li><a href="#comments">评论(0)</a></li>
+      
+      
+      <li>分类:<a href="http://www.iteye.com/blogs/category/web">Web前端</a></li>      
+      <li class='last'><a href="http://www.iteye.com/wiki/blog/1198742" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+            <p style="text-align:center; margin-top:30px;margin-bottom:0px;"><a href="/login" style="background-color:white;"> <img src="/images/login_icon.png" style="vertical-align:middle; margin-right: 10px;" /></a><a href="/login">  您还没有登录,请您登录后再发表评论 </a></p>
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  $$('#main .blog_content pre[name=code]').each(function(pre, index){ // blog content
+    var post_id = 1198742;
+    var location = window.location;
+    source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+    pre.writeAttribute('codeable_id', post_id);
+    pre.writeAttribute('codeable_type', "Blog");
+    pre.writeAttribute('source_url', source_url);
+    pre.writeAttribute('pre_index', index);
+    pre.writeAttribute('title', 'HTML5 拖放API');
+  });
+
+  fix_image_size($$('div.blog_content img'), 700);
+
+  function processComment() {
+    $$('#main .blog_comment > div').each(function(comment){// comment
+      var post_id = comment.id.substr(2);
+      $$("#"+comment.id+" pre[name=code]").each(function(pre, index){
+        var location = window.location;
+        source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+        source_url += "#" + comment.id;
+        pre.writeAttribute('codeable_id', post_id);
+        pre.writeAttribute('codeable_type', "BlogComment");
+        pre.writeAttribute('source_url', source_url);
+        pre.writeAttribute('pre_index', index);
+        pre.writeAttribute('title', 'HTML5 拖放API');
+      });
+    });
+  }
+
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'BlogComment'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);
+        Element.scrollTo(editor.bbcode_editor.textarea.element);}
+    });
+  }
+
+  code_favorites_init();
+  processComment();
+  new WeiboShare({share_buttons: $('share_weibo'), img_scope: $('blog_content')});
+</script>
+
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+  <div id="blog_owner_logo"><a href='http://lucifinilhades.iteye.com'><img alt="lucifinilhades的博客" class="logo" src="http://www.iteye.com/upload/logo/user/558566/e5d842b7-34b9-3f94-b0e2-3ca2c4452676.jpg?1316678061" title="lucifinilhades的博客: 龙神幽虚洞天" width="" /></a></div>
+  <div id="blog_owner_name">lucifinilhades</div>
+</div>
+
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 39606 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.iteye.com/images/icon_minigender_1.gif?1324994303" title="男" /></li>
+              <li>来自: 苏州</li>
+              <li><img src='/images/status/offline.gif'/></li>
+              
+            </ul>
+          </div>
+          <div id="user_visits" class="clearfix">
+            <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">更多访客&gt;&gt;</a></span></h5>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://suncf1985.iteye.com' target='_blank'><img alt="suncf1985的博客" class="logo" src="http://www.iteye.com/upload/logo/user/120497/ed31850a-cfb4-30b1-8fd2-1e20e6cbcf61-thumb.jpg?1246327768" title="suncf1985的博客: suncf1985" width="48px" /></a></div>
+                <div class="left"><a href='http://suncf1985.iteye.com' target='_blank' title='suncf1985'>suncf1985</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://do-ho.iteye.com' target='_blank'><img alt="六十三的博客" class="logo" src="http://www.iteye.com/upload/logo/user/574520/b68705d1-0694-3850-b42d-5ee76e09e629-thumb.jpg?1319286336" title="六十三的博客: 六十三" width="48px" /></a></div>
+                <div class="left"><a href='http://do-ho.iteye.com' target='_blank' title='六十三'>六十三</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://chenxyz.iteye.com' target='_blank'><img alt="chenxyz的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1324994303" title="chenxyz的博客: " width="48px" /></a></div>
+                <div class="left"><a href='http://chenxyz.iteye.com' target='_blank' title='chenxyz'>chenxyz</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://ccyohyeah.iteye.com' target='_blank'><img alt="ccyohyeah的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1324994303" title="ccyohyeah的博客: " width="48px" /></a></div>
+                <div class="left"><a href='http://ccyohyeah.iteye.com' target='_blank' title='ccyohyeah'>ccyohyeah</a></div>
+              </div>
+            
+          </div>
+
+          
+
+                      <div id="blog_menu">
+              <h5>文章分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (42)</a></li>
+                
+                  <li><a href="/category/178956">jQuery (8)</a></li>
+                
+                  <li><a href="/category/178957">Java SE (0)</a></li>
+                
+                  <li><a href="/category/180957">Java EE (3)</a></li>
+                
+                  <li><a href="/category/178958">Java Web (5)</a></li>
+                
+                  <li><a href="/category/178959">Groovy/Grails (0)</a></li>
+                
+                  <li><a href="/category/179376">HTML5/CSS3 (26)</a></li>
+                
+                  <li><a href="/category/182049">DWR (5)</a></li>
+                
+              </ul>
+            </div>
+            <div id='month_blogs'>
+              <h5>社区版块</h5>
+              <ul>
+                <li><a href="/blog/news">我的资讯</a> (0)</li>
+                <li>
+                  <a href="/blog/post">我的论坛</a> (0)
+                </li>
+                <li><a href="/blog/answered_problems">我的问答</a> (0)</li>
+              </ul>
+            </div>
+            <div id="month_blogs">
+              <h5>存档分类</h5>
+              <ul>
+                
+                  <li><a href="/blog/monthblog/2011-11">2011-11</a> (12)</li>
+                
+                  <li><a href="/blog/monthblog/2011-10">2011-10</a> (26)</li>
+                
+                  <li><a href="/blog/monthblog/2011-09">2011-09</a> (4)</li>
+                
+                <li><a href="/blog/monthblog_more">更多存档...</a></li>
+              </ul>
+            </div>
+            
+            
+
+            <div id="guest_books">
+              <h5>最新评论</h5>
+              <ul>
+                
+                <li>
+                  <a href='http://liang3307-163-com.iteye.com' target='_blank' title='liang3307'>liang3307</a>： 
+                  好，我们也在使用html5，其中为了离线可以完全访问，把服务端 ...<br />
+                  <a href="/blog/1211571#bc2247709">HTML5 本地数据库</a>
+                </li>
+                
+              </ul>
+            </div>
+
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：ITeye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2015 ITeye.com.   All rights reserved.  [ 京ICP证110151号  京公网安备110105010620 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.iteye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&user_id=' width='0' height='0' />");
+</script>
+
+<script src="http://csdnimg.cn/pubfooter/js/tracking.js?version=20130923164150" type="text/javascript"></script>
+
+    
+    
+  </body>
+</html>

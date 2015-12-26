@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<hibernate-mapping>
+<!-- 
+    Created by the Middlegen Hibernate plugin 2.2
+
+    http://boss.bekk.no/boss/middlegen/
+    http://www.hibernate.org/
+-->
+
+<class 
+    name="com.pallas.knowledge.bean.KnowledgeType" 
+    table="knowledge_types"
+    lazy="false"
+>
+
+    <id
+        name="id"
+        type="java.lang.Long"
+        column="id"
+    >
+    
+        <generator class="native" />
+    </id>
+
+    <property
+        name="parentId"
+        type="long"
+        column="parentId"
+        not-null="true"
+        length="19"
+    />
+    <property
+        name="text"
+        type="java.lang.String"
+        column="text"
+        not-null="true"
+        length="32"
+    />
+    <property
+        name="leaf"
+        type="boolean"
+        column="leaf"
+        not-null="true"
+    />
+    <property
+        name="expanded"
+        type="boolean"
+        column="expanded"
+        not-null="true"
+    />
+
+    <!-- Associations -->
+  
+
+</class>
+</hibernate-mapping>

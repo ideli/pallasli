@@ -1,0 +1,10 @@
+在开发的根目录下创建一个 data 目录 － 这是 HSQL DB 存储数据文件的地方。此时在 data 目
+录中运行 java -classpath ../lib/hsqldb.jar org.hsqldb.Server 就可启动数据库。你可以在 log
+中看到它的启动，及绑定到 TCP/IP 套接字，这正是我们的应用程序稍后会连接的地方。如果你
+希望在本例中运行一个全新的数据库，就在窗口中按下 CTRL + C 来关闭 HSQL 数据库，并删除
+data/ 目录下的所有文件，再重新启动 HSQL 数据库。
+Hibernate 将为你的应用程序连接到数据库，所以它需要知道如何获取连接。在这个教程里，我
+们使用一个独立连接池（和 javax.sql.DataSource 相反）。Hibernate 支持两个第三方的开源
+JDBC 连接池：c3p0 [https://sourceforge.net/projects/c3p0] 和 proxool [http://
+proxool.sourceforge.net/]。然而，在本教程里我们将使用 Hibernate 内置的连接池。
+小心嵌入的 Hibernate 连接池不用于产品环境。它缺乏连接池里的几个功能。

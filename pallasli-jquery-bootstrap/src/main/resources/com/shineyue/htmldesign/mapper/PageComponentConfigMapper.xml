@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shineyue.htmldesign.mapper.PageComponentConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.shineyue.htmldesign.model.PageComponentConfig" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CONFIG_KEY" property="configKey" jdbcType="VARCHAR" />
+    <result column="CONFIG_VALUE" property="configValue" jdbcType="VARCHAR" />
+    <result column="PAGE_COMPONENT_ID" property="pageComponentId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, CONFIG_KEY, CONFIG_VALUE, PAGE_COMPONENT_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.shineyue.htmldesign.model.PageComponentConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from T_PAGE_COMPONENT_CONFIG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_PAGE_COMPONENT_CONFIG
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from T_PAGE_COMPONENT_CONFIG
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.shineyue.htmldesign.model.PageComponentConfigExample" >
+    delete from T_PAGE_COMPONENT_CONFIG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.shineyue.htmldesign.model.PageComponentConfig" >
+    insert into T_PAGE_COMPONENT_CONFIG (ID, CONFIG_KEY, CONFIG_VALUE, 
+      PAGE_COMPONENT_ID)
+    values (#{id,jdbcType=INTEGER}, #{configKey,jdbcType=VARCHAR}, #{configValue,jdbcType=VARCHAR}, 
+      #{pageComponentId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shineyue.htmldesign.model.PageComponentConfig" >
+    insert into T_PAGE_COMPONENT_CONFIG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="configKey != null" >
+        CONFIG_KEY,
+      </if>
+      <if test="configValue != null" >
+        CONFIG_VALUE,
+      </if>
+      <if test="pageComponentId != null" >
+        PAGE_COMPONENT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="configKey != null" >
+        #{configKey,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null" >
+        #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="pageComponentId != null" >
+        #{pageComponentId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.shineyue.htmldesign.model.PageComponentConfigExample" resultType="java.lang.Integer" >
+    select count(*) from T_PAGE_COMPONENT_CONFIG
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update T_PAGE_COMPONENT_CONFIG
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.configKey != null" >
+        CONFIG_KEY = #{record.configKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.configValue != null" >
+        CONFIG_VALUE = #{record.configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pageComponentId != null" >
+        PAGE_COMPONENT_ID = #{record.pageComponentId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update T_PAGE_COMPONENT_CONFIG
+    set ID = #{record.id,jdbcType=INTEGER},
+      CONFIG_KEY = #{record.configKey,jdbcType=VARCHAR},
+      CONFIG_VALUE = #{record.configValue,jdbcType=VARCHAR},
+      PAGE_COMPONENT_ID = #{record.pageComponentId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shineyue.htmldesign.model.PageComponentConfig" >
+    update T_PAGE_COMPONENT_CONFIG
+    <set >
+      <if test="configKey != null" >
+        CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+      </if>
+      <if test="configValue != null" >
+        CONFIG_VALUE = #{configValue,jdbcType=VARCHAR},
+      </if>
+      <if test="pageComponentId != null" >
+        PAGE_COMPONENT_ID = #{pageComponentId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shineyue.htmldesign.model.PageComponentConfig" >
+    update T_PAGE_COMPONENT_CONFIG
+    set CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+      CONFIG_VALUE = #{configValue,jdbcType=VARCHAR},
+      PAGE_COMPONENT_ID = #{pageComponentId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

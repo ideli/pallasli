@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datas xmlns="http://webservices.amazon.com/AWSECommerceService/2009-05-15">
+	<knowledges>
+		<Request>
+			<IsValid>True</IsValid>
+			<ItemSearchRequest>
+				<Author>Sidney Sheldon</Author>
+				<SearchIndex>Books</SearchIndex>
+			</ItemSearchRequest>
+		</Request>
+		<TotalResults>203</TotalResults>
+		<TotalPages>21</TotalPages>
+		<knowledges>
+			<knowledge>
+				<knowledgeType>001001</knowledgeType>
+				<ItemAttributes>
+				<caption>dd</caption>
+				<content>dd</content>
+				</ItemAttributes>
+			</knowledge>
+		</knowledges>
+	</knowledges>
+</datas>

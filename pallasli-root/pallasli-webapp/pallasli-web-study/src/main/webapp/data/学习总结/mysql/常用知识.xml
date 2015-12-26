@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<knowledges> 
+  <!--Thisis a test for dom4j -->  
+  <maxId>1</maxId>  
+  <knowledge>
+    <id>1</id>
+    <caption>密码修改</caption>
+    <content>&lt;pre id="best-content-208917689" accuse="aContent" class="best-text mb-10" style="margin-top: 0px; margin-bottom: 10px; padding: 0px; font-family: arial, 'courier new', courier, 宋体, monospace; white-space: pre-wrap; word-wrap: break-word; color: rgb(51, 51, 51); font-size: 14px; line-height: 24px; background-color: rgb(241, 254, 221); "&gt;方法二&lt;br&gt;使用mysqladmin，这是前面声明的一个特例。&lt;br&gt;mysqladmin -u root -p password mypasswd&lt;br&gt;输入这个命令后，需要输入root的原密码，然后root的密码将改为mypasswd。&lt;br&gt;把命令里的root改为你的用户名，你就可以改你自己的密码了。&lt;br&gt;当然如果你的mysqladmin连接不上mysql server，或者你没有办法执行mysqladmin，&lt;br&gt;那么这种方法就是无效的。&lt;br&gt;而且mysqladmin无法把密码清空。&lt;/pre&gt;</content>
+  </knowledge>
+</knowledges>

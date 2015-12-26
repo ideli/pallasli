@@ -1,0 +1,8 @@
+CACHE MANIFEST
+#我是注释，这个文件名叫cache.manifest
+CACHE:
+../lib/bootstrap/3.3.5/css/bootstrap.min.css
+../lib/bootstrap/3.3.5/css/bootstrap-theme.min.css
+../lib/jquery/1.11.3/jquery.min.js
+../lib/jquery-validation/1.14.0/jquery.validate.js
+../lib/bootstrap/3.3.5/js/bootstrap.min.js

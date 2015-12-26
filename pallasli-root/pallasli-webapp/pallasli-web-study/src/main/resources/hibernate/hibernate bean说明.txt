@@ -1,0 +1,10 @@
+
+/**
+ * 所有的持久化类（persistent classes）都要求有无参的构造器，因为 Hibernate 必须使用 Java
+ * 反射机制来为你创建对象。构造器（constructor）的访问级别可以是 private，然而当生成运行 时代理（runtime
+ * proxy）的时候则要求使用至少是 package 级别的访问控制，这样在没有字节 码指令（bytecode
+ * instrumentation）的情况下，从持久化类里获取数据会更有效率。
+ * 
+ * @author Administrator
+ * 
+ */

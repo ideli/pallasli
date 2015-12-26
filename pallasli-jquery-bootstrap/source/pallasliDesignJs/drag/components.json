@@ -1,0 +1,196 @@
+{
+	//charts
+	"barChart":{
+		"caption":"柱状图",
+		"type":"charts",
+		"used":true,
+		"catalog":["charts"]
+	}, 
+	"pieChart":{
+		"caption":"饼图图",
+		"type":"charts",
+		"used":true,
+		"catalog":["charts"]
+	}, 
+	"lineChart":{
+		"caption":"折线图",
+		"type":"charts",
+		"used":true,
+		"catalog":["charts"]
+	}, 
+	
+	
+	//stantard
+	"button":{
+		"caption":"按钮",
+		"type":"stantard",
+		"used":true,
+		"catalog":["buttons"]
+	}, 
+	"cycleButton":{
+		"caption":"按钮式菜单",
+		"type":"stantard",
+		"used":true,
+		"catalog":["buttons"]
+	}, 
+	"splitButton":{
+		"caption":"带分割线的按钮",
+		"type":"stantard",
+		"used":true,
+		"catalog":["buttons"]
+	},  
+	//toolbar
+	"buttonGroup":{
+		"caption":"按钮组",
+		"type":"toolbar",
+		"used":true,
+		"catalog":["buttons"]
+	}, 
+	
+	
+	//containers
+	"container":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":["containers"]
+	},
+	"fieldContainer":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":["containers"]
+	},
+	"panel":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":"containers"
+	},
+	"tabPanel":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":"containers"
+	},
+	"viewPort":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":"containers"
+	},
+	"window":{
+		"caption":"柱状图",
+		"type":"containers",
+		"used":true,
+		"catalog":"containers"
+	},
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//views
+	"view":{
+		"caption":"柱状图",
+		"type":"views",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	"boundList":{
+		"caption":"柱状图",
+		"type":"views",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//menu
+	"menu":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	
+	//tree
+	"treeColumn":{
+		"caption":"列",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	"treeDDPlugin":{
+		"caption":"允许拖拽",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	"treePanel":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	"treeGrid":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+	"treeView":{
+		"caption":"柱状图",
+		"type":"menu",
+		"used":true,
+		"catalog":"containers"
+	} ,
+
+
+
+
+
+
+}

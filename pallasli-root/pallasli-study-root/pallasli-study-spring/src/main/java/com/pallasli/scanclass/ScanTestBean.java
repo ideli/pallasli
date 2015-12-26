@@ -1,0 +1,16 @@
+package com.pallasli.scanclass;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ScanTestBean {
+
+	@Autowired
+	ImportTestBean importTestBean;
+
+	public ImportTestBean getImportTestBean() {
+		return importTestBean;
+	}
+
+}

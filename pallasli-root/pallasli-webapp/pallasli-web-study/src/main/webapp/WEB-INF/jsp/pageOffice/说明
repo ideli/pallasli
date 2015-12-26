@@ -1,0 +1,247 @@
+新建Web项目或网站后，拷贝PageOffice示例代码里的pageoffice.jar到您的新项目的WEB-INF\lib文件夹下就可以了。
+ 然后当您需要用PageOfficeCtrl时，新建JSP网页，参考示例代码在页首添加 
+ <%@ page import="com.zhuozhengsoft.pageoffice.*,java.awt.*"%> 
+ <%@ taglib uri="http://java.pageoffice.cn" prefix="po" %> 
+ 在需要显示控件的地方添加 <po:PageOfficeCtrl id="PageOfficeCtrl1" /> 
+ 然后添加您的调用代码即可，例如： 
+ PageOfficeCtrl poCtrl1 = new PageOfficeCtrl(request); 
+ poCtrl1.setServerPage("poserver.do"); //此行必须 
+ poCtrl1.setSaveFilePage("savefile.jsp"); 
+ poCtrl1.webOpen("doc/test.doc", OpenModeType.docNormalEdit, "张三"); 
+ poCtrl1.setTagId("PageOfficeCtrl1"); //此行必须
+
+
+SaveFilePage和SaveDataPage即可单独赋值，也可同时赋值。
+SaveFilePage指定的页面可接受二进制文件流、Form域，直接保存修改后的文件
+SaveDataPage指定的页面可接收页面提交的Word数据区域、Excel表格数据、Form域
+
+SaveFilePage指定的页面只能创建FileServer对象
+SaveDataPage指定的页面只能创建PageOffice.ExcelReader或PageOffice.WordReader命名空间下的对象
+SaveFilePage的使用：只需要保存修改后的文档，而不需要提取文档内容时
+SaveDataPage的使用：需要提交文档内容或用户输入的文档内容时
+
+document.getElementById("PageOfficeCtrl1").WebSave(); 
+var strRet = document.getElementById("PageOfficeCtrl1").CustomSaveResult;
+
+
+用PageOffice实现最简单的导出获取Excel中的数据  普通的MS Office Excel只能在本地磁盘上打开和编辑保存，这使得程序员在开发项目时受到很多的约束，
+许多的功能无法实现或者无法达到理想的效果。但是通过调用PageOffice开发平台，不仅可以在线打开并保存Excel文件还可以提交Excel中的数据。
+  下面我就简单的和大家分享一下如何实现Excel文档的在线打开、编辑、保存和数据的提交。  第一步：请先安装PageOffice的服务器端的安装程序，
+  之后在你的网站中根目录下添加pageoffice文件夹（在PageOffice官方网站的“下载中心”中可下载相应的压缩包，解压之后直接将PageOffice
+  实例代码里的pageoffice文件夹拷贝到根目录下就可以了）。  第二步：在网站中创建动态页面Excel.aspx。在工具箱中拖动一个 PageOfficeCtrl
+  控件到页面上（PageOfficeCtrl控件位于工具箱最下方），并设置控件所在层（<div></div>）的高和宽。  第三步：Excel.aspx页面编写代码，
+  打开Excel文档。部分代码如下：  //设置PageOfficeCtrl控件的服务页面 
+   PageOfficeCtrl1.ServerPage = "../pageoffice/server.aspx"; 
+   PageOfficeCtrl1.AddCustomToolButton("保存", "Save()", 1); //定义Workbook对象  
+   PageOffice.ExcelWriter.Workbook workBook = new PageOffice.ExcelWriter.Workbook(); 
+    //定义Sheet对象，"Sheet1"是打开的Excel表单的名称 
+     PageOffice.ExcelWriter.Sheet sheet = workBook.OpenSheet("Sheet1"); 
+     //定义table对象，设置table对象的设置范围  
+     PageOffice.ExcelWriter.Table table = sheet.OpenTable("B4:F13"); 
+     //设置table对象的提交名称，以便保存页面获取提交的数据
+      table.SubmitName = "Info";  
+      PageOfficeCtrl1.SetWriter(workBook);  
+      PageOfficeCtrl1.SaveDataPage = "SaveData.aspx"; //打开Excel文件  
+      PageOfficeCtrl1.WebOpen("doc/test.xls",  PageOffice.OpenModeType.xlsSubmitForm, "操作人姓名");  
+      说明：若想提交数据需将属性OpenModeType的类型设置为xlsSubmitForm提交类型
+      
+      
+      
+      
+      
+      
+      
+很多情况下，软件开发者需要从数据库读取数据，然后将数据动态填充到手工预先准备好的Excel模板文件里，这对于生成复
+杂格式的Excel报表文件非常有用，这个功能应用PageOffice的基本动态填充功能即可实现。但若是用户想动态生成一个没有
+固定模版格式的Excel报表时，换句话说，没有办法事先准备一个固定格式的模板时，就需要开发人员用后台代码实现Excel报
+表的动态生成功能了，即通过后台代码在Excel的工作表上画出相应表格，实现Excel文件的从零到有。这里的“零”指的是
+Excel空白文件。
+下面我就如何通过后台代码实现在空白Excel文件中画表格，这一问题的具体步骤和大家分享一下。
+就以通过后台自动生成一张“出差开支预算表”为例来向大家介绍一下吧。
+第一步：请先安装PageOffice的服务器端的安装程序（请先确保已安装了微软公司发布的Excel组件程序），之后在你的网站
+中根目录下添加pageoffice文件夹（在www.zhuozhengsoft.com网站的“下载中心”中可下载相应的压缩包，解压之后直接将
+PageOffice实例代码里的pageoffice文件夹拷贝到根目录下就可以了）。
+第二步：在网站中添加文件夹存放excel模板文件，我习惯命名为“doc”，添加的模版文件是“test2.xls”。
+第三步：在网站中创建动态页面Excel.aspx。在工具箱中拖动一个PageOfficeCtrl控件到页面上（PageOfficeCtrl控件位于工
+具箱最下方），并设置控件所在层（
+）的高和宽。 
+第四步：在Excel.aspx.cs中，利用PageOfficeCtrl控件画出相应的Excel表格，部分代码如下：
+// 定义工作薄（Workbook）对象
+PageOffice.ExcelWriter.Workbook wb = new PageOffice.ExcelWriter.Workbook();
+// 定义table对象，“Sheet1”为打开的工作薄中的表单名称
+PageOffice.ExcelWriter.Table backGroundTable = wb.OpenSheet("Sheet1").OpenTable("A1:P200");
+// 设置背景颜色
+backGroundTable.Border.LineColor = Color.White;
+ 
+// 设置标题
+//打开table对象
+wb.OpenSheet("Sheet1").OpenTable("A1:H2").Merge();
+// 设置table中行高
+wb.OpenSheet("Sheet1").OpenTable("A1:H2").RowHeight = 30;
+// 定义单元格对象
+PageOffice.ExcelWriter.Cell A1 = wb.OpenSheet("Sheet1").OpenCell("A1");
+ 
+// 设置单元格内容的对齐方式
+// 设置水平对齐方式
+A1.HorizontalAlignment = PageOffice.ExcelWriter.XlHAlign.xlHAlignCenter;
+// 设置垂直对齐方式
+A1.VerticalAlignment = PageOffice.ExcelWriter.XlVAlign.xlVAlignCenter;
+// 设置单元格前景色
+A1.ForeColor = Color.FromArgb(0, 128, 128);
+// 给单元格赋值
+A1.Value = "出差开支预算";
+// 单元格字体加粗
+A1.Font.Bold = true;
+// 设置单元格字体大小
+A1.Font.Size = 25;
+ 
+#region 画表头
+// 定义Table的Border对象（此处相当于设置单元格的边框）
+PageOffice.ExcelWriter.Border C4Border = wb.OpenSheet("Sheet1").OpenTable("C4:C4").Border;
+// 设置边框的宽度样式
+C4Border.Weight = PageOffice.ExcelWriter.XlBorderWeight.xlThick;
+// 设置边框线的颜色（注意：表格边框的颜色叠加问题：哪个颜色想显示在最上面，哪个表格的边框颜色  后设置）
+C4Border.LineColor = Color.Yellow;
+ 
+PageOffice.ExcelWriter.Table titleTable = wb.OpenSheet("Sheet1").OpenTable("B4:H5");
+titleTable.Border.Weight = PageOffice.ExcelWriter.XlBorderWeight.xlThick;
+// 设置边框线的颜色（表格C4Border的上边框颜色将被表格titleTable的边框颜色覆盖）
+titleTable.Border.LineColor = Color.FromArgb(0, 128, 128);
+// 设置表格边框样式
+titleTable.Border.BorderType = PageOffice.ExcelWriter.XlBorderType.xlAllEdges;
+#endregion
+ 
+#region 画表体
+PageOffice.ExcelWriter.Table bodyTable = wb.OpenSheet("Sheet1").OpenTable("B6:H15");
+// 设置table的边框
+bodyTable.Border.LineColor = Color.Gray;
+bodyTable.Border.Weight = PageOffice.ExcelWriter.XlBorderWeight.xlHairline;
+... ...
+#endregion
+ 
+#region 画表尾
+// 画表尾
+PageOffice.ExcelWriter.Border H16H17Border = wb.OpenSheet("Sheet1").OpenTable("H16:H17").Border;
+H16H17Border.LineColor = Color.FromArgb(204, 255, 204);
+ 
+PageOffice.ExcelWriter.Border E16G17Border = wb.OpenSheet("Sheet1").OpenTable("E16:G17").Border;
+E16G17Border.LineColor = Color.FromArgb(0, 128, 128);
+ 
+ageOffice.ExcelWriter.Table footTable = wb.OpenSheet("Sheet1").OpenTable("B16:H17");
+footTable.Border.Weight = PageOffice.ExcelWriter.XlBorderWeight.xlThick;
+footTable.Border.LineColor = Color.FromArgb(0, 128, 128);
+footTable.Border.BorderType = PageOffice.ExcelWriter.XlBorderType.xlAllEdges;
+#endregion
+ 
+#region 设置行高列宽
+// 设置行高列宽
+wb.OpenSheet("Sheet1").OpenTable("A1:A1").ColumnWidth = 1;
+wb.OpenSheet("Sheet1").OpenTable("B1:B1").ColumnWidth = 20;
+... ...
+wb.OpenSheet("Sheet1").OpenTable("A16:A16").RowHeight = 20;
+wb.OpenSheet("Sheet1").OpenTable("A17:A17").RowHeight = 20;
+#endregion
+ 
+// 批量设置表格中字体大小为10
+for (int i = 0; i < 12; i++)
+{
+for (int j = 0; j < 7; j++)
+{
+wb.OpenSheet("Sheet1").OpenCellRC(4 + i, 2 + j).Font.Size = 10;
+}
+}
+ 
+#region 填充单元格背景颜色
+// 填充单元格背景色
+for (int i = 0; i < 10; i++)
+{
+wb.OpenSheet("Sheet1").OpenCell("H" + (6 + i).ToString()).BackColor = Color.FromArgb(255,  255, 153);
+}
+ 
+wb.OpenSheet("Sheet1").OpenCell("E16").BackColor = Color.FromArgb(0, 128, 128);
+wb.OpenSheet("Sheet1").OpenCell("F16").BackColor = Color.FromArgb(0, 128, 128);
+... ...
+wb.OpenSheet("Sheet1").OpenCell("H16").BackColor = Color.FromArgb(204, 255, 204);
+wb.OpenSheet("Sheet1").OpenCell("H17").BackColor = Color.FromArgb(204, 255, 204);
+#endregion
+ 
+#region 填充单元格文本和公式
+//填充单元格文本
+PageOffice.ExcelWriter.Cell B4 = wb.OpenSheet("Sheet1").OpenCell("B4");
+B4.Font.Bold = true;
+B4.Value = "出差开支预算";
+PageOffice.ExcelWriter.Cell H5 = wb.OpenSheet("Sheet1").OpenCell("H5");
+H5.Font.Bold = true;
+H5.Value = "总计";
+H5.HorizontalAlignment = PageOffice.ExcelWriter.XlHAlign.xlHAlignCenter;
+... ...
+wb.OpenSheet("Sheet1").OpenCell("C6").Value = "机票单价（往）";
+wb.OpenSheet("Sheet1").OpenCell("C7").Value = "机票单价（返）";
+... ...
+//填充单元格公式
+wb.OpenSheet("Sheet1").OpenCell("H6").Formula = "=D6*F6";
+wb.OpenSheet("Sheet1").OpenCell("H7").Formula = "=D7*F7";
+... ...
+//填充单元格文本显示格式（￥.0.00）
+for (int i = 0; i < 10; i++)
+{
+wb.OpenSheet("Sheet1").OpenCell("D"+(6 + i).ToString()).NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+wb.OpenSheet("Sheet1").OpenCell("H"+(6 + i).ToString()).NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+}
+ 
+PageOffice.ExcelWriter.Cell E16 = wb.OpenSheet("Sheet1").OpenCell("E16");
+E16.Font.Bold = true;
+E16.Font.Size = 11;
+E16.ForeColor = Color.White;
+E16.Value = "出差开支总费用";
+E16.VerticalAlignment = PageOffice.ExcelWriter.XlVAlign.xlVAlignCenter;
+PageOffice.ExcelWriter.Cell E17 = wb.OpenSheet("Sheet1").OpenCell("E17");
+E17.Font.Bold = true;
+E17.Font.Size = 11;
+E17.ForeColor = Color.White;
+E17.Formula = "=IF(C4>H16,\"低于预算\",\"超出预算\")";
+E17.VerticalAlignment = PageOffice.ExcelWriter.XlVAlign.xlVAlignCenter;
+PageOffice.ExcelWriter.Cell H16 = wb.OpenSheet("Sheet1").OpenCell("H16");
+H16.VerticalAlignment = PageOffice.ExcelWriter.XlVAlign.xlVAlignCenter;
+H16.NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+H16.Font.Name = "Arial";
+H16.Font.Size = 11;
+H16.Font.Bold = true;
+H16.Formula = "=SUM(H6:H15)";
+PageOffice.ExcelWriter.Cell H17 = wb.OpenSheet("Sheet1").OpenCell("H17");
+H17.VerticalAlignment = PageOffice.ExcelWriter.XlVAlign.xlVAlignCenter;
+H17.NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+H17.Font.Name = "Arial";
+H17.Font.Size = 11;
+H17.Font.Bold = true;
+H17.Formula = "=(C4-H16)";
+#endregion
+ 
+#region 填充数据
+// 填充数据
+PageOffice.ExcelWriter.Cell C4 = wb.OpenSheet("Sheet1").OpenCell("C4");
+C4.NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+C4.Value = "2500";
+PageOffice.ExcelWriter.Cell D6 = wb.OpenSheet("Sheet1").OpenCell("D6");
+D6.NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+D6.Value = "1200";
+wb.OpenSheet("Sheet1").OpenCell("F6").Font.Size = 10;
+wb.OpenSheet("Sheet1").OpenCell("F6").Value = "1";
+PageOffice.ExcelWriter.Cell D7 = wb.OpenSheet("Sheet1").OpenCell("D7");
+D7.NumberFormatLocal = "￥#,##0.00;￥-#,##0.00";
+D7.Value = "875";
+wb.OpenSheet("Sheet1").OpenCell("F7").Value = "1";
+#endregion
+ 
+// 打开文件
+string fileName = "test2.xls";
+PageOfficeCtrl1.ServerPage = "pageoffice/server.aspx";
+PageOfficeCtrl1.SetWriter(wb);
+PageOfficeCtrl1.WebOpen(Server.MapPath("doc/") + fileName, PageOffice.OpenModeType.xlsNormalEdit, "somebody");
+ 
+如此，就完成Excel表格的填充了。
+方案总结：
+利用PageOffice组件实现后台画出Excel报表是很容易的。它既能在线对Excel表格内容进行排版，又能在后台修改内容（可实
+现内容的动态填充，具体编写过程可参考卓正网站的下载中心上的示例），实现Excel报表内容的从无到有。利用PageOffice
+组件可以很容易的就画出自己想要的复杂、美观的Excel表格，大大的节省了程序员的开发时间，提升了开发效率，而且实现
+的功能更加全面，解决了开发OA系统的程序员的一大技术难题。

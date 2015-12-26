@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DataService" default="runFrame" basedir=".">
+	<property name="ant-contrib.jar" location="lib/ant-contrib-1.0b3.jar" />  
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${ant-contrib.jar}" /> 
+	
+	<!--需要打jar的application名-->
+	<property name="liat.appname" value="crm"/>
+	
+	<!--项目上下文路径-->
+	<property name="classes.dir" value="bin"/>
+	<property name="dist.dir" value="release"/>
+	<property name="service.dir" value="../../DataServic_framework"/>
+	<!--引用本项目的项目lib文件夹路径-->
+	<property name="service.lib.dir" value="../../DataServic_framework/applib"/>
+	
+	<target name="runFrame" description="-->runFrame" depends="wsimport">
+		<echo message="runFrame"/>
+		<exec executable="cmd.exe" dir="${service.dir}">
+			<arg line="/c start run.bat"/>			
+		</exec>
+	</target>
+	<!--生产DataService客户端导入包-->
+	<target name="wsimport" depends="foreachjar">
+		<ant antfile="wsimport_crm_new.xml"/>
+	</target>
+	
+	<target name="foreachjar">  
+        <foreach list="${liat.appname}" target="buildNdeliver" param="jar.filename" delimiter=",">    
+        </foreach>  
+    </target> 
+	
+	<!--打jar包-->
+	<target name="build2jar" description="-->生成jar包">
+		<echo message="jar class to ${dist.dir}/${jar.filename}"/>
+		<condition property="buildexists">
+		   <available file="${classes.dir}/com/wasoft/calldb/business/impl/${jar.filename}" type="dir"></available>
+	    </condition>
+	    <antcall target="isTrue"></antcall>
+	    <antcall target="isFalse"></antcall> 
+	</target>
+	
+	<target name="isTrue" if="buildexists">
+		<echo>is ture</echo>
+		<jar jarfile="${dist.dir}/${jar.filename}.jar">
+			<fileset dir="${classes.dir}" casesensitive="false">
+				<include name="com/wasoft/calldb/business/impl/${jar.filename}/*.*"/>
+				<include name="com/wasoft/dataserver/ws/${jar.filename}/**"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="isFalse" unless="buildexists">
+		<echo>is flase</echo>
+		<jar jarfile="${dist.dir}/${jar.filename}.jar">
+			<fileset dir="${classes.dir}"  casesensitive="false">
+				<include name="com/wasoft/calldb/business/impl/${jar.filename}*.*"/>
+				<include name="com/wasoft/dataserver/ws/${jar.filename}/**"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<!--拷贝jar文件到引用项目-->
+	<target name="buildNdeliver" description="-->拷贝文件到引用项目" depends="build2jar">
+		<echo message="deliver ${jar.filename} to project [${service.lib.dir}] ..."/>
+		<copy todir="${service.lib.dir}" preservelastmodified="true">
+			<fileset dir="${dist.dir}">
+				<include name="${jar.filename}.jar"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

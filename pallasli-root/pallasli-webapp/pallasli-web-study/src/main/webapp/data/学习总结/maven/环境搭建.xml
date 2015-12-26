@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<knowledges> 
+  <maxId>3</maxId>  
+  <knowledge> 
+    <id>1</id>  
+    <caption>zz</caption>  
+    <content>xx</content> 
+  </knowledge>  
+  <knowledge> 
+    <id>2</id>  
+    <caption>qwer</caption>  
+    <content>qwer</content> 
+  </knowledge>  
+  <knowledge>
+    <id>3</id>
+    <caption>qwer</caption>
+    <content>qwersafasfd</content>
+  </knowledge>
+</knowledges>

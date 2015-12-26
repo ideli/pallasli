@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nodes>
+	<maxId>21</maxId>
+	<node>
+		<id>0</id>
+		<node>
+			<id>1</id>
+			<text>extjs4</text>
+			<leaf type="boolean">false</leaf>
+			<expanded type="boolean">true</expanded>
+			<node>
+				<id>2</id>
+				<text>布局</text>
+				<leaf type="boolean">true</leaf>
+			</node>
+			<node>
+				<id>3</id>
+				<text>代理</text>
+				<leaf type="boolean">true</leaf>
+			</node>
+			<node>
+				<id>4</id>
+				<text>组件</text>
+				<leaf type="boolean">true</leaf>
+			</node>
+			<node>
+				<id>12</id>
+				<text>常见问题</text>
+				<leaf>true</leaf>
+				<expanded>false</expanded>
+			</node>
+		</node>
+		<node>
+			<id>21</id>
+			<text>java基础</text>
+			<leaf>true</leaf>
+			<expanded>false</expanded>
+		</node>
+		<node>
+			<id>5</id>
+			<text>maven</text>
+			<leaf type="boolean">false</leaf>
+			<expanded type="boolean">true</expanded>
+			<node>
+				<id>6</id>
+				<text>环境搭建</text>
+				<leaf type="boolean">true</leaf>
+			</node>
+			<node>
+				<id>7</id>
+				<text>命令</text>
+				<leaf type="boolean">true</leaf>
+			</node>
+		</node>
+		<node>
+			<id>8</id>
+			<text>ext3</text>
+			<leaf>false</leaf>
+			<expanded>true</expanded>
+			<node>
+				<id>9</id>
+				<text>疑难杂症</text>
+				<leaf>true</leaf>
+			</node>
+		</node>
+		<node>
+			<id>10</id>
+			<text>hibernate</text>
+			<leaf>false</leaf>
+			<expanded>true</expanded>
+			<node>
+				<id>11</id>
+				<text>环境搭建</text>
+				<leaf>true</leaf>
+				<expanded>false</expanded>
+			</node>
+		</node>
+		<node>
+			<id>13</id>
+			<text>weblogic部署</text>
+			<leaf>false</leaf>
+			<expanded>true</expanded>
+			<node>
+				<id>14</id>
+				<text>weblogic.xml</text>
+				<leaf>true</leaf>
+				<expanded>false</expanded>
+			</node>
+		</node>
+		<node>
+			<id>15</id>
+			<text>jQueryMiniUI</text>
+			<leaf>false</leaf>
+			<expanded>true</expanded>
+			<node>
+				<id>16</id>
+				<text>book</text>
+				<leaf>false</leaf>
+				<expanded>true</expanded>
+				<node>
+					<id>18</id>
+					<text>布局控件</text>
+					<leaf>true</leaf>
+					<expanded>false</expanded>
+				</node>
+			</node>
+			<node>
+				<id>17</id>
+				<text>api</text>
+				<leaf>false</leaf>
+				<expanded>true</expanded>
+			</node>
+		</node>
+		<node>
+			<id>19</id>
+			<text>mysql</text>
+			<leaf>false</leaf>
+			<expanded>true</expanded>
+			<node>
+				<id>20</id>
+				<text>常用知识</text>
+				<leaf>true</leaf>
+				<expanded>false</expanded>
+			</node>
+		</node>
+	</node>
+</nodes>

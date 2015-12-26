@@ -1,0 +1,1344 @@
+1. hibernate 与  mybatis
+   如果你的应用是以面向对象模型，并且向动态生成SQL语句，那么MyBatis可能就不符合你的要求。
+   另外，如果你想让你的应用有一个传递性的缓存机制的话（保存父对象时也应该保存关联的子对象），Hibernate会更适合你。
+   
+2. 开发mybatis
+ 新建表 STUDENTS，插入样本数据 ，插入样本数据
+ 新建一个 JavaJavaJavaJava项目，将 MyBatisMyBatis-3.2.2.jar添加到 classpath中
+ 新建 MyBatisSqlSessionFactory单例模式类 
+ 新建 映射器 StudentMapper接口和 StudentService 类
+ 新建一个 JUnit测试 类来StudentServictce
+
+<dependencies> 
+<dependency> 
+<groupId>org.mybatis</groupId> 
+<artifactId>mybatis</artifactId> 
+<version>3.2.2</version> 
+</dependency> 
+<dependency> 
+<groupId>mysql</groupId> 
+<artifactId>mysql-connector-java</artifactId>
+<version>5.1.22</version> 
+<scope>runtime</scope> 
+</dependency>
+<dependency> 
+<groupId>org.slf4j</groupId> 
+<artifactId>slf4j-api</artifactId> 
+<version>1.7.5</version> 
+</dependency> 
+<dependency> 
+<groupId>org.slf4j</groupId> 
+<artifactId>slf4j-log4j12</artifactId> 
+<version>1.7.5</version> 
+<scope>runtime</scope> 
+</dependency> 
+<dependency> 
+<groupId>log4j</groupId> 
+<artifactId>log4j</artifactId> 
+<version>1.2.17</version> 
+<scope>runtime</scope> 
+</dependency> 
+<dependency> 
+<groupId>junit</groupId> 
+<artifactId>junit</artifactId> 
+<version>4.11</version> 
+<scope>test</scope> 
+</dependency> 
+</dependencies>
+
+
+
+log4j.rootLogger=DEBUG, stdout 
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender 
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout 
+log4j.appender.stdout.layout.ConversionPattern=%d [%-5p] %c - %m%n
+
+
+创建 MyBatis的主要配置文件mybatis-config.xml，其中包括数据库连接信息，类型别名等，
+
+MyBatis支持配置多个 dataSource环境，可以将应用部 署到不同的环境上，
+如 DEV(开发环境 )，TEST（测试）， QA （质量评估环境）  ,UAT( 用户验收环境  ),PRODUCTION（生产环境）
+environment: id=development/production
+支持两种类型的事务管理器：  JDBC and MANAGED. jdbc事务由应用程序管理事务。MANAGED（托管）事务由应用服务器管理事务
+transactionManager:type=JDBC/MANAGED
+
+typeAliases中使用package可以指定需要设定别名的包，该包下的所有类都自动生成一个小写字母开头的别名
+程序中的Alias注解级别更高可以覆盖配置文件。
+代码注册类configuration.getTypeAliasRegistry().registerAlias
+代码注册包，包中子类configuration.getTypeAliasRegistry().registerAliases
+
+typeHandlers：对于Javabean中的自定义类型，需要与数据库类型对应时自定义类型转换处理器，继承泛型类BaseTypeHandler<PhoneNumber>
+代码注册类和包configuration.getTypeHandlerRegistry().register
+
+
+
+ <mapper> 标签的属性有助于从不同类型资源中加载映射 标签的属性
+resource属性用来指定在classpath中的 mapper文件。
+url属性用来通过完全文件系统路径或者  web URL地址来指向 mapper文件
+class属性用来指向一个 mapper接口
+package属性用来指向可以找到 Mapper接口的包名 接
+ 
+MyBatis把数据源DataSource分为三种：
+         UNPOOLED    不使用连接池的数据源
+         POOLED      使用连接池的数据源
+         JNDI        使用JNDI实现的数据源
+dataSource:type=POOLED/JNDI
+
+mybatis默认的全局参数：configuration.set...
+
+对象注册 Mapper XML文件,类:configuration.addMapper
+对象注册 Mapper XML文件,包，包中子类:configuration.addMappers
+
+
+指定使用的日志工具：org.apache.ibatis.logging.LogFactory.use...Logging(); 
+
+<configuration> 
+引用并扩展属性文件
+<properties resource="application.properties"> 
+<property name="username" value="db_user" /> 
+<property name="password" value="verysecurepwd" /> 
+</properties> 
+覆盖mybatis默认的全局参数
+<settings>  
+                <!-- 全局映射器启用缓存 -->  
+        <setting name="cacheEnabled" value="true" />  
+                <!-- 查询时，关闭关联对象即时加载以提高性能 -->  
+        <setting name="lazyLoadingEnabled" value="true" />  
+                <!-- 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指              定)，不会加载关联表的所有字段，以提高性能 -->  
+        <setting name="aggressiveLazyLoading" value="false" />  
+                <!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->  
+        <setting name="multipleResultSetsEnabled" value="true" />  
+                <!-- 允许使用列标签代替列名 -->  
+        <setting name="useColumnLabel" value="true" />  
+                <!-- 允许使用自定义的主键值(比如由程序生成的UUID 32位编码作为键值)，数据表的PK生成策略将被覆盖 -->  
+        <setting name="useGeneratedKeys" value="true" />  
+                <!-- 给予被嵌套的resultMap以字段-属性的映射支持 -->  
+        <setting name="autoMappingBehavior" value="FULL" />  
+                <!-- 对于批量更新操作缓存SQL以提高性能  -->  
+        <setting name="defaultExecutorType" value="BATCH" />  
+                <!-- 数据库超过25000秒仍未响应则超时 -->  
+        <setting name="defaultStatementTimeout" value="25000" />  
+    </settings>  
+对于Javabean中的自定义类型，需要与数据库类型对应时自定义类型转换处理器，继承泛型类BaseTypeHandler<PhoneNumber>
+<typeHandlers> 
+<typeHandler handler="com.mybatis3.typehandlers.PhoneNumberTypeHandler" /> 
+<package name="com.mybatis3.typehandlers" /> 
+</typeHandlers>
+<mappers> 
+<mapper resource="com/mybatis3/mappers/StudentMapper.xml" />
+<mapper url="file:///D:/mybatisdemo/mappers/TutorMapper.xml" /> 
+<mapper class="com.mybatis3.mappers.TutorMapper" /> 
+</mappers>
+</configuration> 
+
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd"> 
+<configuration> 
+<typeAliases> 
+<typeAlias alias="Student" type="com.mybatis3.domain.Student" /> 
+</typeAliases> 
+<environments default="development"> 
+<environment id="development"> 
+<transactionManager type="JDBC" /> 
+<dataSource type="POOLED"> 
+<property name="driver" value="com.mysql.jdbc.Driver" /> 
+<property name="url" value="jdbc:mysql://localhost:3306/test" /> 
+<property name="username" value="root" /> 
+<property name="password" value="admin" /> 
+</dataSource> 
+</environment> 
+</environments> 
+<mappers> 
+<mapper resource="com/mybatis3/mappers/StudentMapper.xml" /> 
+</mappers> 
+</configuration>
+
+创建 SQL映射 器 XML配置 文件 
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.mybatis3.mappers.StudentMapper"> 
+<resultMap type="Student" id="StudentResult"> 
+<id property="studId" column="stud_id" /> 
+<result property="name" column="name" /> 
+<result property="email" column="email" /> 
+<result property="dob" column="dob" /> 
+</resultMap> 
+<select id="findAllStudents" resultMap="StudentResult">
+SELECT * FROM STUDENTS 
+</select> 
+<select id="findStudentById" parameterType="int" resultType="Student">
+SELECT STUD_ID AS STUDID, NAME, EMAIL, DOB FROM STUDENTS WHERE STUD_ID=#{Id} 
+</select> 
+<insert id="insertStudent" parameterType="Student"> 
+INSERT INTO STUDENTS(STUD_ID,NAME,EMAIL,DOB) VALUES(#{studId },#{name},#{email},#{dob}) 
+</insert> 
+</mapper>
+
+
+//一般的多个环境共用一个数据库时只创建一个sqlSessionFactory,一个应用使用多个数据库时每个数据要创建一个sqlSessionFactory
+package com.mybatis3.util; 
+import java.io.*; 
+import org.apache.ibatis.io.Resources; 
+import org.apache.ibatis.session.*; 
+public class MyBatisSqlSessionFactory { 
+private static SqlSessionFactory sqlSessionFactory; 
+public static SqlSessionFactory getSqlSessionFactory() { 
+if(sqlSessionFactory == null) { 
+InputStream inputStream; 
+try { 
+inputStream = Resources. getResourceAsStream("mybatis-config.xml"); 
+sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream); 
+//根据数据库环境id创建相应的sqlSessionFactory
+//new SqlSessionFactoryBuilder().build(inputStream, "shoppingcart");
+} catch (IOException e) {
+ throw new RuntimeException(e.getCause());
+} 
+} return sqlSessionFactory; 
+} 
+public static SqlSession openSession() {
+return getSqlSessionFactory().openSession(); 
+} 
+}
+
+
+package com.mybatis3.mappers; 
+import java.util.List; 
+import com.mybatis3.domain.Student; 
+public interface StudentMapper{ 
+List<Student> findAllStudents(); 
+Student findStudentById(Integer id); 
+void insertStudent(Student student); 
+}
+
+
+方式一
+SqlSession sqlSession = MyBatisSqlSessionFactory.openSession(); 
+try { 
+StudentMapper studentMapper = sqlSession.getMapper(StudentMapper.class); 
+studentMapper.insertStudent(student); 
+sqlSession.commit(); 
+} 
+finally { 
+sqlSession.close(); 
+}
+
+方式二，类型不安全
+Student student = (Student)sqlSession. selectOne("com.mybatis3.mappers.StudentMapper.findStudentById", studId);
+
+
+首先，我们配置了 MyBatis最主要的配置文件 -mybatis-config.xml,里面包含了 JDBC连接参数；
+配置了 连接参数；配置了 映射器 Mapper XML配置 文件 文件，里面包含了 SQL语句的映射。
+
+我们使用 mybatis-config.xml内的信息创建了 SqlSessionFactory对象。
+每个 数据库环境应该就一SqlSessionFactory对象实例，所以我们使用了单模式只创建一个 SqlSessionFactory实例。
+
+我们创建了一个 映射器 Mapper接口 -StudentMapper，
+其定义 的方法签名和在 StudentMapper.xml中定义的完全 一样（即 映射器 映射器 映射器 Mapper接口中的方法名跟 StudentMapper.xml中的 id 的值相同）。。
+注意 StudentMapper.xml 中 namespace的值被设置成 com.mybatis3.mappers.Student接口的完全限定名。这使我们 可以使用接口来调映射的 SQL语句。
+
+在 StudentService.java中，我们在每一个方法创建了新的 SqlSession，并在方法功能完成后关闭 并在方法功能完成后关闭 SqlSession对象实例不是线程安全的，
+并且被共享。所 以 SqlSession的作用域最好就是其所在方法。
+从 Web应用程序角度上看， 应用程序角度上看，SqlSession应该存在于 应该存在于 request级 别
+
+
+
+使用 Java API Java API 配置 MyBatis
+
+SqlSessionFactory sqlSessionFactory = null; 
+DataSource dataSource = DataSourceFactory.getDataSource(); 
+//PooledDataSource dataSource = new PooledDataSource(driver, url, username, password);
+//String jndiName = "java:comp/env/jdbc/MyBatisDemoDS"; 
+//InitialContext ctx = new InitialContext(); 
+//DataSource dataSource = (DataSource) ctx.lookup(jndiName);
+TransactionFactory transactionFactory = new JdbcTransactionFactory(); 
+//TransactionFactory transactionFactory = new ManagedTransactionFactory(); 
+Environment environment = new Environment("development", transactionFactory, dataSource); 
+Configuration configuration = new Configuration(environment); 
+configuration.getTypeAliasRegistry().registerAlias("student", Student.class); 
+configuration.getTypeHandlerRegistry().register(PhoneNumber. class, PhoneTypeHandler.class); 
+configuration.addMapper(StudentMapper.class); 
+sqlSessionFactory = new SqlSessionFactoryBuilder(). build(configuration); 
+
+
+不安全映射可使用Map进行安全映射
+Map<Integer, Student> studentMap = sqlSession.selectMap("com.mybatis3.mappers.StudentMapper.findAllStudents", "studId");
+
+
+
+
+[自动 生成主键 生成主键 ]
+<insert id="insertStudent" parameterType="Student" useGeneratedKeys="true" keyProperty="studId">
+ INSERT INTO STUDENTS(NAME, EMAIL, PHONE) VALUES(#{
+
+有些 数据库如 Oracle并不支持 AUTO_INCREMENT 列， 其使用 序列 （SEQUENCE）来生成主键值 。
+<insert id="insertStudent" parameterType="Student"> 
+<selectKey keyProperty="studId" resultType="int" order="BEFORE"> 
+SELECT ELEARNING.STUD_ID_SEQ.NEXTVAL FROM DUAL 
+</selectKey> 
+INSERT INTO STUDENTS(STUD_ID,NAME,EMAIL, PHONE) 
+VALUES(#{studId},#{name},#{email},#{phone}) 
+</insert>
+
+
+result别名定义，查询结果与接口返回值的映射定义
+<resultMap id="StudentResult" type="com.mybatis3.domain.Student"> 
+<id property="studId" column="stud_id" /> 
+<result property="name" column="name" /> 
+<result property="email" column="email" />
+<result property="phone" column="phone" /> 
+</resultMap>
+
+返回值的两种设置，resultMap可以继承另一个resultMap
+resultType="类别名如map"
+resultMap="StudentResult" 
+<resultMap type="Student" id="StudentWithAddressResult" extends="StudentResult">
+</resultMap>
+
+嵌套映射三种方式：查询结果 主键不唯一时产生嵌套
+<resultMap type="Address" id="AddressResult"> 
+<id property="addrId" column="addr_id" />
+</resultMap> 
+<resultMap type="Student" id="StudentWithAddressResult"> 
+<id property="studId" column="stud_id" /> 
+<association property="address" resultMap="AddressResult" /> 
+</resultMap>
+
+
+
+<resultMap type="Student" id="StudentWithAddressResult"> 
+<id property="studId" column="stud_id" /> 
+<association property="address" javaType=""Address" /> 
+<id property="addrId" column="addr_id" />
+</association>
+</resultMap>
+
+<association property="address" column="addr_id" select="findAddressById" />
+
+
+
+集合
+<collection property="posts" ofType="domain.blog.Post">
+<id property="id" column="post_id"/>
+<result property="subject" column="post_subject"/>
+<result property="body" column="post_body"/>
+</collection>
+集合元素的作用几
+集合嵌套
+<resultMap id=”blogResult” type=”Blog”>
+<collection property="posts" javaType=”ArrayList” column="blog_id"
+ofType="Post" select=”selectPostsForBlog”/>
+</resultMap>
+
+鉴别器
+<discriminator javaType="int" column="draft">
+<case value="1" resultType="DraftPost"/>
+</discriminator>
+
+
+MyBatis通过 使用 <if>,<choose>,<where>,<foreach>,<trim>元素 提供了 提供了 对构造动态 SQL语句的 高级别
+
+
+<if test="courseName != null"> 
+AND NAME LIKE #{courseName} 
+</if> 
+<if test="startDate != null"> 
+AND START_DATE >= #{startDate} 
+</if>
+
+<choose> 
+<when test="searchBy == 'Tutor'"> WHERE TUTOR_ID= #{tutorId} </when> 
+<when test="searchBy == 'CourseName'"> WHERE name like #{courseName} </when> 
+<otherwise> WHERE TUTOR start_date >= now() </otherwise> 
+</choose>
+
+当所有的查询条件都是可选时采用where条件，where子句的第一个and或or会动态移除
+SELECT * FROM COURSES 
+<where> 
+<if test=" tutorId != null "> TUTOR_ID= #{tutorId} </if> 
+<if test="courseName != null"> AND name like #{courseName} </if> 
+<if test="startDate != null"> AND start_date >= #{startDate} </if> 
+<if test="endDate != null"> AND end_date <= #{endDate} </if> 
+</where>
+
+
+<trim prefix="WHERE" prefixOverrides="AND | OR"> 
+<if test=" tutorId != null ">TUTOR_ID= #{tutorId} </if> 
+<if test="courseName != null"> AND name like #{courseName} </if> 
+</trim>
+这里如果 任意一个 <if>条件 为 true，<trim>元素 会插入 WHERE,并且 移除紧跟 WHERE后面的 AND或 OR
+ 
+
+<if test="tutorIds != null"> 
+<where> 
+<foreach item="tutorId" collection="tutorIds"> OR tutor_id=#{tutorId} </foreach> 
+</where> 
+</if>
+
+<if test="tutorIds != null"> 
+<where> tutor_id IN 
+<foreach item="tutorId" collection="tutorIds" open="(" separator="," close=")"> 
+#{tutorId} 
+</foreach> 
+</where> 
+</if>
+
+
+
+update students 
+<set> 
+<if test="name != null">name=#{name},</if> 
+<if test="email != null">email=#{email},</if> 
+<if test="phone != null">phone=#{phone},</if> 
+</set> 
+where stud_id=#{id}
+
+
+枚举类型默认存储的是枚举类型的名称，如果想存为顺序号需使用typehandler:org.apache.ibatis.type.EnumOrdinalTypeHandler
+<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.mybatis3.domain.Gender"/>
+
+
+使用 RowBounds对结果集进行分页 
+int offset =0 , limit =25; 
+RowBounds rowBounds = new RowBounds(offset, limit); 
+List<Student> = studentMapper.getStudents(rowBounds);
+若要 展示 第二页 ，使用 offset=25,limit=25;第三 页，则为 页，则为 offset=50，limit=25。
+
+
+
+
+
+使用 ResultSetHandler 自定义结果集 ResultSet处理
+final Map<Integer, String> map = new HashMap<Integer, String>(); 
+sqlSession.select("com.mybatis3.mappers.StudentMapper.findAllStude nts", 
+new ResultHandler() { 
+@Override 
+public void handleResult(ResultContext context) { 
+Student student = (Student) context.getResultObject(); 
+map.put(student.getStudId(), student.getName()); 
+} 
+} 
+);
+
+
+eviction默认LRU按照变动最少进行缓存
+flushInterval 默认根据增删改进行刷新
+size 默认1024
+readOnly 默认false 每次调用一个副本
+
+<cache eviction="FIFO" flushInterval="86400000" size="1000" readOnly="true"/>
+<select resultMap="location_result" parameterType="java.util.Map" id="list" flushCache="false" useCache="true">
+<insert parameterType="Location" id="add" flushCache="true">
+
+与另一个命名空间共享缓存
+<cache-ref namespace=”com.someone.application.data.SomeMapper”/>
+
+<!-- c3p0 connection pool configuration -->  
+    <bean id="testDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  
+        destroy-method="close">  
+                <!-- 数据库驱动 -->  
+        <property name="driverClass" value="${db.driver.class}" />  
+                <!-- 连接URL串 -->  
+        <property name="jdbcUrl" value="${db.url}" />  
+                <!-- 连接用户名 -->  
+        <property name="user" value="${db.username}" />  
+                <!-- 连接密码 -->  
+        <property name="password" value="${db.password}" />  
+                <!-- 初始化连接池时连接数量为5个 -->  
+        <property name="initialPoolSize" value="5" />  
+                <!-- 允许最小连接数量为5个 -->  
+        <property name="minPoolSize" value="5" />  
+                <!-- 允许最大连接数量为20个 -->  
+        <property name="maxPoolSize" value="20" />  
+                <!-- 允许连接池最大生成100个PreparedStatement对象 -->  
+        <property name="maxStatements" value="100" />  
+                <!-- 连接有效时间，连接超过3600秒未使用，则该连接丢弃 -->  
+        <property name="maxIdleTime" value="3600" />  
+                <!-- 连接用完时，一次产生的新连接步进值为2 -->  
+        <property name="acquireIncrement" value="2" />  
+                <!-- 获取连接失败后再尝试10次，再失败则返回DAOException异常 -->  
+        <property name="acquireRetryAttempts" value="10" />  
+                <!-- 获取下一次连接时最短间隔600毫秒，有助于提高性能 -->  
+        <property name="acquireRetryDelay" value="600" />  
+                <!-- 检查连接的有效性，此处小弟不是很懂什么意思 -->  
+        <property name="testConnectionOnCheckin" value="true" />  
+                <!-- 每个1200秒检查连接对象状态 -->  
+        <property name="idleConnectionTestPeriod" value="1200" />  
+                <!-- 获取新连接的超时时间为10000毫秒 -->  
+        <property name="checkoutTimeout" value="10000" />  
+    </bean>  
+    
+    
+    SqlBuilder创建sql
+import static org.apache.ibatis.jdbc.SqlBuilder.BEGIN;  
+import static org.apache.ibatis.jdbc.SqlBuilder.FROM;  
+import static org.apache.ibatis.jdbc.SqlBuilder.SELECT;  
+import static org.apache.ibatis.jdbc.SqlBuilder.SQL;  
+import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;  
+import static org.apache.ibatis.jdbc.SqlBuilder.DELETE_FROM;  
+import static org.apache.ibatis.jdbc.SqlBuilder.INSERT_INTO;  
+import static org.apache.ibatis.jdbc.SqlBuilder.SET;  
+import static org.apache.ibatis.jdbc.SqlBuilder.UPDATE;  
+import static org.apache.ibatis.jdbc.SqlBuilder.VALUES;  
+  
+import java.util.Map;  
+  
+/** 
+ * The test sql Provider,define the sql script for mapping. 
+ *  
+ * @author HuangMin <a href="mailto:minhuang@hengtiansoft.com>send email</a> 
+ *  
+ * @since 1.6 
+ * @version 1.0 
+ *  
+ *          #~TestSqlProvider.java 2011-9-23 : afternoon 10:51:40 
+ */  
+public class TestSqlProvider {  
+  
+    /** table name, here is test */  
+    private static final String TABLE_NAME = "test";  
+  
+    /** 
+     * get test by id sql script. 
+     *  
+     * @param parameters 
+     * @return 
+     */  
+    public String getSql(Map<String, Object> parameters) {  
+        String uid = (String) parameters.get("id");  
+        BEGIN();  
+        SELECT("test_id, test_text");  
+        FROM(TABLE_NAME);  
+        if (uid != null) {  
+            WHERE("test_id = #{id,javaType=string,jdbcType=VARCHAR}");  
+        }  
+        return SQL();  
+    }  
+  
+    /** 
+     * get all tests sql script. 
+     *  
+     * @return 
+     */  
+    public String getAllSql() {  
+        BEGIN();  
+        SELECT("test_id, test_text");  
+        FROM(TABLE_NAME);  
+        return SQL();  
+    }  
+  
+    /** 
+     * get test by test text sql script. 
+     *  
+     * @param parameters 
+     * @return 
+     */  
+    public String getByTestTextSql(Map<String, Object> parameters) {  
+        String tText = (String) parameters.get("testText");  
+        BEGIN();  
+        SELECT("test_id, test_text");  
+        FROM(TABLE_NAME);  
+        if (tText != null) {  
+            WHERE("test_text like #{testText,javaType=string,jdbcType=VARCHAR}");  
+        }  
+        return SQL();  
+    }  
+  
+    /** 
+     * insert a test sql script. 
+     *  
+     * @return 
+     */  
+    public String insertSql() {  
+        BEGIN();  
+        INSERT_INTO(TABLE_NAME);  
+        VALUES("test_id", "#{testBean.id,javaType=string,jdbcType=VARCHAR}");  
+        VALUES("test_text", "#{testBean.testText,javaType=string,jdbcType=VARCHAR}");  
+        return SQL();  
+    }  
+  
+    /** 
+     * update a test sql script. 
+     *  
+     * @return 
+     */  
+    public String updateSql() {  
+        BEGIN();  
+        UPDATE(TABLE_NAME);  
+        SET("test_text = #{testBean.testText,javaType=string,jdbcType=VARCHAR}");  
+        WHERE("test_id = #{testBean.id,javaType=string,jdbcType=VARCHAR}");  
+        return SQL();  
+    }  
+  
+    /** 
+     * delete a test sql script. 
+     *  
+     * @return 
+     */  
+    public String deleteSql() {  
+        BEGIN();  
+        DELETE_FROM(TABLE_NAME);  
+        WHERE("test_id = #{id,javaType=string,jdbcType=VARCHAR}");  
+        return SQL();  
+    }  
+}  
+
+注解：
+静态SQL
+@Insert("INSERT INTO STUDENTS(NAME,EMAIL,ADDR_ID, PHONE) VALUES(#{name},#{email},#{address.addrId},#{phone})") 
+@Update(
+@Delete(
+@Select( 
+动态sql
+@SelectProvider(type = TutorDynaSqlProvider.class, method = "findTutorByNameAndEmailSql")
+@InsertProvider( 
+@UpdateProvider(
+@DeleteProvider(
+
+@Options(useGeneratedKeys = true, keyProperty = "studId")
+@SelectKey(statement="SELECT STUD_ID_SEQ.NEXTVAL FROM DUAL", keyProperty="studId", resultType=int.class, before=true)
+@Results( { 
+	@Result(id = true, column = "stud_id", property = "studId"), 
+	@Result(column = "name", property = "name"), 
+	@Result(column = "email", property = "email"), 
+	@Result(column = "addr_id", property = "address.addrId"),
+	one = @One(select = " com.mybatis3. mappers.TutorMapper.findAddressById")), @Result(property = "courses", column = "tutor_id", 
+	many = @Many(select = "com.mybatis3.mappers.TutorMapper. findCoursesByTutorId"))
+})
+@ResultMap("com.mybatis3.mappers.TutorMapper.TutorResult")
+
+
+
+
+
+集成spring   <version>3.1.3.RELEASE</version>
+<dependency> <groupId>org.mybatis</groupId> <artifactId>mybatis-spring</artifactId> <version>1.2.0</version> </dependency> 
+<dependency> <groupId>org.springframework</groupId> <artifactId>spring-context-support</artifactId> 
+	<exclusions><exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId></exclusion></exclusions> 
+</dependency> 
+<dependency> <groupId>org.springframework</groupId> <artifactId>spring-jdbc</artifactId></dependency> 
+<dependency> <groupId>org.springframework</groupId> <artifactId>spring-test</artifactId> 
+	<scope>test</scope> 
+</dependency> 
+<dependency> <groupId>org.aspectj</groupId> <artifactId>aspectjrt</artifactId> <version>1.6.8</version> </dependency> 
+<dependency> <groupId>org.aspectj</groupId> <artifactId>aspectjweaver</artifactId> <version>1.6.8</version> </dependency> 
+<dependency> <groupId>cglib</groupId> <artifactId>cglib-nodep</artifactId> <version>2.2</version> </dependency> 
+<dependency> <groupId>commons-dbcp</groupId> <artifactId>commons-dbcp</artifactId> <version>1.4</version> </dependency>
+
+
+<beans> 
+<bean id="dataSource" class="org.springframework.jdbc.datasource. DriverManagerDataSource"> 
+<property name="driverClassName" value="com.mysql.jdbc.Driver" /> 
+<property name="url" value="jdbc:mysql://localhost:3306/elearning" /> 
+<property name="username" value="root" /> 
+<property name="password" value="admin" /> 
+</bean> 
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+<property name="dataSource" ref="dataSource" /> 
+<property name="typeAliases" value="com.mybatis3.domain.Student, com.mybatis3.domain.Tutor" /> 
+<property name="typeAliasesPackage" value="com.mybatis3.domain" /> 
+<property name="typeHandlers" value="com.mybatis3.typehandlers.PhoneTypeHandler" /> 
+<property name="typeHandlersPackage" value="com.mybatis3.typehandlers" /> 
+<property name="mapperLocations" value="classpath*:com/mybatis3/**/*.xml" /> 
+<property name="configLocation" value="WEB-INF/mybatisconfig.xml" /> 
+</bean> 
+</beans>
+
+
+SqlSessionTemplate线程安全
+<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"> 
+<constructor-arg index="0" ref="sqlSessionFactory" /> 
+</bean>
+
+<bean id="studentDao" class="com.mybatis3.dao.StudentDaoImpl"> 
+<property name="sqlSession" ref="sqlSession" /> 
+</bean>
+或使用注解
+@Repository 
+public class StudentDaoImpl implements StudentDao { 
+private SqlSession sqlSession; 
+@Autowired public void setSqlSession(SqlSession session) {
+ this.sqlSession = session; 
+}
+public void createStudent(Student student) { 
+StudentMapper mapper = this.sqlSession.getMapper(StudentMapper.class); 
+mapper.insertStudent(student); 
+} 
+}
+
+
+
+mybatis 对象工厂
+每次MyBatis 为结果对象创建一个新实例，都会用到ObjectFactory。默认的ObjectFactory 与使用目标类的构造函数创建一个实例毫无区别，如果有已经映射的参数，那也可能使用带参数的构造函数。
+如果你重写ObjectFactory 的默认操作，你可以通过继承org.apache.ibatis.reflection.factory.DefaultObjectFactory创建一下你自己的。
+ 
+<objectFactory type="org.mybatis.example.ExampleObjectFactory">
+<property name="someProperty" value="100"/>
+</objectFactory>
+
+mybatis 插件拦截器
+ Executor(update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)
+ ParameterHandler(getParameterObject, setParameters)
+ ResultSetHandler(handleResultSets, handleOutputParameters)
+ StatementHandler(prepare, parameterize, batch, update, query)
+
+
+
+
+dataSource元素使用基本的JDBC数据源接口来配置JDBC连接对象的资源。
+ 许多MyBatis的应用程序将会按示例中的例子来配置数据源。然而它并不是必须的。要知道为了方便使用延迟加载，数据源才是必须的。
+有三种内建的数据源类型（也就是type=”???”）：
+UNPOOLED – 这个数据源的实现是每次被请求时简单打开和关闭连接。它有一点慢，这是对简单应用程序的一个很好的选择，因为它不需要及时的可用连接。
+不同的数据库对这个的表现也是不一样的，所以对某些数据库来说配置数据源并不重要，这个配置也是闲置的。
+UNPOOLED类型的数据源仅仅用来配置以下4种属性：
+ driver – 这是JDBC驱动的Java类的完全限定名（如果你的驱动包含，它也不是数据源类）。
+ url – 这是数据库的JDBC URL地址。
+ username – 登录数据库的用户名。
+ password – 登录数据库的密码。
+ defaultTransactionIsolationLevel – 默认的连接事务隔离级别。
+作为可选项，你可以传递数据库驱动的属性。要这样做，属性的前缀是以“driver.”开头的，例如：
+ driver.encoding=UTF8
+这样就会传递以值“UTF8”来传递属性“encoding”，它是通过DriverManager.getConnection(url,driverProperties)方法传递给数据库驱动。
+POOLED – 这是JDBC连接对象的数据源连接池的实现，用来避免创建新的连接实例时必要的初始连接和认证时间。这是一种当前Web应用程序用来快速响应请求很流行的方法。
+除了上述（UNPOOLED）的属性之外，还有很多属性可以用来配置POOLED数据源：
+ poolMaximumActiveConnections – 在任意时间存在的活动（也就是正在使用）连接的数量。默认值：10
+ poolMaximumIdleConnections – 任意时间存在的空闲连接数。
+ poolMaximumCheckoutTime – 在被强制返回之前，池中连接被检查的时间。默认值：20000毫秒（也就是20秒）
+ poolTimeToWait – 这是给连接池一个打印日志状态机会的低层次设置，还有重新尝试获得连接，
+这些情况下往往需要很长时间（为了避免连接池没有配置时静默失败）。默认值：20000毫秒（也就是20秒）
+ poolPingQuery – 发送到数据的侦测查询，用来验证连接是否正常工作，并且准备接受请求。
+默认是“NO PING QUERY SET”，这会引起许多数据库驱动连接由一个错误信息而导致失败。
+ poolPingEnabled – 这是开启或禁用侦测查询。如果开启，你必须用一个合法的SQL语句（最好是很快速的）设置poolPingQuery属性。
+默认值：false。
+ poolPingConnectionsNotUsedFor – 这是用来配置poolPingQuery多次时间被用一次。
+这可以被设置匹配标准的数据库连接超时时间，来避免不必要的侦测。默认值：0（也就是所有连接每一时刻都被侦测-但仅仅当poolPingEnabled为true时适用）。
+JNDI – 这个数据源的实现是为了使用如Spring或应用服务器这类的容器，容器可以集中或在外部配置数据源，然后放置一个JNDI上下文的引用。这个数据源配置只需要两个属性：
+ initial_context – 这个属性用来从初始上下文中寻找环境（也就是initialContext.lookup（initial——context））。
+这是个可选属性，如果被忽略，那么data_source属性将会直接以initialContext为背景再次寻找。
+ data_source – 这是引用数据源实例位置的上下文的路径。它会以由initial_context查询返回的环境为背景来查找，如果initial_context没有返回结果时，直接以初始上下文为环境来查找。
+和其他数据源配置相似，它也可以通过名为“env.”的前缀直接向初始上下文发送属性。比如：
+ env.encoding=UTF8
+在初始化之后，这就会以值“UTF8”向初始上下文的构造方法传递名为“encoding”的属性。
+
+
+statementType
+STATEMENT,PREPARED或CALLABLE的一种。这会让MyBatis使用选择使用Statement，PreparedStatement或CallableStatement。默认值：PREPARED。
+
+resultSetType
+FORWARD_ONLY|SCROLL_SENSITIVE|SCROLL_INSENSITIVE中的一种。默认是不设置（驱动自行处理）。
+
+
+
+
+自定义事务实现：Transaction，TransactionFactory
+
+
+自定义缓存实现：Cache
+<cache type=”com.domain.something.MyCustomCache”>
+<property name=”cacheFile” value=”/tmp/my-custom-cache.tmp”/>
+</cache>
+
+
+
+
+注解 目标 相对应的XML 描述
+@CacheNamespace
+类
+<cache>
+为给定的命名空间（比如类）配置缓存。属性：implemetation,eviction,
+flushInterval,size和readWrite。
+@CacheNamespaceRef
+类
+<cacheRef>
+参照另外一个命名空间的缓存来使用。属性：value，应该是一个名空姐的字符串值（也就是类的完全限定名）。
+@ConstructorArgs
+方法
+<constructor>
+收集一组结果传递给一个劫夺对象的构造方法。属性：value，是形式参数的数组。
+@Arg
+方法
+<arg>
+<idArg>
+单独的构造方法参数，是ConstructorArgs集合的一部分。属性：id，column，javaType，typeHandler。id属性是布尔值，
+来标识用于比较的属性，和<idArg>XML元素相似。
+@TypeDiscriminator
+方法
+<discriminator>
+一组实例值被用来决定结果映射的表现。属性：column，javaType，jdbcType，typeHandler，cases。cases属性就是实例的数组。
+@Case
+方法
+<case>
+单独实例的值和它对应的映射。属性：value，type，results。Results属性是结果数组，因此这个注解和实际的ResultMap很相似，
+由下面的Results注解指定。
+@Results
+方法
+<resultMap>
+结果映射的列表，包含了一个特别结果列如何被映射到属性或字段的详情。属性：value，是Result注解的数组。
+@Result
+方法
+<result>
+<id>
+在列和属性或字段之间的单独结果映射。属性：id，column，property，javaType，jdbcType，typeHandler，one，many。
+id属性是一个布尔值，表示了应该被用于比较（和在XML映射中的<id>相似）的属性。one属性是单独的联系，和<association>相似，
+而many属性是对集合而言的，和<collection>相似。它们这样命名是为了避免名称冲突。
+@One
+方法
+<association>
+复杂类型的单独属性值映射。属性：select，已映射语句（也就是映射器方法）的完全限定名，它可以加载合适类型的实例。
+注意：联合映射在注解API中是不支持的。这是因为Java注解的限制，不允许循环引用。
+@Many
+方法
+<collection>
+复杂类型的集合属性映射。属性：select，是映射语句（也就是映射器方法）的完全限定名，它可以加载合适类型的一组实例。
+注意：联合映射在Java注解中是不支持的。这是因为Java注解的限制，不允许循环引用。
+@Options
+方法
+映射语句的属性
+这个注解提供访问交换和配置选项的宽广范围，它们通常在映射语句上作为
+属性出现。而不是将每条语句注解变复杂，Options注解提供连贯清晰的方式来访问它们。
+属性：useCache=true，flushCache=false，resultSetType=FORWARD_ONLY，statementType=PREPARED，
+fetchSize=-1，timeout=-1，useGeneratedKeys=false，keyProperty=”id”。
+理解Java注解是很重要的，因为没有办法来指定“null”作为值。因此，一旦你使用了Options注解，语句就受所有默认值的支配。
+要注意什么样的默认值来避免不期望的行为。
+@Insert
+@Update
+@Delete
+方法
+<insert>
+<update>
+<delete>
+这些注解中的每一个代表了执行的真实SQL。它们每一个都使用字符串数组（或单独的字符串）。
+如果传递的是字符串数组，它们由每个分隔它们的单独空间串联起来。这就当用Java代码构建SQL时避免了“丢失空间”的问题。
+然而，如果你喜欢，也欢迎你串联单独的字符串。属性：value，这是字符串数组用来组成单独的SQL语句。
+@InsertProvider
+@UpdateProvider
+@DeleteProvider
+@SelectProvider
+方法
+<insert>
+<update>
+<delete>
+<select>
+允许创建动态SQL。
+这些可选的SQL注解允许你指定一个类名和一个方法在执行时来返回运行的SQL。基于执行的映射语句，MyBatis会实例化这个类，
+然后执行由provider指定的方法.这个方法可以选择性的接受参数对象作为它的唯一参数，但是必须只指定该参数或者没有参数。
+属性：type，method。type属性是类的完全限定名。method是该类中的那个方法名。
+注意：这节之后是对SelectBuilder类的讨论，它可以帮助你以干净，容于阅读的方式来构建动态SQL。
+@Param
+参数
+N/A
+如果你的映射器的方法需要多个参数，这个注解可以被应用于映射器的方法参数来给每个参数一个名字。
+否则，多参数将会以它们的顺序位置来被命名（不包括任何RowBounds参数）。比如#{1}，#{2}等，这是默认的。
+使用@Param(“person”)，参数应该被命名为#{person}。
+
+
+
+
+
+
+SqlBuilder:
+BEGIN()/RESET()
+这些方法清理SelectBuilder类的ThreadLocal的状态，而且准备构建新的语句。当开始一条新的语句时，BEGIN()读取得最好。
+当在执行中间因为某些原因（在某些条件下，也许处理逻辑需要一个完整的而且不同的语句）要清理一条语句时RESET()读取的做好。
+SELECT(String)
+开始或附加一个SELECT子句。可以被多次调用，而且参数会被追加在SELECT子句后面。参数通常是逗号分隔的列名列表和别名，但要是驱动程序可以接受的东西。
+SELECT_DISTINCT(String)
+开始或附加一个SELECT子句，也在生成的查询语句中添加“DISTINCT”关键字。可以被多次调用，而且参数会被追加在SELECT子句后面。
+参数通常是逗号分隔的列名列表和别名，但要是驱动程序可以接受的东西。
+FROM(String)
+开始或附加一个FROM子句。可以被多次调用，而且参数会被追加在FROM子句后面。参数通常是表明或别名，或是驱动程序可以接受的任意内容。
+JOIN(String)
+INNER_JOIN(String)
+LEFT_OUTER_JOIN(String)
+RIGHT_OUTER_JOIN(String)
+基于调用的方法，添加一个合适类型的新的JOIN子句。参数可以包含列之间基本的join连接还有条件连接。
+WHERE(String)
+添加一个新的WHERE条件子句，由AND串联起来。可以被多次调用，由AND告诉它来串联一个新的条件。使用OR()方法来分隔OR条件。
+OR()
+使用OR来分隔当前WHERE子句的条件。可以被多次调用，但是在一行上多次调用会生成不稳定的SQL。
+AND()
+使用AND来分隔当前WHERE字句的条件。可以被多次调用，但是在一行上多次调用会生成不稳定的SQL。
+因为WHERE和HAVING两者都自动串联AND，这样使用是非常罕见的，包含它也仅仅是为了完整性。
+GROUP_BY(String)
+附加一个新的GROUP BY子句，由逗号串联起来。可以被多次调用，每次使用逗号来告诉它串联一个新的条件。
+HAVING(String)
+附加一个新的HAVING条件子句，由AND串联起来。可以被多次调用，每次使用AND来告诉它要串联新的条件。使用OR()方法来分隔OR条件。
+ORDER_BY(String)
+附加一个新的ORDER BY子句，由逗号串联起来。可以被多次调用，每次使用逗号来告诉它串联新的条件。
+SQL()
+这会返回生成SQL而且重置SelectBuilder的状态（正如BEGIN()或RESET()方法被调用）。因此，这个方法只能被调用一次！
+DELETE_FROM(String)
+开始一个delete语句，要指定删除的表。通常它后面要跟着一个WHERE语句！
+INSERT_INTO(String)
+开始一个insert语句，要指定插入的表。它的后面要跟着一个或多个VALUES()调用。
+SET(String)
+为更新语句附加“set”内容的列表。
+UPDATE(String)
+开始一个update语句，要指定更新的表。它的后面要跟着一个或多个SET()调用，通常需要一个WHERE()调用。
+VALUES(String,String)
+附加到insert语句后。第一个参数是要插入的列名，第二个参数是要插入的值。
+
+
+
+
+
+ JDBC查询数据库数据，一般需要以下七个步骤：
+（1）  加载JDBC驱动
+（2）  建立并获取数据库连接
+（3）  创建 JDBC Statements 对象
+（4）  设置SQL语句的传入参数
+（5）  执行SQL语句并获得查询结果
+（6）  对查询结果进行转换处理并将处理结果返回
+（7）  释放相关资源（关闭Connection，关闭Statement，关闭ResultSet）
+
+
+JDBC演变到Mybatis过程
+
+第一步优化：连接获取和释放
+问题描述：通过JDBC的方式数据库连接频繁的开启和关闭本身就造成了资源的浪费，影响系统的性能；但是现在连接池多种多样，可能存在变化，
+有可能采用DBCP的连接池，也有可能采用容器本身的JNDI数据库连接池。
+解决问题：数据库连接的获取和关闭我们可以使用数据库连接池来解决资源浪费的问题，通过连接池就可以反复利用已经建立的连接去访问数据库了，
+减少连接的开启和关闭的时间。
+同时通过DataSource进行隔离解耦，统一从DataSource里面获取数据库连接，DataSource具体由DBCP实现还是由容器的JNDI实现都可以，
+将DataSource的具体实现通过让用户配置来应对变化。
+第二步优化：SQL统一存取
+问题描述：通过JDBC的方式，可读性很差，不利于维护以及做性能调优；改动Java代码需要重新编译、打包部署。
+不利于取出SQL在数据库客户端执行（取出后还得删掉中间的Java代码，编写好的SQL语句写好后还得通过＋号在Java进行拼凑）。
+解决问题：把SQL语句统一集中放到配置文件，通过SQL语句的key值去获取对应的SQL语句。
+第三步优化：传入参数映射和动态SQL
+问题描述：很多情况下，我们都可以通过在SQL语句中设置占位符来达到使用传入参数的目的，这种方式本身就有一定局限性，它是按照一定顺序传入参数的，
+要与占位符一一匹配。但是，如果我们传入的参数是不确定的（比如列表查询，根据用户填写的查询条件不同，传入查询的参数也是不同的，
+有时是一个参数、有时可能是三个参数），那么我们就得在后台代码中自己根据请求的传入参数去拼凑相应的SQL语句，
+这样的话还是避免不了在Java代码里面写SQL语句的命运。
+解决问题：通过专门的SQL解析器来解析SQL语句，SQL语句经过解析后就可以动态的生成符合上下文的SQL语句，同时使用#变量名#表示占位符变量，
+使用$变量名$表示非占位符变量
+第四步优化：结果映射和结果缓存
+问题描述：执行SQL语句、获取执行结果、对执行结果进行转换处理、释放相关资源是一整套下来的。假如是执行查询语句，那么执行SQL语句后，
+返回的是一个ResultSet结果集，这个时候我们就需要将ResultSet对象的数据取出来，不然等到释放资源时就取不到这些结果信息了。
+我们从前面的优化来看，以及将获取连接、设置传入参数、执行SQL语句、释放资源这些都封装起来了，只剩下结果处理这块还没有进行封装，
+如果能封装起来，每个数据库操作都不用自己写那么一大堆Java代码，直接调用一个封装的方法就可以搞定了
+解决问题：一般对执行结果的有哪些处理，有可能将结果不做任何处理就直接返回，也有可能将结果转换成一个JavaBean对象返回、一个Map返回、
+一个List返回等等，结果处理可能是多种多样的。从这里看，我们必须告诉SQL处理器两点：第一，需要返回什么类型的对象；
+第二，需要返回的对象的数据结构怎么跟执行的结果映射，这样才能将具体的值copy到对应的数据结构上。
+     接下来，我们可以进而考虑对SQL执行结果的缓存来提升性能。缓存数据都是key-value的格式，那么这个key怎么来呢？怎么保证唯一呢？
+     即使同一条SQL语句几次访问的过程中由于传入参数的不同，得到的执行SQL语句也是不同的。那么缓存起来的时候是多对。
+     但是SQL语句和传入参数两部分合起来可以作为数据缓存的key值。
+第五步优化：解决重复SQL语句问题
+问题描述：将所有SQL语句都放到配置文件中，这个时候会遇到一个SQL重复的问题，几个功能的SQL语句其实都差不多，
+有些可能是SELECT后面那段不同、有些可能是WHERE语句不同。有时候表结构改了，那么我们就需要改多个地方，不利于维护。
+解决问题：通过将SQL片段模块化，将重复的SQL片段独立成一个SQL块，然后在各个SQL语句引用重复的SQL块，这样需要修改时只需要修改一处即可。
+ 3.  优化的总结
+对JDBC的优化和封装：
+（1） 使用数据库连接池对连接进行管理
+（2） SQL语句统一存放到配置文件
+（3） SQL语句变量和传入参数的映射以及动态SQL
+（4） 动态SQL语句的处理
+（5） 对数据库操作结果的映射和结果缓存
+（6） SQL语句的重复使用
+
+
+
+
+
+
+三．框架整体设计
+1.总体流程
+（1）加载配置并初始化
+触发条件：加载配置文件
+          配置来源于两个地方，一处是配置文件，一处是Java代码的注解，将SQL的配置信息加载成为一个个MappedStatement对象（包括了传入参数映射配置、执行的SQL语句、结果映射配置），存储在内存中。
+（2）接收调用请求 
+触发条件：调用Mybatis提供的API
+      传入参数：为SQL的ID和传入参数对象
+处理过程：将请求传递给下层的请求处理层进行处理。
+（3）处理操作请求
+ 触发条件：API接口层传递请求过来
+                      传入参数：为SQL的ID和传入参数对象
+                      处理过程：
+      (A)根据SQL的ID查找对应的MappedStatement对象。
+      (B)根据传入参数对象解析MappedStatement对象，得到最终要执行的SQL和执行传入参数。
+      (C)获取数据库连接，根据得到的最终SQL语句和执行传入参数到数据库执行，并得到执行结果。
+      (D)根据MappedStatement对象中的结果映射配置对得到的执行结果进行转换处理，并得到最终的处理结果。
+      (E)释放连接资源。
+ （4）返回结果处理
+   将最终的处理结果返回
+   
+2. 功能架构设计
+把Mybatis的功能架构分为三层：
+（1）API接口层：提供给外部使用的接口API，开发人员通过这些本地API来操纵数据库。接口层一接收到调用请求就会调用数据处理层来完成具体的数据处理。
+（2）数据处理层：负责具体的SQL查找、SQL解析、SQL执行和执行结果映射处理等。它主要的目的是根据调用的请求完成一次数据库操作。
+（3）基础支撑层：负责最基础的功能支撑，包括连接管理、事务管理、配置加载和缓存处理，这些都是共用的东西，将他们抽取出来作为最基础的组件。为上层的数据处理层提供最基础的支撑。
+
+框架架构设计
+框架架构讲解：
+(1)加载配置：配置来源于两个地方，一处是配置文件，一处是Java代码的注解，将SQL的配置信息加载成为一个个MappedStatement对象（包括了传入参数映射配置、执行的SQL语句、结果映射配置），存储在内存中。
+(2)SQL解析：当API接口层接收到调用请求时，会接收到传入SQL的ID和传入对象（可以是Map、JavaBean或者基本数据类型），Mybatis会根据SQL的ID找到对应的MappedStatement，
+然后根据传入参数对象对MappedStatement进行解析，解析后可以得到最终要执行的SQL语句和参数。
+(3) SQL执行：将最终得到的SQL和参数拿到数据库进行执行，得到操作数据库的结果。
+(4)结果映射：将操作数据库的结果按照映射的配置进行转换，可以转换成HashMap、JavaBean或者基本数据类型，并将最终结果返回。
+
+
+ 作用域和生命周期
+1.SqlSessionFactoryBuilder
+这个类可以被初始，使用和丢弃，因为如果已经创建好一个SqlSessionFactory后就不用再保留它，所以SqlSessionFactoryBuilder的最好作用域是方法体内的。
+2.SqlSessionFactory 
+一旦创建，SqlSessionFactory 就会在整个应用过程中始终存在。所以没有理由去销毁和再创建它，一个应用运行中也不建议多次创建SqlSessionFactory。
+因此SqlSessionFactory最好的作用域是Application。可以结合使用Google Guice 或Spring 来进行依赖反射。这些框架允许你生成管理器来管理SqlSessionFactory 的单例生命周期。
+3.SqlSession
+每个线程都有自己的SqlSession 实例，SqlSession 实例是不能被共享，也是不是线程安全的。因此最好使用Request 作用域或者方法体作用域。
+比如说在Servlet 中的HttpSession 中。如果你正在使用WEB 框架，应该让SqlSession 跟随HTTP 请求的相似作用域。也就是说，在收到一个HTTP 请求过后，
+打开SqlSession，等返回一个回应以后，立马关掉这个SqlSession。关闭SqlSession 是非常重要的。你必须要确保SqlSession 在finally 方法体中正常关闭。可以使用下面的标准方式来关闭：
+SqlSession session = sqlSessionFactory.openSession();
+try {
+// do work
+} finally {
+	session.close();
+}
+使用这种模式来贯穿你的所有代码，以确保所有数据库资源都被完全关闭。[这是假定不是使用你自己的数据库连接，而是使用MyBatis 来管理你的数据库连接资源]。
+4.Mapper实例
+Mapper是一种创建用于绑定映射语句的接口。Mapper接口的实例是用SqlSession来获得的，所以Mapper 实例作用域像SqlSession 一样，使用请求作用域。
+在方法被调用的时候调用Mapper实例，然后使用后，就会自动销毁掉，而不需要使用明确的注销。下面例子演示如何操作：
+SqlSession session = sqlSessionFactory.openSession();
+try {
+PersonDao mapper = session.getMapper(PersonDao.class);
+// do work
+} finally {
+session.close();
+}
+
+
+orm工具的基本思想
+ 无论是用过的hibernate,mybatis,你都可以法相他们有一个共同点：
+1. 从配置文件(通常是XML配置文件中)得到 sessionfactory.
+2. 由sessionfactory  产生 session
+3. 在session 中完成对数据的增删改查和事务提交等.
+4. 在用完之后关闭session 。
+5. 在java 对象和 数据库之间有做mapping 的配置文件，也通常是xml 文件。
+
+
+
+
+与Spring MVC 的集成
+1. web.xml 配置 spring dispatchservlet ,比如为:mvc-dispatcher
+2. mvc-dispatcher-servlet.xml 文件配置
+3. spring applicationContext.XML文件配置(与数据库相关，与mybatis sqlSessionFaction 整合，扫描所有mybatis mapper 文件等.)
+4. 编写controller 类
+5. 编写页面代码.
+
+1. web.xml 配置 spring dispatchservlet ,比如为:mvc-dispatcher
+ 
+
+程序代码 程序代码
+
+
+<context-param>
+     <param-name>contextConfigLocation</param-name>
+     <param-value>classpath*:config/applicationContext.xml</param-value>
+   </context-param>
+   <listener>
+     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+   <listener>
+     <listener-class>
+             org.springframework.web.context.ContextCleanupListener</listener-class>
+   </listener>
+   <servlet>
+     <servlet-name>mvc-dispatcher</servlet-name>
+     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+     <servlet-name>mvc-dispatcher</servlet-name>
+     <url-pattern>/</url-pattern>
+   </servlet-mapping>
+
+
+ 2. 在web.xml 同目录下配置 mvc-dispatcher-servlet.xml 文件,这个文件名前面部分必须与你在web.xml里面配置的DispatcherServlet 的servlet名字对应.其内容为:
+
+
+程序代码 程序代码
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="
+          http://www.springframework.org/schema/beans     
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context 
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+     <context:component-scan base-package="com.yihaomen.controller" />
+     <mvc:annotation-driven />
+     
+     <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>  
+     <mvc:default-servlet-handler/>  
+      
+     <bean
+         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+         <property name="prefix">
+             <value>/WEB-INF/pages/</value>
+         </property>
+         <property name="suffix">
+             <value>.jsp</value>
+         </property>
+     </bean>
+
+ < /beans>
+
+
+ 3. 在源码目录 config 目录下配置 spring 配置文件 applicationContext.xml
+
+
+程序代码 程序代码
+
+
+< !--本示例采用DBCP连接池，应预先把DBCP的jar包复制到工程的lib目录下。 -->   
+     <context:property-placeholder    location="classpath:/config/database.properties" />
+         
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+         destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
+         p:url="jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8" 
+         p:username="root" p:password="password"
+         p:maxActive="10" p:maxIdle="10">
+     </bean>
+     
+     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       <property name="dataSource" ref="dataSource" />
+     </bean>
+     
+      
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+      <!--dataSource属性指定要用到的连接池--> 
+      <property name="dataSource" ref="dataSource"/> 
+      <!--configLocation属性指定mybatis的核心配置文件--> 
+      <property name="configLocation" value="classpath:config/Configuration.xml" />
+      <!-- 所有配置的mapper文件 -->
+      <property name="mapperLocations" value="classpath*:com/yihaomen/mapper/*.xml" />
+   </bean> 
+   
+   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+      <property name="basePackage" value="com.yihaomen.inter" />     
+   </bean>
+
+
+
+不知道为什么，一旦我用了 MapperScannerConfigurer 去扫描所有的mapper 接口时，数据库配置datasource 就不能用读取database.properties文件了。
+报错： Cannot load JDBC driver class '${jdbc.driverClassName}'，网上有人说在spring 3.1.1 下用 sqlSessionFactionBean 注入可以解决，
+但我用 spring 3.1.3 还是有问题，所以只好把数据库连接信息直接配置在了XML 文件里面。
+
+4. 编写 controller 层
+
+
+程序代码 程序代码
+
+
+package com.yihaomen.controller;
+ import java.util.List;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.servlet.http.HttpServletResponse;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.servlet.ModelAndView;
+ import com.yihaomen.inter.IUserOperation;
+ import com.yihaomen.model.Article;
+
+ @Controller
+ @RequestMapping("/article")
+ public class UserController {
+     @Autowired
+     IUserOperation userMapper;
+
+     @RequestMapping("/list")
+     public ModelAndView listall(HttpServletRequest request,HttpServletResponse response){
+         List<Article> articles=userMapper.getUserArticles(1); 
+         ModelAndView mav=new ModelAndView("list");
+         mav.addObject("articles",articles);
+         return mav;
+     }
+ }
+
+ 5. 页面文件:
+ [code]
+ < c:forEach items="${articles}" var="item">  
+         ${item.id }--${item.title }--${item.content }<br />
+     </c:forEach>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mybatis 代码生成工具的使用
+mybatis 应用程序，需要大量的配置文件，对于一个成百上千的数据库表来说，完全手工配置，这是一个很恐怖的工作量. 所以mybatis 官方也推出了一个mybatis代码生成工具的jar包. 今天花了一点时间，按照 mybatis generator 的doc 文档参考，初步配置出了一个可以使用的版本，我把源代码也提供下载,mybatis 代码生成工具，主要有一下功能:
+1.生成pojo 与 数据库结构对应
+2.如果有主键，能匹配主键
+3.如果没有主键，可以用其他字段去匹配
+4.动态select,update,delete 方法
+5.自动生成接口(也就是以前的dao层)
+6.自动生成sql mapper，增删改查各种语句配置，包括动态where语句配置
+7.生成Example 例子供参考
+
+ 下面介绍下详细过程
+
+1. 创建测试工程,并配置mybatis代码生成jar包
+ 下载地址:http://code.google.com/p/mybatis/downloads/list?can=3&q=Product%3DGenerator
+ mysql 驱动下载:http://dev.mysql.com/downloads/connector/j/
+这些jar包，我也会包含在源代码里面，可以在文章末尾处，下载源代码，参考。
+ 用 eclipse 建立一个dynamic web project。
+ 解压下载后的 mybatis-generator-core-1.3.2-bundle.zip 文件，其中有两个目录：一个目录是文档目录docs，
+ 主要介绍这个代码生成工具如何使用，另一个是lib目录，里面的内容主要是jar 包，这里我们需要 mybatis-generator-core-1.3.2.jar，这个 jar 包. 
+ 将它拷贝到我们刚刚创建的 web工程的 WebContent/WEB-INF/lib  目录下.在这个目录下也放入 mysql 驱动jar包.因为用 mysql  做测试的.
+2.在数据库中创建测试表  
+ 在mybatis数据库中创建 用来测试的category表(如果没有mybatis这个数据库,要创建，这是基于前面这个系列文章而写的，已经有了mybatis 这个数据库)
+3. 配置mybatis 代码生成工具的配置文件 
+在创建的web工程中，创建相应的package 比如 :
+com.yihaomen.inter 用来存放mybatis 接口对象.
+com.yihaomen.mapper用来存放sql mapper对应的映射，sql语句等.
+com.yihaomen.model 用来存放与数据库对应的model 。
+ 在用mybatis 代码生成工具之前，这些目录必须先创建好，作为一个好的应用程序，这些目录的创建也是有规律的。
+
+ 根据mybatis代码生成工具文档，需要一个配置文件，这里命名为:mbgConfiguration.xml 放在src 目录下. 配置文件内容如下:
+< ?xml version="1.0" encoding="UTF-8"?>
+ < !DOCTYPE generatorConfiguration
+   PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+ < generatorConfiguration>
+   
+   <!-- 配置mysql 驱动jar包路径.用了绝对路径 -->
+   <classPathEntry location="D:\Work\Java\eclipse\workspace\myBatisGenerator\WebContent\WEB-INF\lib\mysql-connector-java-5.1.22-bin.jar" />
+
+   <context id="yihaomen_mysql_tables" targetRuntime="MyBatis3">
+   
+     <!-- 为了防止生成的代码中有很多注释，比较难看，加入下面的配置控制 -->
+     <commentGenerator>
+       <property name="suppressAllComments" value="true" />
+       <property name="suppressDate" value="true" />
+     </commentGenerator>
+     <!-- 注释控制完毕 -->
+   
+     <!-- 数据库连接 -->
+     <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+         connectionURL="jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8"
+         userId="root"
+         password="password">
+     </jdbcConnection>
+
+     <javaTypeResolver >
+       <property name="forceBigDecimals" value="false" />
+     </javaTypeResolver>
+     
+     <!-- 数据表对应的model 层  -->
+     <javaModelGenerator targetPackage="com.yihaomen.model" targetProject="src">
+       <property name="enableSubPackages" value="true" />
+       <property name="trimStrings" value="true" />
+     </javaModelGenerator>
+     
+     <!-- sql mapper 隐射配置文件 -->
+     <sqlMapGenerator targetPackage="com.yihaomen.mapper"  targetProject="src">
+       <property name="enableSubPackages" value="true" />
+     </sqlMapGenerator>
+     
+     <!-- 在ibatis2 中是dao层，但在mybatis3中，其实就是mapper接口 -->
+     <javaClientGenerator type="XMLMAPPER" targetPackage="com.yihaomen.inter"  targetProject="src">
+       <property name="enableSubPackages" value="true" />
+     </javaClientGenerator>
+     
+     <!-- 要对那些数据表进行生成操作，必须要有一个. -->
+     <table schema="mybatis" tableName="category" domainObjectName="Category" 
+         enableCountByExample="false" enableUpdateByExample="false"
+         enableDeleteByExample="false" enableSelectByExample="false"
+         selectByExampleQueryId="false">     
+     </table>
+
+   </context>
+ < /generatorConfiguration>
+
+import java.io.File;
+ import java.io.IOException;
+ import java.sql.SQLException;
+ import java.util.ArrayList;
+ import java.util.List;
+
+ import org.mybatis.generator.api.MyBatisGenerator;
+ import org.mybatis.generator.config.Configuration;
+ import org.mybatis.generator.config.xml.ConfigurationParser;
+ import org.mybatis.generator.exception.InvalidConfigurationException;
+ import org.mybatis.generator.exception.XMLParserException;
+ import org.mybatis.generator.internal.DefaultShellCallback;
+
+ public class GenMain {
+     public static void main(String[] args) {
+         List<String> warnings = new ArrayList<String>();
+         boolean overwrite = true;
+         String genCfg = "/mbgConfiguration.xml";
+         File configFile = new File(GenMain.class.getResource(genCfg).getFile());
+         ConfigurationParser cp = new ConfigurationParser(warnings);
+         Configuration config = null;
+         try {
+             config = cp.parseConfiguration(configFile);
+         } catch (IOException e) {
+             e.printStackTrace();
+         } catch (XMLParserException e) {
+             e.printStackTrace();
+         }
+         DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+         MyBatisGenerator myBatisGenerator = null;
+         try {
+             myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
+         } catch (InvalidConfigurationException e) {
+             e.printStackTrace();
+         }
+         try {
+             myBatisGenerator.generate(null);
+         } catch (SQLException e) {
+             e.printStackTrace();
+         } catch (IOException e) {
+             e.printStackTrace();
+         } catch (InterruptedException e) {
+             e.printStackTrace();
+         }
+     }
+ }
+
+
+如果你想用命令行方式处理，也是可以的.
+ 比如:
+java -jar mybatis-generator-core-1.3.2.jar -mbgConfiguration.xml -overwrite
+这时，要用绝对路径才行. 另外mbgConfiguration.xml  配置文件中targetProject 的配置也必须是绝对路径了。
+
+
+
+
+
+
+
+
+
+
+
+
+SqlSessionDaoSupport的使用 
+注意继承了 "SqlSessionDaoSupport" ，利用方法 getSqlSession() 可以得到 SqlSessionTemplate ,从而可以执行各种sql语句，类似于hibernatetemplate一样，至少思路一样.
+如果与spring 3 mvc 集成要用  autowire的话，在daoimpl 类上 加上注解 “@Repository” ，
+另外还需要在spring 配置文件中加入<context:component-scan base-package="com.yihaomen.dao" /> 这样在需要调用的地方，就可以使用autowire自动注入了。
+ 当然，你也可以按一般程序的思路，创建一个service 的package, 用service 去调用 dao层，我这里就没有做了，因为比较简单，
+ 用类似的方法，也机注意自动注入时，也要配置 <context:component-scan base-package="com.yihaomen.service" /> 等这样的。

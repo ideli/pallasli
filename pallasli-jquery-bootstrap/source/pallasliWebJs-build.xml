@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Activiti BPM Editor" default="js.concat">
+	<!-- Editor properties *************************************************** -->
+	<property name="root" value="." />
+	<property name="src" value="${root}/pallasliWebJs" />
+	<property name="destdir" value="${root}/../dist" />
+	<property name="target" value="target" />
+	<property name="temp" value="temp" />
+	<property name="js.filename" value="pallasliJquery.js"/>
+	<property name="js.min.filename" value="pallasliJquery.min.js"/>
+	<!-- parses plugin xml
+	<xmlproperty file="${root}/plugins.xml" collapseAttributes="true" />-->
+	<!-- 合并js-->
+	<target name="js.concat">
+		<concat destfile='${destdir}/pallasliWebJs.js' encoding="utf-8">
+			<filelist id="coresourcefiles" dir="${src}">
+				<file name='BaseUtils.js' />
+				<file name='Utils.js' />
+				<file name='Utils.js' />
+				<file name='Component.js' />
+				<file name='field/base/Field.js' />
+				<file name='action/base/Button.js' />
+				<file name='panel/base/Panel.js' />
+				<file name='layout/base/Layout.js' />
+				<file name='window/base/Window.js' />
+			</filelist>
+			<fileset dir="${src}" includes="field/*.js"/>
+			<fileset dir="${src}" includes="action/*.js"/>
+			<fileset dir="${src}" includes="bar/*.js"/>
+			<fileset dir="${src}" includes="window/*.js"/>
+			<fileset dir="${src}" includes="panel/*.js"/>
+			<fileset dir="${src}" includes="tree/*.js"/>
+			<fileset dir="${src}" includes="layout/*.js"/>
+			<fileset dir="${src}" includes="panel/tree/*.js"/>
+			<fileset dir="${src}" includes="panel/nav/*.js"/>
+			<!-- load all sources from plugins defined in the plugins.xml
+			<filelist dir="${src}/Plugins/" files="${config.plugins.plugin.source}" />-->
+		</concat> 
+	</target> 
+	<!--
+	<target name='js.compress' depends="js.concat">
+		<mkdir dir="${temp}" />
+		<tempfile property="compress.temp" suffix=".js" prefix="compressed" destDir="${temp}" />
+		<java dir="${temp}" jar="yuicompressor-2.4.2.jar" fork="true" failonerror="true" output='${compress.temp}'>
+			<arg file='${destdir}/pallasliJquery.js' />
+		</java>
+		<concat destfile='${destdir}/pallasliJquery.min.js'>
+			<fileset file="LICENSE" />
+			<fileset file="${compress.temp}" />
+		</concat>
+		<copy todir="${webdestdir}" preservelastmodified="true">
+					<fileset dir="${destdir}">
+						<include name="${js.min.filename}"/>
+					</fileset>
+		</copy>
+		<copy todir="${pallasliJsDir}" preservelastmodified="true">
+					<fileset dir="${destdir}">
+						<include name="${js.min.filename}"/>
+					</fileset>
+		</copy>
+		<delete file='${compress.temp}' />
+		<delete dir="${temp}" />
+	</target> -->
+</project>

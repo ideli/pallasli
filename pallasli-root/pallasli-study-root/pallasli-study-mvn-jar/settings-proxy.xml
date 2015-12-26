@@ -1,0 +1,36 @@
+ 
+ <!-- Maven的本地资源库默认为 .m2 目录文件夹：
+Unix/Mac OS X – ~/.m2
+Windows – C:\Documents and Settings\{your-username}\.m2
+ -->
+ <localRepository>D:\software\yiibai.com\apache-maven\repository</localRepository>
+ 
+ <!-- Maven 中央存储库 – http://repo1.maven.org/maven2/  -->
+ 
+ 
+ <!-- 使用Maven的Tomcat插件打包并部署一个WAR文件到Tomcat,添加在上面Maven 设置文件的 Tomcat 用户，是之后Maven使用此用户来登录Tomcat服务器。 -->
+ <settings ...>
+	<servers>
+	   
+		<server>
+			<id>TomcatServer</id>
+			<username>admin</username>
+			<password>password</password>
+		</server>
+
+	</servers>
+</settings>
+ 
+ <!-- Maven启用代理访问 -->
+ <proxies>
+      <proxy>
+      <id>optional</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <username>yiibai</username>
+      <password>password</password>
+      <host>proxy.yiibai.com</host>
+      <port>8888</port>
+      <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
+    </proxy>
+  </proxies>

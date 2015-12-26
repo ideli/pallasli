@@ -1,0 +1,175 @@
+﻿JDK 常用命令
+
+一） 引言： 
+   当我们安装完JDK时，除了必须的编译运行以外，它就已经自带了很多辅助工具。正所谓“工欲善其事，必先利其器。”如果能用好这些工具，它们将大大方便你的开发。它们的实用和方便有时甚至会使你惊讶的发现：JDK的这些自带的辅助工具将会是IDE的一个很好的补充。了解了这些命令你也就知道了IDE理论上能做些什么不能做些什么（不管你用的是什么IDE），因为归根结底IDE调用的就是这些命令啦。 
+   BTW: 在实践这些命令前请先确认你成功安装了JDK。如果只是安装了JRE，那么很可惜，除了编译运行外很多辅助工具命令你可找不到喽~~。 
+
+二）不可或缺：javac, java 
+   不管你安装的是jre还是jdk。javac, java这两个命令都会包括其中。原因么也很简单，这两个命令分别是用来编译和运行java程序的啦。可以说是java基础的基础，相信大家都已很熟悉了。在此多啰嗦一下，简介如下： 
+   编译：javac  
+   1）最简单的例子  javac d:\Java1.6\HelloWorld.java 
+      这样会在d:\Java1.6目录下编译生成一个HelloWorld.class文件 
+
+   2) 进一步： javac -g d:\Java1.6\HelloWorld.java 
+      先看看帮助文件怎么说的： 
+       -g                         生成所有调试信息 
+       -g:none                    不生成任何调试信息 
+       -g:{lines,vars,source}     只生成某些调试信息（源码行号，变量，源文件信息） 
+      在class文件中嵌入调试信息。比较一下两者生成的class文件的大小就知道区别了。IDE工具debug时十分需要这些信息噢，对于程序的正常运行没什么影响。 
+
+    3）再加一点：  javac -verbose d:\Java1.6\HelloWorld.java 
+       -verbose    输出有关编译器正在执行的操作的消息 
+       -version    版本信息 
+       -d <目录>   指定存放生成的类文件的根目录 
+       这个不多说，试打一下马上知道。 
+
+    4）非常关键参数： -classpath <目录>   -sourcepath <目录> 
+       先从字面上理解下这两个字段的意思：classpath,当然是指定可供使用的class文件的路径集喽。 那sourcepath,指的就是可供使用的源文件的路径集喽。 
+       先说 -classpath, 它有缩写形式 -cp ，默认值就是安装jdk时在系统变量里设置的classpath的值，如果使用-classpath， 它将覆盖默认值。但这里注意哦，编译是用到的classpath可不止系统变量里设置的这么点噢。那完整的classpath到底长什么样呢？ -verbose 看看吧 ^.^ 。 噢，还有一点，当使用-classpath而没有使用-sourcepath时，设置的classpath值还将同时作为sourcepath的值。 
+       好了，说完classpath说sourcepath。 它用到的情况相对比较少。举个例子说明吧： 
+假设源文件结构如下： 
+      src-| 
+             |-foo-| 
+                       |-Testfoo.java 
+             |-baz-| 
+                       |-Testbaz.java 
+并且package的跟目录是src/(即：在Testbaz.java中像这样 import foo.Testfoo;) 
+那我现在非要在/目录下一次编译这两个有依赖的文件怎么办呢？这时-soucrepath该出场了： javac -sourcepath src src/baz/*.java 
+再次注意，-sourcepath指定的是根目录噢 
+
+     5）-target <版本>     生成特定 VM 版本的类文件（向下兼容） 
+
+   运行：java  
+   先列举一下和javac共性的参数： -version -verbose -classpath -cp,原理一样，不多说了。 
+   1）最简单的例子： java  com.thaIm.HelloWorld 
+   2）如果你机子上有多个jdk版本，那么可以指定一下想使用的版本： java -version:1.6  com.thaIm.HelloWorld 
+   3）运行jar: java -jar HelloWord.jar 
+
+三） 实用的 jar javadoc jdb serialver javah javap htmlConverter native2ascii 
+1）jar 打架包，查看架包 
+   详细参数可以查看help文档啦，这里就举几个例子： 
+   打包： jar cvf hello.jar com 
+   更新： jar uvf hello.jar com 
+   查看： jar tf hello.jar 
+
+2）javadoc 生成文档 
+   javadoc注释以"/**"开始，以"*/"结束，里面可以包含普通文本、HTML标记和javadoc标记。javadoc只处理源文件中在类/接口定义、方法、域、构造器之前的注释，忽略位于其他地方的注释。 
+/** 
+*Demo--<b>Helloworld</b> 
+*@author thaIm 
+*@version 1.0 2012/01/01 
+*/ 
+public class HelloWorld 
+{ 
+/** 
+*在main( )方法中使用的显示用字符串 
+*@see #main(java.lang.String[]) 
+*/ 
+static String SDisplay; 
+/** 
+*显示HelloWorld 
+*@param args 从命令行中带入的字符串 
+*@return 无 
+*/ 
+public static void main(String args[]) 
+{ 
+SDisplay = "Hello World " ; 
+System.out.println( SDisplay ); 
+} 
+} 
+
+输入命令：javadoc -private -d doc -author -version com\thaIm\HelloWorld.java 
+    在doc目录下生成HelloWorld类的说明文档，内容包括私有成员在内的所有类和成员，作者信息，版本信息。运行一下，看看结果就知道文档和代码注释怎么对应了。 
+
+3）jdb 用来debug 
+     还是用例子说明吧： 
+         jdb com.thaIm.HelloWorld 
+         运行： run 
+         退出： exit 
+     详细命令列表如下： 
+     connectors                -- 列出此 VM 中可用的连接器和传输器  
+     run [类 [参数]]        -- 开始执行应用程序的主类  
+     threads [线程组]     -- 列出线程  
+     thread <线程 ID>        -- 设置默认线程  
+     suspend [线程 ID]    -- 暂停线程（默认值为 all）  
+     resume [线程 ID]     -- 恢复线程（默认值为 all）  
+     where [<线程 ID> | all] -- 转储线程的堆栈  
+     wherei [<线程 ID> | all] -- 转储线程的堆栈以及 pc 信息  
+     up [n 帧]             -- 向上移动线程的堆栈  
+     down [n 帧]           -- 向下移动线程的堆栈  
+     kill <线程 ID> <表达式>   -- 中止具有给定的异常对象的线程  
+     interrupt <线程 ID>     -- 中断线程  
+  
+     print <表达式>              -- 输出表达式的值  
+     dump <表达式>               -- 输出所有对象信息  
+     eval <表达式>               -- 计算表达式的值（与 print 作用相同）  
+     set <lvalue> = <表达式>     -- 为字段/变量/数组元素指定新值  
+     locals                    -- 输出当前堆栈帧中的所有本地变量  
+  
+     classes                   -- 列出当前已知的类  
+     class <类 ID>          -- 显示已命名类的详细信息  
+     methods <类 ID>        -- 列出类的方法  
+     fields <类 ID>         -- 列出类的字段   
+     threadgroups              -- 列出线程组  
+     threadgroup <名称>        -- 设置当前线程组  
+     stop in <类 ID>.<方法>[(参数类型,...)]     -- 在方法中设置断点  
+     stop at <类 ID>:<行> -- 在行中设置断点  
+     clear <类 ID>.<方法>[(参数类型,...)]       -- 清除方法中的断点  
+     clear <类 ID>:<行>   -- 清除行中的断点  
+     clear                -- 列出断点  
+     catch [uncaught|caught|all] <类 ID>|<类模式>   -- 出现指定的异常时中断  
+     ignore [uncaught|caught|all] <类 ID>|<类模式>  -- 对于指定的异常，取消 'catch'  
+     watch [access|all] <类 ID>.<字段名>     -- 监视对字段的访问/修改  
+     unwatch [access|all] <类 ID>.<字段名>   -- 停止监视对字段的访问/修改  
+     trace [go] methods [thread]    -- 跟踪方法的进入和退出。  
+                                    -- 除非指定 'go'，否则所有线程都将暂停  
+     trace [go] method exit | exits [thread]  -- 跟踪当前方法的退出或所有方法的退出  
+                                              -- 除非指定 'go'，否则所有线程都将暂停  
+     untrace [方法]         -- 停止跟踪方法的进入和/或退出  
+     step                      -- 执行当前行  
+     step up                   -- 执行到当前方法返回其调用方  
+     stepi                     -- 执行当前指令  
+     next                      -- 跳过一行（跨过调用）  
+     cont                      -- 从断点处继续执行  
+     list [line number|method] -- 输出源代码  
+     use（或 sourcepath）[源文件路径]   -- 显示或更改源路径  
+     exclude [<类模式>, ...|“无”]     -- 不报告指定类的步骤或方法事件  
+     classpath                 -- 从目标 VM 输出类路径信息  
+     monitor <命令>         -- 每次程序停止时执行命令  
+     monitor                   -- 列出监视器  
+     unmonitor <监视器号>      -- 删除某个监视器  
+     read <文件名>           -- 读取并执行某个命令文件  
+     lock <表达式>               -- 输出对象的锁信息  
+     threadlocks [线程 ID]   -- 输出线程的锁信息  
+     pop                       -- 弹出整个堆栈，且包含当前帧  
+     reenter                   -- 与 pop 作用相同，但重新进入当前帧  
+     redefine <类 ID> <类文件名>    -- 重新定义类代码  
+     disablegc <表达式>          -- 禁止对象的垃圾回收  
+     enablegc <表达式>           -- 允许对象的垃圾回收  
+     !!                        -- 重复执行最后一个命令  
+     <n> <命令>             -- 将命令重复执行 n 次  
+     # <命令>               -- 放弃（不执行）  
+     help（或 ?）               -- 列出命令  
+     version                   -- 输出版本信息  
+     exit（或 quit）            -- 退出调试器  
+  
+<类 ID>: 带有软件包限定符的完整类名  
+<类模式>: 带有前导或后缀通配符 (*) 的类名  
+<线程 ID>: 'threads' 命令中所报告的线程号  
+<表达式>: Java(TM) 编程语言表达式。 
+
+4）serialver 返回 serialVersionUID 
+     命令： serialver -show 
+     至于什么是 serialVersionUID，看看序列化的概念吧~~ 
+
+5）javah 产生可以调用Java过程的C过程，或建立能被Java程序调用的C过程的头文件 (没怎么用过，以后补充了...) 
+
+6）javap  Java反汇编器，显示编译类文件中的可访问功能和数据，同时显示字节代码含义  
+    看个例子啦：javap com.thaIm.HelloWorld ，让后就把HelloWorld.class反编译的结果返回给你了。很好用吧~~。 
+
+7）htmlConverter 命令转换工具 
+    applet的html页面的转换工具。用起来超方便输入htmlConverter，回车。图形化界面一看便知啦~~ 
+
+8）native2ascii 将含有不是Unicode或Latinl字符的的文件转换为Unicode编码字符的文件。  
+    格式超简单啦：  native2ascii [options] [inputfile [outputfile]] 
+    options的参数也只有一个： -reverse 执行相反的操作：将含 Latin-1 和/或 Unicode 编码字符的文件转换成含本地编码字符的文件。

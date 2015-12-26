@@ -1,0 +1,174 @@
+Maven仓库汇总
+1、maven 仓库地址：
+共有的仓库
+http://repo1.maven.org/maven2/
+http://repository.jboss.com/maven2/
+http://repository.sonatype.org/content/groups/public/
+http://mirrors.ibiblio.org/pub/mirrors/maven2/org/acegisecurity/
+
+私有的仓库
+http://repository.codehaus.org/
+http://snapshots.repository.codehaus.org/
+http://people.apache.org/repo/m2-snapshot-repository
+http://people.apache.org/repo/m2-incubating-repository/
+ 
+同时可以搭建自己的maven仓库：私服， 搭建的方式参考如下：
+http://juvenshun.javaeye.com/blog/349534
+2、收集的外部仓库地址
+http://www.ibiblio.org/maven/mule/dependencies/maven2/
+ 
+附：Maven仓库的搭建
+ 访问http://nexus.sonatype.org/downloads/下载Nexus。 
+   启动Nexus，就是启动一个web服务器，它的默认地址是localhost:8081。Nexus在一个名为Jetty的servlet容器中运行，它使用一个名为Tanuki Java Service Wrapper的本地服务包裹器启动。这个服务包裹器可以被配置成以Windows服务或Unix守护线程的形式运行Nexus。要启动Nexus，你需要为你的平台找到合适的启动脚本。要查看可用平台的列表，查看${NEXUS_HOME}/bin/jsw目录的内容。
+   可执行文件在%nexus安装目录%\nexus-webapp-1.0.0\binjsw\windows-x86-32下： 
+   InstallNexus.bat/UninstallNexus.bat是安装/卸载nexus为windows service。 
+   Nexus.bat是直接在命令行中启动Nexus，如果不想安装Nexus为windows service，可以用这个文件来手工控制Nexus的启动退出。 
+1.配置nexus 
+   首先登录，默认地址http://localhost:8081/nexus/，默认用户名密码为admin/admin123. 
+    nexus默认是关闭远程索引下载功能的。开启的方式： 
+    点击Administration菜单下面的Repositories，将这三个仓库Apache Snapshots，Codehaus Snapshots，Maven Central的 
+    Download Remote Indexes修改为true。然后在这三个仓库上分别右键，选择Re-index，这样Nexus就会去下载远程的索引文件。 
+2.管理仓库 
+以管理员用户登陆然后点击左边导航菜单Administration下面的Repositories。Nexus提供了三种不同的仓库。 
+(1)代理仓库 
+一个代理仓库是对远程仓库的一个代理。默认情况下，Nexus自带了如下配置的代理仓库： 
+Apache Snapshots 
+这个仓库包含了来自于Apache软件基金会的快照版本。http://people.apache.org/repo/m2-snapshot-repository 
+Codehaus Snapshots 
+这个仓库包含了来自于Codehaus的快照版本。 http://snapshots.repository.codehaus.org/ 
+Central Maven Repository 
+这是中央Maven仓库（发布版本）。 http://repo1.maven.org/maven2/ 
+(2)宿主仓库 
+一个宿主仓库是由Nexus托管的仓库。Maven自带了如下配置的宿主仓库。 
+3rd Party 
+这个宿主仓库应该用来存储在公共Maven仓库中找不到的第三方依赖。这种依赖的样例有：你组织使用的，商业的，私有的类库如Oracle JDBC驱动。 
+Releases 
+这个宿主仓库是你组织公布内部发布版本的地方。 
+Snapshots 
+这个宿主仓库是你组织发布内部快照版本的地方。 
+(3)虚拟仓库 
+一个虚拟仓库作为Maven 1的适配器存在。Nexus自带了一个central-m1虚拟仓库 
+3. 管理组 
+组是Nexus一个强大的特性，它允许你在一个单独的URL中组合多个仓库。Nexus自带了两个组：public和public-snapshots。public组中组合了三个宿主仓库：3rd Party, Releases, 和Snapshots，还有中央Maven仓库。而public-snapshots组中组合了Apache Snapshots和Codehaus Snapshots仓库。 
+4. 配置maven 
+要让maven使用Nexus作为仓库，要修改~/.m2/settings.xml. 
+Xml代码 
+<profiles> 
+   <profile> 
+     <id>nexus</id> 
+     <repositories> 
+       <repository> 
+           <id>nexus</id> 
+           <name>local private nexus</name> 
+           <url>http://localhost:8081/nexus/content/groups/public</url> 
+       </repository> 
+     </repositories> 
+   </profile> 
+   <profile> 
+     <id>nexus-snapshots</id> 
+     <repositories> 
+       <repository> 
+           <id>nexus-snapshots</id> 
+           <name>local private nexus snapshots</name> 
+           <url>http://localhost:8081/nexus/content/groups/public-snapshots</url> 
+       </repository> 
+     </repositories> 
+   </profile> 
+</profiles>
+<activeProfiles> 
+    <activeProfile>nexus</activeProfile> 
+    <activeProfile>nexus-snapshots</activeProfile> 
+</activeProfiles>
+5.部署构件至Nexus 
+   要部署构件至Nexus，在distributionManagement中提供仓库URL，然后运行mvn deploy。Maven会通过一个简单的HTTP PUT将项目POM和构件推入至你的Nexus安装。需要配置你项目POM中distributionManagement部分的repository。 
+Xml代码 
+<distributionManagement> 
+<repository> 
+    <id>releases</id> 
+    <name>Internal Releases</name> 
+    <url>http://localhost:8081/nexus/content/repositories/releases</url> 
+</repository> 
+<snapshotRepository> 
+    <id>Snapshots</id> 
+    <name>Internal Snapshots</name> 
+    <url>http://localhost:8081/nexus/content/repositories/snapshots</url> 
+</snapshotRepository> 
+</distributionManagement>
+这样还没完，这时如果部署会报错，还要在〜/.m2/settings.xml中添加如下的服务器登录信息： 
+Xml代码 
+<server> 
+<id>releases</id> 
+<username>admin</username> 
+<password>admin123</password> 
+</server> 
+<server> 
+<id>Snapshots</id> 
+<username>admin</username> 
+<password>admin123</password> 
+</server>
+部署第三方构件： 
+构件可能是私有数据库的JDBC驱动如Oracle，或者你依赖于另一个JAR，它既不开源也无法免费获得。在这样的情况下，你就需要手动拿来这些构件然后发布到你自己的仓库中。Nexus提供宿主的"third-party"仓库，就是为了这个目的。 
+使用以下命令发布该文件至Nexus： 
+Java代码 
+mvn deploy:deploy-file -DgroupId=com.oracle -DartifactId=ojdbc14 
+-Dversion=10.2.0.3.0 -Dpackaging=jar -Dfile=ojdbc.jar   
+-Durl=http://localhost:8081/nexus/content/repositories/thirdparty   
+-DrepositoryId=thirdparty
+6.Nexus监听端口 
+默认情况下，Nexus监听端口8081。你可以更改这个端口，通过更改${NEXUS_HOME}/conf/plexus.properties的值，为此，停止Nexus，更改文件中applicationPort的值，然后重启Nexus。 
+7.Maven Profiles 
+   Maven中的profile是一组可选的配置，可以用来设置或者覆盖配置默认值。有了profile，你就可以为不同的环境定制构建。profile可以在pom.xml中配置，并给定一个id。然后你就可以在运行Maven的时候使用的命令行标记告诉Maven运行特定profile中的目标。以下pom.xml使用production profile覆盖了默认的Compiler插件设置。 
+Xml代码 
+<profiles> 
+   <profile> 
+     <id>production</id> 
+     <build> 
+       <plugins> 
+         <plugin> 
+           <groupId>org.apache.maven.plugins</groupId> 
+           <artifactId>maven-compiler-plugin</artifactId> 
+           <configuration> 
+             <debug>false</debug> 
+             <optimize>true</optimize> 
+           </configuration> 
+         </plugin> 
+       </plugins> 
+     </build> 
+   </profile> 
+</profiles> 
+要使用production profile来运行mvn install，你需要在命令行传入-Pproduction参数。要验证production profile覆盖了默认的Compiler插件配置，可以像这样以开启调试输出(-X) 的方式运行Maven。 
+    如果你开始大量使用Maven profile，你会希望将profile从POM中分离，使用一个单独的文件如profiles.xml。你可以混合使用定义在pom.xml中和外部profiles.xml文件中的profile。只需要将profiles元素放到${basedir}目录下的profiles.xml文件中，然后照常运行Maven就可以。profiles.xml文件的大概内容如下： 
+Xml代码 
+<profiles> 
+    <profile> 
+      <id>development</id> 
+      <build> 
+        <plugins> 
+          <plugin> 
+            <groupId>org.apache.maven.plugins</groupId> 
+            <artifactId>maven-compiler-plugin</artifactId> 
+            <configuration> 
+              <debug>true</debug> 
+              <optimize>false</optimize> 
+            </configuration> 
+          </plugin> 
+        </plugins> 
+      </build> 
+    </profile> 
+    <profile> 
+      <id>production</id> 
+      <build> 
+        <plugins> 
+          <plugin> 
+            <groupId>org.apache.maven.plugins</groupId> 
+            <artifactId>maven-compiler-plugin</artifactId> 
+            <configuration> 
+              <debug>false</debug> 
+              <optimize>true</optimize> 
+            </configuration> 
+          </plugin> 
+        </plugins> 
+      </build> 
+    </profile> 
+</profiles>
+   settings profile可以应用到所有你使用Maven构建的项目。你可以在两个地方定义settings profile：定义在~/.m2/settings.xml中的用户特定settings profile，或者定义在${M2_HOME}/conf/settings.xml中的全局settings profile。

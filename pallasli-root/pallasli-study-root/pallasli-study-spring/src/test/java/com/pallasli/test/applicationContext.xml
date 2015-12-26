@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- 指定Spring IOC 容器扫描的包 -->
+	<!-- 可以通过resource-pattern指定扫描的资源 -->
+	<!-- <context:component-scan base-package="com.coslay.beans.annotation" 
+		resource-pattern="reporsitory/*.class"> </context:component-scan> -->
+
+	<!-- context:exclude-filter 子节点指定排除哪些指定表达式的组件 
+	context:include-filter 子节点指定包含哪些表达式的组件，
+	该子节点需要use-default-filters="false"配合使用
+	（如果use-default-filters="ture"则使用系统默认扫描所有带有@Component@Controller@Service@Repository的组件） -->
+	<!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/> -->
+	<!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/> -->
+	<!-- <context:exclude-filter type="assignable" expression="com.coslay.beans.annotation.reporsitory.UserRepository"/> -->
+	<!-- <context:include-filter type="assignable" expression="com.coslay.beans.annotation.reporsitory.UserRepository"/> -->
+
+	<context:component-scan base-package="com.pallasli">
+	<context:exclude-filter type="annotation" expression="org.springframework.context.annotation.Configuration"/>
+	</context:component-scan> 
+	<bean id="scanTestBean" class="com.pallasli.scanclass.ScanTestBean"></bean>
+	<bean id="importTestBean" class="com.pallasli.scanclass.ImportTestBean"></bean>
+	<import resource="spring-jdbc.xml"/>
+</beans>

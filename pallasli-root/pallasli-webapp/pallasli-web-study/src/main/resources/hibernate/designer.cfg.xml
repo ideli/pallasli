@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+	<session-factory>
+
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">root</property> 
+		<property name="connection.url">jdbc:mysql://localhost:3306/designer?useUnicode=true&amp;characterEncoding=utf8</property>
+        <property name="show_sql">true</property>
+        
+		<mapping resource="hibernate/hbmxml/designer/CompConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/Config.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/Fieldset.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/FieldsetConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/FieldsetField.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/FieldsetFieldConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/Page.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/PageConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/PageFieldset.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/PageFieldsetConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/PageFieldsetField.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/PageFieldsetFieldConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/Table.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/TableConfig.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/TableField.hbm.xml" />
+		<mapping resource="hibernate/hbmxml/designer/TableFieldConfig.hbm.xml" />
+
+	</session-factory>
+</hibernate-configuration>

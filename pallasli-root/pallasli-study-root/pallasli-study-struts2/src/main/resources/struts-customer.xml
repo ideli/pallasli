@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="customer" namespace="/" extends="struts-default">
+
+		<action name="addCustomerAction" class="com.yiibai.common.action.CustomerAction">
+			<result name="success">pages/addCustomer.jsp</result>
+		</action>
+
+		<action name="customerAction" class="com.yiibai.common.action.CustomerAction">
+			<result name="success">pages/success.jsp</result>
+		</action>
+
+	</package>
+</struts> 
