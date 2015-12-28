@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-ftp" default="upload-ftp">
+	<target name="upload-ftp" description="Upload build to an FTP server">
+			<!-- Upload everything under the destination.dir to the FTP server. -->
+			<ftp server="${ftp.hostname}" remotedir="/" userid="${ftp.username}"
+				password="${ftp.userpassword}" separator="\" verbose="yes" binary="yes">
+				<fileset dir="${destination.dir}">
+					<include name="**/*.*" />
+				</fileset>
+			</ftp>
+		</target>
+</project>

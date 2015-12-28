@@ -65,7 +65,7 @@ public class BatchTest {
 		// add more batches
 		// Create an int[] to hold returned values
 		count = stmt.executeBatch();
-
+		System.out.println(count);
 		// Explicitly commit statements to apply changes
 		conn.commit();
 	}

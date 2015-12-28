@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-info" default="build2jar">
+	<!--
+		if	Allows the execution of a target based on the trueness of a conditional attribute. (optional)
+		unless	Adds the target to the dependency list of the specified Extension Point. An Extension Point is similar to a target, but it does not have any tasks. (Optional)
+		-->
+	<target name="build2jar" description="-->生成jar包">
+			<echo message="jar class to ${dist.dir}/${jar.filename}"/>
+			<condition property="buildexists">
+			   <available file="${classes.dir}/com/wasoft/calldb/business/impl/${jar.filename}" type="dir"></available>
+		    </condition>
+		    <antcall target="isTrue"></antcall>
+		    <antcall target="isFalse"></antcall> 
+		</target>
+		
+		<target name="isTrue" if="buildexists">
+			<echo>is ture</echo>
+			<jar jarfile="${dist.dir}/${jar.filename}.jar">
+				<fileset dir="${classes.dir}" casesensitive="false">
+					<include name="com/wasoft/calldb/business/impl/${jar.filename}/*.*"/>
+					<include name="com/wasoft/dataserver/ws/${jar.filename}/**"/>
+				</fileset>
+			</jar>
+		</target>
+		
+		<target name="isFalse" unless="buildexists">
+			<echo>is flase</echo>
+			<jar jarfile="${dist.dir}/${jar.filename}.jar">
+				<fileset dir="${classes.dir}"  casesensitive="false">
+					<include name="com/wasoft/calldb/business/impl/${jar.filename}*.*"/>
+					<include name="com/wasoft/dataserver/ws/${jar.filename}/**"/>
+				</fileset>
+			</jar>
+		</target>
+</project>

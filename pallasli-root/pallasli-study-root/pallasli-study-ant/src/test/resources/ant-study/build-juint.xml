@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ant" default="report" basedir=".">
+
+	<target name="compile" depends="compile.java,compile.test,jar"></target>
+
+	<target name="test" depends="compile">
+		<mkdir dir="${target.report.dir}" />
+
+		<property name="tests" value="Test*" />
+
+		<junit printsummary="yes" haltonerror="yes" haltonfailure="yes"
+			fork="yes">
+
+			<formatter type="xml" />
+
+			<batchtest todir="${target.report.dir}">
+				<fileset dir="${target.classes.test.dir}">
+					<include name="**/Test*.class" />
+					<include name="**/*Test.class" />
+					<exclude name="**/*AllTest.class" />
+				</fileset>
+			</batchtest>
+
+			<classpath>
+				<fileset dir="${lib}">
+					<include name="*.jar" />
+				</fileset>
+				<pathelement location="${target.classes.java.dir}" />
+				<pathelement location="${target.classes.test.dir}" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="report" depends="test">
+		<mkdir dir="${target.report.dir}/html" />
+
+
+		<junitreport todir="${target.report.dir}">
+			<fileset dir="${target.report.dir}">
+				<include name="TEST-*.xml" />
+
+			</fileset>
+			<report format="frames" todir="${target.report.dir}/html" />
+		</junitreport>
+	</target>
+	<!--junit集成 dir Where to invoke the VM from. This is ignored when fork is 
+		disabled. jvm Command used to invoke the JVM. This is ignored when fork is 
+		disabled. fork Runs the test in a separate JVM errorproperty The name of 
+		the property to set if there is a Junit error failureproperty The name of 
+		the property to set if there is a Junit failure haltonerror Stops execution 
+		when a test error occurs haltonfailure Stops execution when a failure occurs 
+		printsummary Advices Ant to display simple statistics for each test showoutput 
+		Adivces Ant tosend the output to its logs and formatters tempdir Path to 
+		the temporary file that Ant will use timeout Exits the tests that take longer 
+		to run than this setting (in milliseconds). -->
+	<target name="unittest">
+		<junit haltonfailure="true" printsummary="true">
+			<test name="com.yiibai.UtilsTest" />
+		</junit>
+	</target>
+</project>

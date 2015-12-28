@@ -99,6 +99,7 @@ public class FirstExample {
 			if (rs.wasNull()) {
 				id = 0;
 			}
+			System.out.println(id);
 			rs.close();
 			stmt.close();
 			conn.close();

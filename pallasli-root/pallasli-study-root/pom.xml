@@ -38,5 +38,6 @@
       <module>pallasli-study-cmdorsh</module>
       <module>pallasli-study-mail</module>
       <module>pallasli-study-ftp</module>
+      <module>pallasli-study-htmlunit</module>
   </modules>
 </project>

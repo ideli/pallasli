@@ -29,6 +29,7 @@ public class BasicOperation {
 		this.databaseType = databaseType;
 	}
 
+	@Override
 	public String toString() {
 		return getClass().getName();
 	}
@@ -774,12 +775,14 @@ public class BasicOperation {
 				ResultSet.CONCUR_READ_ONLY, tableName, queryStatement);
 	}
 
+	@SuppressWarnings("unused")
 	private ResultSet queryProcedureToScroll(String sqlStatement,
 			String tableName, String queryStatement) throws CallDbException {
 		return queryProcedure(sqlStatement, ResultSet.TYPE_SCROLL_SENSITIVE,
 				ResultSet.CONCUR_READ_ONLY, tableName, queryStatement);
 	}
 
+	@SuppressWarnings("unused")
 	private List<List<Row>> queryProcedureToMoreList(String sqlStatement)
 			throws CallDbException {
 		ResultSet rs = null;

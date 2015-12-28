@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-variable" default="info">
+	<property file="build.properties" />
+	<property name="src.dir" value="${basedir}/../../../src/main/java" />
+
+	<path id="master-classpath">
+		<fileset dir="/Users/lyt1987/Desktop/study/01_maven/repo/org/apache/ant/">
+			<include name="*/*.jar" />
+		</fileset>
+		<pathelement path="${build.dir}" />
+	</path>
+	<path id="project.class.path">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${bin}" />
+		<pathelement path="${java.class.path}" />
+	</path>
+	
+	<fileset dir="${src}" casesensitive="yes">
+		<include name="**/*.java" />
+		<exclude name="**/*Stub*" />
+	</fileset>
+	<patternset id="java.files.without.stubs">
+		<include name="src/**/*.java" />
+		<exclude name="src/**/*Stub*" />
+	</patternset>
+	<fileset dir="${src}" casesensitive="yes">
+		<patternset refid="java.files.without.stubs" />
+	</fileset>
+	<filelist id="config.files" dir="${webapp.src.folder}">
+		<file name="applicationConfig.xml" />
+		<file name="faces-config.xml" />
+		<file name="web.xml" />
+		<file name="portlet.xml" />
+	</filelist>
+	<target name="info">
+		<echo>
+			<![CDATA[ $ {basedir}]]>----${basedir}</echo>
+	</target>
+</project>

@@ -6,16 +6,17 @@ import java.util.ArrayList;
 import com.pallasli.jdbc.exception.CallDbException;
 
 public class DbFactory {
-	private static final Object AbstractDbInterface = null;
+	// private static final Object abstractDbInterface = null;
 
 	public DbFactory() {
 	}
 
+	@Override
 	public String toString() {
 		return getClass().getName();
 	}
 
-	public AbstractDbInterface getDbInterface(Class objClass,
+	public AbstractDbInterface getDbInterface(Class<?> objClass,
 			String procedureName) throws CallDbException {
 
 		AbstractDbInterface object = null;

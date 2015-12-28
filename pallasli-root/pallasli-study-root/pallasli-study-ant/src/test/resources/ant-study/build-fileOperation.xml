@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-fileOperation" default="deletedir">
+	<target name="mkdir">
+		<mkdir dir="../tmp/test" />
+	</target>
+	<target name="copydir">
+		<copy todir="../tmp/test" preservelastmodified="true">
+			<fileset dir="../../java">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${output.dir}">
+			<fileset dir="${releasenotes.dir}" includes="**/*.txt" />
+			<filterset>
+				<filter token="VERSION" value="${current.version}" />
+			</filterset>
+		</copy>
+	</target>
+	<target name="deletedir">
+		<delete includeemptydirs="true">
+			<fileset dir="../tmp" includes="**/*" />
+		</delete>
+		<delete>
+			<fileset dir="${build.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</delete>
+	</target>
+</project>

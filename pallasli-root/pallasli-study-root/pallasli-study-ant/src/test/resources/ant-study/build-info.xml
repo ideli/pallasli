@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+name The Name of the project. (Optional)
+default	The default target for the build script. A project may contain any number of targets. This attribute specifies which target should be considered as the default. (Mandatory)
+basedir	The base directory (or) the root folder for the project. (Optional)
+-->
+<project name="build-info" default="info">
+	<!--
+		ant.file	The full location of the build file.
+		ant.version	The version of the Apache Ant installation.
+		basedir	The basedir of the build, as specified in the basedir attribute of theproject element.
+		ant.java.version	The version of the JDK that is used by Ant.
+		ant.project.name	The name of the project, as specified in the name atrribute of theproject element
+		ant.project.default-target	The default target of the current project
+		ant.project.invoked-targets	Comma separated list of the targets that were invoked in the current project
+		ant.core.lib	The full location of the ant jar file
+		ant.home	The home directory of Ant installation
+		ant.library.dir	The home directory for Ant library files - typically ANT_HOME/lib folder.
+		-->
+	<target name="info">
+		<echo>
+			<![CDATA[ $ {ant.file}]]>----${ant.file}</echo>
+		<echo>
+			<![CDATA[ $ {ant.version}]]>----${ant.version}</echo>
+		<echo>
+			<![CDATA[ $ {ant.java.version}]]>----${ant.java.version}</echo>
+		<echo>
+			<![CDATA[ $ {ant.project.name}]]>----${ant.project.name}</echo>
+		<echo>
+			<![CDATA[ $ {basedir}]]>----${basedir}</echo>
+		<echo>
+			<![CDATA[ $ {ant.project.default-target}]]>----${ant.project.default-target}</echo>
+		<echo>
+			<![CDATA[ $ {ant.project.invoked-targets}]]>----${ant.project.invoked-targets}</echo>
+		<echo>
+			<![CDATA[ $ {ant.core.lib}]]>----${ant.core.lib}</echo>
+		<echo>
+			<![CDATA[ $ {ant.home}]]>----${ant.home}</echo>
+		<echo>
+			<![CDATA[ $ {ant.library.dir}]]>----${ant.library.dir}</echo>
+
+	</target>
+
+
+	<target name="usage">
+		<echo message="" />
+		<echo message="${name} build file" />
+		<echo message="-----------------------------------" />
+		<echo message="" />
+		<echo message="Available targets are:" />
+		<echo message="" />
+		<echo message="deploy    --> Deploy application 
+          as directory" />
+		<echo message="deploywar --> Deploy application 
+          as a WAR file" />
+		<echo message="" />
+	</target>
+</project>

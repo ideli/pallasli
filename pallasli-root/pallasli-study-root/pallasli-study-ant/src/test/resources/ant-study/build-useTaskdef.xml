@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-info" default="info">
+
+	<target name="info">
+		<echo>Hello World - Welcome to Apache Ant!</echo>
+	</target>
+</project>

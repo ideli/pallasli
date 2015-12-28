@@ -91,7 +91,7 @@ public class SqlUtils {
 			Map<String, String> otherNmae) {
 		// log.info("[ SqlToo.rowToObj row.colunm num is "+row.getColumnCount()+" obj class is "+obj.getClass()+"]")
 		// ;
-		Class c = obj.getClass();
+		Class<?> c = obj.getClass();
 		Method[] ms = c.getMethods();
 		HashMap<String, Method> setM = new HashMap<String, Method>();
 		for (int i = 0; i < ms.length; i++) {
@@ -105,9 +105,10 @@ public class SqlUtils {
 		Entry<String, Method> te = null;
 		try {
 			for (int i = 0; its.hasNext(); i++) {
+				System.out.println(i);
 				Entry<String, Method> e = its.next();
 				te = e;
-				Class pc = e.getValue().getParameterTypes()[0];
+				Class<?> pc = e.getValue().getParameterTypes()[0];
 				// log.info("++++["+i+"]++++++"+"colunm mane is "+e.getKey()+"\tmethod is "+e.getValue().getName()+"\tparemeter class is "+pc.getName()+"++++++++++")
 				// ;
 				if (pc.getName().equals(String.class.getName())) {

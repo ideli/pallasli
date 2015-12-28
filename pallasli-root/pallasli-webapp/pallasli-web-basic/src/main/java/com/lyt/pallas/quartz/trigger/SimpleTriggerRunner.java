@@ -18,6 +18,7 @@ public class SimpleTriggerRunner {
 		Scheduler scheduler = schedulerFactory.getScheduler();
 
 		long ctime = System.currentTimeMillis();
+		System.out.println(ctime);
 
 		JobDetail jobDetail = new JobDetail("jobDetail-s1",
 				"jobDetailGroup-s1", SimpleQuartzJob.class);

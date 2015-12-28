@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Hello World Project">
+
+	<!-- ============================================================ -->
+	<!-- Tomcat tasks -->
+	<!-- ============================================================ -->
+
+	<path id="catalina-ant-classpath">
+		<!-- We need the Catalina jars for Tomcat -->
+		<!--  * for other app servers - check the docs -->
+		<fileset dir="lib">
+			<include name="catalina-ant.jar" />
+		</fileset>
+	</path>
+	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+		<classpath refid="catalina-ant-classpath" />
+	</taskdef>
+	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
+		<classpath refid="catalina-ant-classpath" />
+	</taskdef>
+	<taskdef name="list" classname="org.apache.catalina.ant.ListTask">
+		<classpath refid="catalina-ant-classpath" />
+	</taskdef>
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+		<classpath refid="catalina-ant-classpath" />
+	</taskdef>
+	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+		<classpath refid="catalina-ant-classpath" />
+	</taskdef>
+
+	<target name="reload" description="Reload application in Tomcat">
+		<reload url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${name}" />
+	</target>
+
+
+
+</project>

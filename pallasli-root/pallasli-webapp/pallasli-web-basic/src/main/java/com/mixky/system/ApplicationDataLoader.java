@@ -13,6 +13,7 @@ public class ApplicationDataLoader {
 	protected ApplicationDataLoader() {
 		logger = LogFactory.getLog(this.getClass());
 		applicationLoaded = false;
+		logger.info("init");
 	}
 
 	public static ApplicationDataLoader instance() {

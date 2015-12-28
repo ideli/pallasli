@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-war" default="build">
+
+	<!--
+	webxml	Path to the web.xml file
+lib	A grouping to specify what goes into the WEB-INFlib folder.
+classes	A grouping to specify what goes into the WEB-INFclasses folder.
+metainf	Specifies the instructions for generating the MANIFEST.MF file.
+	--> 
+	<target name="build">
+		<war destfile="fax.war" webxml="${web.dir}/web.xml">
+			<fileset dir="${web.dir}/WebContent">
+				<include name="**/*.*" />
+			</fileset>
+			<lib dir="thirdpartyjars">
+				<exclude name="portlet.jar" />
+			</lib>
+			<classes dir="${build.dir}/web" />
+		</war>
+	</target>
+</project>

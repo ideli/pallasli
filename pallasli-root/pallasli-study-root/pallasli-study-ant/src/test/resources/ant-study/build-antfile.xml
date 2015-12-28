@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-antfiel" default="ant-build-info">
+	<target name="ant-build-info">
+		<ant antfile="build-info.xml" target="info"></ant>
+	</target>
+</project>

@@ -24,5 +24,6 @@
   	<module>pallasli-webapp-report</module>
   	<module>pallasli-webapp-reporttest</module>
   	<module>pallasli-webapp-servermanager</module>
+  	<module>pallasli-webapp-testlog</module>
   </modules>
 </project>

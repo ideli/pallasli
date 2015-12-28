@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import com.pallas.sys.dispatch.action.ContextVariablesContainer;
 
 public class FrameWindowAction implements Controller {
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) throws Exception {

@@ -13,6 +13,7 @@ import com.pallas.sys.dispatch.action.ContextVariablesContainer;
 
 public class FramePageAction implements Controller {
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) throws Exception {

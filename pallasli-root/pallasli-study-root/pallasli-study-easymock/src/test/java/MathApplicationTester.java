@@ -29,7 +29,7 @@ public class MathApplicationTester {
 		mathApplication.setCalculatorService(calcService);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = AssertionError.class)
 	public void testAdd() {
 		// EasyMock.expect(calcService.add(10.0, 20.0)).andReturn(30.00);
 		// add the behavior to throw exception

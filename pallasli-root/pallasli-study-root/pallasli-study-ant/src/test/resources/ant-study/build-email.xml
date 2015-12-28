@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-mail" default="send-email">
+
+	<target name="send-email" description="Notify testing team of the new build">
+		<!-- Read build information from the build.info file. -->
+		<property file="${destination.dir}/build.info" />
+		<!-- Send a mail to the testing team. -->
+		<mail mailhost="${smtp.hostname}" mailport="${smtp.hostport}"
+			subject="Test build #${build.number}" from="${smtp.from}" tolist="${smtp.tolist}">
+			<message>The build #${build.number} is now available for testing.
+			</message>
+		</mail>
+	</target>
+</project>

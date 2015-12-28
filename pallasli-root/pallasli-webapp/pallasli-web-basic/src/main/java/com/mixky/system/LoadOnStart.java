@@ -2,7 +2,6 @@ package com.mixky.system;
 
 import javax.servlet.ServletException;
 
-@SuppressWarnings("serial")
 public class LoadOnStart {
 	public void init() throws ServletException {
 		// 初始化系统上下文环境

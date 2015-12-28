@@ -20,7 +20,7 @@ public class CronTriggerRunner {
 		Scheduler scheduler = schedulerFactory.getScheduler();
 
 		long ctime = System.currentTimeMillis();
-
+		System.out.println(ctime);
 		JobDetail jobDetail = new JobDetail("jobDetail2", "jobDetailGroup2",
 				SimpleQuartzJob.class);
 

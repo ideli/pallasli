@@ -6,6 +6,7 @@ import com.pallasli.jdbc.exception.CallDbException;
 
 public class DbSingleton {
 
+	@Override
 	public String toString() {
 		return getClass().getName();
 	}
@@ -32,6 +33,7 @@ public class DbSingleton {
 	}
 
 	public BasicOperation getGjjDb() throws CallDbException {
+		xlog.info("dada");
 		if (this.ds == null) {
 			throw new CallDbException("�������ݿ������������Ϣδ����!");
 		} else {
@@ -77,9 +79,9 @@ public class DbSingleton {
 
 	private DataSource ds = null;
 	private int databaseType = BasicOperation.DB_TYPE_SYBASE;
-	private final DataSource tempDs = null;
-	private final int tempDbType = BasicOperation.DB_TYPE_SYBASE;
-
+	// private final DataSource tempDs = null;
+	// private final int tempDbType = BasicOperation.DB_TYPE_SYBASE;
+	//
 	private static org.apache.log4j.Logger xlog = null;
 	private static int initCount = 0;
 

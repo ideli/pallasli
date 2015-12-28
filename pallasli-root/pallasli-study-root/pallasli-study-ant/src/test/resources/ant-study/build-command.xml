@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-info" default="runFrame">
+
+
+	<!--执行java代码-->
+	<target name="notify">
+		<java fork="true" failonerror="yes" classname="NotifyAdministrator">
+			<arg line="admin@test.com" />
+		</java>
+	</target>
+	<target name="runFrame" description="-->runFrame"  >
+			<echo message="runFrame"/>
+			<exec executable="cmd.exe" dir="${service.dir}">
+				<arg line="/c start run.bat"/>			
+			</exec>
+		</target>
+</project>

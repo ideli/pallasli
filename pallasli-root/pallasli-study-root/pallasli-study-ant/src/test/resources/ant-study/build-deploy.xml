@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-deploy" default="deploy">
+	<property name="deploy.path" value="../tmp/deploy"></property>
+	<target name="deploy" description="Deploy application">
+			<copy todir="${deploy.path}" preservelastmodified="true">
+				<fileset dir="../tmp/dist">
+					<include name="**/*.*" />
+				</fileset>
+			</copy>
+		</target>
+
+
+	<target name="deploywar"  description="Deploy application as a WAR file">
+		<war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+			<fileset dir="${web.dir}">
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir=".">
+				<include name="*.war" />
+			</fileset>
+		</copy>
+	</target>
+</project>

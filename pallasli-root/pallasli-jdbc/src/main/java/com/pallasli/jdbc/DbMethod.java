@@ -57,7 +57,7 @@ public class DbMethod {
 				+ (obj == null ? "null" : obj.getClass().getName()) + ", "
 				+ ")");
 		/***************** begindbtrace ***********************/
-		boolean bDbtrace = Constant.bDbtrace;
+		// boolean bDbtrace = Constant.bDbtrace;
 
 		/************************** enddbtrace ********************/
 		DbFactory df = dbSingleton.getDbFactory();

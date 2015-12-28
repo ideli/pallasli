@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-foreach" default="for-each">
+
+	<property name="ant-contrib.jar" location="lib/ant-contrib-1.0b3.jar" />  
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${ant-contrib.jar}" /> 
+	<property name="list.data" value="first,second" />
+	<target name="info">
+		<echo>print foreach data ---${foreach.data}</echo>
+	</target>
+	<target name="for-each">
+		<foreach list="${list.data}"  target="info" param="foreach.data" delimiter=",">
+		</foreach>
+	</target>
+</project>

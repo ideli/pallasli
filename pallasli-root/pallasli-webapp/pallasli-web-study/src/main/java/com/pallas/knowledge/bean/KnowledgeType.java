@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /** @author Hibernate CodeGenerator */
+@SuppressWarnings("serial")
 public class KnowledgeType implements Serializable {
 
 	/** identifier field */

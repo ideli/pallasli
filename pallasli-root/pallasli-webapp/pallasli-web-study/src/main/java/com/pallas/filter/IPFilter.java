@@ -15,6 +15,7 @@ public class IPFilter implements Filter// 实现Filter接口
 	protected FilterConfig config;
 	protected String rejectedlP;
 
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.config = filterConfig;// 从Web务器获取过滤器配置对象
 		rejectedlP = config.getInitParameter("RejectedlP");
@@ -22,6 +23,7 @@ public class IPFilter implements Filter// 实现Filter接口
 
 	}
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("");
@@ -29,6 +31,9 @@ public class IPFilter implements Filter// 实现Filter接口
 		int i = remotelP.lastIndexOf(".");
 		int r = rejectedlP.lastIndexOf(".");
 		String relPscope = rejectedlP.substring(0, r);// 过滤lP段
+		dispatcher.forward(request, response);
+		System.out.println(i);
+		System.out.println(relPscope);
 		// if (relPscope.equals(remotelP.substring(0, i))) {
 		// dispatcher.forward(request, response);// 重定向到rejectedError.jsp页面
 		// return;// 阻塞,直接返Web回客户端

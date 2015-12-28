@@ -20,12 +20,12 @@ public class DesignerCssFileBuilder {
 	/**
 	 * 基路径.
 	 */
-	private String basePath;
+	// private String basePath;
 
 	/**
 	 * CSS名称中路径部分用于定位的基路径.
 	 */
-	private String cssClassBasePath;
+	// private String cssClassBasePath;
 
 	private String template;
 
@@ -38,6 +38,7 @@ public class DesignerCssFileBuilder {
 		try {
 			InputStream is = url.openStream();
 			// template = FileTool.readFromStream(is);
+			is.close();
 		} catch (IOException e) {
 			LOG.error("读取CSS模板定义文件时出错!", e);
 			throw new RuntimeException(e);
@@ -76,6 +77,7 @@ public class DesignerCssFileBuilder {
 	 * @param cssFileName
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	private void buildIconCss(File dir, String cssFileName) throws IOException {
 		List<File> files = computeAllImageFiles(dir);
 
