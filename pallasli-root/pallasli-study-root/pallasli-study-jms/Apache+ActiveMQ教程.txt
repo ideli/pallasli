@@ -1,119 +1,119 @@
-Apache ActiveMQ½Ì³Ì
-Ò»¡¢ÌØĞÔ¼°ÓÅÊÆ
-1¡¢ÊµÏÖJMS1.1¹æ·¶£¬Ö§³ÖJ2EE1.4ÒÔÉÏ
-2¡¢¿ÉÔËĞĞÓÚÈÎºÎjvmºÍ´ó²¿·ÖwebÈİÆ÷£¨ActiveMQ works great in any JVM£©
-3¡¢Ö§³Ö¶àÖÖÓïÑÔ¿Í»§¶Ë£¨java, C, C++, AJAX, ACTIONSCRIPTµÈµÈ£©
-4¡¢Ö§³Ö¶àÖÖĞ­Òé£¨stomp£¬openwire£¬REST£©
-5¡¢Á¼ºÃµÄspringÖ§³Ö£¨ActiveMQ has great Spring Support£©
-6¡¢ËÙ¶ÈºÜ¿ì£¬JBossMQµÄÊ®±¶£¨ActiveMQ is very fast; often 10x faster than JBossMQ.£©
-7¡¢ÓëOpenJMS¡¢JbossMQµÈ¿ªÔ´jms providerÏà±È£¬ActiveMQÓĞApacheµÄÖ§³Ö£¬³ÖĞø·¢Õ¹µÄÓÅÊÆÃ÷ÏÔ¡£
-¶ş¡¢ÏÂÔØ²¿Êğ
-1¡¢ÏÂÔØ  http://activemq.apache.org/activemq-510-release.html£¬ÏÂÔØ5.1.0 Windows Distribution°æ±¾
-2¡¢°²×°  Ö±½Ó½âÑ¹ÖÁÈÎÒâÄ¿Â¼£¨Èç£ºd:\ apache-activemq-5.1.0£©
-3¡¢Æô¶¯ActiveMQ·şÎñÆ÷
-·½·¨1£ºÖ±½ÓÔËĞĞbin\activemq.bat
-·½·¨2£¨ÔÚJVMÖĞÇ¶Ì×Æô¶¯£©£º
+Apache ActiveMQæ•™ç¨‹
+ä¸€ã€ç‰¹æ€§åŠä¼˜åŠ¿
+1ã€å®ç°JMS1.1è§„èŒƒï¼Œæ”¯æŒJ2EE1.4ä»¥ä¸Š
+2ã€å¯è¿è¡Œäºä»»ä½•jvmå’Œå¤§éƒ¨åˆ†webå®¹å™¨ï¼ˆActiveMQ works great in any JVMï¼‰
+3ã€æ”¯æŒå¤šç§è¯­è¨€å®¢æˆ·ç«¯ï¼ˆjava, C, C++, AJAX, ACTIONSCRIPTç­‰ç­‰ï¼‰
+4ã€æ”¯æŒå¤šç§åè®®ï¼ˆstompï¼Œopenwireï¼ŒRESTï¼‰
+5ã€è‰¯å¥½çš„springæ”¯æŒï¼ˆActiveMQ has great Spring Supportï¼‰
+6ã€é€Ÿåº¦å¾ˆå¿«ï¼ŒJBossMQçš„åå€ï¼ˆActiveMQ is very fast; often 10x faster than JBossMQ.ï¼‰
+7ã€ä¸OpenJMSã€JbossMQç­‰å¼€æºjms providerç›¸æ¯”ï¼ŒActiveMQæœ‰Apacheçš„æ”¯æŒï¼ŒæŒç»­å‘å±•çš„ä¼˜åŠ¿æ˜æ˜¾ã€‚
+äºŒã€ä¸‹è½½éƒ¨ç½²
+1ã€ä¸‹è½½  http://activemq.apache.org/activemq-510-release.htmlï¼Œä¸‹è½½5.1.0 Windows Distributionç‰ˆæœ¬
+2ã€å®‰è£…  ç›´æ¥è§£å‹è‡³ä»»æ„ç›®å½•ï¼ˆå¦‚ï¼šd:\ apache-activemq-5.1.0ï¼‰
+3ã€å¯åŠ¨ActiveMQæœåŠ¡å™¨
+æ–¹æ³•1ï¼šç›´æ¥è¿è¡Œbin\activemq.bat
+æ–¹æ³•2ï¼ˆåœ¨JVMä¸­åµŒå¥—å¯åŠ¨ï¼‰ï¼š
 cd example
 ant embedBroker
-4¡¢ActiveMQÏûÏ¢¹ÜÀíºóÌ¨ÏµÍ³£º http://localhost:8161/admin
-Èı¡¢ÔËĞĞ¸½´øµÄÊ¾Àı³ÌĞò
-1¡¢QueueÏûÏ¢Ê¾Àı£º
-* Æô¶¯QueueÏûÏ¢Ïû·ÑÕß
+4ã€ActiveMQæ¶ˆæ¯ç®¡ç†åå°ç³»ç»Ÿï¼š http://localhost:8161/admin
+ä¸‰ã€è¿è¡Œé™„å¸¦çš„ç¤ºä¾‹ç¨‹åº
+1ã€Queueæ¶ˆæ¯ç¤ºä¾‹ï¼š
+* å¯åŠ¨Queueæ¶ˆæ¯æ¶ˆè´¹è€…
 cd example
 ant consumer
-* Æô¶¯QueueÏûÏ¢Éú²úÕß
+* å¯åŠ¨Queueæ¶ˆæ¯ç”Ÿäº§è€…
 cd example
 ant producer
-¼òÒªËµÃ÷£ºÉú²úÕß£¨producer£©·¢ÏûÏ¢£¬Ïû·ÑÕß£¨consumer£©½ÓÏûÏ¢£¬·¢ËÍ/½ÓÊÕ2000¸öÏûÏ¢ºó×Ô¶¯¹Ø±Õ
-2¡¢TopicÏûÏ¢Ê¾Àı£º
-* Æô¶¯TopicÏûÏ¢Ïû·ÑÕß
+ç®€è¦è¯´æ˜ï¼šç”Ÿäº§è€…ï¼ˆproducerï¼‰å‘æ¶ˆæ¯ï¼Œæ¶ˆè´¹è€…ï¼ˆconsumerï¼‰æ¥æ¶ˆæ¯ï¼Œå‘é€/æ¥æ”¶2000ä¸ªæ¶ˆæ¯åè‡ªåŠ¨å…³é—­
+2ã€Topicæ¶ˆæ¯ç¤ºä¾‹ï¼š
+* å¯åŠ¨Topicæ¶ˆæ¯æ¶ˆè´¹è€…
 cd example
 ant topic-listener
-* Æô¶¯TopicÏûÏ¢Éú²úÕß
+* å¯åŠ¨Topicæ¶ˆæ¯ç”Ÿäº§è€…
 cd example
 ant topic-publisher
-¼òÒªËµÃ÷£ºÖØ¸´10ÂÖ£¬publisherÃ¿ÂÖ·¢ËÍ2000¸öÏûÏ¢£¬²¢µÈ´ı»ñÈ¡listenerµÄ´¦Àí½á¹û±¨¸æ£¬È»ºó½øÈëÏÂÒ»ÂÖ·¢ËÍ£¬×îºóÍ³¼ÆÈ«¾Ö·¢ËÍÊ±¼ä¡£
-ËÄ¡¢QueueÓëTopicµÄ±È½Ï
-1¡¢JMS QueueÖ´ĞĞload balancerÓïÒå£º
-Ò»ÌõÏûÏ¢½öÄÜ±»Ò»¸öconsumerÊÕµ½¡£Èç¹ûÔÚmessage·¢ËÍµÄÊ±ºòÃ»ÓĞ¿ÉÓÃµÄconsumer£¬ÄÇÃ´Ëü½«±»±£´æÒ»Ö±µ½ÄÜ´¦Àí¸ÃmessageµÄconsumer¿ÉÓÃ¡£Èç¹ûÒ»¸öconsumerÊÕµ½Ò»ÌõmessageºóÈ´²»ÏìÓ¦Ëü£¬ÄÇÃ´ÕâÌõÏûÏ¢½«±»×ªµ½ÁíÒ»¸öconsumerÄÇ¶ù¡£Ò»¸öQueue¿ÉÒÔÓĞºÜ¶àconsumer£¬²¢ÇÒÔÚ¶à¸ö¿ÉÓÃµÄconsumerÖĞ¸ºÔØ¾ùºâ¡£
-2¡¢TopicÊµÏÖpublishºÍsubscribeÓïÒå£º
-Ò»ÌõÏûÏ¢±»publishÊ±£¬Ëü½«·¢µ½ËùÓĞ¸ĞĞËÈ¤µÄ¶©ÔÄÕß£¬ËùÒÔÁãµ½¶à¸ösubscriber½«½ÓÊÕµ½ÏûÏ¢µÄÒ»¸ö¿½±´¡£µ«ÊÇÔÚÏûÏ¢´úÀí½ÓÊÕµ½ÏûÏ¢Ê±£¬Ö»ÓĞ¼¤»î¶©ÔÄµÄsubscriberÄÜ¹»»ñµÃÏûÏ¢µÄÒ»¸ö¿½±´¡£
-3¡¢·Ö±ğ¶ÔÓ¦Á½ÖÖÏûÏ¢Ä£Ê½£º
-Point-to-Point (µã¶Ôµã),Publisher/Subscriber Model (·¢²¼/¶©ÔÄÕß)
-ÆäÖĞÔÚPublicher/Subscriber Ä£Ê½ÏÂÓÖÓĞNondurable subscription£¨·Ç³Ö¾Ã¶©ÔÄ£©ºÍdurable subscription (³Ö¾Ã»¯¶©ÔÄ)2ÖÖÏûÏ¢´¦Àí·½Ê½¡£
-Îå¡¢Point-to-Point (µã¶Ôµã)ÏûÏ¢Ä£Ê½¿ª·¢Á÷³Ì
-1¡¢Éú²úÕß£¨producer£©¿ª·¢Á÷³Ì£¨ProducerTool.java£©£º
-1.1 ´´½¨Connection£º
-¸ù¾İurl£¬userºÍpassword´´½¨Ò»¸öjms Connection¡£
-1.2 ´´½¨Session£º
-ÔÚconnectionµÄ»ù´¡ÉÏ´´½¨Ò»¸ösession£¬Í¬Ê±ÉèÖÃÊÇ·ñÖ§³ÖÊÂÎñºÍACKNOWLEDGE±êÊ¶¡£
-1.3 ´´½¨Destination¶ÔÏó£º
-ĞèÖ¸¶¨Æä¶ÔÓ¦µÄÖ÷Ìâ£¨subject£©Ãû³Æ£¬producerºÍconsumer½«¸ù¾İsubjectÀ´·¢ËÍ/½ÓÊÕ¶ÔÓ¦µÄÏûÏ¢¡£
-1.4 ´´½¨MessageProducer£º
-¸ù¾İDestination´´½¨MessageProducer¶ÔÏó£¬Í¬Ê±ÉèÖÃÆä³Ö¾ÃÄ£Ê½¡£
-1.5 ·¢ËÍÏûÏ¢µ½¶ÓÁĞ£¨Queue£©£º
-·â×°TextMessageÏûÏ¢£¬Ê¹ÓÃMessageProducerµÄsend·½·¨½«ÏûÏ¢·¢ËÍ³öÈ¥¡£
-2¡¢Ïû·ÑÕß£¨consumer£©¿ª·¢Á÷³Ì£¨ConsumerTool.java£©£º
-2.1 ÊµÏÖMessageListener½Ó¿Ú£º
-Ïû·ÑÕßÀà±ØĞëÊµÏÖMessageListener½Ó¿Ú£¬È»ºóÔÚonMessage()·½·¨ÖĞ¼àÌıÏûÏ¢µÄµ½´ï²¢´¦Àí¡£
-2.2 ´´½¨Connection£º
-¸ù¾İurl£¬userºÍpassword´´½¨Ò»¸öjms Connection£¬Èç¹ûÊÇdurableÄ£Ê½£¬»¹ĞèÒª¸øconnectionÉèÖÃÒ»¸öclientId¡£
-2.3 ´´½¨SessionºÍDestination£º
-ÓëProducerTool.javaÖĞµÄÁ÷³ÌÀàËÆ£¬²»ÔÙ×¸Êö¡£
-2.4´´½¨replyProducer¡¾¿ÉÑ¡¡¿£º
-¿ÉÒÔÓÃÀ´½«ÏûÏ¢´¦Àí½á¹û·¢ËÍ¸øproducer¡£
-2.5 ´´½¨MessageConsumer£º
-¸ù¾İDestination´´½¨MessageConsumer¶ÔÏó¡£
-2.6 Ïû·Ñmessage£º
-ÔÚonMessage()·½·¨ÖĞ½ÓÊÕproducer·¢ËÍ¹ıÀ´µÄÏûÏ¢½øĞĞ´¦Àí£¬²¢¿ÉÒÔÍ¨¹ıreplyProducer·´À¡ĞÅÏ¢¸øproducer
+ç®€è¦è¯´æ˜ï¼šé‡å¤10è½®ï¼Œpublisheræ¯è½®å‘é€2000ä¸ªæ¶ˆæ¯ï¼Œå¹¶ç­‰å¾…è·å–listenerçš„å¤„ç†ç»“æœæŠ¥å‘Šï¼Œç„¶åè¿›å…¥ä¸‹ä¸€è½®å‘é€ï¼Œæœ€åç»Ÿè®¡å…¨å±€å‘é€æ—¶é—´ã€‚
+å››ã€Queueä¸Topicçš„æ¯”è¾ƒ
+1ã€JMS Queueæ‰§è¡Œload balancerè¯­ä¹‰ï¼š
+ä¸€æ¡æ¶ˆæ¯ä»…èƒ½è¢«ä¸€ä¸ªconsumeræ”¶åˆ°ã€‚å¦‚æœåœ¨messageå‘é€çš„æ—¶å€™æ²¡æœ‰å¯ç”¨çš„consumerï¼Œé‚£ä¹ˆå®ƒå°†è¢«ä¿å­˜ä¸€ç›´åˆ°èƒ½å¤„ç†è¯¥messageçš„consumerå¯ç”¨ã€‚å¦‚æœä¸€ä¸ªconsumeræ”¶åˆ°ä¸€æ¡messageåå´ä¸å“åº”å®ƒï¼Œé‚£ä¹ˆè¿™æ¡æ¶ˆæ¯å°†è¢«è½¬åˆ°å¦ä¸€ä¸ªconsumeré‚£å„¿ã€‚ä¸€ä¸ªQueueå¯ä»¥æœ‰å¾ˆå¤šconsumerï¼Œå¹¶ä¸”åœ¨å¤šä¸ªå¯ç”¨çš„consumerä¸­è´Ÿè½½å‡è¡¡ã€‚
+2ã€Topicå®ç°publishå’Œsubscribeè¯­ä¹‰ï¼š
+ä¸€æ¡æ¶ˆæ¯è¢«publishæ—¶ï¼Œå®ƒå°†å‘åˆ°æ‰€æœ‰æ„Ÿå…´è¶£çš„è®¢é˜…è€…ï¼Œæ‰€ä»¥é›¶åˆ°å¤šä¸ªsubscriberå°†æ¥æ”¶åˆ°æ¶ˆæ¯çš„ä¸€ä¸ªæ‹·è´ã€‚ä½†æ˜¯åœ¨æ¶ˆæ¯ä»£ç†æ¥æ”¶åˆ°æ¶ˆæ¯æ—¶ï¼Œåªæœ‰æ¿€æ´»è®¢é˜…çš„subscriberèƒ½å¤Ÿè·å¾—æ¶ˆæ¯çš„ä¸€ä¸ªæ‹·è´ã€‚
+3ã€åˆ†åˆ«å¯¹åº”ä¸¤ç§æ¶ˆæ¯æ¨¡å¼ï¼š
+Point-to-Point (ç‚¹å¯¹ç‚¹),Publisher/Subscriber Model (å‘å¸ƒ/è®¢é˜…è€…)
+å…¶ä¸­åœ¨Publicher/Subscriber æ¨¡å¼ä¸‹åˆæœ‰Nondurable subscriptionï¼ˆéæŒä¹…è®¢é˜…ï¼‰å’Œdurable subscription (æŒä¹…åŒ–è®¢é˜…)2ç§æ¶ˆæ¯å¤„ç†æ–¹å¼ã€‚
+äº”ã€Point-to-Point (ç‚¹å¯¹ç‚¹)æ¶ˆæ¯æ¨¡å¼å¼€å‘æµç¨‹
+1ã€ç”Ÿäº§è€…ï¼ˆproducerï¼‰å¼€å‘æµç¨‹ï¼ˆProducerTool.javaï¼‰ï¼š
+1.1 åˆ›å»ºConnectionï¼š
+æ ¹æ®urlï¼Œuserå’Œpasswordåˆ›å»ºä¸€ä¸ªjms Connectionã€‚
+1.2 åˆ›å»ºSessionï¼š
+åœ¨connectionçš„åŸºç¡€ä¸Šåˆ›å»ºä¸€ä¸ªsessionï¼ŒåŒæ—¶è®¾ç½®æ˜¯å¦æ”¯æŒäº‹åŠ¡å’ŒACKNOWLEDGEæ ‡è¯†ã€‚
+1.3 åˆ›å»ºDestinationå¯¹è±¡ï¼š
+éœ€æŒ‡å®šå…¶å¯¹åº”çš„ä¸»é¢˜ï¼ˆsubjectï¼‰åç§°ï¼Œproducerå’Œconsumerå°†æ ¹æ®subjectæ¥å‘é€/æ¥æ”¶å¯¹åº”çš„æ¶ˆæ¯ã€‚
+1.4 åˆ›å»ºMessageProducerï¼š
+æ ¹æ®Destinationåˆ›å»ºMessageProducerå¯¹è±¡ï¼ŒåŒæ—¶è®¾ç½®å…¶æŒä¹…æ¨¡å¼ã€‚
+1.5 å‘é€æ¶ˆæ¯åˆ°é˜Ÿåˆ—ï¼ˆQueueï¼‰ï¼š
+å°è£…TextMessageæ¶ˆæ¯ï¼Œä½¿ç”¨MessageProducerçš„sendæ–¹æ³•å°†æ¶ˆæ¯å‘é€å‡ºå»ã€‚
+2ã€æ¶ˆè´¹è€…ï¼ˆconsumerï¼‰å¼€å‘æµç¨‹ï¼ˆConsumerTool.javaï¼‰ï¼š
+2.1 å®ç°MessageListeneræ¥å£ï¼š
+æ¶ˆè´¹è€…ç±»å¿…é¡»å®ç°MessageListeneræ¥å£ï¼Œç„¶ååœ¨onMessage()æ–¹æ³•ä¸­ç›‘å¬æ¶ˆæ¯çš„åˆ°è¾¾å¹¶å¤„ç†ã€‚
+2.2 åˆ›å»ºConnectionï¼š
+æ ¹æ®urlï¼Œuserå’Œpasswordåˆ›å»ºä¸€ä¸ªjms Connectionï¼Œå¦‚æœæ˜¯durableæ¨¡å¼ï¼Œè¿˜éœ€è¦ç»™connectionè®¾ç½®ä¸€ä¸ªclientIdã€‚
+2.3 åˆ›å»ºSessionå’ŒDestinationï¼š
+ä¸ProducerTool.javaä¸­çš„æµç¨‹ç±»ä¼¼ï¼Œä¸å†èµ˜è¿°ã€‚
+2.4åˆ›å»ºreplyProducerã€å¯é€‰ã€‘ï¼š
+å¯ä»¥ç”¨æ¥å°†æ¶ˆæ¯å¤„ç†ç»“æœå‘é€ç»™producerã€‚
+2.5 åˆ›å»ºMessageConsumerï¼š
+æ ¹æ®Destinationåˆ›å»ºMessageConsumerå¯¹è±¡ã€‚
+2.6 æ¶ˆè´¹messageï¼š
+åœ¨onMessage()æ–¹æ³•ä¸­æ¥æ”¶producerå‘é€è¿‡æ¥çš„æ¶ˆæ¯è¿›è¡Œå¤„ç†ï¼Œå¹¶å¯ä»¥é€šè¿‡replyProduceråé¦ˆä¿¡æ¯ç»™producer
 if (message.getJMSReplyTo() != null) {
 replyProducer.send(message.getJMSReplyTo(),
 session.createTextMessage("Reply: " + message.getJMSMessageID()));
 }
-Áù¡¢Publisher/Subscriber(·¢²¼/¶©ÔÄÕß)ÏûÏ¢Ä£Ê½¿ª·¢Á÷³Ì
-1¡¢¶©ÔÄÕß£¨Subscriber£©¿ª·¢Á÷³Ì£¨TopicListener.java£©£º
-1.1 ÊµÏÖMessageListener½Ó¿Ú£º
-ÔÚonMessage()·½·¨ÖĞ¼àÌı·¢²¼Õß·¢³öµÄÏûÏ¢¶ÓÁĞ£¬²¢×öÏàÓ¦´¦Àí¡£
-1.2 ´´½¨Connection£º
-¸ù¾İurl£¬userºÍpassword´´½¨Ò»¸öjms Connection¡£
-1.3 ´´½¨Session£º
-ÔÚconnectionµÄ»ù´¡ÉÏ´´½¨Ò»¸ösession£¬Í¬Ê±ÉèÖÃÊÇ·ñÖ§³ÖÊÂÎñºÍACKNOWLEDGE±êÊ¶¡£
-1.4 ´´½¨Topic£º
-´´½¨2¸öTopic£¬ topictest.messagesÓÃÓÚ½ÓÊÕ·¢²¼Õß·¢³öµÄÏûÏ¢£¬topictest.controlÓÃÓÚÏò·¢²¼Õß·¢ËÍÏûÏ¢£¬ÊµÏÖË«·½µÄ½»»¥¡£
-1.5 ´´½¨consumerºÍproducer¶ÔÏó£º
-¸ù¾İtopictest.messages´´½¨consumer£¬¸ù¾İtopictest.control´´½¨producer¡£
-1.6 ½ÓÊÕ´¦ÀíÏûÏ¢£º
-ÔÚonMessage()·½·¨ÖĞ£¬¶ÔÊÕµ½µÄÏûÏ¢½øĞĞ´¦Àí£¬¿ÉÖ±½Ó¼òµ¥ÔÚ±¾µØÏÔÊ¾ÏûÏ¢£¬»òÕß¸ù¾İÏûÏ¢ÄÚÈİ²»Í¬´¦Àí¶ÔÓ¦µÄÒµÎñÂß¼­£¨±ÈÈç£ºÊı¾İ¿â¸üĞÂ¡¢ÎÄ¼ş²Ù×÷µÈµÈ£©£¬²¢ÇÒ¿ÉÒÔÊ¹ÓÃproducer¶ÔÏó½«´¦Àí½á¹û·µ»Ø¸ø·¢²¼Õß¡£
-2¡¢·¢²¼Õß£¨Publisher£©¿ª·¢Á÷³Ì£¨TopicPublisher.java£©£º
-2.1 ÊµÏÖMessageListener½Ó¿Ú£º
-ÔÚonMessage()·½·¨ÖĞ½ÓÊÕ¶©ÔÄÕßµÄ·´À¡ÏûÏ¢¡£
-2.2 ´´½¨Connection£º
-¸ù¾İurl£¬userºÍpassword´´½¨Ò»¸öjms Connection¡£
-2.3 ´´½¨Session£º
-ÔÚconnectionµÄ»ù´¡ÉÏ´´½¨Ò»¸ösession£¬Í¬Ê±ÉèÖÃÊÇ·ñÖ§³ÖÊÂÎñºÍACKNOWLEDGE±êÊ¶¡£
-2.4 ´´½¨Topic£º
-´´½¨2¸öTopic£¬topictest.messagesÓÃÓÚÏò¶©ÔÄÕß·¢²¼ÏûÏ¢£¬topictest.controlÓÃÓÚ½ÓÊÕ¶©ÔÄÕß·´À¡µÄÏûÏ¢¡£Õâ2¸ötopicÓë¶©ÔÄÕß¿ª·¢Á÷³ÌÖĞµÄtopicÊÇÒ»Ò»¶ÔÓ¦µÄ¡£
-2.5 ´´½¨consumerºÍproducer¶ÔÏó£º
-¸ù¾İtopictest.messages´´½¨publisher£»
-¸ù¾İtopictest.control´´½¨consumer£¬Í¬Ê±¼àÌı¶©ÔÄÕß·´À¡µÄÏûÏ¢¡£
-2.6 ¸øËùÓĞ¶©ÔÄÕß·¢ËÍÏûÏ¢£¬²¢½ÓÊÕ·´À¡ÏûÏ¢£º
-Ê¾Àı´úÂëÖĞ£¬Ò»¹²ÖØ¸´10ÂÖ²Ù×÷¡£
-Ã¿ÂÖÏÈÏòËùÓĞ¶©ÔÄÕß·¢ËÍ2000¸öÏûÏ¢£»
-È»ºó¶ÂÈûÏß³Ì£¬¿ªÊ¼µÈ´ı£»
-×îºóÍ¨¹ıonMessage()·½·¨£¬½ÓÊÕµ½¶©ÔÄÕß·´À¡µÄ¡°REPORT¡±ÀàĞÅÏ¢ºó£¬²Åprint·´À¡ĞÅÏ¢²¢½â³ıÏß³Ì¶ÂÈû£¬½øÈëÏÂÒ»ÂÖ¡£
-×¢£º¿ÉÍ¬Ê±ÔËĞĞ¶à¸ö¶©ÔÄÕß²âÊÔ²é¿´´ËÄ£Ê½Ğ§¹û
-Æß¡¢ActiveMQÓëTomcatÕûºÏ
-ËµÃ÷£ºTomcatÊ¾Àı°æ±¾6.0.14£¬ÆäËü°æ±¾ÔÚÅäÖÃÉÏ¿ÉÄÜÓĞÒ»Ğ©²îÒì
-1¡¢×¼±¸jar°ü£º
-½«ActiveMQ libÄ¿Â¼ÏÂµÄ5¸öjar°ü¸´ÖÆµ½Tomcat libÄ¿Â¼ÏÂ£º
+å…­ã€Publisher/Subscriber(å‘å¸ƒ/è®¢é˜…è€…)æ¶ˆæ¯æ¨¡å¼å¼€å‘æµç¨‹
+1ã€è®¢é˜…è€…ï¼ˆSubscriberï¼‰å¼€å‘æµç¨‹ï¼ˆTopicListener.javaï¼‰ï¼š
+1.1 å®ç°MessageListeneræ¥å£ï¼š
+åœ¨onMessage()æ–¹æ³•ä¸­ç›‘å¬å‘å¸ƒè€…å‘å‡ºçš„æ¶ˆæ¯é˜Ÿåˆ—ï¼Œå¹¶åšç›¸åº”å¤„ç†ã€‚
+1.2 åˆ›å»ºConnectionï¼š
+æ ¹æ®urlï¼Œuserå’Œpasswordåˆ›å»ºä¸€ä¸ªjms Connectionã€‚
+1.3 åˆ›å»ºSessionï¼š
+åœ¨connectionçš„åŸºç¡€ä¸Šåˆ›å»ºä¸€ä¸ªsessionï¼ŒåŒæ—¶è®¾ç½®æ˜¯å¦æ”¯æŒäº‹åŠ¡å’ŒACKNOWLEDGEæ ‡è¯†ã€‚
+1.4 åˆ›å»ºTopicï¼š
+åˆ›å»º2ä¸ªTopicï¼Œ topictest.messagesç”¨äºæ¥æ”¶å‘å¸ƒè€…å‘å‡ºçš„æ¶ˆæ¯ï¼Œtopictest.controlç”¨äºå‘å‘å¸ƒè€…å‘é€æ¶ˆæ¯ï¼Œå®ç°åŒæ–¹çš„äº¤äº’ã€‚
+1.5 åˆ›å»ºconsumerå’Œproducerå¯¹è±¡ï¼š
+æ ¹æ®topictest.messagesåˆ›å»ºconsumerï¼Œæ ¹æ®topictest.controlåˆ›å»ºproducerã€‚
+1.6 æ¥æ”¶å¤„ç†æ¶ˆæ¯ï¼š
+åœ¨onMessage()æ–¹æ³•ä¸­ï¼Œå¯¹æ”¶åˆ°çš„æ¶ˆæ¯è¿›è¡Œå¤„ç†ï¼Œå¯ç›´æ¥ç®€å•åœ¨æœ¬åœ°æ˜¾ç¤ºæ¶ˆæ¯ï¼Œæˆ–è€…æ ¹æ®æ¶ˆæ¯å†…å®¹ä¸åŒå¤„ç†å¯¹åº”çš„ä¸šåŠ¡é€»è¾‘ï¼ˆæ¯”å¦‚ï¼šæ•°æ®åº“æ›´æ–°ã€æ–‡ä»¶æ“ä½œç­‰ç­‰ï¼‰ï¼Œå¹¶ä¸”å¯ä»¥ä½¿ç”¨producerå¯¹è±¡å°†å¤„ç†ç»“æœè¿”å›ç»™å‘å¸ƒè€…ã€‚
+2ã€å‘å¸ƒè€…ï¼ˆPublisherï¼‰å¼€å‘æµç¨‹ï¼ˆTopicPublisher.javaï¼‰ï¼š
+2.1 å®ç°MessageListeneræ¥å£ï¼š
+åœ¨onMessage()æ–¹æ³•ä¸­æ¥æ”¶è®¢é˜…è€…çš„åé¦ˆæ¶ˆæ¯ã€‚
+2.2 åˆ›å»ºConnectionï¼š
+æ ¹æ®urlï¼Œuserå’Œpasswordåˆ›å»ºä¸€ä¸ªjms Connectionã€‚
+2.3 åˆ›å»ºSessionï¼š
+åœ¨connectionçš„åŸºç¡€ä¸Šåˆ›å»ºä¸€ä¸ªsessionï¼ŒåŒæ—¶è®¾ç½®æ˜¯å¦æ”¯æŒäº‹åŠ¡å’ŒACKNOWLEDGEæ ‡è¯†ã€‚
+2.4 åˆ›å»ºTopicï¼š
+åˆ›å»º2ä¸ªTopicï¼Œtopictest.messagesç”¨äºå‘è®¢é˜…è€…å‘å¸ƒæ¶ˆæ¯ï¼Œtopictest.controlç”¨äºæ¥æ”¶è®¢é˜…è€…åé¦ˆçš„æ¶ˆæ¯ã€‚è¿™2ä¸ªtopicä¸è®¢é˜…è€…å¼€å‘æµç¨‹ä¸­çš„topicæ˜¯ä¸€ä¸€å¯¹åº”çš„ã€‚
+2.5 åˆ›å»ºconsumerå’Œproducerå¯¹è±¡ï¼š
+æ ¹æ®topictest.messagesåˆ›å»ºpublisherï¼›
+æ ¹æ®topictest.controlåˆ›å»ºconsumerï¼ŒåŒæ—¶ç›‘å¬è®¢é˜…è€…åé¦ˆçš„æ¶ˆæ¯ã€‚
+2.6 ç»™æ‰€æœ‰è®¢é˜…è€…å‘é€æ¶ˆæ¯ï¼Œå¹¶æ¥æ”¶åé¦ˆæ¶ˆæ¯ï¼š
+ç¤ºä¾‹ä»£ç ä¸­ï¼Œä¸€å…±é‡å¤10è½®æ“ä½œã€‚
+æ¯è½®å…ˆå‘æ‰€æœ‰è®¢é˜…è€…å‘é€2000ä¸ªæ¶ˆæ¯ï¼›
+ç„¶åå µå¡çº¿ç¨‹ï¼Œå¼€å§‹ç­‰å¾…ï¼›
+æœ€åé€šè¿‡onMessage()æ–¹æ³•ï¼Œæ¥æ”¶åˆ°è®¢é˜…è€…åé¦ˆçš„â€œREPORTâ€ç±»ä¿¡æ¯åï¼Œæ‰printåé¦ˆä¿¡æ¯å¹¶è§£é™¤çº¿ç¨‹å µå¡ï¼Œè¿›å…¥ä¸‹ä¸€è½®ã€‚
+æ³¨ï¼šå¯åŒæ—¶è¿è¡Œå¤šä¸ªè®¢é˜…è€…æµ‹è¯•æŸ¥çœ‹æ­¤æ¨¡å¼æ•ˆæœ
+ä¸ƒã€ActiveMQä¸Tomcatæ•´åˆ
+è¯´æ˜ï¼šTomcatç¤ºä¾‹ç‰ˆæœ¬6.0.14ï¼Œå…¶å®ƒç‰ˆæœ¬åœ¨é…ç½®ä¸Šå¯èƒ½æœ‰ä¸€äº›å·®å¼‚
+1ã€å‡†å¤‡jaråŒ…ï¼š
+å°†ActiveMQ libç›®å½•ä¸‹çš„5ä¸ªjaråŒ…å¤åˆ¶åˆ°Tomcat libç›®å½•ä¸‹ï¼š
 activemq-core-5.1.0.jar
 activemq-web-5.1.0.jar
 geronimo-j2ee-management_1.0_spec-1.0.jar
 geronimo-jms_1.1_spec-1.1.1.jar
 geronimo-jta_1.0.1B_spec-1.0.1.jar
-2¡¢ĞŞ¸ÄÅäÖÃÎÄ¼ş£º
-2.1 ĞŞ¸ÄTomcatµÄconf/context.xmlÎÄ¼ş£º
-ÔÚ<context></context>½ÚµãÖĞÌí¼ÓÒÔÏÂÄÚÈİ£º
+2ã€ä¿®æ”¹é…ç½®æ–‡ä»¶ï¼š
+2.1 ä¿®æ”¹Tomcatçš„conf/context.xmlæ–‡ä»¶ï¼š
+åœ¨<context></context>èŠ‚ç‚¹ä¸­æ·»åŠ ä»¥ä¸‹å†…å®¹ï¼š
 <Resource
 name="jms/FailoverConnectionFactory"
 auth="Container"
@@ -142,14 +142,14 @@ auth="Container"
 type="org.apache.activemq.command.ActiveMQQueue"
 factory="org.apache.activemq.jndi.JNDIReferenceFactory"
 physicalName="MY.TEST.FOO.QUEUE"/>
-ÅäÖÃËµÃ÷£ºÒÔJNDIµÄ·½Ê½¶¨ÒåÁËActiveMQµÄbrokerÁ¬½Óurl¡¢TopicºÍQueue¡£
-´Ë´¦Ğè¼ÓÒÔ×¢ÒâµÄÊÇListener¶ËµÄborkerURLÊ¹ÓÃÁËfailover´«Êä·½Ê½£º
+é…ç½®è¯´æ˜ï¼šä»¥JNDIçš„æ–¹å¼å®šä¹‰äº†ActiveMQçš„brokerè¿æ¥urlã€Topicå’ŒQueueã€‚
+æ­¤å¤„éœ€åŠ ä»¥æ³¨æ„çš„æ˜¯Listenerç«¯çš„borkerURLä½¿ç”¨äº†failoverä¼ è¾“æ–¹å¼ï¼š
 failover:(tcp://localhost:61616)?initialReconnectDelay=100&amp;maxReconnectAttempts=5
-¿Í»§¶ËÊ¹ÓÃÆÕÍ¨´«Êä·½Ê½£ºtcp://localhost:61616
-failover transportÊÇÒ»ÖÖÖØĞÂÁ¬½Ó»úÖÆ£¬ÓÃÓÚ½¨Á¢¿É¿¿µÄ´«Êä¡£´Ë´¦ÅäÖÃµÄÊÇÒ»µ©ActiveMQ brokerÖĞ¶Ï£¬Listener¶Ë½«Ã¿¸ô100ms×Ô¶¯³¢ÊÔÁ¬½Ó£¬Ö±ÖÁ³É¹¦Á¬½Ó»òÖØÊÔ5´ÎÁ¬½ÓÊ§°ÜÎªÖ¹¡£
-failover»¹Ö§³Ö¶à¸öborkerÍ¬Ê±Ìá¹©·şÎñ£¬ÊµÏÖ¸ºÔØ¾ùºâµÄÍ¬Ê±¿ÉÔö¼ÓÏµÍ³Èİ´íĞÔ£¬¸ñÊ½£º failover:(uri1,...,uriN)?transportOptions
-2.2 ĞÂ½¨webÓ¦ÓÃ(webapps/jms-test)£¬ĞŞ¸ÄWEB-INF/web.xmlÎÄ¼ş£º
-Ôö¼ÓÒ»¸ö×ÔÆô¶¯Servlet£¬¸ÃServletÊµÏÖÁËMessageListener½Ó¿Ú£¬×÷ÎªTopicÏûÏ¢µÄListener¶Ë¡£
+å®¢æˆ·ç«¯ä½¿ç”¨æ™®é€šä¼ è¾“æ–¹å¼ï¼štcp://localhost:61616
+failover transportæ˜¯ä¸€ç§é‡æ–°è¿æ¥æœºåˆ¶ï¼Œç”¨äºå»ºç«‹å¯é çš„ä¼ è¾“ã€‚æ­¤å¤„é…ç½®çš„æ˜¯ä¸€æ—¦ActiveMQ brokerä¸­æ–­ï¼ŒListenerç«¯å°†æ¯éš”100msè‡ªåŠ¨å°è¯•è¿æ¥ï¼Œç›´è‡³æˆåŠŸè¿æ¥æˆ–é‡è¯•5æ¬¡è¿æ¥å¤±è´¥ä¸ºæ­¢ã€‚
+failoverè¿˜æ”¯æŒå¤šä¸ªborkeråŒæ—¶æä¾›æœåŠ¡ï¼Œå®ç°è´Ÿè½½å‡è¡¡çš„åŒæ—¶å¯å¢åŠ ç³»ç»Ÿå®¹é”™æ€§ï¼Œæ ¼å¼ï¼š failover:(uri1,...,uriN)?transportOptions
+2.2 æ–°å»ºwebåº”ç”¨(webapps/jms-test)ï¼Œä¿®æ”¹WEB-INF/web.xmlæ–‡ä»¶ï¼š
+å¢åŠ ä¸€ä¸ªè‡ªå¯åŠ¨Servletï¼Œè¯¥Servletå®ç°äº†MessageListeneræ¥å£ï¼Œä½œä¸ºTopicæ¶ˆæ¯çš„Listenerç«¯ã€‚
 <servlet>
 <servlet-name>jms-listener</servlet-name>
 <servlet-class>
@@ -157,25 +157,25 @@ com.flvcd.servlet.JMSListener
 </servlet-class>
 <load-on-startup>1</load-on-startup>
 </servlet>
-2.3 ĞŞ¸Äactivemq.xmlÎÄ¼ş£º ÎªÁËÖ§³Ö³Ö¾Ã»¯ÏûÏ¢£¬ĞèĞŞ¸ÄActiveMQµÄÅäÖÃÎÄ¼şÈçÏÂ£¬Ê¹ÓÃÄ¬ÈÏµÄAMQ Message Store·½Ê½£¨Ë÷ÒıÎÄ¼ş·½Ê½£©´æ´¢ÏûÏ¢£¬¾İ¹ÙÍø½éÉÜÊÇ¿ìËÙ¡¢ÎÈ¶¨µÄ¡£Êı¾İ¿â´æ´¢·½Ê½¿É²ÎÕÕ¹ÙÍøÏà¹ØÎÄµµ¡£ <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" persistent="true" useShutdownHook="false"> <persistenceAdapter> <amqPersistenceAdapter directory="activemq-data" maxFileLength="32mb"/> </persistenceAdapter> </broker>
-3¡¢Listener¶Ë£¨JMSListener.java£©ÍêÕûÊµÏÖ£º
+2.3 ä¿®æ”¹activemq.xmlæ–‡ä»¶ï¼š ä¸ºäº†æ”¯æŒæŒä¹…åŒ–æ¶ˆæ¯ï¼Œéœ€ä¿®æ”¹ActiveMQçš„é…ç½®æ–‡ä»¶å¦‚ä¸‹ï¼Œä½¿ç”¨é»˜è®¤çš„AMQ Message Storeæ–¹å¼ï¼ˆç´¢å¼•æ–‡ä»¶æ–¹å¼ï¼‰å­˜å‚¨æ¶ˆæ¯ï¼Œæ®å®˜ç½‘ä»‹ç»æ˜¯å¿«é€Ÿã€ç¨³å®šçš„ã€‚æ•°æ®åº“å­˜å‚¨æ–¹å¼å¯å‚ç…§å®˜ç½‘ç›¸å…³æ–‡æ¡£ã€‚ <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" persistent="true" useShutdownHook="false"> <persistenceAdapter> <amqPersistenceAdapter directory="activemq-data" maxFileLength="32mb"/> </persistenceAdapter> </broker>
+3ã€Listenerç«¯ï¼ˆJMSListener.javaï¼‰å®Œæ•´å®ç°ï¼š
 package com.flvcd.servlet;
 import java.io.*; import javax.servlet.*; import javax.servlet.http.*; import javax.naming.*; import javax.jms.*; import org.apache.activemq.ActiveMQConnectionFactory;
 public class JMSListener extends HttpServlet implements MessageListener{
-/** ³õÊ¼»¯jmsÁ¬½Ó£¬´´½¨topic¼àÌıÆ÷ */ public void init(ServletConfig config) throws ServletException{ try { InitialContext initCtx = new InitialContext(); Context envContext = (Context) initCtx.lookup("java:comp/env"); ConnectionFactory connectionFactory = (ConnectionFactory) envContext.lookup("jms/FailoverConnectionFactory"); Connection connection = connectionFactory.createConnection();
+/** åˆå§‹åŒ–jmsè¿æ¥ï¼Œåˆ›å»ºtopicç›‘å¬å™¨ */ public void init(ServletConfig config) throws ServletException{ try { InitialContext initCtx = new InitialContext(); Context envContext = (Context) initCtx.lookup("java:comp/env"); ConnectionFactory connectionFactory = (ConnectionFactory) envContext.lookup("jms/FailoverConnectionFactory"); Connection connection = connectionFactory.createConnection();
 connection.setClientID("MyClient");
 Session jmsSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-//ÆÕÍ¨ÏûÏ¢¶©ÔÄÕß£¬ÎŞ·¨½ÓÊÕ³Ö¾ÃÏûÏ¢ //MessageConsumer consumer = jmsSession.createConsumer((Destination) envContext.lookup("jms/topic/MyTopic")); //»ùÓÚTopic´´½¨³Ö¾ÃµÄÏûÏ¢¶©ÔÄÕß£¬Ç°Ìá£ºConnection±ØĞëÖ¸¶¨Ò»¸öÎ¨Ò»µÄclientId£¬µ±Ç°ÎªMyClient TopicSubscriber consumer = jmsSession.createDurableSubscriber((Topic) envContext.lookup("jms/topic/MyTopic"), "MySub");
+//æ™®é€šæ¶ˆæ¯è®¢é˜…è€…ï¼Œæ— æ³•æ¥æ”¶æŒä¹…æ¶ˆæ¯ //MessageConsumer consumer = jmsSession.createConsumer((Destination) envContext.lookup("jms/topic/MyTopic")); //åŸºäºTopicåˆ›å»ºæŒä¹…çš„æ¶ˆæ¯è®¢é˜…è€…ï¼Œå‰æï¼šConnectionå¿…é¡»æŒ‡å®šä¸€ä¸ªå”¯ä¸€çš„clientIdï¼Œå½“å‰ä¸ºMyClient TopicSubscriber consumer = jmsSession.createDurableSubscriber((Topic) envContext.lookup("jms/topic/MyTopic"), "MySub");
 consumer.setMessageListener(this);
 connection.start(); } catch (NamingException e) { e.printStackTrace(); } catch (JMSException e) { e.printStackTrace(); } }
-/** ½ÓÊÕÏûÏ¢£¬×ö¶ÔÓ¦´¦Àí */ public void onMessage(Message message) {
-if (checkText(message, "RefreshArticleId") != null) { String articleId = checkText(message, "RefreshArticleId"); System.out.println("½ÓÊÕË¢ĞÂÎÄÕÂÏûÏ¢£¬¿ªÊ¼Ë¢ĞÂÎÄÕÂID=" + articleId); } else if (checkText(message, "RefreshThreadId") != null) { String threadId = checkText(message, "RefreshThreadId"); System.out.println("½ÓÊÕË¢ĞÂÂÛÌ³Ìû×ÓÏûÏ¢£¬¿ªÊ¼Ë¢ĞÂÌû×ÓID=" + threadId); } else { System.out.println("½ÓÊÕÆÕÍ¨ÏûÏ¢£¬²»×öÈÎºÎ´¦Àí£¡"); } }
+/** æ¥æ”¶æ¶ˆæ¯ï¼Œåšå¯¹åº”å¤„ç† */ public void onMessage(Message message) {
+if (checkText(message, "RefreshArticleId") != null) { String articleId = checkText(message, "RefreshArticleId"); System.out.println("æ¥æ”¶åˆ·æ–°æ–‡ç« æ¶ˆæ¯ï¼Œå¼€å§‹åˆ·æ–°æ–‡ç« ID=" + articleId); } else if (checkText(message, "RefreshThreadId") != null) { String threadId = checkText(message, "RefreshThreadId"); System.out.println("æ¥æ”¶åˆ·æ–°è®ºå›å¸–å­æ¶ˆæ¯ï¼Œå¼€å§‹åˆ·æ–°å¸–å­ID=" + threadId); } else { System.out.println("æ¥æ”¶æ™®é€šæ¶ˆæ¯ï¼Œä¸åšä»»ä½•å¤„ç†ï¼"); } }
 private static String checkText(Message m, String s) { try { return m.getStringProperty(s); } catch (JMSException e) { e.printStackTrace(System.out); return null; } } }
-±àÒëJMSListener.javaÖÁclassesÄ¿Â¼£º
+ç¼–è¯‘JMSListener.javaè‡³classesç›®å½•ï¼š
 javac -cp .;D:\apache-tomcat-6.0.14\lib\servlet-api.jar;D:\apache-tomcat-6.0.14\lib\geronimo-jms_1.1_spec-1.1.1.jar;D:\apache-tomcat-6.0.14\lib\activemq-core-5.1.0.jar -d . JMSListener.java
-×¢£ºD:\apache-tomcat-6.0.14ÇëÌæ»»³É±¾µØ¶ÔÓ¦Ä¿Â¼¡£
-4¡¢Publisher¶Ë£¨publish.jsp£©ÊµÏÖ£º
-ÔÚjms-testÄ¿Â¼ÏÂĞÂ½¨publish.jspÎÄ¼ş£º
+æ³¨ï¼šD:\apache-tomcat-6.0.14è¯·æ›¿æ¢æˆæœ¬åœ°å¯¹åº”ç›®å½•ã€‚
+4ã€Publisherç«¯ï¼ˆpublish.jspï¼‰å®ç°ï¼š
+åœ¨jms-testç›®å½•ä¸‹æ–°å»ºpublish.jspæ–‡ä»¶ï¼š
 <%@ page language="java" import="javax.jms.*" pageEncoding="GBK"%>
 <%@ page language="java" import="javax.naming.*"%>
 <%@ page language="java" import="org.apache.activemq.ActiveMQConnectionFactory"%>
@@ -187,13 +187,13 @@ ConnectionFactory connectionFactory = (ConnectionFactory) envContext.lookup("jms
 Connection connection = connectionFactory.createConnection();
 Session jmsSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 MessageProducer producer = jmsSession.createProducer((Destination) envContext.lookup("jms/topic/MyTopic"));
-//ÉèÖÃ³Ö¾Ã·½Ê½
+//è®¾ç½®æŒä¹…æ–¹å¼
 producer.setDeliveryMode(DeliveryMode.PERSISTENT);
 Message testMessage = jmsSession.createMessage();
-//·¢²¼Ë¢ĞÂÎÄÕÂÏûÏ¢
+//å‘å¸ƒåˆ·æ–°æ–‡ç« æ¶ˆæ¯
 testMessage.setStringProperty("RefreshArticleId", "2046");
 producer.send(testMessage);
-//·¢²¼Ë¢ĞÂÌû×ÓÏûÏ¢
+//å‘å¸ƒåˆ·æ–°å¸–å­æ¶ˆæ¯
 testMessage.clearProperties();
 testMessage.setStringProperty("RefreshThreadId", "331");
 producer.send(testMessage);
@@ -203,21 +203,21 @@ e.printStackTrace();
 e.printStackTrace();
 }
 %>
-PublisherºÍListnerÖ®¼äÍ¨¹ıMessageµÄsetStringPropertyºÍgetStringProperty·½·¨£¬ÊµÏÖ¶ÔÓ¦µÄÒµÎñÂß¼­¡£
-ÉÏÊöÊ¾Àı´úÂëÖĞ£¬RefreshArticleId´ú±íË¢ĞÂÄ³ÆªÎÄÕÂ£¬RefreshThreadId´ú±íË¢ĞÂÄ³¸öÌû×Ó£¬propertyÖµ±£³Ö¶ÔÓ¦µÄID¡£µ±È»ÓÃ»§¿É¸ù¾İÊµ¼ÊĞèÇóÁé»îµØÊ¹ÓÃ¡£
-5¡¢ÔËĞĞDemo£º
-5.1 Æô¶¯ActiveMQ·şÎñÆ÷
-5.2 Æô¶¯Tomcat·şÎñÆ÷£ºJMSListener½«×Ô¶¯Á¬½ÓActiveMQ broker£¬ÈÕÖ¾ĞÅÏ¢:
+Publisherå’ŒListnerä¹‹é—´é€šè¿‡Messageçš„setStringPropertyå’ŒgetStringPropertyæ–¹æ³•ï¼Œå®ç°å¯¹åº”çš„ä¸šåŠ¡é€»è¾‘ã€‚
+ä¸Šè¿°ç¤ºä¾‹ä»£ç ä¸­ï¼ŒRefreshArticleIdä»£è¡¨åˆ·æ–°æŸç¯‡æ–‡ç« ï¼ŒRefreshThreadIdä»£è¡¨åˆ·æ–°æŸä¸ªå¸–å­ï¼Œpropertyå€¼ä¿æŒå¯¹åº”çš„IDã€‚å½“ç„¶ç”¨æˆ·å¯æ ¹æ®å®é™…éœ€æ±‚çµæ´»åœ°ä½¿ç”¨ã€‚
+5ã€è¿è¡ŒDemoï¼š
+5.1 å¯åŠ¨ActiveMQæœåŠ¡å™¨
+5.2 å¯åŠ¨TomcatæœåŠ¡å™¨ï¼šJMSListenerå°†è‡ªåŠ¨è¿æ¥ActiveMQ brokerï¼Œæ—¥å¿—ä¿¡æ¯:
 Successfully connected to tcp://localhost:61616
-5.3 ·ÃÎÊhttp://localhost:8080/jms-test/publish.jsp
-Tomcat·şÎñÆ÷ÈÕÖ¾½«ÌáÊ¾£º
-½ÓÊÕË¢ĞÂÎÄÕÂÏûÏ¢£¬¿ªÊ¼Ë¢ĞÂÎÄÕÂID=2046
-½ÓÊÕË¢ĞÂÂÛÌ³Ìû×ÓÏûÏ¢£¬¿ªÊ¼Ë¢ĞÂÌû×ÓID=331
-5.4 ·ÃÎÊhttp://localhost:8161/admin/topics.jsp²é¿´MY.TEST.FOOµÄÏûÏ¢ÈÕÖ¾£¬·Ö±ğ·¢ËÍºÍ½ÓÊÕ2Ìõ¡£
-ÖÁ´Ë£¬ÒÑ³É¹¦Íê³ÉActiveMQÓëTomcatµÄ»ù±¾ÕûºÏ£¡
-PublisherºÍListenerÍêÈ«¿ÉÒÔ¶ÀÁ¢²¿Êğµ½²»Í¬µÄWeb·şÎñÆ÷ÉÏ£¬²¢Í¨¹ıActiveMQÀ´½øĞĞÏûÏ¢´«µİ£¬ÊµÏÖÓÃ»§ËùĞèµÄÒµÎñÂß¼­¡£
-²âÊÔ³Ö¾ÃÏûÏ¢µÄ¾ßÌå²½Öè£º
-l Æô¶¯PublisherËùÔÚWeb·şÎñÆ÷
-l Æô¶¯ActiveMQ
-l ·ÃÎÊpublish.jsp·¢ËÍÏûÏ¢£¬´ËÊ±Listener»¹Î´Æô¶¯£¬ÏûÏ¢½«±£´æÔÚActiveMQµÄbin\activemq-dataÄ¿Â¼ÏÂ£¬²é¿´ÈÕÖ¾¿ÉÒÔ¿´µ½·¢ËÍ2Ìõ£¬½ÓÊÕ0Ìõ
-l Æô¶¯ListenerËùÔÚWeb·şÎñÆ÷£¬½«×Ô¶¯½ÓÊÕµ½ActiveMQµÄ³Ö¾ÃÏûÏ¢²¢´¦Àí£¬²é¿´ÈÕÖ¾£º·¢ËÍ2Ìõ£¬½ÓÊÕ2Ìõ£¬±íÃ÷³Ö¾ÃÏûÏ¢Ó¦ÓÃ³É¹¦£¡
+5.3 è®¿é—®http://localhost:8080/jms-test/publish.jsp
+TomcatæœåŠ¡å™¨æ—¥å¿—å°†æç¤ºï¼š
+æ¥æ”¶åˆ·æ–°æ–‡ç« æ¶ˆæ¯ï¼Œå¼€å§‹åˆ·æ–°æ–‡ç« ID=2046
+æ¥æ”¶åˆ·æ–°è®ºå›å¸–å­æ¶ˆæ¯ï¼Œå¼€å§‹åˆ·æ–°å¸–å­ID=331
+5.4 è®¿é—®http://localhost:8161/admin/topics.jspæŸ¥çœ‹MY.TEST.FOOçš„æ¶ˆæ¯æ—¥å¿—ï¼Œåˆ†åˆ«å‘é€å’Œæ¥æ”¶2æ¡ã€‚
+è‡³æ­¤ï¼Œå·²æˆåŠŸå®ŒæˆActiveMQä¸Tomcatçš„åŸºæœ¬æ•´åˆï¼
+Publisherå’ŒListenerå®Œå…¨å¯ä»¥ç‹¬ç«‹éƒ¨ç½²åˆ°ä¸åŒçš„WebæœåŠ¡å™¨ä¸Šï¼Œå¹¶é€šè¿‡ActiveMQæ¥è¿›è¡Œæ¶ˆæ¯ä¼ é€’ï¼Œå®ç°ç”¨æˆ·æ‰€éœ€çš„ä¸šåŠ¡é€»è¾‘ã€‚
+æµ‹è¯•æŒä¹…æ¶ˆæ¯çš„å…·ä½“æ­¥éª¤ï¼š
+l å¯åŠ¨Publisheræ‰€åœ¨WebæœåŠ¡å™¨
+l å¯åŠ¨ActiveMQ
+l è®¿é—®publish.jspå‘é€æ¶ˆæ¯ï¼Œæ­¤æ—¶Listenerè¿˜æœªå¯åŠ¨ï¼Œæ¶ˆæ¯å°†ä¿å­˜åœ¨ActiveMQçš„bin\activemq-dataç›®å½•ä¸‹ï¼ŒæŸ¥çœ‹æ—¥å¿—å¯ä»¥çœ‹åˆ°å‘é€2æ¡ï¼Œæ¥æ”¶0æ¡
+l å¯åŠ¨Listeneræ‰€åœ¨WebæœåŠ¡å™¨ï¼Œå°†è‡ªåŠ¨æ¥æ”¶åˆ°ActiveMQçš„æŒä¹…æ¶ˆæ¯å¹¶å¤„ç†ï¼ŒæŸ¥çœ‹æ—¥å¿—ï¼šå‘é€2æ¡ï¼Œæ¥æ”¶2æ¡ï¼Œè¡¨æ˜æŒä¹…æ¶ˆæ¯åº”ç”¨æˆåŠŸï¼

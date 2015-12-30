@@ -1,0 +1,4 @@
+./activemq setup ~/.activemqrc
+./activemq start
+
+ActiveMQ消息管理后台系统： http://localhost:8161/admin
