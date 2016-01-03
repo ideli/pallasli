@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+ ##报表定义，和基本属性定义
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+ name="WebappReport" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="50" bottomMargin="50" uuid="4bfc4df9-db93-4bd6-a4e7-4335e2618615">
+</jasperReport>
+	
+	##属性定义
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	##样式定义
+	<style name="Sans_Normal" isDefault="true" fontName="DejaVu Sans" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="pageHeader" style="Sans_Bold" forecolor="#FFFFFF" backcolor="#333333"/>
+	##参数定义
+	<parameter name="ReportTitle" class="java.lang.String"/>
+	##字段定义
+	<field name="Id" class="java.lang.Integer"/>
+	##变量定义
+	<variable name="CityNumber" class="java.lang.Integer" resetType="Group" resetGroup="CityGroup" calculation="System">
+		<initialValueExpression><![CDATA[($V{CityNumber} != null)?(Integer.valueOf($V{CityNumber}.intValue() + 1)):(Integer.valueOf(1))]]></initialValueExpression>
+	</variable>
+	<variable name="AllCities" class="java.lang.String" calculation="System"/>
+	
+	##标题栏
+	<title>
+		<band height="60">
+			<frame>
+				<reportElement x="0" y="0" width="515" height="50" backcolor="#E0E0E0" uuid="55936dc7-6e12-42ee-9924-7f43efaf3cb1"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<image scaleImage="Clip" hyperlinkType="Reference">
+					<reportElement x="5" y="5" width="165" height="40" uuid="d8d5c5a9-267f-4992-b824-bf5e4f703441"/>
+					<imageExpression><![CDATA[new File($P{BaseDir}, "../images/jasperreports.png")]]></imageExpression>
+					<hyperlinkReferenceExpression><![CDATA["http://jasperreports.sourceforge.net"]]></hyperlinkReferenceExpression>
+				</image>
+				<textField isBlankWhenNull="true">
+					<reportElement x="175" y="5" width="335" height="40" uuid="bb74781c-1c03-4044-87f6-e43bfaf5a15a"/>
+					<textElement textAlignment="Right">
+						<font size="22"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	##页头
+	<pageHeader>
+		<band height="20">
+		</band>
+	</pageHeader>
+	##分组
+	<group name="CityGroup" minHeightToStartNewPage="60">
+		<groupExpression><![CDATA[$F{City}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement style="Sans_Bold" mode="Opaque" x="0" y="4" width="515" height="15" backcolor="#C0C0C0" uuid="7c1fd700-93f7-4a3f-b7e4-2402cf6375fc"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textFieldExpression><![CDATA["  " + String.valueOf($V{CityNumber}) + ". " + String.valueOf($F{City})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<line>
+					<reportElement x="0" y="-1" width="515" height="1" uuid="c4a39799-0b43-44b3-b3cf-0b92048be18c"/>
+				</line>
+				<staticText>
+					<reportElement style="Sans_Bold" x="400" y="0" width="60" height="15" uuid="d21ce99a-2ec9-48dc-8225-ed9b516e334f"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Count :]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Sans_Bold" x="460" y="0" width="30" height="15" uuid="eabe9064-c151-4576-b3e0-0f0f626af7ee"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{CityGroup_COUNT}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	##内容
+	<detail>
+		<band height="20">
+		</band>
+	</detail>
+	##页脚
+	<pageFooter>
+		<band height="40">
+		</band>
+	</pageFooter>
+	##总结
+	<summary>
+		<band height="80">
+		</band>
+	</summary>
+	
+	
+	
+	$F{Street}   $V{REPORT_COUNT}  
+	
+	##staticText
+			<staticText>
+				<reportElement style="pageHeader" mode="Opaque" x="0" y="5" width="55" height="15" uuid="770b24fc-5f48-42bb-a168-1e80a8c068c2"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+	##line
+			<line>
+				<reportElement positionType="Float" x="0" y="19" width="515" height="1" forecolor="#808080" uuid="bf0e2cb8-18b9-4a3a-9dd4-50a622f9e754"/>
+			</line>
+			<line>
+				<reportElement x="0" y="10" width="515" height="1" uuid="64c25804-0fad-41d2-8ddf-29cd0b7c48c9"/>
+			</line>
+	##textField
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Sans_Italic" x="175" y="20" width="165" height="15" uuid="ee5b4bc5-c7a3-4413-bdc8-591a6f6d6c07"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["There were " + 
+					String.valueOf($V{REPORT_COUNT}) + 
+					" address records on this report from the following cities : \n" +
+					$V{AllCities} + "."]]></textFieldExpression>
+			</textField>

@@ -1,7 +1,11 @@
 package com.pallasli.report.designer.action;
 
+import java.io.File;
+
 import javax.swing.AbstractButton;
 import javax.swing.JFileChooser;
+
+import com.pallasli.utils.FileUtils;
 
 /**
  * setFileSelectionMode(int mode) 设置 JFileChooser，以允许用户只选择文件、只选择目录，或者可选择文件和目录。
@@ -20,9 +24,15 @@ public class OpenAction extends AbstractAction {
 		super(action);
 	}
 
+	@Override
 	public void execute() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.showOpenDialog(mainFrame);
+		int i = chooser.showOpenDialog(mainFrame);
+		System.out.println(i);
+		if (i == 0) {
+			File f = chooser.getSelectedFile();
+			System.out.println(FileUtils.readFileToString(f));
+		}
 	}
 
 }

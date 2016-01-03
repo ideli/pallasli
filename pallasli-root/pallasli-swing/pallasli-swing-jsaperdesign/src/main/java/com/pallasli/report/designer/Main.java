@@ -5,9 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -36,6 +39,8 @@ import com.pallasli.report.designer.action.OpenAction;
 import com.pallasli.report.designer.action.PageSettingAction;
 import com.pallasli.report.designer.action.ReportPropsSettingAction;
 import com.pallasli.report.designer.action.SaveAsAction;
+import com.pallasli.report.designer.page.ComponentItemsPanel;
+import com.pallasli.report.designer.page.TableReportPanel;
 
 @SuppressWarnings("rawtypes")
 public class Main extends JFrame {
@@ -68,7 +73,7 @@ public class Main extends JFrame {
 		setTitle("设计器");
 		setBackground(Color.BLUE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 50, 1000, 650);
+		setBounds(100, 50, 1041, 650);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -280,7 +285,42 @@ public class Main extends JFrame {
 
 		JToolBar toolBar = new JToolBar();
 		panel_3.add(toolBar);
-		JComboBox comboBox_2 = new JComboBox();
+		Object[][] biaogezhonglei = {
+				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+						new MyIcon("/designer/icons/report/blank.gif"), "空白报表" },
+				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/report/styletable.gif"),
+						"表格报表" },
+				{ 3, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/report/crosstabstyle.gif"),
+						"交叉报表" } };
+		JComboBox comboBox_2 = new JImageComboBox(biaogezhonglei);
+
+		comboBox_2.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					// ComboTypeValue
+					// cv=(ComboTypeValue)comboBox_2.getSelectedItem();
+					Object[] item = (Object[]) e.getItem();
+					Object values[] = item;
+					int value = (Integer) values[0];
+					Font font = (Font) values[1];
+					Color color = (Color) values[2];
+					MyIcon icon = (MyIcon) values[3];
+					String text = (String) values[4];
+
+					ComboTypeValue cv = new ComboTypeValue(value, font, color,
+							icon, text);
+					if (cv.getValue() == 2) {
+						JTabbedPane tab = Main.getInstance().getTabbedPane();
+						JPanel p = new TableReportPanel();
+						tab.add(p);
+					}
+				}
+			}
+		});
 		toolBar.add(comboBox_2);
 		comboBox_2.setSize(new Dimension(100, 0));
 
@@ -288,6 +328,11 @@ public class Main extends JFrame {
 		panel_3.add(toolBar_1);
 
 		JComboBox fontFamilyCombo = new JComboBox(fontFamilies);
+		fontFamilyCombo.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+			}
+		});
 		toolBar_1.add(fontFamilyCombo);
 		fontFamilyCombo.setPreferredSize(new Dimension(100, 21));
 
@@ -315,6 +360,48 @@ public class Main extends JFrame {
 		btnNewButton.setIcon(new ImageIcon(Main.class
 				.getResource("/designer/icons/tool/arrow.gif")));
 
+		JButton button_3 = new JButton("");
+		toolBar_2.add(button_3);
+		button_3.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/label.gif")));
+		button_3.setPreferredSize(new Dimension(23, 23));
+
+		JButton button_30 = new JButton("");
+		toolBar_2.add(button_30);
+		button_30.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/text.gif")));
+		button_30.setPreferredSize(new Dimension(23, 23));
+
+		JButton button_2 = new JButton("");
+		toolBar_2.add(button_2);
+		button_2.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/image.gif")));
+		button_2.setPreferredSize(new Dimension(23, 23));
+
+		JButton btnNewButton_2 = new JButton("");
+		toolBar_2.add(btnNewButton_2);
+		btnNewButton_2.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/table.gif")));
+		btnNewButton_2.setPreferredSize(new Dimension(23, 23));
+
+		JButton button = new JButton("");
+		toolBar_2.add(button);
+		button.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/barcode.gif")));
+		button.setPreferredSize(new Dimension(23, 23));
+
+		JButton btnNewButton_1 = new JButton("");
+		toolBar_2.add(btnNewButton_1);
+		btnNewButton_1.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/chart.gif")));
+		btnNewButton_1.setPreferredSize(new Dimension(23, 23));
+
+		JButton button_1 = new JButton("");
+		toolBar_2.add(button_1);
+		button_1.setIcon(new ImageIcon(Main.class
+				.getResource("/designer/icons/tool/panel.gif")));
+		button_1.setPreferredSize(new Dimension(23, 23));
+
 		JButton btnNewButton_3 = new JButton("");
 		toolBar_2.add(btnNewButton_3);
 		btnNewButton_3.setPreferredSize(new Dimension(23, 23));
@@ -325,36 +412,6 @@ public class Main extends JFrame {
 		});
 		btnNewButton_3.setIcon(new ImageIcon(Main.class
 				.getResource("/designer/icons/tool/table.gif")));
-
-		JButton btnNewButton_1 = new JButton("");
-		toolBar_2.add(btnNewButton_1);
-		btnNewButton_1.setIcon(new ImageIcon(Main.class
-				.getResource("/designer/icons/tool/chart.gif")));
-		btnNewButton_1.setPreferredSize(new Dimension(23, 23));
-
-		JButton btnNewButton_2 = new JButton("");
-		toolBar_2.add(btnNewButton_2);
-		btnNewButton_2.setIcon(new ImageIcon(Main.class
-				.getResource("/designer/icons/tool/table.gif")));
-		btnNewButton_2.setPreferredSize(new Dimension(23, 23));
-
-		JButton button_3 = new JButton("");
-		toolBar_2.add(button_3);
-		button_3.setIcon(new ImageIcon(Main.class
-				.getResource("/designer/icons/tool/barcode.gif")));
-		button_3.setPreferredSize(new Dimension(23, 23));
-
-		JButton button_2 = new JButton("");
-		toolBar_2.add(button_2);
-		button_2.setPreferredSize(new Dimension(23, 23));
-
-		JButton button_1 = new JButton("");
-		toolBar_2.add(button_1);
-		button_1.setPreferredSize(new Dimension(23, 23));
-
-		JButton button = new JButton("");
-		toolBar_2.add(button);
-		button.setPreferredSize(new Dimension(23, 23));
 
 		JPanel panel_4 = new JPanel();
 		FlowLayout flowLayout_3 = (FlowLayout) panel_4.getLayout();
@@ -440,10 +497,40 @@ public class Main extends JFrame {
 		button_16.setEnabled(false);
 		toolBar_3.add(button_16);
 
-		JComboBox comboBox_3 = new JComboBox();
+		// ImageIcon[] images = {
+		// new ImageIcon("/designer/icons/tool/delete.gif"),
+		// new ImageIcon("/designer/icons/tool/delete.gif") };
+		// CustomComboBoxDemo comboBox_3 = new CustomComboBoxDemo(images);
+		// toolBar_3.add(comboBox_3);
+
+		Object movetype[][] = {
+				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+						new MyIcon("/designer/icons/tool/movedown.gif"), "置后" },
+				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/tool/moveup.gif"), "置前" } };
+
+		JComboBox comboBox_3 = new JImageComboBox(movetype);
 		toolBar_3.add(comboBox_3);
 
-		JComboBox comboBox = new JComboBox();
+		Object[][] duiqi = {
+				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+						new MyIcon("/designer/icons/align/alignleft.gif"),
+						"左对齐" },
+				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/align/alignright.gif"),
+						"右对齐" },
+				{ 3, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/align/alignhcenter.gif"),
+						"水平居中" },
+				{ 4, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/align/alignvcenter.gif"),
+						"垂直居中" },
+				{ 5, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/align/aligntop.gif"), "上对齐" },
+				{ 6, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/align/alignbottom.gif"),
+						"下对齐" } };
+		JComboBox comboBox = new JImageComboBox(duiqi);
 		toolBar_3.add(comboBox);
 
 		JButton button_13 = new JButton("");
@@ -451,7 +538,14 @@ public class Main extends JFrame {
 				.getResource("/designer/icons/align/center.gif")));
 		toolBar_3.add(button_13);
 
-		JComboBox comboBox_1 = new JComboBox();
+		Object[][] daxiao = {
+				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+						new MyIcon("/designer/icons/tool/sameheight.gif"), "等高" },
+				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/tool/samewidth.gif"), "等宽" },
+				{ 3, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+						new MyIcon("/designer/icons/tool/sameboth.gif"), "等高宽" } };
+		JComboBox comboBox_1 = new JImageComboBox(daxiao);
 		toolBar_3.add(comboBox_1);
 
 		JButton btnNewButton_7 = new JButton("");
@@ -574,8 +668,11 @@ public class Main extends JFrame {
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-		tabbedPane.setPreferredSize(new Dimension(10, 5));
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
+
+		JPanel panel_14 = new ComponentItemsPanel();
+		panel_14.setPreferredSize(new Dimension(205, 500));
+		contentPane.add(panel_14, BorderLayout.EAST);
 
 	}
 

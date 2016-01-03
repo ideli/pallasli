@@ -6,4 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>pallasli-swing-jsaperdesign</artifactId>
+  <dependencies>
+  
+  <dependency><artifactId>pallasli-utils</artifactId><groupId>com.pallasli</groupId><version>0.0.1-SNAPSHOT</version></dependency>
+  </dependencies>
 </project>
