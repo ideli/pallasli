@@ -1,0 +1,238 @@
+Remote Address:222.222.216.162:7001
+Request URL:http://oa.atwasoft.net:7001/portal/login.do
+Request Method:POST
+Status Code:302 Found
+Response Headers
+view source
+Access-Control-Allow-Credentials:true
+Access-Control-Allow-Headers:X-Requested-With
+Access-Control-Allow-Origin:http://oa.atwasoft.net:7001
+Content-Language:zh-CN
+Content-Length:0
+Date:Tue, 05 Jan 2016 05:40:06 GMT
+Location:http://oa.atwasoft.net:7001/portal/home.do
+Server:Apache-Coyote/1.1
+Request Headers
+view source
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding:gzip, deflate
+Accept-Language:zh-CN,zh;q=0.8
+Cache-Control:max-age=0
+Connection:keep-alive
+Content-Length:36
+Content-Type:application/x-www-form-urlencoded
+Cookie:JSESSIONID=A8123B3821961E071B87DFAE163DDDF1.jvm1
+Host:oa.atwasoft.net:7001
+Origin:http://oa.atwasoft.net:7001
+Referer:http://oa.atwasoft.net:7001/portal/login.do
+User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+Form Data
+view source
+view URL encoded
+u:20233
+p:860830
+f:force
+msg_signed:
+
+
+
+
+
+
+
+
+
+Remote Address:222.222.216.162:7001
+Request URL:http://oa.atwasoft.net:7001/OA/direct
+Request Method:POST
+Status Code:200 OK
+Response Headers
+view source
+Content-Length:131
+Content-Type:text/html;charset=UTF-8
+Date:Tue, 05 Jan 2016 05:11:16 GMT
+Server:Apache-Coyote/1.1
+Request Headers
+view source
+Accept:*/*
+Accept-Encoding:gzip, deflate
+Accept-Language:zh-CN,zh;q=0.8
+Connection:keep-alive
+Content-Length:287
+Content-Type:application/json
+Cookie:JSESSIONID=8D465FEED5C5D3A71F44765B02E2160B.jvm1
+Host:oa.atwasoft.net:7001
+Origin:http://oa.atwasoft.net:7001
+Referer:http://oa.atwasoft.net:7001/portal/home.do
+User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36
+X-Requested-With:XMLHttpRequest
+Request Payload
+
+
+view source
+{action: "OaAppDirect", method: "log_kqqk_save",…}
+action: "OaAppDirect"
+data: [{logrq: "2016-01-04", kqzt_am: "01", gzdd_am: "05", addre_am: "", gtr_am: "", sbsj_am: "09:00",…}]
+addre_am: ""
+addre_pm: ""
+gtr_am: ""
+gtr_pm: ""
+gzdd_am: "05"
+gzdd_pm: "05"
+kqzt_am: "01"
+kqzt_pm: "01"
+logrq: "2016-01-05"
+sbsj_am: "09:00"
+sbsj_pm: "13:00"
+xbsj_am: "12:00"
+xbsj_pm: "18:00"
+method: "log_kqqk_save"
+tid: 35
+type: "rpc"
+
+
+
+
+
+ 
+ 
+view source
+{action: "OaAppDirect", method: "logSave", data: [,…], type: "rpc", tid: 38}
+action: "OaAppDirect"
+data: [,…]
+0: {logrq: "2016-01-04", crstate: "0", zgs: "0", id: "1000040259151#@&", taskid: "0#@&", planid: "0#@&",…}
+bz: "null#@&"
+cgw: "0#@&"
+crstate: "1"
+finish: "2#@&"
+fqr: "李永涛#@&"
+fqrid: "1932#@&"
+id: "0#@&"
+jsr: "李永涛#@&"
+jsrid: "1932#@&"
+khbm: "01000#@&"
+kntext: "1#@&"
+logrq: "2016-01-05"
+logtext: "echart特效研究#@&"
+planid: "0#@&"
+qrbz: "0#@&"
+quality: "null#@&"
+rwgs: "8#@&"
+rwtype: "041501#@&"
+rzxh: "0#@&"
+scale: "null#@&"
+ssbm: "null#@&"
+summarize: "null#@&"
+sunit: "null#@&"
+taskid: "0#@&"
+type: "39#@&"
+userid: "1932#@&"
+wplace: "石家庄市#@&"
+xmbm: "YF-010#@&"
+xmmc: "3.5新框架标准版建立#@&"
+zgs: "0"
+method: "logSave"
+tid: 38
+type: "rpc"
+
+
+action: "OaAppDirect"
+data: [0, 0, "", "", {logrq: "2016-01-05", nfs: 0}]
+0: 0
+1: 0
+2: ""
+3: ""
+4: {logrq: "2016-01-05", nfs: 0}
+logrq: "2016-01-05"
+nfs: 0
+method: "oa_log_cx"
+tid: 90
+type: "rpc"
+
+{"result":{"totals":0,"results":[{"bmbm":" ","bmtype":0,"bz":"",
+"caption":"李永涛","captionid":0,"cgw":"0","count":0,"crstate":"1",
+"cxlx":0,"daytype":0,"deptfzr":" ",
+"deptname":"河北神玥软件科技有限公司/执行委员会/产品中心/技术研究部/业务流程组",
+"deptnameid":0,
+"finish":"2",
+"finishbm":0,"fqr":"李永涛","fqrid":0,"id":1000040278015,"idStr":"001000040278015",
+"ip":" ","jb":0,"jsr":"李永涛","jsrid":0,
+"khbm":"01000","khmc":"安泰伟奥信息技术有限公司","kntext":"1",
+"level":0,"logrq":"2016-01-05","logtext":"echart特效研究",
+"modleName":" ","name":" ","nfs":0,"no":" ","note":" ",
+"parentid":0,"phrid":0,"planid":0,"qrbz":"0","qrbz1":0,
+"quality":"0","ret":0,"rwgs":8.0,"rwtype":"041501",
+"rwtypemc":"代码编写","rzxh":"1","rzzt":0,"sbsj":"09:00",
+"scale":"0","sjrwgs":0.0,"sprid":0,"ssbm":"0","ssbmid":0,"ssmc":"",
+"summarize":"","sunit":"0","taskid":0,"tjbz":"0",
+"totals":0,"type":"39","uid":0,"userid":1932,
+"wplace":"石家庄市","xbsj":"18:00","xmbm":"YF-010",
+"xmmc":"3.5新框架标准版建立","zgs":"8","zztype":0,
+"flowLogFDataId":0,"flowLogFStartUserId":0,"flowLogFState":0,
+"flowLogFUpdateUserId":0,"flowLogId":0,"nodelogFFlowlogId":0,
+"nodelogFRouteId":0,"nodelogFState":0,"nodelogId":0,
+"opinionlogFFlowlogId":0,"opinionlogFNodelogId":0,
+"opinionlogFProcesslogId":0,"opinionlogFUserId":0,
+"opinionlogFWriteType":0,"opinionlogId":0,"processlogFActionType":0,
+"processlogFFlowlogId":0,"processlogFNodelogId":0,"processlogFProcessType":0,
+"processlogFState":0,"processlogFUserId":0,"processlogId":0,
+"routelogFDestNodelogId":0,"routelogFDirction":0,"routelogFFlowlogId":0,
+"routelogFSrcNodelogId":0,"routelogId":0,"sfkh":0,"sfty":0,
+"startNodelogFFlowlogId":0,"startNodelogFRouteId":0,
+"startNodelogFState":0,"startNodelogId":0,"targetNodelogFFlowlogId":0,
+"targetNodelogFRouteId":0,"targetNodelogFState":0,"targetNodelogId":0,
+"vend":0,"vid":0,"vonly":0,"vuserid":0}]},"tid":90,"action":"OaAppDirect",
+"method":"oa_log_cx","type":"rpc"}
+ 
+ 
+ 
+ 
+{action: "OaAppDirect", method: "log_tj", data: [,…], type: "rpc", tid: 47}
+action: "OaAppDirect"
+data: [,…]
+0: {logrq: "2016-01-04", msg_yj: "false", msg_gz: "false", sprid: 1790, spr: "高磊", crstate: "0", zgs: "0",…}
+bz: "null#@&"
+cgw: "0#@&"
+crstate: "0"
+finish: "2#@&"
+fqr: "李永涛#@&"
+fqrid: "0#@&"
+id: "1000040259151#@&"
+jsr: "李永涛#@&"
+jsrid: "0#@&"
+khbm: "01000#@&"
+kntext: "1#@&"
+logrq: "2016-01-04"
+logtext: "echart特效研究#@&"
+msg_gz: "false"
+msg_yj: "false"
+planid: "0#@&"
+qrbz: "0#@&"
+quality: "null#@&"
+rwgs: "8#@&"
+rwtype: "041501#@&"
+rzxh: "1#@&"
+scale: "null#@&"
+spr: "高磊"
+sprid: 1790
+ssbm: "0#@&"
+summarize: "null#@&"
+sunit: "null#@&"
+taskid: "0#@&"
+type: "39#@&"
+userid: "1932#@&"
+wplace: "石家庄市#@&"
+xmbm: "YF-010#@&"
+xmmc: "3.5新框架标准版建立#@&"
+zgs: "0"
+method: "log_tj"
+tid: 47
+type: "rpc"
+
+
+
+
+
+
+
+

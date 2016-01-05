@@ -39,5 +39,7 @@
       <module>pallasli-study-mail</module>
       <module>pallasli-study-ftp</module>
       <module>pallasli-study-htmlunit</module>
+      <module>pallasli-study-ivy</module>
+      <module>pallasli-study-httpclient</module>
   </modules>
 </project>

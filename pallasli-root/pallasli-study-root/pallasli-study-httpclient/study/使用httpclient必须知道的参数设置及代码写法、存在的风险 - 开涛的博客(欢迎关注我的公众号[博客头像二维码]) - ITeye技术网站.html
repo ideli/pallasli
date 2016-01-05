@@ -1,0 +1,1009 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>使用httpclient必须知道的参数设置及代码写法、存在的风险 - 开涛的博客(欢迎关注我的公众号[博客头像二维码]) - ITeye技术网站</title>
+    <meta name="description" content="  结论：  如果使用httpclient 3.1并发量比较大的项目，最好升级到httpclient4.2.3上，保证并发量大时能抗住。httpclient 4.3.3，目前还有一些bug；还是用4.2.x稳定版本吧。     以库存项目为例：     httpclient一天并发量在1500w左右，峰值一秒7万。       在之前使用过程中，一直存在大量的        org.apache.h ..." />
+    <meta name="keywords" content=" 使用httpclient必须知道的参数设置及代码写法、存在的风险" />
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/open_search.xml" title="ITeye" />
+    <link href="/rss" rel="alternate" title="开涛的博客(欢迎关注我的公众号[博客头像二维码])" type="application/rss+xml" />
+    <link href="http://www.iteye.com/stylesheets/blog.css?1450926710" media="screen" rel="stylesheet" type="text/css" />
+<link href="http://www.iteye.com/stylesheets/themes/blog/orange.css?1448702469" media="screen" rel="stylesheet" type="text/css" />
+    <script src="http://www.iteye.com/javascripts/application.js?1448702469" type="text/javascript"></script>
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-535605-1']);
+  _gaq.push(['_setDomainName', 'iteye.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+      <link href="http://www.iteye.com/javascripts/syntaxhighlighter/SyntaxHighlighter.css?1448702469" media="screen" rel="stylesheet" type="text/css" />
+  <script src="http://www.iteye.com/javascripts/syntaxhighlighter/shCoreCommon.js?1448702469" type="text/javascript"></script>
+<script src="http://www.iteye.com/javascripts/hotkey.js?1448702469" type="text/javascript"></script>
+  <script src="http://www.iteye.com/javascripts/code_favorites.js?1448702469" type="text/javascript"></script>
+<script src="http://www.iteye.com/javascripts/weiboshare.js?1448702469" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="blog_site_nav">
+  <a href="http://www.iteye.com/" class="homepage">首页</a>
+  <a href="http://www.iteye.com/news">资讯</a>
+  <a href="http://www.iteye.com/magazines">精华</a>
+  <a href="http://www.iteye.com/forums">论坛</a>
+  <a href="http://www.iteye.com/ask">问答</a>
+  <a href="http://www.iteye.com/blogs">博客</a>
+  <a href="http://www.iteye.com/blogs/subjects">专栏</a>
+  <a href="http://www.iteye.com/groups">群组</a>
+  <a href="#" onclick="return false;" id="msna"><u>更多</u> <small>▼</small></a>
+  <div class="quick_menu" style="display:none;">
+    <a target="_blank" href="http://job.iteye.com/iteye">招聘</a>
+    <a href="http://www.iteye.com/search">搜索</a>
+  </div>
+</div>
+
+      <div id="user_nav">
+      <a href="/login" class="welcome" title="登录">您还未登录 !</a>
+    <a href="/login">登录</a>
+    <a href="/signup" class="nobg">注册</a>
+  </div>
+
+    </div>
+
+    <div id="page">
+      <div id="branding" class="clearfix">
+        <div id="blog_name">
+          <h1><a href="/">开涛的博客(欢迎关注我的公众号[博客头像二维码])</a></h1>
+        </div>
+        <div id='fd'></div>
+        <div id="blog_navbar">
+          <ul>
+            <li class='blog_navbar_for'><a href="http://jinnianshilongnian.iteye.com"><strong>博客</strong></a></li>
+            <li ><a href="/weibo">微博</a></li>
+            <li ><a href="/album">相册</a></li>
+            <li ><a href="/link">收藏</a></li>
+            <li ><a href="/blog/guest_book">留言</a></li>
+            <li ><a href="/blog/profile">关于我</a></li>
+          </ul>
+    
+          <div class="search">
+            <form action="/blog/search" method="get">
+              <input class="search_text" id="query" name="query" style="margin-left: 10px;width: 110px;" type="text" value="" />
+              <input class="submit_search" type="submit" value="" />
+            </form>
+          </div> 
+          <div id="fd"></div>         
+        </div>
+      </div>
+      
+      <div id="content" class="clearfix">
+        <div id="main">
+          
+
+
+
+          
+
+
+<div class="h-entry" style='display:none'>
+  <a href="http://jinnianshilongnian.iteye.com" class="p-author" target="_blank">jinnianshilongnian</a>
+</div>
+
+
+<div class="blog_main">
+  <div class="blog_title">
+    <h3>
+      <a href="/blog/2089792">使用httpclient必须知道的参数设置及代码写法、存在的风险</a>
+      <em class="actions">      </em>
+    </h3>
+    <ul class='blog_categories'><strong>博客分类：</strong> <li><a href="/category/244085">java web</a></li> </ul>
+        <div class='news_tag'>&nbsp;</div>
+  </div>
+
+  <div id="blog_content" class="blog_content">
+    <div style="font-size: 14px;" class="iteye-blog-content-contain">
+<div style="font-weight: bold;">结论：</div>
+<div>如果使用httpclient 3.1并发量比较大的项目，最好升级到httpclient4.2.3上，保证并发量大时能抗住。httpclient 4.3.3，目前还有一些bug；还是用4.2.x稳定版本吧。</div>
+<div style="font-weight: bold;"> </div>
+<div style="font-weight: bold;">以库存项目为例：</div>
+<div>
+<p style="margin: 0cm 0cm 0pt;" class="MsoNormal"><span style="font-family: 宋体; font-size: 10pt;"> httpclient一天并发量在</span><span style="font-family: 'Segoe UI', sans-serif; font-size: 10pt;">1500w</span><span style="font-family: 宋体; font-size: 10pt;">左右，峰值一秒</span><span style="font-family: 'Segoe UI', sans-serif; font-size: 10pt;">7</span><span style="font-family: 宋体; font-size: 10pt;">万。</span></p>
+<p style="margin: 0cm 0cm 0pt;" class="MsoNormal"> </p>
+</div>
+<div>在之前使用过程中，一直存在大量的</div>
+<p> </p>
+<div>
+<div>
+<em>org.apache.http.conn.ConnectionPoolTimeoutException</em>: <em title="追加条件搜索" style="border-color: #d1e9e9;">Timeout</em> <em title="追加条件搜索" style="border-color: #d1e9e9;">waiting</em> <em title="追加条件搜索" style="border-color: #d1e9e9;">for</em> <em title="追加条件搜索" style="border-color: #d1e9e9;">connection</em> <em title="追加条件搜索" style="border-color: #d1e9e9;">from</em> <em title="追加条件搜索" style="border-color: #d1e9e9;">pool</em><br style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">at</em> <em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">org</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">apache</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">http</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">impl</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">conn</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">PoolingClientConnectionManager</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">leaseConnection</em></em>(<em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">PoolingClientConnectionManager</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">java</em></em>:<em title="追加条件搜索" style="border-color: #d1e9e9;">232</em>)<br style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">at</em> <em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">org</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">apache</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">http</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">impl</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">conn</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">PoolingClientConnectionManager</em></em>$<em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">1</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">getConnection</em></em>(<em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">PoolingClientConnectionManager</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">java</em></em>:<em title="追加条件搜索" style="border-color: #d1e9e9;">199</em>)<br style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">at</em> <em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">org</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">apache</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">http</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">impl</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">client</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">DefaultRequestDirector</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">execute</em></em>(<em title="追加条件搜索" style="border-color: #d1e9e9;"><em title="追加条件搜索" style="border-color: #d1e9e9;">DefaultRequestDirector</em>.<em title="追加条件搜索" style="border-color: #d1e9e9;">java</em></em>:<em title="追加条件搜索" style="border-color: #d1e9e9;">456</em>)</div>
+<div>另外通过jstack查看线程，会发现：</div>
+<div>"pool-21-thread-3" prio=10 tid=0x00007f6b7c002800 nid=0x40ff waiting on condition [0x00007f6b37020000]<br>java.lang.Thread.State: TIMED_WAITING (parking)<br>at sun.misc.Unsafe.park(Native Method)<br>- parking to wait for &lt;0x00000000f97918b8&gt; (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)<br>at java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:239)<br>at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitUntil(AbstractQueuedSynchronizer.java:2072)<br>at org.apache.http.pool.PoolEntryFuture.await(PoolEntryFuture.java:129)<br>at org.apache.http.pool.AbstractConnPool.getPoolEntryBlocking(AbstractConnPool.java:281)<br>at org.apache.http.pool.AbstractConnPool.access$000(AbstractConnPool.java:62)<br>at org.apache.http.pool.AbstractConnPool$2.getPoolEntry(AbstractConnPool.java:176)<br>at org.apache.http.pool.AbstractConnPool$2.getPoolEntry(AbstractConnPool.java:172)<br>at org.apache.http.pool.PoolEntryFuture.get(PoolEntryFuture.java:100)<br>at org.apache.http.impl.conn.PoolingClientConnectionManager.leaseConnection(PoolingClientConnectionManager.java:212)</div>
+<div> </div>
+<div> </div>
+<div style="font-weight: bold;">问题：</div>
+<div>因为使用了连接池，但连接不够用，造成大量的等待；而且这种等待都有滚雪球的效应（和交易组最近使用的apache common dbcp存在的风险是类似的）。</div>
+<div> </div>
+<div> </div>
+<div style="font-weight: bold;">解决方案</div>
+<div>最终我们定了一些合理的参数值，目前来看还没有遇到问题。</div>
+<div> </div>
+<div> </div>
+<div style="font-weight: bold;">思考</div>
+<div>其实出问题的原因是我们对一些参数不了解，随意设置其值，不出现问题则好，出现问题很难排查到原因，因此我把使用httpclient必须设置的参数及代码写法及排查方法总结一下，供参考。</div>
+<div> </div>
+<div style="font-weight: bold;">参数设置</div>
+<div>1、httpclient 4.2.3</div>
+<div>
+<div>HttpParams params = new BasicHttpParams();</div>
+<div>//设置连接超时时间</div>
+<div>Integer CONNECTION_TIMEOUT = 2 * 1000; <span style="color: #ff0000;">//设置请求超时2秒钟 根据业务调整</span>
+</div>
+<div>Integer SO_TIMEOUT = 2 * 1000; <span style="color: #ff0000;"> //设置等待数据超时时间2秒钟 根据业务调整</span>
+</div>
+<div><span style="color: #ff0000;"> <span style="color: #000000;"> //定义了当从ClientConnectionManager中检索ManagedClientConnection实例时使用的毫秒级的超时时间</span></span></div>
+<div><span style="color: #ff0000;"><span style="color: #000000;"> //这个参数期望得到一个java.lang.Long类型的值。<span style="color: #ff0000;">如果这个参数没有被设置，默认等于CONNECTION_TIMEOUT</span>，因此一定要设置</span></span></div>
+<div>Long CONN_MANAGER_TIMEOUT = 500L; <span style="color: #ff0000;"> //该值就是连接不够用的时候等待超时时间，一定要设置，而且不能太大 ()</span>
+</div>
+<div> </div>
+<div>params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, CONNECTION_TIMEOUT);</div>
+<div>params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, SO_TIMEOUT);</div>
+<div>params.setLongParameter(ClientPNames.CONN_MANAGER_TIMEOUT, CONN_MANAGER_TIMEOUT);</div>
+<div>//在提交请求之前 测试连接是否可用
+<div>params.setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, true);</div>
+<div> </div>
+</div>
+<div>PoolingClientConnectionManager conMgr = new PoolingClientConnectionManager();</div>
+<div>conMgr.setMaxTotal(200);<span style="color: #ff0000;"> //设置整个连接池最大连接数 根据自己的场景决定</span>
+</div>
+<div>//是路由的默认最大连接（该值默认为2），限制数量实际使用DefaultMaxPerRoute并非MaxTotal。</div>
+<div>//设置过小无法支持大并发(ConnectionPoolTimeoutException: Timeout waiting for connection from pool)，路由是对maxTotal的细分。</div>
+<div>conMgr.setDefaultMaxPerRoute(conMgr.getMaxTotal());//（目前只有一个路由，因此让他等于最大值）</div>
+<div> </div>
+<div>//另外设置http client的重试次数，默认是3次；当前是禁用掉（如果项目量不到，这个默认即可）</div>
+<div>httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));</div>
+<div>此处解释下MaxtTotal和DefaultMaxPerRoute的区别：</div>
+<div>1、MaxtTotal是整个池子的大小；</div>
+<div>2、DefaultMaxPerRoute是根据连接到的主机对MaxTotal的一个细分；比如：</div>
+<div>MaxtTotal=400 DefaultMaxPerRoute=200</div>
+<div>而我只连接到http://sishuok.com时，到这个主机的并发最多只有200；而不是400；</div>
+<div>而我连接到http://sishuok.com 和 http://qq.com时，到每个主机的并发最多只有200；即加起来是400（但不能超过400）；所以起作用的设置是DefaultMaxPerRoute。</div>
+</div>
+<div> </div>
+<div> </div>
+<div>2、httpclient 3.1</div>
+<div>
+<div>HttpConnectionManagerParams params = new HttpConnectionManagerParams();</div>
+<div>params.setConnectionTimeout(2000);</div>
+<div>params.setSoTimeout(2000);</div>
+<div>// 最大连接数</div>
+<div>params.setMaxTotalConnections(500);</div>
+<div>params.setDefaultMaxConnectionsPerHost(500);</div>
+<div>params.setStaleCheckingEnabled(true);</div>
+<div>connectionManager.setParams(params);</div>
+<div> </div>
+<div>HttpClientParams httpClientParams = new HttpClientParams();</div>
+<div>// 设置httpClient的连接超时，对连接管理器设置的连接超时是无用的</div>
+<div>httpClientParams.setConnectionManagerTimeout(5000); //等价于4.2.3中的CONN_MANAGER_TIMEOUT</div>
+<div>httpClient = new HttpClient(connectionManager);</div>
+<div>httpClient.setParams(httpClientParams);</div>
+<div> </div>
+<div>//另外设置http client的重试次数，默认是3次；当前是禁用掉（如果项目量不到，这个默认即可）</div>
+<div>
+<div>httpClientParams.setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(0, false));</div>
+<div> </div>
+</div>
+</div>
+<div>参数类似 就不多解释了；</div>
+<div> </div>
+<div style="font-weight: bold;">代码写法</div>
+<div>1、httpclient 4.2.3</div>
+<div>
+<div>HttpResponse response = null;</div>
+<div>HttpEntity entity = null;</div>
+<div>try {</div>
+<div>  HttpGet get = new HttpGet();</div>
+<div>  String url = "http://hc.apache.org/";</div>
+<div>  get.setURI(new URI(url));</div>
+<div>  response = getHttpClient().execute(get);</div>
+<div>/  /处理响应</div>
+<div>} catch (Exception e) {</div>
+<div>  //处理异常</div>
+<div>} finally {</div>
+<div>  if(response != null) { </div>
+<div>    EntityUtils.consume(response.getEntity()); //会自动释放连接</div>
+<div>  }</div>
+<div>  //如下方法也是可以的，但是存在一些风险；不要用
+<div>  //InputStream is = response.getEntity().getContent();</div>
+<div>  //is.close();</div>
+</div>
+<div>}</div>
+</div>
+<div> </div>
+<div>2、httpclient 3.1</div>
+<div>PostMethod postMethod = new PostMethod(yxUrl);</div>
+<div>try { </div>
+<div>  httpClient.executeMethod(postMethod);</div>
+<div>} catch (Exception e) {</div>
+<div>  //处理异常</div>
+<div>} finally {</div>
+<div>  if(postMethod != null) { //不要忘记释放，尽量通过该方法实现，</div>
+<div>    postMethod.releaseConnection();</div>
+<div>    //存在风险，不要用</div>
+<div>
+<div>    //postMethod.setParameter("Connection", "close");</div>
+<div>    //InputStream is = postMethod.getResponseBodyAsStream();</div>
+<div>    //is.clsoe();也会关闭并释放连接的</div>
+</div>
+<div>  }</div>
+<div>}</div>
+<div> </div>
+<div style="font-weight: bold;">存在的风险</div>
+<div>1、httpclient 4.2.3 在释放连接时</div>
+<div>
+<div>if (managedConn.isOpen() &amp;&amp; !managedConn.isMarkedReusable()) { //如果连接打开的且不可重用（not keepalive） close socket</div>
+<div>  try {</div>
+<div>    managedConn.shutdown();</div>
+<div>  } catch (IOException iox) {</div>
+<div>    if (this.log.isDebugEnabled()) {</div>
+<div>      this.log.debug("I/O exception shutting down released connection", iox);</div>
+<div>    }</div>
+<div>  }</div>
+<div>}</div>
+<div>// Only reusable connections can be kept alive</div>
+<div>if (managedConn.isMarkedReusable()) {</div>
+<div>  entry.updateExpiry(keepalive, tunit != null ? tunit : TimeUnit.MILLISECONDS);</div>
+<div>  if (this.log.isDebugEnabled()) {</div>
+<div>    String s;</div>
+<div>    if (keepalive &gt; 0) {</div>
+<div>      s = "for " + keepalive + " " + tunit;</div>
+<div>    } else { </div>
+<div>      s = "indefinitely";</div>
+<div>    }</div>
+<div>    this.log.debug("Connection " + format(entry) + " can be kept alive " + s);</div>
+<div>  }</div>
+<div>}</div>
+</div>
+<div>无风险</div>
+<div> </div>
+<div>2、httpclient 3.1</div>
+<div>1、如果走http1.1协议：如果proxy-connection/connection请求头设置为close；那么会关闭socket； 或者这两个头不等于close 也会自动关；</div>
+<div>2、如果是keep-alive ，不会关闭；</div>
+<div>
+<div>3、如果协议小于等于http1.0协议没有问题；调用releaseConnection时会close socket；</div>
+<div>4、其他情况不会close；</div>
+<div> </div>
+<div>也就是说如果走http1.1且没有设置相关参数；那么socket其实是没有关闭的；可能造成很多TIME_WAIT；因此如果是走短连接建议设置postMethod.setParameter("Connection", "close")。</div>
+</div>
+<div> </div>
+<div style="font-weight: bold;">其他注意事项：</div>
+<div>
+<div>1、使用keep-alive一定要设置Content-Length头（否则也不是长连接）。</div>
+<div> </div>
+<div>
+<div>2、在使用httpclient3.1时（4.2.3没问题）；尽量不要调用 byte[] getResponseBody() ：因为如果Content-Length没设置或者传输的数据大于1M，会有大量如下日志</div>
+</div>
+<div>
+<div>LOG.warn("Going to buffer response body of large or unknown size. "</div>
+<div>+"Using getResponseBodyAsStream instead is recommended.");</div>
+<div> </div>
+<div>
+<div>如果大于1M可以设置该参数；但是-1的话就没办法了，就不要调用 byte[] getResponseBody()</div>
+<div>httpClientParams.setLongParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 2L * 1024 * 1024);</div>
+</div>
+</div>
+<div> </div>
+<div> </div>
+<div>3、锁</div>
+<div>httpclient 3.1 使用synchronized+wait+notifyAll，存在两个问题，量大synchronized慢和notifyAll可能造成线程饥饿；httpclient 4.2.3 使用 ReentrantLock（默认非公平） + Condition（每个线程一个）。</div>
+<div> </div>
+<div><span style="line-height: 25px;">这里有个测试：<a href="http://java.dzone.com/articles/synchronized-vs-lock">http://java.dzone.com/articles/synchronized-vs-lock</a> ，在我本机（jdk1.6.0_43 ）测试结果明细锁的优势比较大</span></div>
+<div><span style="line-height: 25px;">1x synchronized {} with 32 threads took 2.621 seconds</span></div>
+<div>
+<div>1x Lock.lock()/unlock() with 32 threads took 1.951 seconds</div>
+<div>1x AtomicInteger with 32 threads took 4.113 seconds</div>
+<div>1x synchronized {} with 64 threads took <span style="color: #ff0000;">2.621 </span>seconds</div>
+<div>1x Lock.lock()/unlock() with 64 threads took <span style="color: #ff0000;">1.983 </span>seconds</div>
+<div> </div>
+这也是为什么在库存项目中使用httpclient 3.1 依然有大量的wait，而httpclient4.2.3 一个没有的问题所在。</div>
+</div>
+<div> </div>
+<div>如有问题，请赐教。</div>
+</div>
+</div>
+  </div>
+
+  
+
+  
+  
+  <IFRAME SRC="/iframe_ggbd/187" SCROLLING=no WIDTH=680 HEIGHT=90 FRAMEBORDER=0></IFRAME>
+  
+  <div id="bottoms" class="clearfix">
+    <div id="digg_bottom" class="clearfix"><div class='digged'><strong>19</strong> <br/>顶</div><div class='digged'><strong>2</strong> <br/>踩</div></div>
+    <div id="share_weibo">分享到：
+      <a data-type='sina' href="javascript:;" title="分享到新浪微博"><img src="/images/sina.jpg"></a>
+      <a data-type='qq' href="javascript:;" title="分享到腾讯微博"><img src="/images/tec.jpg"></a>
+    </div>
+  </div>
+
+  <div class="blog_nav">
+    <div class="pre_next">
+      <a href="/blog/2090188" class="next" title="跟叶子学把妹——教程序猿把妹第一集">跟叶子学把妹——教程序猿把妹第一集</a>
+      |
+      <a href="/blog/2049092" class="pre" title="《跟我学Shiro》PDF完结版下载">《跟我学Shiro》PDF完结版下载</a>
+    </div>
+  </div>
+  <div class="blog_bottom">
+    <ul>
+      <li>2014-07-09 08:43</li>
+      <li>浏览 38877</li>
+      <li><a href="#comments">评论(19)</a></li>
+      
+      
+      <li>分类:<a href="http://www.iteye.com/blogs/category/architecture">企业架构</a></li>      
+      <li class='last'><a href="http://www.iteye.com/wiki/blog/2089792" target="_blank" class="more">相关推荐</a></li>
+    </ul>
+  </div>
+
+  <div class="blog_comment">
+    <h5>评论</h5>
+    <a id="comments" name="comments"></a>
+    <div id="bc2381763">
+  <div class="comment_title">
+    19 楼
+    <a href='http://dirklei.iteye.com' target='_blank' title='dirklei'>dirklei</a>
+    2015-11-20&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">yjp322 写道</div><div class="quote_div"><div class="quote_title">讨厌淡紫色 写道</div><div class="quote_div">请问下大神，我用工具类A<br />static{<br />		cm=new PoolingHttpClientConnectionManager();<br />		cm.setMaxTotal(200);<br />		cm.setDefaultMaxPerRoute(20);<br />		 //将目标主机的最大连接数增加到50<br />	&nbsp;&nbsp; /* HttpHost localhost = new HttpHost("http://api.map.baidu.com", 80);<br />	&nbsp;&nbsp;&nbsp; cm.setMaxPerRoute(new HttpRoute(localhost), 50);*/<br />	}我是直接静态块构造的，然后<br />/**<br />	 * 获取连接<br />	 * */<br />	public static CloseableHttpClient getConnection(){<br />		CloseableHttpClient httpClient=HttpClients.custom().setConnectionManager(cm).build();<br />		return httpClient;<br />	}这个静态方法获取<br />外部调用类B<br /> CloseableHttpClient&nbsp; httpClient=A.getConnection();<br />&nbsp; 方法最后httpClient.close(),为什么这个操作会关闭连接池<br /></div><br />解决了吗？同样的疑问，感觉是static 惹得祸</div><br /><br /><br /><br />因为你的client对象默认是是IntenalHttpClient实例，<br />看这个类中close方法的定义：<br />public void close() {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.connManager.shutdown();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (this.closeables != null) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (final Closeable closeable: this.closeables) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; closeable.close();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } catch (final IOException ex) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this.log.error(ex.getMessage(), ex);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; }</div>
+</div>
+
+<div id="bc2381347">
+  <div class="comment_title">
+    18 楼
+    <a href='http://yjp322.iteye.com' target='_blank' title='yjp322'>yjp322</a>
+    2015-11-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">讨厌淡紫色 写道</div><div class="quote_div">请问下大神，我用工具类A<br />static{<br />		cm=new PoolingHttpClientConnectionManager();<br />		cm.setMaxTotal(200);<br />		cm.setDefaultMaxPerRoute(20);<br />		 //将目标主机的最大连接数增加到50<br />	&nbsp;&nbsp; /* HttpHost localhost = new HttpHost("http://api.map.baidu.com", 80);<br />	&nbsp;&nbsp;&nbsp; cm.setMaxPerRoute(new HttpRoute(localhost), 50);*/<br />	}我是直接静态块构造的，然后<br />/**<br />	 * 获取连接<br />	 * */<br />	public static CloseableHttpClient getConnection(){<br />		CloseableHttpClient httpClient=HttpClients.custom().setConnectionManager(cm).build();<br />		return httpClient;<br />	}这个静态方法获取<br />外部调用类B<br /> CloseableHttpClient&nbsp; httpClient=A.getConnection();<br />&nbsp; 方法最后httpClient.close(),为什么这个操作会关闭连接池<br /></div><br />解决了吗？同样的疑问，感觉是static 惹得祸</div>
+</div>
+
+<div id="bc2380877">
+  <div class="comment_title">
+    17 楼
+    <a href='http://yanchunfeng-love-126-com.iteye.com' target='_blank' title='讨厌淡紫色'>讨厌淡紫色</a>
+    2015-10-28&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">请问下大神，我用工具类A<br />static{<br />		cm=new PoolingHttpClientConnectionManager();<br />		cm.setMaxTotal(200);<br />		cm.setDefaultMaxPerRoute(20);<br />		 //将目标主机的最大连接数增加到50<br />	&nbsp;&nbsp; /* HttpHost localhost = new HttpHost("http://api.map.baidu.com", 80);<br />	&nbsp;&nbsp;&nbsp; cm.setMaxPerRoute(new HttpRoute(localhost), 50);*/<br />	}我是直接静态块构造的，然后<br />/**<br />	 * 获取连接<br />	 * */<br />	public static CloseableHttpClient getConnection(){<br />		CloseableHttpClient httpClient=HttpClients.custom().setConnectionManager(cm).build();<br />		return httpClient;<br />	}这个静态方法获取<br />外部调用类B<br /> CloseableHttpClient&nbsp; httpClient=A.getConnection();<br />&nbsp; 方法最后httpClient.close(),为什么这个操作会关闭连接池<br /></div>
+</div>
+
+<div id="bc2376835">
+  <div class="comment_title">
+    16 楼
+    <a href='http://yanyinxi.iteye.com' target='_blank' title='yanyinxi'>yanyinxi</a>
+    2015-08-20&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">能否共享一下你的httpClient工具类</div>
+</div>
+
+<div id="bc2373226">
+  <div class="comment_title">
+    15 楼
+    <a href='http://201407225838.iteye.com' target='_blank' title='豆腐脑o'>豆腐脑o</a>
+    2015-06-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><img src="/images/smiles/icon_razz.gif" />&nbsp;<img src="/images/smiles/icon_razz.gif" />&nbsp;<img src="/images/smiles/icon_razz.gif" />&nbsp;<img src="/images/smiles/icon_redface.gif" />&nbsp;<img src="/images/smiles/icon_redface.gif" /> </div>
+</div>
+
+<div id="bc2353149">
+  <div class="comment_title">
+    14 楼
+    <a href='http://tobe.iteye.com' target='_blank' title='tobe'>tobe</a>
+    2014-07-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><img src="/images/smiles/icon_idea.gif" /> </div>
+</div>
+
+<div id="bc2353101">
+  <div class="comment_title">
+    13 楼
+    <a href='http://jinnianshilongnian.iteye.com' target='_blank' title='jinnianshilongnian'>jinnianshilongnian</a>
+    2014-07-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">lz958942 写道</div><div class="quote_div">喜欢这种文章</div><br /><img src="/images/smiles/icon_biggrin.gif" /> </div>
+</div>
+
+<div id="bc2353100">
+  <div class="comment_title">
+    12 楼
+    <a href='http://jinnianshilongnian.iteye.com' target='_blank' title='jinnianshilongnian'>jinnianshilongnian</a>
+    2014-07-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">宋建勇 写道</div><div class="quote_div">又见到楼主了，very nice！</div><br /><img src="/images/smiles/icon_biggrin.gif" /> </div>
+</div>
+
+<div id="bc2353096">
+  <div class="comment_title">
+    11 楼
+    <a href='http://songjianyong.iteye.com' target='_blank' title='宋建勇'>宋建勇</a>
+    2014-07-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">又见到楼主了，very nice！</div>
+</div>
+
+<div id="bc2353092">
+  <div class="comment_title">
+    10 楼
+    <a href='http://gourmand.iteye.com' target='_blank' title='lz958942'>lz958942</a>
+    2014-07-10&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">喜欢这种文章</div>
+</div>
+
+<div id="bc2353068">
+  <div class="comment_title">
+    9 楼
+    <a href='http://jinnianshilongnian.iteye.com' target='_blank' title='jinnianshilongnian'>jinnianshilongnian</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">malie0 写道</div><div class="quote_div">好像很久没看到LZ了，本来在问答区还是很活跃的</div><br />谢谢，上班忙啊</div>
+</div>
+
+<div id="bc2353067">
+  <div class="comment_title">
+    8 楼
+    <a href='http://jinnianshilongnian.iteye.com' target='_blank' title='jinnianshilongnian'>jinnianshilongnian</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">yixiandave 写道</div><div class="quote_div">卧槽。。。今天看了你的文章才发现commons-httpclient原来是07年的老版本。。。我还一直在用<br />话说4.0接口变化真大，之前一个项目改了我一上午<br /><br />最后问下4.3.4版本有什么已知bug吗</div><br /><a rel="nofollow" href="https://issues.apache.org/jira/browse/HTTPCLIENT-1478" target="_blank">https://issues.apache.org/jira/browse/HTTPCLIENT-1478</a> 现在说是修复了，没看最新的源代码。 用之前可以再看下源代码或者跑下量测试下。</div>
+</div>
+
+<div id="bc2353011">
+  <div class="comment_title">
+    7 楼
+    <a href='http://yixiandave.iteye.com' target='_blank' title='yixiandave'>yixiandave</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">卧槽。。。今天看了你的文章才发现commons-httpclient原来是07年的老版本。。。我还一直在用<br />话说4.0接口变化真大，之前一个项目改了我一上午<br /><br />最后问下4.3.4版本有什么已知bug吗</div>
+</div>
+
+<div id="bc2353007">
+  <div class="comment_title">
+    6 楼
+    <a href='http://malie0.iteye.com' target='_blank' title='malie0'>malie0</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">好像很久没看到LZ了，本来在问答区还是很活跃的</div>
+</div>
+
+<div id="bc2353002">
+  <div class="comment_title">
+    5 楼
+    <a href='http://jinnianshilongnian.iteye.com' target='_blank' title='jinnianshilongnian'>jinnianshilongnian</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><div class="quote_title">kidding87 写道</div><div class="quote_div"><br /><br />so_timeout这个必须设置，否则pool就可能呆死在这里了<br /><br /><br />这个是控制并发量的，两个都要设置<br />cm.setDefaultMaxPerRoute(100);<br />cm.setMaxTotal(200);<br /><br />不知道楼主那么大的并发不是针对相同的机器么，相同的话，keepalive能提升不少性能，减少了连接次数<br />time_wait 需要设置reuseaddr<br /><br />下面是官方默认给的<br />httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());<br />httpClient.setReuseStrategy(new DefaultConnectionReuseStrategy());<br />httpClient.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());<br /><br />官方的例子还给了一个定期清理pool中connection的例子<br /><br /><pre name="code" class="java">
+  class IdleConnectionMonitorThread extends Thread {
+		private final ClientConnectionManager connMgr;
+		private volatile boolean shutdown;
+
+		public IdleConnectionMonitorThread(ClientConnectionManager connMgr) {
+			super();
+			this.setName("idle-connection-monitor");
+			this.setDaemon(true);
+			this.connMgr = connMgr;
+			this.start();
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (!shutdown) {
+					synchronized (this) {
+						wait(5000);
+						// Close expired connections
+						connMgr.closeExpiredConnections();
+						// Optionally, close connections
+						// that have been idle longer than 30 sec
+						connMgr.closeIdleConnections(60, TimeUnit.SECONDS);
+					}
+				}
+			} catch (InterruptedException ex) {
+				// terminate
+			}
+		}
+
+		public void shutdown() {
+			synchronized (this) {
+				shutdown = true;
+				notifyAll();
+			}
+		}
+	}
+</pre></div><br />恩，是相同机器 keepalive方式 我没有试，我是帮同事调试的，只是给他建议。</div>
+</div>
+
+<div id="bc2352986">
+  <div class="comment_title">
+    4 楼
+    <a href='http://kidding87.iteye.com' target='_blank' title='kidding87'>kidding87</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content"><br /><br />so_timeout这个必须设置，否则pool就可能呆死在这里了<br /><br /><br />这个是控制并发量的，两个都要设置<br />cm.setDefaultMaxPerRoute(100);<br />cm.setMaxTotal(200);<br /><br />不知道楼主那么大的并发不是针对相同的机器么，相同的话，keepalive能提升不少性能，减少了连接次数<br />time_wait 需要设置reuseaddr<br /><br />下面是官方默认给的<br />httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());<br />httpClient.setReuseStrategy(new DefaultConnectionReuseStrategy());<br />httpClient.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());<br /><br />官方的例子还给了一个定期清理pool中connection的例子<br /><br /><pre name="code" class="java">
+  class IdleConnectionMonitorThread extends Thread {
+		private final ClientConnectionManager connMgr;
+		private volatile boolean shutdown;
+
+		public IdleConnectionMonitorThread(ClientConnectionManager connMgr) {
+			super();
+			this.setName("idle-connection-monitor");
+			this.setDaemon(true);
+			this.connMgr = connMgr;
+			this.start();
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (!shutdown) {
+					synchronized (this) {
+						wait(5000);
+						// Close expired connections
+						connMgr.closeExpiredConnections();
+						// Optionally, close connections
+						// that have been idle longer than 30 sec
+						connMgr.closeIdleConnections(60, TimeUnit.SECONDS);
+					}
+				}
+			} catch (InterruptedException ex) {
+				// terminate
+			}
+		}
+
+		public void shutdown() {
+			synchronized (this) {
+				shutdown = true;
+				notifyAll();
+			}
+		}
+	}
+</pre></div>
+</div>
+
+<div id="bc2352975">
+  <div class="comment_title">
+    3 楼
+    <a href='http://qiaoshaohua.iteye.com' target='_blank' title='qiaoshaohua'>qiaoshaohua</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">精典文章，保留了</div>
+</div>
+
+<div id="bc2352954">
+  <div class="comment_title">
+    2 楼
+    <a href='http://e241138.iteye.com' target='_blank' title='e241138'>e241138</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">这货的接口老是变</div>
+</div>
+
+<div id="bc2352948">
+  <div class="comment_title">
+    1 楼
+    <a href='http://ie7shop.iteye.com' target='_blank' title='ie7shop'>ie7shop</a>
+    2014-07-09&nbsp;&nbsp;
+    
+    
+  </div>
+  <div class="comment_content">涛-哥出品，必属精口。必须MARK</div>
+</div>
+
+
+    
+    
+  </div>
+
+  <div class="blog_comment">
+    <h5>发表评论</h5>
+            <p style="text-align:center; margin-top:30px;margin-bottom:0px;"><a href="/login" style="background-color:white;"> <img src="/images/login_icon.png" style="vertical-align:middle; margin-right: 10px;" /></a><a href="/login">  您还没有登录,请您登录后再发表评论 </a></p>
+      </div>
+</div>
+
+
+<script type="text/javascript">
+  dp.SyntaxHighlighter.HighlightAll('code', true, true);
+
+  $$('#main .blog_content pre[name=code]').each(function(pre, index){ // blog content
+    var post_id = 2089792;
+    var location = window.location;
+    source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+    pre.writeAttribute('codeable_id', post_id);
+    pre.writeAttribute('codeable_type', "Blog");
+    pre.writeAttribute('source_url', source_url);
+    pre.writeAttribute('pre_index', index);
+    pre.writeAttribute('title', '使用httpclient必须知道的参数设置及代码写法、存在的风险');
+  });
+
+  fix_image_size($$('div.blog_content img'), 700);
+
+  function processComment() {
+    $$('#main .blog_comment > div').each(function(comment){// comment
+      var post_id = comment.id.substr(2);
+      $$("#"+comment.id+" pre[name=code]").each(function(pre, index){
+        var location = window.location;
+        source_url = location.protocol + "//" + location.host + location.pathname + location.search;
+        source_url += "#" + comment.id;
+        pre.writeAttribute('codeable_id', post_id);
+        pre.writeAttribute('codeable_type', "BlogComment");
+        pre.writeAttribute('source_url', source_url);
+        pre.writeAttribute('pre_index', index);
+        pre.writeAttribute('title', '使用httpclient必须知道的参数设置及代码写法、存在的风险');
+      });
+    });
+  }
+
+  function quote_comment(id) {
+    new Ajax.Request('/editor/quote', {
+      parameters: {'id':id, 'type':'BlogComment'},
+      onSuccess:function(response){editor.bbcode_editor.textarea.insertAfterSelection(response.responseText);
+        Element.scrollTo(editor.bbcode_editor.textarea.element);}
+    });
+  }
+
+  code_favorites_init();
+  processComment();
+  new WeiboShare({share_buttons: $('share_weibo'), img_scope: $('blog_content')});
+</script>
+
+
+
+
+        </div>
+
+        <div id="local">
+          <div class="local_top"></div>
+          <div id="blog_owner">
+  <div id="blog_owner_logo"><a href='http://jinnianshilongnian.iteye.com'><img alt="jinnianshilongnian的博客" class="logo" src="http://www.iteye.com/upload/logo/user/1122108/c7dd3e08-f305-3aa7-a0ee-888e606701d4.jpg?1444401766" title="jinnianshilongnian的博客: 开涛的博客(欢迎关注我的公众号[博客头像二维码])" width="" /></a></div>
+  <div id="blog_owner_name">jinnianshilongnian</div>
+</div>
+
+          <div id="blog_actions">
+            <ul>
+              <li>浏览: 6478231 次</li>
+              <li>性别: <img alt="Icon_minigender_1" src="http://www.iteye.com/images/icon_minigender_1.gif?1448702469" title="男" /></li>
+              
+              <li><img src='/images/status/offline.gif'/></li>
+              
+            </ul>
+          </div>
+          <div id="user_visits" class="clearfix">
+            <h5>最近访客 <span style='font-weight:normal;font-size:12px;padding-left:30px;'><a href="/blog/user_visits">更多访客&gt;&gt;</a></span></h5>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://gubin-mail.iteye.com' target='_blank'><img alt="leogu的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1448702469" title="leogu的博客: leo gu" width="48px" /></a></div>
+                <div class="left"><a href='http://gubin-mail.iteye.com' target='_blank' title='leogu'>leogu</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://201512293214.iteye.com' target='_blank'><img alt="阿土微博的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1448702469" title="阿土微博的博客: " width="48px" /></a></div>
+                <div class="left"><a href='http://201512293214.iteye.com' target='_blank' title='阿土微博'>阿土微博</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://hgmbupt.iteye.com' target='_blank'><img alt="hgmbupt的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1448702469" title="hgmbupt的博客: " width="48px" /></a></div>
+                <div class="left"><a href='http://hgmbupt.iteye.com' target='_blank' title='hgmbupt'>hgmbupt</a></div>
+              </div>
+            
+              <div class="user_visit">
+                <div class="logo"><a href='http://vistaorg.iteye.com' target='_blank'><img alt="vistaorg的博客" class="logo" src="http://www.iteye.com/images/user-logo-thumb.gif?1448702469" title="vistaorg的博客: " width="48px" /></a></div>
+                <div class="left"><a href='http://vistaorg.iteye.com' target='_blank' title='vistaorg'>vistaorg</a></div>
+              </div>
+            
+          </div>
+
+          
+            <div>
+              <h5>博客专栏</h5>
+              
+
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/spring3" target="_blank"><img alt="5c8dac6a-21dc-3466-8abb-057664ab39c7" src="http://www.iteye.com/upload/logo/blog_wiki/642677/5c8dac6a-21dc-3466-8abb-057664ab39c7.png?1331000354" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/spring3" target="_blank" title="跟我学spring3">跟我学spring3</a><br />
+      <span class="visited">浏览量：1016586</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/spring-tittle-tattle" target="_blank"><img alt="D659df3e-4ad7-3b12-8b9a-1e94abd75ac3" src="http://www.iteye.com/upload/logo/blog_wiki/858709/d659df3e-4ad7-3b12-8b9a-1e94abd75ac3.png?1371447808" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/spring-tittle-tattle" target="_blank" title="Spring杂谈">Spring杂谈</a><br />
+      <span class="visited">浏览量：1110457</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/kaitao-springmvc" target="_blank"><img alt="43989fe4-8b6b-3109-aaec-379d27dd4090" src="http://www.iteye.com/upload/logo/blog_wiki/858708/43989fe4-8b6b-3109-aaec-379d27dd4090.png?1371447798" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/kaitao-springmvc" target="_blank" title="跟开涛学SpringMVC">跟开涛学SpringMVC...</a><br />
+      <span class="visited">浏览量：2025495</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/Servlet-3-1" target="_blank"><img alt="1df97887-a9e1-3328-b6da-091f51f886a1" src="http://www.iteye.com/upload/logo/blog_wiki/862394/1df97887-a9e1-3328-b6da-091f51f886a1.png?1372307553" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/Servlet-3-1" target="_blank" title="Servlet3.1规范翻译">Servlet3.1规范翻...</a><br />
+      <span class="visited">浏览量：118472</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/springmvc-tattle" target="_blank"><img alt="4f347843-a078-36c1-977f-797c7fc123fc" src="http://www.iteye.com/upload/logo/blog_wiki/858710/4f347843-a078-36c1-977f-797c7fc123fc.png?1371447823" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/springmvc-tattle" target="_blank" title="springmvc杂谈">springmvc杂谈</a><br />
+      <span class="visited">浏览量：488254</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/hibernate" target="_blank"><img alt="22722232-95c1-34f2-b8e1-d059493d3d98" src="http://www.iteye.com/upload/logo/blog_wiki/858711/22722232-95c1-34f2-b8e1-d059493d3d98.png?1371447830" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/hibernate" target="_blank" title="hibernate杂谈">hibernate杂谈</a><br />
+      <span class="visited">浏览量：134101</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/shiro" target="_blank"><img alt="45b32b6f-7468-3077-be40-00a5853c9a48" src="http://www.iteye.com/upload/logo/blog_wiki/940965/45b32b6f-7468-3077-be40-00a5853c9a48.png?1392994068" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/shiro" target="_blank" title="跟我学Shiro">跟我学Shiro</a><br />
+      <span class="visited">浏览量：1054071</span>
+    </dd>
+  </dl>
+  
+  <dl class="series" style="padding-bottom:5px;">
+    <dt>
+      <a href="http://www.iteye.com/blogs/subjects/nginx-lua" target="_blank"><img alt="Group-logo" src="http://www.iteye.com/images/group-logo.gif?1448702469" /></a>
+    </dt>
+    <dd>
+    <a href="http://www.iteye.com/blogs/subjects/nginx-lua" target="_blank" title="跟我学Nginx+Lua开发">跟我学Nginx+Lua开...</a><br />
+      <span class="visited">浏览量：118220</span>
+    </dd>
+  </dl>
+  
+
+
+            </div>
+          
+
+                      <div id="blog_menu">
+              <h5>文章分类</h5>
+              <ul>
+                <li><a href="/">全部博客 (317)</a></li>
+                
+                  <li><a href="/category/333854">跟我学Nginx+Lua开发 (11)</a></li>
+                
+                  <li><a href="/category/206533">跟我学spring (54)</a></li>
+                
+                  <li><a href="/category/231099">跟开涛学SpringMVC (34)</a></li>
+                
+                  <li><a href="/category/301336">spring4 (16)</a></li>
+                
+                  <li><a href="/category/218109">spring杂谈 (50)</a></li>
+                
+                  <li><a href="/category/277825">springmvc杂谈 (22)</a></li>
+                
+                  <li class='selected'><a href="/category/305053">跟我学Shiro (26)</a></li>
+                
+                  <li><a href="/category/277699">shiro杂谈 (3)</a></li>
+                
+                  <li><a href="/category/219273">hibernate杂谈 (10)</a></li>
+                
+                  <li><a href="/category/283252">java开发常见问题分析 (36)</a></li>
+                
+                  <li><a href="/category/283243">加速Java应用开发 (5)</a></li>
+                
+                  <li><a href="/category/255452">Servlet 3.1规范[翻译] (21)</a></li>
+                
+                  <li><a href="/category/286229">servlet3.x (2)</a></li>
+                
+                  <li><a href="/category/283927">websocket协议[翻译] (14)</a></li>
+                
+                  <li><a href="/category/277530">websocket规范[翻译] (1)</a></li>
+                
+                  <li><a href="/category/244085">java web (5)</a></li>
+                
+                  <li><a href="/category/220701">db (1)</a></li>
+                
+                  <li><a href="/category/268665">js &amp; jquery &amp; bootstrap (4)</a></li>
+                
+                  <li><a href="/category/252959">非技术 (4)</a></li>
+                
+                  <li><a href="/category/215151">reminder[转载] (23)</a></li>
+                
+                  <li><a href="/category/317975">跟叶子学把妹 (9)</a></li>
+                
+                  <li><a href="/category/337500">nginx (2)</a></li>
+                
+                  <li><a href="/category/344044">架构 (7)</a></li>
+                
+                  <li><a href="/category/350365">flume架构与源码分析 (4)</a></li>
+                
+              </ul>
+            </div>
+            <div id='month_blogs'>
+              <h5>社区版块</h5>
+              <ul>
+                <li><a href="/blog/news">我的资讯</a> (10)</li>
+                <li>
+                  <a href="/blog/post">我的论坛</a> (1112)
+                </li>
+                <li><a href="/blog/answered_problems">我的问答</a> (2428)</li>
+              </ul>
+            </div>
+            <div id="month_blogs">
+              <h5>存档分类</h5>
+              <ul>
+                
+                  <li><a href="/blog/monthblog/2015-12">2015-12</a> (4)</li>
+                
+                  <li><a href="/blog/monthblog/2015-11">2015-11</a> (2)</li>
+                
+                  <li><a href="/blog/monthblog/2015-10">2015-10</a> (1)</li>
+                
+                <li><a href="/blog/monthblog_more">更多存档...</a></li>
+              </ul>
+            </div>
+            
+            
+              <div id="comments_top">
+                <h5>评论排行榜</h5>
+                <ul>
+                  
+                    <li><a href="/blog/2188538" title="第七章 Web开发实战2——商品详情页">第七章 Web开发实战2——商品详情页</a></li>
+                  
+                    <li><a href="/blog/2232357" title="我是如何构建一个持续发展的项目">我是如何构建一个持续发展的项目</a></li>
+                  
+                    <li><a href="/blog/2245925" title="商品详情页系统的Servlet3异步化实践">商品详情页系统的Servlet3异步化实践</a></li>
+                  
+                    <li><a href="/blog/2188113" title="第六章 Web开发实战1——HTTP服务">第六章 Web开发实战1——HTTP服务</a></li>
+                  
+                    <li><a href="/blog/2235572" title="构建需求响应式亿级商品详情页">构建需求响应式亿级商品详情页</a></li>
+                  
+                </ul>
+              </div>
+            
+
+            <div id="guest_books">
+              <h5>最新评论</h5>
+              <ul>
+                
+                <li>
+                  <a href='http://407122006-qq-com.iteye.com' target='_blank' title='田梦桦'>田梦桦</a>： 
+                  体验下零配置的感觉。<br />
+                  <a href="/blog/1997192#bc2383336">Spring Boot——2分钟构建spring web mvc REST风格HelloWorld</a>
+                </li>
+                
+                <li>
+                  <a href='http://walidake.iteye.com' target='_blank' title='walidake'>walidake</a>： 
+                  您好~   关于数组的配置并不能set进去~~~  不知道什么 ...<br />
+                  <a href="/blog/2020820#bc2383316">第四章  INI配置——《跟我学Shiro》</a>
+                </li>
+                
+                <li>
+                  <a href='http://kakadong123.iteye.com' target='_blank' title='kakadong123'>kakadong123</a>： 
+                  十分感谢您的分享<br />
+                  <a href="/blog/2049092#bc2383311">《跟我学Shiro》PDF完结版下载</a>
+                </li>
+                
+                <li>
+                  <a href='http://sbwfgihc.iteye.com' target='_blank' title='sbwfgihc'>sbwfgihc</a>： 
+                  andyadc 写道wtaisi 写道String excep ...<br />
+                  <a href="/blog/2037222#bc2383293">第十六章  综合实例——《跟我学Shiro》</a>
+                </li>
+                
+                <li>
+                  <a href='http://86142718.iteye.com' target='_blank' title='言小辞'>言小辞</a>： 
+                  赞<br />
+                  <a href="/blog/1593441#bc2383289">第一章 Web MVC简介 —— 跟开涛学SpringMVC</a>
+                </li>
+                
+              </ul>
+            </div>
+
+            <div class="local_bottom"></div>
+          
+        </div>
+      </div>
+
+      <div id="footer" class="clearfix">
+        <div id="copyright">
+          <hr/>
+          声明：ITeye文章版权属于作者，受法律保护。没有作者书面许可不得转载。若作者同意转载，必须以超链接形式标明文章原始出处和作者。<br />
+          &copy; 2003-2015 ITeye.com.   All rights reserved.  [ 京ICP证110151号  京公网安备110105010620 ]
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+  document.write("<img src='http://stat.iteye.com/?url="+ encodeURIComponent(document.location.href) + "&referrer=" + encodeURIComponent(document.referrer) + "&user_id=' width='0' height='0' />");
+</script>
+
+<script src="http://csdnimg.cn/pubfooter/js/tracking.js?version=20130923164150" type="text/javascript"></script>
+
+    
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-29786484-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+      
+    
+  </body>
+</html>

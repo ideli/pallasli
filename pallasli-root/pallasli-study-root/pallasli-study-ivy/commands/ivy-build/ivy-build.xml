@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="wasoft bpm" default="build2jar"
+	xmlns:ivy="antlib:org.apache.ivy.ant"
+ 	basedir=".">
+ 	<ivy:retrieve file="./ivy.xml" sync="true" />
+	<description>
+		wasoft bpm
+    </description>
+	<!--生成jar文件名-->
+	<property file="ivy_build.properties" />
+	<property name="jar.filename" value="${src.jar.filename}"/>
+	<!--项目上下文路径-->
+	<property name="classes.dir" value="${src.classes.dir}"/>
+	<property name="dist.dir" value="${src.dist.dir}"/> 
+	
+	<!--打jar包-->
+	<target name="build2jar" description="-->生成jar包">
+		<jar jarfile="${dist.dir}/${jar.filename}">
+			<fileset dir="${classes.dir}">
+				<include name="com/**/*.*"/>
+			</fileset>
+		</jar>
+	</target>
+	
+</project>

@@ -1,27 +1,27 @@
-²âÊÔÓÃÀı£ºÀàÃûÎŞÔ¼Êø£¬¹«¹²Àà£¬º¬ÎŞ²Î¹¹Ôì
+æµ‹è¯•ç”¨ä¾‹ï¼šç±»åæ— çº¦æŸï¼Œå…¬å…±ç±»ï¼Œå«æ— å‚æ„é€ 
 
-²âÊÔ·½·¨£º@Test±ê¼Ç£¬¹«¹²£¬ÎŞ²Î£¬ÎŞ·µ»Ø
-
-
-import static org.junit.Assert.*;¿É¾²Ì¬ÒıÈë¶ÏÑÔ·½·¨
+æµ‹è¯•æ–¹æ³•ï¼š@Testæ ‡è®°ï¼Œå…¬å…±ï¼Œæ— å‚ï¼Œæ— è¿”å›
 
 
-org.junit.runner.JUnitCore ¸ù¾İ²âÊÔÀà@RunWith×Ô¶¯Ñ¡Ôñ²âÊÔÔËĞĞÆ÷
+import static org.junit.Assert.*;å¯é™æ€å¼•å…¥æ–­è¨€æ–¹æ³•
 
 
-assertEquals(ÆÚÍûÖµ£¬ÕæÊµÖµ£¬ÔÊĞíµÄÎó²î) equals
-assertEquals(·µ»ØĞÅÏ¢£¬ÆÚÍûÖµ£¬ÕæÊµÖµ£¬ÔÊĞíµÄÎó²î) equals
-assertArrayEquals(·µ»ØĞÅÏ¢£¬Êı×é£¬Êı×é)
-assertSame(·µ»ØĞÅÏ¢£¬¶ÔÏó£¬¶ÔÏó)  ===
-assertTrue(ÆÚÍûÖµ£¬Öµ)
-assertNotNull(ÆÚÍûÖµ£¬¶ÔÏó)
+org.junit.runner.JUnitCore æ ¹æ®æµ‹è¯•ç±»@RunWithè‡ªåŠ¨é€‰æ‹©æµ‹è¯•è¿è¡Œå™¨
 
 
-²ÎÊı»¯²âÊÔ
-Àà×¢½â£º@RunWith(value = Parameterized.class)
+assertEquals(æœŸæœ›å€¼ï¼ŒçœŸå®å€¼ï¼Œå…è®¸çš„è¯¯å·®) equals
+assertEquals(è¿”å›ä¿¡æ¯ï¼ŒæœŸæœ›å€¼ï¼ŒçœŸå®å€¼ï¼Œå…è®¸çš„è¯¯å·®) equals
+assertArrayEquals(è¿”å›ä¿¡æ¯ï¼Œæ•°ç»„ï¼Œæ•°ç»„)
+assertSame(è¿”å›ä¿¡æ¯ï¼Œå¯¹è±¡ï¼Œå¯¹è±¡)  ===
+assertTrue(æœŸæœ›å€¼ï¼Œå€¼)
+assertNotNull(æœŸæœ›å€¼ï¼Œå¯¹è±¡)
 
 
-²âÊÔ¼¯×¢½â
+å‚æ•°åŒ–æµ‹è¯•
+ç±»æ³¨è§£ï¼š@RunWith(value = Parameterized.class)
+
+
+æµ‹è¯•é›†æ³¨è§£
 @RunWith(value = org.junit.runners.Suite.class)
 @SuiteClasses(value = { CalculatorTest.class,
 		CalculatorParameterizedTest.class, ExpressionTest.class })

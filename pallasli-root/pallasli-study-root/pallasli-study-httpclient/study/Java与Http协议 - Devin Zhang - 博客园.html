@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Java与Http协议 - Devin Zhang - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=xCq7zOzG7ffmeoIZ8ptO6h_XQZKuhaCdCqXw425T8aQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/sea/bundle-sea.css?v=PPe3jt1rcXPno6kucw0iQU2MWF3DbrvubQHRM0FEMas1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/devinzhang/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/devinzhang/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/devinzhang/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'devinzhang', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=vfyaOatuLMyj5RwdSGYAF5dymrCScyt2dbQ1pH4gldc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="header">
+	
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/devinzhang/">Devin Zhang</a><br>
+		
+	</div>
+</div>
+
+</div>
+
+<div id="mytopmenu" >
+	
+		<div id="mylinks">
+<!--done-->
+<a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a> &nbsp;
+<a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/devinzhang/">首页</a> &nbsp;
+<a href="http://q.cnblogs.com" class="menu">博问</a> &nbsp;
+<a href="http://home.cnblogs.com/ing/" class="menu">闪存</a> &nbsp;
+<a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a> &nbsp;
+<a id="MyLinks1_ContactLink" class="menu" rel="nofollow" href="http://msg.cnblogs.com/send/Devin%20Zhang">联系</a> &nbsp;
+<a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/devinzhang/rss">订阅</a><a id="MyLinks1_XMLLink" href="http://www.cnblogs.com/devinzhang/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>&nbsp;
+<a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a>
+</div>
+		<DIV id="mystats">
+<!--done-->
+随笔-123&nbsp;
+评论-238&nbsp;
+文章-0&nbsp;
+trackbacks-0
+</DIV>
+	
+</div>
+<div id="centercontent" >
+	
+<div id="post_detail">
+<div class = "post">
+	<h1 class = "postTitle"><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/devinzhang/archive/2012/02/06/2340186.html">Java与Http协议</a></h1>
+	<div id="cnblogs_post_body"><p><strong>引言</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;http（超文本传输协议）是一个基于请求与响应模式的、无状态的、应用层的协议，常基于TCP的连接方式。HTTP协议的主要特点是：<br /> &nbsp;&nbsp;&nbsp;&nbsp; 1.支持客户/服务器模式。<br /> &nbsp;&nbsp;&nbsp;&nbsp; 2.简单快速：客户向服务器请求服务时，只需传送请求方法和路径。由于HTTP协议简单，通信速度很快。<br /> &nbsp;&nbsp;&nbsp;&nbsp; 3.灵活：HTTP允许传输任意类型的数据对象。类型由Content-Type加以标记。<br /> &nbsp;&nbsp;&nbsp; &nbsp;4.无连接：即每次连接只处理一个请求，处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。<br /> &nbsp;&nbsp;&nbsp;&nbsp; 5.无状态：无状态是指协议对于事务处理没有记忆能力。&nbsp;</p>
+<p>&nbsp;&nbsp; &nbsp; http1.0协议默认的是非持久连接， HTTP1.1默认的连接方式为持久连接。</p>
+<p>非持久连接：每次服务器发出一个对象后，相应的TCP连接就被关闭，也就是说每个连接都没有持续到可用于传送其他对象。每个TCP连接只用于传输一个请求消息和一个响应消息。</p>
+<p>持久连接：服务器在发出响应后让TCP连接继续打开着。同一对客户/服务器之间的后续请求和响应可以通过这个连接发送。HTTP/1.1的默认模式使用带流水线的持久连接。</p>
+<p>&nbsp;</p>
+<p><strong>一、</strong><strong>HTTP</strong><strong>协议详解之请求</strong></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">请求行</span><span style="color: #008000;"><br /></span>POST /reg.jsp HTTP/ (CRLF)       <br /><br /><span style="color: #008000;">//</span><span style="color: #008000;">消息报头</span><span style="color: #008000;"><br /></span>Accept:image/gif,image/x-xbitmap,image/jpeg,application/x-shockwave-flash,application/vnd.ms-excel,application/vnd.ms-powerpoint,application/mswo<span style="color: #000000;">rd,*/*</span><span style="color: #008000;"><span style="color: #000000;"> (CRLF)</span><br /><span style="color: #000000;">Accept-Language:zh-cn (CRLF)</span><br /><span style="color: #000000;">Accept-Encoding:gzip,deflate (CRLF)</span><br /><span style="color: #000000;">If-Modified-Since:Wed,05 Jan 2007 11:21:25 GMT (CRLF)</span><br /><span style="color: #000000;">If-None-Match:W/"80b1a4c018f3c41:8317" (CRLF)</span><br /><span style="color: #000000;">User-Agent:Mozilla/4.0(compatible;MSIE6.0;Windows NT 5.0) (CRLF)</span><br /><span style="color: #000000;">Host:www.guet.edu.cn (CRLF)</span><br /><span style="color: #000000;">Connection:Keep-Alive (CRLF)</span><br /><span style="color: #000000;">(CRLF)</span><br /><br />//请求正文<br /><span style="color: #000000;">user=jeffrey&amp;pwd=1234 </span></span></pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp;以上是http请求的三部：<strong>请求行、消息报头、请求正文。</strong></p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;请求行以一个方法符号开头，以空格分开，后面跟着请求的URI和协议的版本，格式如下：</p>
+<p>Method Request-URI HTTP-Version CRLF&nbsp;&nbsp;<br /> &nbsp;&nbsp;&nbsp;&nbsp; 其中 Method表示请求方法(如POST、GET、PUT、DELETE等)；Request-URI是一个统一资源标识符；HTTP-Version表示请求的HTTP协议版本；CRLF表示回车和换行。</p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>二、</strong><strong>HTTP</strong><strong>协议详解之响应篇</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;">状态行</span><span style="color: #008000;"><br /></span>HTTP/1.1 200 OK (CRLF)<br /><br /><span style="color: #008000;">//</span><span style="color: #008000;">消息报头</span><span style="color: #008000;"><br /></span>Cache-Control: <span style="color: #0000ff;">private</span>, max-age=30<br />Content-Type: text/html; charset=utf-8<br />Content-Encoding: gzip<br />Expires: Mon, 25 May 2009 03:20:33 GMT<br />Last-Modified: Mon, 25 May 2009 03:20:03 GMT<br />Vary: Accept-Encoding<br />Server: Microsoft-IIS/7.0<br />X-AspNet-Version: 2.0.50727<br />X-Powered-By: ASP.NET<br />Date: Mon, 25 May 2009 03:20:02 GMT<br />Content-Length: 12173<br /><br /><span style="color: #008000;">//</span><span style="color: #008000;">响应正文</span><span style="color: #008000;"><br /></span>略</pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp;HTTP响应也是由三个部分组成，分别是：<strong>状态行、消息报头、响应正文</strong></p>
+<p>&nbsp; &nbsp; &nbsp;状态行格式如下：<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP-Version Status-Code Reason-Phrase CRLF<br />&nbsp; &nbsp; &nbsp;其中，HTTP-Version表示服务器HTTP协议的版本；Status-Code表示服务器发回的响应状态代码；Reason-Phrase表示状态代码的文本描述。<br /> <br /> 常见状态代码、状态描述、说明：<br /> 200 OK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //客户端请求成功<br /> 400 Bad Request&nbsp; //客户端请求有语法错误，不能被服务器所理解<br /> 401 Unauthorized //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用&nbsp;<br /> 403 Forbidden&nbsp; //服务器收到请求，但是拒绝提供服务<br /> 404 Not Found&nbsp; //请求资源不存在，eg：输入了错误的URL<br /> 500 Internal Server Error //服务器发生不可预期的错误<br /> 503 Server Unavailable&nbsp; //服务器当前不能处理客户端的请求，一段时间后可能恢复正常</p>
+<p>&nbsp;</p>
+<p><strong>三、</strong><strong>HTTP</strong><strong>协议详解之消息报头</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP消息由客户端到服务器的请求和服务器到客户端的响应组成。请求消息和响应消息都是由开始行（对于请求消息，开始行就是请求行；对于响应消息，开始行就是状态行），消息报头（可选），空行（只有CRLF的行），消息正文（可选）组成。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP消息报头包括普通报头、请求报头、响应报头、实体报头。每一个报头域都是由名字+&ldquo;：&rdquo;+空格+值 组成，消息报头域的名字是大小写无关的。</p>
+<p>1、请求报头<br /> &nbsp;&nbsp;&nbsp;&nbsp; 请求报头允许客户端向服务器端传递请求的附加信息以及客户端自身的信息。</p>
+<p><br /> 常用的请求报头</p>
+<p>Accept请求报头域用于指定客户端接受哪些类型的信息。<br /> Accept-Charset请求报头域用于指定客户端接受的字符集。<br /> Accept-Encoding请求报头域类似于Accept，但是它是用于指定可接受的内容编码。<br /> Accept-Language请求报头域类似于Accept，但是它是用于指定一种自然语言。<br /> Authorization请求报头域主要用于证明客户端有权查看某个资源。</p>
+<p>Host请求报头域主要用于指定被请求资源的Internet主机和端口号，它通常从HTTP URL中提取出来的。User-Agent请求报头域允许客户端将它的操作系统、浏览器和其它属性告诉服务器。</p>
+<p>2、响应报头</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 响应报头允许服务器传递不能放在状态行中的附加响应信息，以及关于服务器的信息和对Request-URI所标识的资源进行下一步访问的信息。</p>
+<p><br /> 常用的响应报头<br /> Location响应报头域用于重定向接受者到一个新的位置。Location响应报头域常用在更换域名的时候。<br /> Server响应报头域包含了服务器用来处理请求的软件信息</p>
+<p>3. 实体报头</p>
+<p>请求和响应消息都可以传送一个实体。</p>
+<p><br /> 常用的实体报头<br /> Content-Encoding指示已经被应用到实体正文的附加内容的编码。</p>
+<p>Content-Language实体报头域描述了资源所用的自然语言。</p>
+<p>Content-Length实体报头域用于指明实体正文的长度，以字节方式存储的十进制数字来表示。<br /> Content-Type实体报头域用语指明发送给接收者的实体正文的媒体类型。<br /> Last-Modified实体报头域用于指示资源的最后修改日期和时间。<br /> Expires实体报头域给出响应过期的日期和时间。</p>
+<p>&nbsp;</p>
+<p><strong>四、</strong><span style="color: #000000;"><span style="color: #000000;"><strong>补充</strong></span></span></p>
+<p>1、HTTP协议Content Lenth限制漏洞导致拒绝服务攻击<br /> 使用POST方法时，可以设置ContentLenth来定义需要传送的数据长度，例如ContentLenth:999999999，在传送完成前，内 存不会释放，攻击者可以利用这个缺陷，连续向WEB服务器发送垃圾数据直至WEB服务器内存耗尽。这种攻击方法基本不会留下痕迹。<br />2、为了提高用户使用浏览器时的性能，现代浏览器还支持并发的访问方式，浏览一个网页时同时建立多个连接，以迅速获得一个网页上的多个图标，这样能更快速完成整个网页的传输。HTTP1.1中提供了这种持续连接的方式，而下一代HTTP协议：HTTP-NG更增加了有关会话控制、丰富的内容协商等方式的支持，来提供更高效率的连接。</p>
+<p>&nbsp;</p>
+<p>五.Java利用HTTP协议实现联网和下载</p>
+<p><span>Url的请求连接(Get方式)</span></p>
+<div class="cnblogs_code">
+<pre>String currentUrl=&ldquo;http://www.myWeb.com/login.jsp?userName='Devin'&amp;passWord='mypassword'&rdquo;; //URL ?后面的内容为HTTP请求的正文</pre>
+<pre>URL url = <span style="color: #0000ff;">new</span> URL(currentUrl);<br /> <br />HttpURLConnection httpurlconnection = url.openConnection();</pre>
+<pre><span style="color: #008000;">//下面的设置对应HTTP请求中的消息报头</span><br />httpurlconnection.setRequestProperty("User-Agent",CommonValues.User_Agent);<br />httpurlconnection.setRequestProperty("Accept",CommonValues.Accept);<br />httpurlconnection.setRequestProperty("Accept-Charset",CommonValues.Accept_Charset);<br />httpurlconnection.setRequestProperty("Accept-Language",CommonValues.Accept_Language);<br />httpurlconnection.setRequestProperty("Connection",CommonValues.Connection);<br />httpurlconnection.setRequestProperty("Keep-Alive",CommonValues.Keep_Alive);<br />httpurlconnection.setConnectTimeout(CommonValues.ConnectionTimeOut);<br />httpurlconnection.setReadTimeout(CommonValues.ReadTimeOut);<br />             <br />httpurlconnection.connect();<br />            <br /><span style="color: #0000ff;">int</span> responsecode = httpurlconnection.getResponseCode();<br />             <br /><span style="color: #0000ff;">if</span>(responsecode == HttpURLConnection.HTTP_OK) <span style="color: #008000;">//对应HTTP响应中状态行的响应码</span></pre>
+<pre>{<br />　　<span style="color: #008000;">//操作请求流，这里对应HTTP响应中的响应正文</span><br />}<br />             <br /><span style="color: #0000ff;">if</span> (httpurlconnection != <span style="color: #0000ff;">null</span>) <br />{<br />   httpurlconnection.disconnect();<br />}<br /><br /></pre>
+</div>
+<p>&nbsp;Post方法连接请查看：<a href="http://www.cnblogs.com/devinzhang/archive/2012/01/17/2325092.html">http://www.cnblogs.com/devinzhang/archive/2012/01/17/2325092.html</a></p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+	<div class = "postDesc">posted on <span id="post-date">2012-02-06 15:07</span> <a href='http://www.cnblogs.com/devinzhang/'>Devin Zhang</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://i.cnblogs.com/EditPosts.aspx?postid=2340186" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(2340186);return false;">收藏</a></div>
+</div>
+<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=104312,cb_entryId=2340186,cb_blogApp=currentBlogApp,cb_blogUserGuid='65ff1fe1-c126-e011-ac81-842b2b196315',cb_entryCreatedDate='2012/2/6 15:07:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+<div id="comment_form_container"></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="开发者的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="opt_under_post"></div>
+<script type="text/javascript">
+    fixPostBodyFormat();
+</script>
+<div id="google_ad_c1" class="c_ad_block"></div>
+<div id="under_post_news"></div>
+<div id="google_ad_c2" class="c_ad_block"></div>
+<div id="under_post_kb"></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+$(function () {
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+});
+</script>
+</div>
+
+</div>
+<div id="leftcontent">
+	
+		<DIV id="leftcontentcontainer">
+			
+<!--done-->
+<div class="newsItem">
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script><br>
+			<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script></DIV>
+	
+</div>
+
+<!--done-->
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com">博客园</a>	模板提供：<a href="http://blog.hjenglish.com">沪江博客</a>
+	Copyright &copy;2015 Devin Zhang
+</div>
+
+
+
+</body>
+</html>

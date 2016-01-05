@@ -110,6 +110,13 @@ public class Main extends JFrame {
 		mnf.add(menu3);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("另存为");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 判断是哪个按纽被点击了
+
+			}
+		});
 		new SaveAsAction(mntmNewMenuItem_3);
 		mnf.add(mntmNewMenuItem_3);
 

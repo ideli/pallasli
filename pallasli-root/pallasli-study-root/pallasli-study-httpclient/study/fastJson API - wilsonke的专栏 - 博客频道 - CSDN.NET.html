@@ -1,0 +1,1478 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+     
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>   
+    
+     
+    <script type="text/javascript" src="http://c.csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <title>fastJson API - wilsonke的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="笔记本在Win7下使用wubi安装Ubuntu10.04 双系统" />
+    <script src="http://static.blog.csdn.net/scripts/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="http://static.blog.csdn.net/scripts/ad.js?v=1.1"></script>
+        <!--new top-->
+               <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">        <!--new top-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/wilsonke/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+</head>
+<body>
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/wilsonke">wilsonke的专栏</a></h2>
+            <h3>入行十三年，做不尽的代码苦力。</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+            
+                <li id="btnContents"><a href="http://blog.csdn.net/wilsonke?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/wilsonke?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/wilsonke/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "wilsonke";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/wilsonke";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "lyt1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+<a href="http://huiyi.csdn.net/activity/product/goods_list?project_id=2738">
+<font color=red>【免费公开课】解码皮肤美化算法
+</font></a>
+&nbsp;&nbsp;&nbsp;
+
+<a href="http://edu.csdn.net/yearPromotion">
+<font color=blue>学院周年礼-顶尖课程钜惠呈现
+</font></a>
+&nbsp;&nbsp;&nbsp;
+<a href="http://bss.csdn.net/m/topic/cuanke_vote">
+<font color=red>当讲师？爱学习？投票攒课吧
+</font></a>
+&nbsp;&nbsp;&nbsp;
+<a href="http://vote.blog.csdn.net/blogstar2015/result">
+<font color=blue>CSDN 2015博客之星评选结果公布
+</font></a>
+
+</div>                        </div>
+                        
+
+<!--AdForward Begin:-->
+<script type="text/javascript" ads-src="http://csdnim.qtmojo.com/main/s?user=csdn|blog|fumeiti&db=csdnim&border=0&local=yes&js=ie" src="http://creatim.qtmojo.cn/td/AllyesDeliver.min.js" charset="gbk"></script>
+<!--AdForward End-->
+
+  
+<link href="http://static.blog.csdn.net/css/comment1.css" type="text/css" rel="stylesheet" />
+<link href="http://static.blog.csdn.net/css/style1.css" type="text/css" rel="stylesheet" />
+<script language='JavaScript' type='text/javascript' src='http://download.csdn.net/js/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/search-service/main.js"></script>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+<link rel="stylesheet" href="http://static.blog.csdn.net/css/category.css?v=1.0" />
+<script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+          
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Repost"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="/wilsonke/article/details/37921571">
+        fastJson API            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/fastjson' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">fastjson</a><a href='http://www.csdn.net/tag/JSON.ParseArray' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">JSON.ParseArray</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2014-07-18 08:57</span>
+            <span class="link_view" title="阅读次数">7049人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(2)</span>
+            <span class="link_collect"> <a href="javascript:void(0);" onclick="javascript:collectArticle('fastJson API','37921571');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(37921571,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('1833053','wilsonke','top','37921571');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">Java<em>（85）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/wilsonke/article/category/1833053">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1833053">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>  
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<div style="top:0px">&#65279;&#65279;</div>
+<div>FastJSON是一个很好的java开源json工具类库，相比其他同类的json类库，它的速度的确是fast，最快！但是文档做得不好，在应用前不得不亲测一些功能。</div>
+<div>&nbsp;</div>
+<div>实际上其他的json处理工具都和它差不多，api也有几分相&#20284;。</div>
+<div>&nbsp;</div>
+<div>一、JSON规范</div>
+<div>JSON是一个标准规范，用于数据交互，规范的中文文档如下：</div>
+<div><a target="_blank" href="http://www.json.org/json-zh.html" style="color:rgb(51,102,153); text-decoration:none">http://www.json.org/json-zh.html</a></div>
+<div>&nbsp;</div>
+<div>参看规范，来对比JSON类库处理结果。</div>
+<div>&nbsp;</div>
+<div>二、fastjson的一些简要说明</div>
+<div>&nbsp;</div>
+<div>1、了解fastjson</div>
+<div>&nbsp;</div>
+<div>Fastjson介绍</div>
+<div>Fastjson是一个Java语言编写的JSON处理器。<br>
+1、遵循<a target="_blank" class="external-link" href="http://json.org/" rel="nofollow" style="color:rgb(51,102,153); text-decoration:none">http://json.org</a>标准，为其官方网站收录的参考实现之一。<br>
+2、功能qiang打，支持JDK的各种类型，包括基本的JavaBean、Collection、Map、Date、Enum、泛型。<br>
+3、无依赖，不需要例外额外的jar，能够直接跑在JDK上。<br>
+4、开源，使用Apache License 2.0协议开源。<a target="_blank" class="external-link" href="http://code.alibabatech.com/wiki/display/FastJSON/Home" rel="nofollow" style="color:rgb(51,102,153); text-decoration:none">http://code.alibabatech.com/wiki/display/FastJSON/Home</a></div>
+<div>如果获得Fastjson？<br>
+SVN:<a target="_blank" class="external-link" href="http://code.alibabatech.com/svn/fastjson/trunk/" rel="nofollow" style="color:rgb(51,102,153); text-decoration:none">http://code.alibabatech.com/svn/fastjson/trunk/</a><br>
+WIKI:<a target="_blank" class="external-link" href="http://code.alibabatech.com/wiki/display/FastJSON/Home" rel="nofollow" style="color:rgb(51,102,153); text-decoration:none">http://code.alibabatech.com/wiki/display/FastJSON/Home</a><br>
+Issue Tracking:<a target="_blank" class="external-link" href="http://code.alibabatech.com/jira/browse/FASTJSON" rel="nofollow" style="color:rgb(51,102,153); text-decoration:none">http://code.alibabatech.com/jira/browse/FASTJSON</a></div>
+<div>&nbsp;</div>
+<div>2、主要的使用入口</div>
+<div>&nbsp;</div>
+<div>Fastjson API入口类是com.alibaba.fastjson.JSON，常用的序列化操作都可以在JSON类上的静态方法直接完成。</div>
+<div>
+<div style=""><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>Object parse(String
+ text);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">// 把JSON文本parse为JSONObject或者JSONArray<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>JSONObject parseObject(String text)；<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//
+ 把JSON文本parse成JSONObject&nbsp;&nbsp;&nbsp;&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>&lt;T&gt; T parseObject(String text, Class&lt;T&gt; clazz);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//
+ 把JSON文本parse为JavaBean<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>JSONArray parseArray(String text);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//
+ 把JSON文本parse成JSONArray<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>&lt;T&gt; List&lt;T&gt; parseArray(String text, Class&lt;T&gt; clazz);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//把JSON文本parse成JavaBean集合<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>String toJSONString(Object object);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//
+ 将JavaBean序列化为JSON文本<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>String toJSONString(Object object,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">boolean</span><span>&nbsp;</span></span>prettyFormat);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,128,0)">//
+ 将JavaBean序列化为带&#26684;式的JSON文本<span>&nbsp;</span></span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">final</span><span>&nbsp;</span></span>Object toJSON(Object javaObject); 将JavaBean转换为JSONObject或者JSONArray。</div>
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>3、有关类库的一些说明</div>
+<div>&nbsp;</div>
+<div>SerializeWriter：相当于StringBuffer</div>
+<div>JSONArray：相当于List&lt;Object&gt;</div>
+<div>JSONObject：相当于Map&lt;String, Object&gt;</div>
+<div>&nbsp;</div>
+<div>JSON反序列化没有真正数组，本质类型都是List&lt;Object&gt;</div>
+<div>&nbsp;</div>
+<div>4、fastjson还有很多很高级的特性，比如支持注解、支持全类型序列化，这些都是很好的特性，功能强大，不在本次测试范围。</div>
+<div>&nbsp;</div>
+<div>三、测试代码</div>
+<div>&nbsp;</div>
+<div>
+<div style=""><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">package</span><span>&nbsp;</span></span>lavasoft.stu.json;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.JSON;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SerializeConfig;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>java.util.*;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">/**<span>&nbsp;</span><br>
+* Created by IntelliJ IDEA.<span>&nbsp;</span><br>
+*<span>&nbsp;</span><br>
+* @author leizhimin 11-11-22 上午9:15<span>&nbsp;</span><br>
+*/</span><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">class</span><span>&nbsp;</span></span>Foo {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>String vString =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;vStringhehhehe&quot;</span></span>;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">char</span><span>&nbsp;</span></span>vchar = 'x';<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">byte</span><span>&nbsp;</span></span>vbyte = 64;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">short</span><span>&nbsp;</span></span>vshort = 128;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>vint = 65535;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">long</span><span>&nbsp;</span></span>vlong = 9999999L;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">float</span><span>&nbsp;</span></span>vfloat = 12.1f;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">double</span><span>&nbsp;</span></span>vdouble = 22.203d;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">boolean</span><span>&nbsp;</span></span>vboolean =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">false</span></span>;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,128,0)">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private Date vdate = new Date();<span>&nbsp;</span></span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Date dddd =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Date();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Date vDate =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Date();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Date v_Date =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Date();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Object vnull =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">null</span></span>;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>String[] avString = {<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;aaa&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;bbb&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;ccc&quot;</span></span>};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span></span>[] avint = {1, 2, 3, 4};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">boolean</span></span>[] avboolean = {<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">true</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">false</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">true</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">true</span></span>};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>List&lt;String&gt; listString =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>ArrayList&lt;String&gt;();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Map&lt;String, String&gt; map =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>HashMap&lt;String,
+ String&gt;();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Bar bar =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Bar[] avBar = {<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar(),<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar()};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>List&lt;Bar&gt; listBar =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>ArrayList&lt;Bar&gt;();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listString.add(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;listString1&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listString.add(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;listString2&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listString.add(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;listString3&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;x&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;s11111x&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;y&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;s22222y&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;z&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;s33333z&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listBar.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listBar.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;listBar.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>String getvString() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setvString(String vString) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vString = vString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">char</span><span>&nbsp;</span></span>getVchar() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vchar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVchar(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">char</span><span>&nbsp;</span></span>vchar)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vchar = vchar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">byte</span><span>&nbsp;</span></span>getVbyte() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vbyte;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVbyte(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">byte</span><span>&nbsp;</span></span>vbyte)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vbyte = vbyte;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">short</span><span>&nbsp;</span></span>getVshort() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vshort;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVshort(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">short</span><span>&nbsp;</span></span>vshort)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vshort = vshort;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>getVint() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vint;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVint(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>vint)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vint = vint;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">long</span><span>&nbsp;</span></span>getVlong() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vlong;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVlong(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">long</span><span>&nbsp;</span></span>vlong)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vlong = vlong;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">float</span><span>&nbsp;</span></span>getVfloat() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vfloat;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVfloat(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">float</span><span>&nbsp;</span></span>vfloat)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vfloat = vfloat;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">double</span><span>&nbsp;</span></span>getVdouble() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vdouble;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVdouble(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">double</span><span>&nbsp;</span></span>vdouble)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vdouble = vdouble;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">boolean</span><span>&nbsp;</span></span>isVboolean() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vboolean;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVboolean(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">boolean</span><span>&nbsp;</span></span>vboolean)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vboolean = vboolean;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Date getDddd() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>dddd;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setDddd(Date dddd) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.dddd = dddd;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Date getV_Date() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>v_Date;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setV_Date(Date v_Date) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.v_Date = v_Date;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Date getvDate() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vDate;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setvDate(Date vDate) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vDate = vDate;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Object getVnull() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>vnull;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setVnull(Object vnull) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.vnull = vnull;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>String[] getAvString() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>avString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setAvString(String[] avString) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.avString = avString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span></span>[] getAvint() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>avint;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setAvint(<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">int</span></span>[]
+ avint) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.avint = avint;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">boolean</span></span>[] getAvboolean() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>avboolean;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setAvboolean(<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">boolean</span></span>[]
+ avboolean) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.avboolean = avboolean;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>List&lt;String&gt; getListString() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>listString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setListString(List&lt;String&gt; listString) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.listString = listString;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Map&lt;String, String&gt; getMap() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>map;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setMap(Map&lt;String, String&gt; map) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.map = map;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Bar getBar() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>bar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setBar(Bar bar) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.bar = bar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Bar[] getAvBar() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>avBar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setAvBar(Bar[] avBar) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.avBar = avBar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>List&lt;Bar&gt; getListBar() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>listBar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setListBar(List&lt;Bar&gt; listBar) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.listBar = listBar;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>}</div>
+</div>
+<div>&nbsp;</div>
+<div>
+<div style=""><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">package</span><span>&nbsp;</span></span>lavasoft.stu.json;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.JSON;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SerializeConfig;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>java.util.Date;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>java.util.Random;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">/**<span>&nbsp;</span><br>
+* Created by IntelliJ IDEA.<span>&nbsp;</span><br>
+*<span>&nbsp;</span><br>
+* @author leizhimin 11-11-22 上午9:15<span>&nbsp;</span><br>
+*/</span><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">class</span><span>&nbsp;</span></span>Bar {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span></span>SerializeConfig mapping =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>SerializeConfig();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>String barName;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>barAge;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span></span>Date barDate =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Date();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span></span>{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mapping.put(Date.<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">class</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>SimpleDateFormatSerializer(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;yyyy-MM-dd&quot;</span></span>));<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Random r =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Random();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;barName =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;sss_&quot;</span></span>&#43;String.valueOf(r.nextFloat());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;barAge = r.nextInt();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>main(String[]
+ args) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Object obj = JSON.toJSON(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String x1 = JSON.toJSONString(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar(),<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">true</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(x1);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String x2 = JSON.toJSONString(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar(), mapping);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(x2);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>String getBarName() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>barName;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setBarName(String barName) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.barName = barName;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>getBarAge() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>barAge;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setBarAge(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">int</span><span>&nbsp;</span></span>barAge)
+ {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.barAge = barAge;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>Date getBarDate() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span></span>barDate;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>setBarDate(Date barDate) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">this</span></span>.barDate = barDate;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Override<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span></span>String toString() {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">return</span><span>&nbsp;</span><span style="color:rgb(128,0,0)">&quot;Bar{&quot;</span><span>&nbsp;</span></span>&#43;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(128,0,0)">&quot;barName='&quot;</span><span>&nbsp;</span></span>&#43; barName &#43; '\'' &#43;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(128,0,0)">&quot;, barAge=&quot;</span><span>&nbsp;</span></span>&#43; barAge &#43;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(128,0,0)">&quot;, barDate=&quot;</span><span>&nbsp;</span></span>&#43; barDate &#43;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}';<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>}</div>
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div style=""><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">package</span><span>&nbsp;</span></span>lavasoft.stu.json;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.JSON;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.JSONArray;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SerializeConfig;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+<span style="color:rgb(0,0,255)">import</span><span>&nbsp;</span></span>java.util.*;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span><span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">/**<span>&nbsp;</span><br>
+* Created by 2IntelliJ IDEA.<span>&nbsp;</span><br>
+*<span>&nbsp;</span><br>
+* @author leizhimin 11-11-22 上午9:45<span>&nbsp;</span><br>
+*/</span><span>&nbsp;</span><br>
+<span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">class</span><span>&nbsp;</span></span>Test {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">private</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span></span>SerializeConfig mapping =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>SerializeConfig();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span></span>{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mapping.put(Date.<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">class</span></span>,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>SimpleDateFormatSerializer(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;yyyy-MM-dd
+ HH:mm:ss&quot;</span></span>));<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>main(String[]
+ args) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Foo f1 =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Foo();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date date =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Date();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String text = JSON.toJSONString(date, mapping);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(text);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(JSON.toJSONString(f1,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">true</span></span>));<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String x2 =JSON.toJSONString(f1, mapping);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(x2);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>json2List(){<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">//List -&gt; JSON array<span>&nbsp;</span></span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Bar&gt; barList =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>ArrayList&lt;Bar&gt;();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;barList.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;barList.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;barList.add(<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String json= JSON.toJSONString(barList,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">true</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(json);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">//JSON array -&gt; List<span>&nbsp;</span></span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;Bar&gt; barList1 = JSON.parseArray(json,Bar.<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">class</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">for</span><span>&nbsp;</span></span>(Bar bar : barList1) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(bar.toString());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>json2Map(){<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">//Map -&gt; JSON<span>&nbsp;</span></span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map&lt;String,Bar&gt; map =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>HashMap&lt;String, Bar&gt;();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;a&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;b&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;c&quot;</span></span>,<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String json = JSON.toJSONString(map,<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">true</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(json);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,128,0)">//JSON -&gt; Map<span>&nbsp;</span></span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map&lt;String,Bar&gt; map1 = (Map&lt;String,Bar&gt;)JSON.parse(json);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">for</span><span>&nbsp;</span></span>(String key : map1.keySet()) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(key&#43;<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;:&quot;</span></span>&#43;map1.get(key));<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>array2JSON(){<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String[] arr_String&nbsp;&nbsp;&nbsp;&nbsp;= {<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;a&quot;</span></span>,<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;b&quot;</span></span>,<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;c&quot;</span></span>};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String json_arr_String = JSON.toJSONString(arr_String,<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">true</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(json_arr_String);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray jsonArray = JSON.parseArray(json_arr_String);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">for</span><span>&nbsp;</span></span>(Object o : jsonArray) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(o);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(jsonArray);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>array2JSON2(){<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bar[] arr_Bar&nbsp;&nbsp;&nbsp;&nbsp;= {<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar(),<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar(),<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>Bar()};<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String json_arr_Bar = JSON.toJSONString(arr_Bar,<span style="color:rgb(0,0,255)"><span style="background-color:rgb(238,238,238)">true</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(json_arr_Bar);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray jsonArray = JSON.parseArray(json_arr_Bar);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">for</span><span>&nbsp;</span></span>(Object o : jsonArray) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(o);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(jsonArray);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">public</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">static</span><span>&nbsp;</span><span style="color:rgb(0,0,255)">void</span><span>&nbsp;</span></span>map2JSON(){<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map map =<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><span style="color:rgb(0,0,255)">new</span><span>&nbsp;</span></span>HashMap();<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;a&quot;</span></span>,<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;aaa&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;b&quot;</span></span>,<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;bbb&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map.put(<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;c&quot;</span></span>,<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;ccc&quot;</span></span>);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String json=JSON.toJSONString(map);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(json);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map map1 = JSON.parseObject(json);<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="background-color:rgb(238,238,238)"><span style="color:rgb(0,0,255)">for</span><span>&nbsp;</span></span>(Object o : map.entrySet()) {<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Map.Entry&lt;String,String&gt; entry = (Map.Entry&lt;String,String&gt;)o;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(entry.getKey()&#43;<span style="color:rgb(128,0,0)"><span style="background-color:rgb(238,238,238)">&quot;---&gt;&quot;</span></span>&#43;entry.getValue());<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>}</div>
+</div>
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>说明：</div>
+<div>SerializeConfig：是对序列化过程中一些序列化过程的特殊配置，这里用作日期&#26684;式的定义。</div>
+<div>有关需要带类型的全类型序列化过程，需要调用JSON.toJSONStringZ()方法。</div>
+<div>需要美化输出时候，需要打开序列化美化开关，在方法中true那个参数。</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>输出结果：</div>
+<div>
+<div>
+<div style="">&quot;2011-11-23 23:30:33&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;avBar&quot;:[{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:174398800,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.62378174&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;},{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:38938962,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.36014742&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;}],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;avString&quot;:[&quot;aaa&quot;,&quot;bbb&quot;,&quot;ccc&quot;],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;avboolean&quot;:[true,false,true,true],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;avint&quot;:[1,2,3,4],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;bar&quot;:{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:1601495948,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.46644872&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;},<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;dddd&quot;:1322062233046,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;listBar&quot;:[<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:-1090113522,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.83562374&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;},<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:478603194,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.59483266&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;},<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;{<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barAge&quot;:1118357669,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barDate&quot;:1322062233062,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;barName&quot;:&quot;sss_0.9961642&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;listString&quot;:[<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;listString1&quot;,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;listString2&quot;,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&nbsp;&nbsp;&quot;listString3&quot;<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;],<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;map&quot;:{&quot;x&quot;:&quot;s11111x&quot;,&quot;y&quot;:&quot;s22222y&quot;,&quot;z&quot;:&quot;s33333z&quot;},<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;v_Date&quot;:1322062233046,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vboolean&quot;:false,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vbyte&quot;:64,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vchar&quot;:&quot;x&quot;,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vdouble&quot;:22.203,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vfloat&quot;:12.1,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vint&quot;:65535,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vlong&quot;:9999999,<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>&nbsp;&nbsp;&quot;vshort&quot;:128<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+</span>{&quot;avBar&quot;:[{&quot;barAge&quot;:174398800,&quot;barDate&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.62378174&quot;},{&quot;barAge&quot;:38938962,&quot;barDate&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.36014742&quot;}],&quot;avString&quot;:[&quot;aaa&quot;,&quot;bbb&quot;,&quot;ccc&quot;],&quot;avboolean&quot;:[true,false,true,true],&quot;avint&quot;:[1,2,3,4],&quot;bar&quot;:{&quot;barAge&quot;:1601495948,&quot;barDate&quot;:&quot;2011-11-23
+ 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.46644872&quot;},&quot;dddd&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;listBar&quot;:[{&quot;barAge&quot;:-1090113522,&quot;barDate&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.83562374&quot;},{&quot;barAge&quot;:478603194,&quot;barDate&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.59483266&quot;},{&quot;barAge&quot;:1118357669,&quot;barDate&quot;:&quot;2011-11-23
+ 23:30:33&quot;,&quot;barName&quot;:&quot;sss_0.9961642&quot;}],&quot;listString&quot;:[&quot;listString1&quot;,&quot;listString2&quot;,&quot;listString3&quot;],&quot;map&quot;:{&quot;x&quot;:&quot;s11111x&quot;,&quot;y&quot;:&quot;s22222y&quot;,&quot;z&quot;:&quot;s33333z&quot;},&quot;v_Date&quot;:&quot;2011-11-23 23:30:33&quot;,&quot;vboolean&quot;:false,&quot;vbyte&quot;:64,&quot;vchar&quot;:&quot;x&quot;,&quot;vdouble&quot;:22.203,&quot;vfloat&quot;:12.1,&quot;vint&quot;:65535,&quot;vlong&quot;:9999999,&quot;vshort&quot;:128}<span style="background-color:rgb(238,238,238)"><span>&nbsp;</span><br>
+<br>
+</span>Process finished with exit code 0<span><span style="background-color:rgb(238,238,238)">&nbsp;</span></span></div>
+</div>
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>fastjson通过各方面测试都很好，功能性能都是No.1，喜欢，它的源代码质量很高，作者也煞费苦心，将性能做到了最好，全免超越其他的json类库。</div>
+<div>从其中的源代码中，可以学到很多东西，在阅读源码后，不得不佩服作者高超的程序设计水平，和高质量的编码。</div>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox" style="float: right;">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="http://static.blog.csdn.net/css/blog_detail.css" />
+
+    
+<!--172.16.140.11-->
+<ul class="article_next_prev">
+            <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='/wilsonke/article/details/37596549';">上一篇</span><a href="/wilsonke/article/details/37596549" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">程序员必知的10大基础实用性算法</a></li>
+            <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='/wilsonke/article/details/37934207';">下一篇</span><a href="/wilsonke/article/details/37934207" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">Maven下载Jar包同时下载源文件和文档</a></li>
+</ul>
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+ 
+
+        <div id="digg" ArticleId="37921571">
+            <dl id="btnDigg" class="digg digg_enable">
+               
+                 <dt>顶</dt>
+                <dd>0</dd>
+            </dl>
+            <dl id="btnBury" class="digg digg_enable">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>
+            </dl>
+        </div>
+
+
+        <div class="similar_article"  style="display:none">
+                <h4>我的同类文章</h4>
+                <div class="similar_c"style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span  style="cursor:pointer"  onclick="GetCategoryArticles('1833053','wilsonke','foot','37921571');">Java<em>（85）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141">
+                        <a href="http://blog.csdn.net" style="display:none">http://blog.csdn.net</a>
+                        <ul class="similar_list fl">                          
+                        </ul>
+
+                        <ul class="similar_list fr">                           
+                        </ul>
+                    </div>
+                </div>
+            </div>    
+    <script  type="text/javascript">
+        $(function () {
+            GetCategoryArticles('1833053', 'wilsonke','foot','37921571');
+        });
+    </script>
+      
+</div>
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/wilsonke/svc/GetSuggestContent/37921571",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+<dl class="blog-ass-articl" id="res-relatived" > 
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="http://csdnimg.cn/jobreco/job_reco.js" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "37921571",
+                username: "lyt1997",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+        </script> 
+    </div>  
+
+    
+     <div id="res"  data-mod="popu_36"  class="tracking-ad" style="width: 42%;float: left;margin-right: 30px;"></div>
+   
+</dl>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'fastJson API' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>   
+
+    <div id="ad_cen">        
+<!--AdForward Begin:-->
+<script type="text/javascript" src="http://csdnim.qtmojo.com/main/s?user=csdn|blog|banner2&db=csdnim&border=0&local=yes&js=ie" charset="gbk"></script>
+<!--AdForward End-->    </div>  
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '37921571';
+    var commentscount = 2;
+    var islock = false
+</script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="display:none"></div>
+  <script  language="javascript" type='text/javascript'>     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/wilsonke/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });
+        },200);  
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }    
+
+</script>
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/wilsonke" target="_blank">
+    <img src="http://avatar.csdn.net/1/2/E/1_wilsonke.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/wilsonke" class="user_name" target="_blank">wilsonke</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=wilsonke','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>401408次</span></li>
+    <li>积分：<span>4893</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：4893 </div>
+        </span>  </li>
+    <li>排名：<span>第3104名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>37篇</span></li>
+    <li>转载：<span>358篇</span></li>
+    <li>译文：<span>2篇</span></li>
+    <li>评论：<span>118条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/wilsonke/article/category/419138" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Wix</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/582820" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C#</a><span>(50)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/419140" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">后台|服务器通讯</a><span>(57)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/419145" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">综合</a><span>(69)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/1233047" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">报表</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/1233048" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(38)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/1427678" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>(9)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/1503717" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">asp.net</a><span>(65)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/1833053" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Java</a><span>(86)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/2554519" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">前端</a><span>(9)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/2919981" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">搜索技术</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/2920013" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">mq</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/3160467" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">android</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5809457" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">linux</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5911583" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">maven</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5921887" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">websocket</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5927407" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">redis</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5983191" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">maven-shade-plugin</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/5994691" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">tomcat</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/6013067" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">concurrency/multi-thread</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/6015053" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">data access:mybatis/hibernate</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/6048874" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">spring</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/6056543" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">ionic</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/wilsonke/article/category/6056545" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">cordova</a><span>(0)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/wilsonke/article/month/2015/12">2015年12月</a><span>(5)</span></li><li><a href="/wilsonke/article/month/2015/11">2015年11月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2015/10">2015年10月</a><span>(12)</span></li><li><a href="/wilsonke/article/month/2015/09">2015年09月</a><span>(9)</span></li><li><a href="/wilsonke/article/month/2015/08">2015年08月</a><span>(8)</span></li><li><a href="/wilsonke/article/month/2015/07">2015年07月</a><span>(3)</span></li><li><a href="/wilsonke/article/month/2015/06">2015年06月</a><span>(3)</span></li><li><a href="/wilsonke/article/month/2015/05">2015年05月</a><span>(5)</span></li><li><a href="/wilsonke/article/month/2015/04">2015年04月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2015/03">2015年03月</a><span>(3)</span></li><li><a href="/wilsonke/article/month/2015/02">2015年02月</a><span>(6)</span></li><li><a href="/wilsonke/article/month/2015/01">2015年01月</a><span>(11)</span></li><li><a href="/wilsonke/article/month/2014/12">2014年12月</a><span>(9)</span></li><li><a href="/wilsonke/article/month/2014/11">2014年11月</a><span>(16)</span></li><li><a href="/wilsonke/article/month/2014/10">2014年10月</a><span>(19)</span></li><li><a href="/wilsonke/article/month/2014/09">2014年09月</a><span>(27)</span></li><li><a href="/wilsonke/article/month/2014/08">2014年08月</a><span>(16)</span></li><li><a href="/wilsonke/article/month/2014/07">2014年07月</a><span>(21)</span></li><li><a href="/wilsonke/article/month/2014/06">2014年06月</a><span>(21)</span></li><li><a href="/wilsonke/article/month/2014/05">2014年05月</a><span>(11)</span></li><li><a href="/wilsonke/article/month/2014/04">2014年04月</a><span>(23)</span></li><li><a href="/wilsonke/article/month/2014/03">2014年03月</a><span>(10)</span></li><li><a href="/wilsonke/article/month/2014/02">2014年02月</a><span>(3)</span></li><li><a href="/wilsonke/article/month/2014/01">2014年01月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2013/12">2013年12月</a><span>(19)</span></li><li><a href="/wilsonke/article/month/2013/11">2013年11月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2013/10">2013年10月</a><span>(11)</span></li><li><a href="/wilsonke/article/month/2013/09">2013年09月</a><span>(19)</span></li><li><a href="/wilsonke/article/month/2013/08">2013年08月</a><span>(27)</span></li><li><a href="/wilsonke/article/month/2013/07">2013年07月</a><span>(18)</span></li><li><a href="/wilsonke/article/month/2013/06">2013年06月</a><span>(5)</span></li><li><a href="/wilsonke/article/month/2013/05">2013年05月</a><span>(7)</span></li><li><a href="/wilsonke/article/month/2013/04">2013年04月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2013/03">2013年03月</a><span>(5)</span></li><li><a href="/wilsonke/article/month/2013/02">2013年02月</a><span>(1)</span></li><li><a href="/wilsonke/article/month/2013/01">2013年01月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2012/12">2012年12月</a><span>(5)</span></li><li><a href="/wilsonke/article/month/2012/11">2012年11月</a><span>(3)</span></li><li><a href="/wilsonke/article/month/2012/09">2012年09月</a><span>(10)</span></li><li><a href="/wilsonke/article/month/2012/08">2012年08月</a><span>(9)</span></li><li><a href="/wilsonke/article/month/2012/07">2012年07月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2012/06">2012年06月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2012/05">2012年05月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2009/11">2009年11月</a><span>(1)</span></li><li><a href="/wilsonke/article/month/2009/08">2009年08月</a><span>(1)</span></li><li><a href="/wilsonke/article/month/2009/01">2009年01月</a><span>(1)</span></li><li><a href="/wilsonke/article/month/2008/12">2008年12月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2008/08">2008年08月</a><span>(2)</span></li><li><a href="/wilsonke/article/month/2008/07">2008年07月</a><span>(4)</span></li><li><a href="/wilsonke/article/month/2008/06">2008年06月</a><span>(1)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/wilsonke/article/details/39896595" title="dubbo 教程">dubbo 教程</a><span>(20845)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/39935801" title="dubbo——管理员指南">dubbo——管理员指南</a><span>(11640)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/39935097" title="Hydra - 京东开源的基于Dubbo的调用分布跟踪系统">Hydra - 京东开源的基于Dubbo的调用分布跟踪系统</a><span>(11631)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/26590379" title="Spring task quartz 定时任务的几种实现">Spring task quartz 定时任务的几种实现</a><span>(9872)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/37921571" title="fastJson API">fastJson API</a><span>(7015)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/10713287" title="Asp.net MVC3 JQuery EasyUI DEMO">Asp.net MVC3 JQuery EasyUI DEMO</a><span>(6547)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/38980069" title="Expected MultipartHttpServletRequest: is a MultipartResolver configured">Expected MultipartHttpServletRequest: is a MultipartResolver configured</a><span>(6337)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/9203583" title="MFCGridCtrl的使用方法">MFCGridCtrl的使用方法</a><span>(6198)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/40538569" title="maven eclipse debug">maven eclipse debug</a><span>(5414)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/7616984" title="c# 多线程-异步-WaitHandle-AutoResetEvent">c# 多线程-异步-WaitHandle-AutoResetEvent</a><span>(5020)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/wilsonke/article/details/39896595" title="dubbo 教程">dubbo 教程</a><span>(16)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/17620551" title="C# 解决 PathTooLongException 重写了整个System.IO">C# 解决 PathTooLongException 重写了整个System.IO</a><span>(10)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/39001569" title="httpclient模拟登陆facebook.com">httpclient模拟登陆facebook.com</a><span>(7)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/9183219" title="C++连接SQL Server数据库">C++连接SQL Server数据库</a><span>(6)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/24295117" title="maven 命令大全 持续更新中">maven 命令大全 持续更新中</a><span>(5)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/7663440" title="C#.NET自定义报表数据打印">C#.NET自定义报表数据打印</a><span>(4)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/10060549" title="MVC+Jquery easyui实现无限级部门小示例">MVC+Jquery easyui实现无限级部门小示例</a><span>(4)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/8191785" title="ASP.NET MVC 企业级实战 —— 创建用户权限管理示例程序（一）">ASP.NET MVC 企业级实战 —— 创建用户权限管理示例程序（一）</a><span>(3)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/11521075" title="C# 先数字后字符的排序方法">C# 先数字后字符的排序方法</a><span>(3)</span>
+</li>
+<li>
+<a href="/wilsonke/article/details/10713287" title="Asp.net MVC3 JQuery EasyUI DEMO">Asp.net MVC3 JQuery EasyUI DEMO</a><span>(3)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/lovehuangjiaju/article/details/50439715" 
+
+target="_blank">*Spark入门到精通：第九节 Spark SQL运行流程解析</a></li>
+<li><a href="http://blog.csdn.net/foruok/article/details/50416725" 
+
+target="_blank">*架构设计：系统间通信（17）——服务治理与Dubbo 中篇（分析）</a></li>
+<li><a href="http://blog.csdn.net/bluecloudmatrix/article/details/49490339" 
+
+target="_blank">* 拉开大变革序幕（中）：Docker 场景化尝试</a></li>
+<li><a 
+
+href="http://blog.csdn.net/yanbober/article/details/46417531"target="_blank">*Android应用开发allowBackup敏感信息泄露的一点反思</a></li>
+<li><a href="http://blog.csdn.net/nk_test/article/details/50449470" 
+
+target="_blank">*Linux多线程实践（四 ）线程的特定数据</a></li>
+<li><a href="http://blog.csdn.net/andywuchuanlong/article/details/50450816"  
+
+target="_blank">*Android点击Button水波纹效果</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/wilsonke/article/details/40617061#comments">关于 xftp 上传文件时，只是上传了0字节的问题</a>
+    <p style="margin:0px;"><a href="/wilsonke" class="user_name">wilsonke</a>:
+应该还是服务器的服务，要么是内存不足，要么是需要用apt-get update
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/40617061#comments">关于 xftp 上传文件时，只是上传了0字节的问题</a>
+    <p style="margin:0px;"><a href="/liu39115345" class="user_name">liu39115345</a>:
+远程的话出现这个问题 怎么解决
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/37921571#comments">fastJson API</a>
+    <p style="margin:0px;"><a href="/u010393809" class="user_name">u010393809</a>:
+学习了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/37934207#comments">Maven下载Jar包同时下载源文件和文档</a>
+    <p style="margin:0px;"><a href="/wilsonke" class="user_name">wilsonke</a>:
+清缓存,而且尽量在父亲一级作清理mvn clean install
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/39671321#comments">aliyun Ubuntu 14.04 64bit OpenJDK Tomcat7 install</a>
+    <p style="margin:0px;"><a href="/wilsonke" class="user_name">wilsonke</a>:
+ps -aux | grep tomcat
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/39896595#comments">dubbo 教程</a>
+    <p style="margin:0px;"><a href="/qq_33252033" class="user_name">qq_33252033</a>:
+发的
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/8191785#comments">ASP.NET MVC 企业级实战 —— 创建用户权限管理示例程序（一）</a>
+    <p style="margin:0px;"><a href="/wilsonke" class="user_name">wilsonke</a>:
+建议不要用.net做web，少开源的东东
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/8191785#comments">ASP.NET MVC 企业级实战 —— 创建用户权限管理示例程序（一）</a>
+    <p style="margin:0px;"><a href="/cjahm" class="user_name">cjahm</a>:
+是的 我ye没有找到
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/10060549#comments">MVC+Jquery easyui实现无限级部门小示例</a>
+    <p style="margin:0px;"><a href="/zhu_changqing" class="user_name">zhu_changqing</a>:
+您好 能发我一份吗 谢谢 ！nj83507777@126.com
+    </p>
+    </li>
+    <li>
+   
+         <a href="/wilsonke/article/details/39935801#comments">dubbo——管理员指南</a>
+    <p style="margin:0px;"><a href="/wilsonke" class="user_name">wilsonke</a>:
+里面加上了转字,只是方便我自己使用而已！有伤看官，实在抱歉!
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+ </div>   
+            <div class="clear">
+            </div>
+        </div>
+        
+
+<script type="text/javascript" src="http://c.csdnimg.cn/rabbit/cnick/cnick.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/newblog.min.js"></script>
+
+
+<script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=56192"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/JavaScript1.js"></script>
+
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-blog.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a>"
+                    + "<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>     <!--new top-->
+   
+    <link href="http://c.csdnimg.cn/comm_ask/css/ask_float_block.css" type="text/css" rel="stylesheet" />
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/wmd.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/showdown.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/libs/prettify.js'></script>
+    <script language='JavaScript' type='text/javascript' src='http://c.csdnimg.cn/comm_ask/js/apps/ask_float_block.js'></script>
+   
+</body>
+</html>   
+ 

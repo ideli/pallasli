@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦 | java编程网</title> 
+<meta name="description" content=" 做Java编程的人其实，很多不懂SEO，也不知道如何让百度收录等等，当然，对于爬虫，网页抓取，也不是所有编程的人有考虑到，但是专门做这个人，还是需要了解一下这里面的知识的，那下面就来介绍一下一些爬虫和网页采集相关的组件和插件吧~" />
+<meta name="keywords" content="HtmlUnit,HttpClient" />
+<link rel="alternate" type="application/rss+xml" title="java编程网 RSS Feed" href="http://www.haohaoblog.com/?feed=rss2" />
+<link rel="alternate" type="application/atom+xml" title="java编程网 Atom Feed" href="http://www.haohaoblog.com/?feed=atom" />
+<link rel="pingback" href="http://www.haohaoblog.com/xmlrpc.php" />
+<link rel="shortcut icon" href="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/images/favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/js/jquery.min.js"></script>
+<link rel="alternate" type="application/rss+xml" title="java编程网 &raquo; 对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦评论Feed" href="http://www.haohaoblog.com/?feed=rss2&#038;p=1327" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.haohaoblog.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.haohaoblog.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='用java实现HTTP读取，独立收发数据，不需jar包' href='http://www.haohaoblog.com/?p=1324' />
+<link rel='next' title='如何面对Java并发编程，面试也可以很简单，掌握这八个Java并发知识即可' href='http://www.haohaoblog.com/?p=1329' />
+<meta name="generator" content="WordPress 3.9.9" />
+<link rel='canonical' href='http://www.haohaoblog.com/?p=1327' />
+<link rel='shortlink' href='http://www.haohaoblog.com/?p=1327' />
+<link rel="stylesheet" type="text/css" href="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/css/t-green.css" />
+	<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/comments-ajax.js"></script>
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/js/realgravatar.js"></script>
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/js/hoveraccordion.js"></script>
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/js/weisay.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+$('.article h2 a').click(function(){
+    $(this).text('亲，我在给力加载O(∩_∩)O~……');
+    window.location = $(this).attr('href');
+    });
+});
+</script>
+<script type="text/javascript" src="http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/js/lazyload.js"></script>
+<script type="text/javascript">
+	$(function() {          
+    	$(".article img, .articles img").not("#respond_box img").lazyload({
+        	placeholder:"http://www.haohaoblog.com/wp-content/themes/weisaysimple/weisaysimple/images/image-pending.gif",
+            effect:"fadeIn"
+          });
+    	});
+</script></head>
+
+<body>
+
+<div id="page">
+<div id="header">
+<div id="top">
+<div id="top_logo">
+
+	<div class="page_menu">
+<ul id="menu-pages-menu" class="navi">
+<li class="page_item page-item-0"><a href="http://www.haohaoblog.com/" title="首页"></a></li>
+</ul></div><div class="clear"></div>
+            	<div id="blogname"><a href="http://www.haohaoblog.com"><h2>java编程网</h2></a>
+    <div id="blogtitle"><h3>java编程****java笔记****java教程****java学习****java博客</h3></div></div></div>
+		<div class="search">		
+			<form id="searchform" method="get" action="http://www.haohaoblog.com">
+				<input type="text" value="" name="s" id="s" size="30" />
+				<button type="submit">搜索</button>
+			</form>
+		</div><div class="clear"></div>
+<div class="topnav">
+<ul id="nav" class="menu"><li id="menu-item-84" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-84"><a target="_blank" href="http://www.haohaoblog.com/?cat=12">java编程</a></li>
+<li id="menu-item-590" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-590"><a target="_blank" href="http://www.haohaoblog.com/?cat=98">jsp学习</a></li>
+<li id="menu-item-1350" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1350"><a title="android 开发，android教程，android开发教程，android系统，android开发入门教程，android面试题，android开发工具，android开发环境，android 游戏开发" target="_blank" href="http://www.haohaoblog.com/?cat=174">android 开发</a></li>
+<li id="menu-item-236" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-236"><a target="_blank" href="http://www.haohaoblog.com/?cat=56">网络技术</a></li>
+<li id="menu-item-83" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-83"><a target="_blank" href="http://www.haohaoblog.com/?cat=3">杂谈</a></li>
+<li id="menu-item-587" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-587"><a target="_blank" href="http://www.haohaoblog.com/?cat=99">IT休闲</a>
+<ul class="sub-menu">
+	<li id="menu-item-588" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-588"><a target="_blank" href="http://www.haohaoblog.com/?cat=100">散文欣赏</a></li>
+</ul>
+</li>
+</ul></div>
+<div id="rss"><ul>
+<li class="rssfeed"><a href="http://www.haohaoblog.com/?feed=rss2" target="_blank" class="icon1" title="欢迎订阅java编程网"></a></li>
+<li class="tqq"><a href="http://t.qq.com/cbh735" target="_blank" class="icon2" title="我的腾讯微博"></a></li>
+<li class="tsina"><a href="http://weibo.com/u/1836792484" target="_blank" class="icon3" title="我的新浪微博"></a></li>
+<li class="rssmail"><a href="http://mail.qq.com/cgi-bin/feed?u=http://www.haohaoblog.com/?feed=rss2" target="_blank" class="icon4" title="用QQ邮箱阅读空间订阅我的博客"></a></li>
+</ul></div>
+<div class="clear"></div>
+</div>
+</div>
+
+<div id="roll"><div title="回到顶部" id="roll_top"></div><div title="查看评论" id="ct"></div><div title="转到底部" id="fall"></div></div>
+<div id="content">
+<div class="main"><div class="left">
+<div class="post_date"><span class="date_m">Sep</span><span class="date_d">19</span><span class="date_y">2014</span></div>
+<div class="article">
+<h1>对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦</h1>
+<div class="article_info">作者：java_bird &nbsp; 发布：2014-09-19 15:36 &nbsp; 分类：<a href="http://www.haohaoblog.com/?cat=12" title="查看java编程中的全部文章" rel="category">java编程</a> &nbsp; 阅读： &nbsp; <a href="http://www.haohaoblog.com/?p=1327#respond" title="《对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦》上的评论">抢沙发</a> &nbsp; </div><div class="clear"></div>
+        <div class="context">
+        <div style="float:right;border:1px #ccc solid;padding:2px;overflow:hidden;margin:12px 0 1px 2px;"></div><p><span style="color: #000000;"> 做Java编程的人其实，很多不懂SEO，也不知道如何让百度收录等等，当然，对于爬虫，网页抓取，也不是所有编程的人有考虑到，但是专门做这个人，还是需要了解一下这里面的知识的，那下面就来介绍一下一些爬虫和网页采集相关的组件和插件吧~</span></p>
+<p><span style="color: #000000;">大家在做爬虫、网页采集、通过网页自动写入数据时基本上都接触过这两个组件（权且称之为组件吧），网上入门资料已经很多了，我想从实际的应用角度谈谈我对于这两个组件的看法，并记录在博客中，以便日后翻阅，欢迎大家批评指正。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">        本文主要比较两者的优劣性以及介绍应用中的使用技巧，推荐一些入门资料以及非常实用的辅助工具，希望能对大家有所帮助。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">        大家有任何疑问或者建议希望留言给我，一起交流学习。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">下面我们首先来看下2个组件的区别和优劣性： </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">HtmlUnit: </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">HtmlUnit本来是一款自动化测试的工具，它采用了HttpClient和java自带的网络api结合来实现，它与HttpClient的不同之处在于，它比HttpClient更“人性化”。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">在写HtmlUnit代码的时候，仿佛感觉到的就是在操作浏览器而非写代码，得到页面（getPage）&#8211; 寻找到文本框（getElementByID || getElementByName || getElementByXPath 等等）&#8211; 输入文字（type，setValue，setText等等）&#8211; 其他一些类似操作 &#8212; 找到提交按钮 &#8212; 提交 &#8212; 得到新的Page，这样就非常像一个人在后台帮你操作浏览器一样，而你要做的就是告诉他如何操作以及需要填入哪些值。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">      优点： </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">         一、网页的模拟化 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">首先说说HtmlUnit相对于HttpClient的最明显的一个好处，HtmlUnit更好的将一个网页封装成了一个对象，如果你非要说HttpClient返回的接口HttpResponse实际上也是存储了一个对象那也可以，但是HtmlUnit不仅保存了这个网页对象，更难能可贵的是它还存有这个网页的所有基本操作甚至事件。这就是说，我们对于操作这个网页可以像在jsp中写js一样，这是非常方便的，比如：你想某个节点的上一个节点，查找所有的按钮，查找样式为“bt-style”的所有元素，对于某些元素先进行一些改造，然后再转成String,或者我直接得到这个网页之后操作这个网页，完成一次提交都是非常方便的。这意味着你如果想分析一个网页会来的非常的容易，比如我附上一段百度新闻高级搜索的代码： </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">         </span><br style="color: #000000;" /><span style="color: #000000;">// 得到浏览器对象，直接New一个就能得到，现在就好比说你得到了一个浏览器了 </span><br style="color: #000000;" /><span style="color: #000000;">WebClient webclient = new WebClient(); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 这里是配置一下不加载css和javaScript,配置起来很简单，是不是 </span><br style="color: #000000;" /><span style="color: #000000;">webclient.getOptions().setCssEnabled(false); </span><br style="color: #000000;" /><span style="color: #000000;">webclient.getOptions().setJavaScriptEnabled(false); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 做的第一件事，去拿到这个网页，只需要调用getPage这个方法即可 </span><br style="color: #000000;" /><span style="color: #000000;">HtmlPage htmlpage = webclient.getPage(&#8220;http://news.baidu.com/advanced_news.html&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 根据名字得到一个表单，查看上面这个网页的源代码可以发现表单的名字叫“f” </span><br style="color: #000000;" /><span style="color: #000000;">final HtmlForm form = htmlpage.getFormByName(&#8220;f&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">// 同样道理，获取”百度一下“这个按钮 </span><br style="color: #000000;" /><span style="color: #000000;">final HtmlSubmitInput button = form.getInputByValue(&#8220;百度一下&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">// 得到搜索框 </span><br style="color: #000000;" /><span style="color: #000000;">final HtmlTextInput textField = form.getInputByName(&#8220;q1&#8243;); </span><br style="color: #000000;" /><span style="color: #000000;">// 最近周星驰比较火呀，我这里设置一下在搜索框内填入”周星驰“ </span><br style="color: #000000;" /><span style="color: #000000;">textField.setValueAttribute(&#8220;周星驰&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">// 输入好了，我们点一下这个按钮 </span><br style="color: #000000;" /><span style="color: #000000;">final HtmlPage nextPage = button.click(); </span><br style="color: #000000;" /><span style="color: #000000;">// 我把结果转成String </span><br style="color: #000000;" /><span style="color: #000000;">String result = nextPage.asXml(); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">System.out.println(result); </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">然后你可以把得到的result结果复制到一个文本，然后用浏览器打开该文本，是不是想要的东西（如图结），很简单对吧，为什么会感觉简单，因为它完全符合我们操作浏览器的习惯，当然最终它也是用HttpClient和其它一些工具类实现的，但是这样的封装是非常人性化和令人惊叹的。 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">Htmlunit可以有效的分析出 dom标签，并且可以有效的运行页面上的js以便得到一些需要执行JS才能得到的值，你仅仅需要做的就是执行executeJavaScript（）这个方法而已，这些都是HtmlUnit帮我们封装好，我们要做的仅仅是告诉它需要做什么。 </span><br style="color: #000000;" /><span style="color: #000000;">                WebClient webclient = new WebClient(); </span><br style="color: #000000;" /><span style="color: #000000;">HtmlPage htmlpage = webclient.getPage(&#8220;you url&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">htmlpage.executeJavaScript(&#8220;the function name you want to execute&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">对于使用Java程序员来说，对对象的操作就再熟悉不过了，HtmlUnit所做的正是帮我们把网页封装成一个对象，一个功能丰富的，透明的对象。 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">二、网络响应的自动化处理 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">HtmlUnit拥有强大的响应处理机制，我们知道：常见的404是找不到资源，100等是继续，300等是跳转&#8230;我们在使用HttpClient的时候它会把响应结果告诉我们，当然，你可以自己来判断，比如说，你发现响应码是302的时候，你就在响应头去找到新的地址并自动再跳过去，发现是100的时候就再发一次请求，你如果使用HttpClient,你可以这么去做，也可以写的比较完善，但是，HtmlUnit已经较为完整的实现了这一功能，甚至说，他还包括了页面JS的自动跳转（响应码是200，但是响应的页面就是一个JS），天涯的登录就是这么一个情况，让我们一起来看下。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">                  </span><br style="color: #000000;" /><span style="color: #000000;">/** </span><br style="color: #000000;" /><span style="color: #000000;">* @author CaiBo </span><br style="color: #000000;" /><span style="color: #000000;">* @date 2014年9月15日 上午9:16:36 </span><br style="color: #000000;" /><span style="color: #000000;">* @version $Id$ </span><br style="color: #000000;" /><span style="color: #000000;">* </span><br style="color: #000000;" /><span style="color: #000000;">*/ </span><br style="color: #000000;" /><span style="color: #000000;">public class TianyaTest { </span><br style="color: #000000;" /><span style="color: #000000;">/** </span><br style="color: #000000;" /><span style="color: #000000;">* </span><br style="color: #000000;" /><span style="color: #000000;">*/ </span><br style="color: #000000;" /><span style="color: #000000;">public static void main(String[] args) throws Exception { </span><br style="color: #000000;" /><span style="color: #000000;">// 这是一个测试，也是为了让大家看的更清楚，请暂时抛开代码规范性，不要纠结于我多建了一个局部变量等 </span><br style="color: #000000;" /><span style="color: #000000;">// 得到认证https的浏览器对象 </span><br style="color: #000000;" /><span style="color: #000000;">HttpClient client = getSSLInsecureClient(); </span><br style="color: #000000;" /><span style="color: #000000;">// 得到我们需要的post流 </span><br style="color: #000000;" /><span style="color: #000000;">HttpPost post = getPost(); </span><br style="color: #000000;" /><span style="color: #000000;">// 使用我们的浏览器去执行这个流,得到我们的结果 </span><br style="color: #000000;" /><span style="color: #000000;">HttpResponse hr = client.execute(post); </span><br style="color: #000000;" /><span style="color: #000000;">// 在控制台输出我们想要的一些信息 </span><br style="color: #000000;" /><span style="color: #000000;">showResponseInfo(hr); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">private static void showResponseInfo(HttpResponse hr) throws ParseException, IOException { </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">System.out.println(&#8220;响应状态行信息：&#8221; + hr.getStatusLine()); </span><br style="color: #000000;" /><span style="color: #000000;">System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">System.out.println(&#8220;响应头信息：&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">Header[] allHeaders = hr.getAllHeaders(); </span><br style="color: #000000;" /><span style="color: #000000;">for (int i = 0; i &lt; allHeaders.length; i++) { </span><br style="color: #000000;" /><span style="color: #000000;">System.out.println(allHeaders[i].getName() + &#8220;:&#8221; + allHeaders[i].getValue()); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">System.out.println(&#8220;响应正文：&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">System.out.println(EntityUtils.toString(hr.getEntity())); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 得到一个认证https链接的HttpClient对象（因为我们将要的天涯登录是Https的） </span><br style="color: #000000;" /><span style="color: #000000;">// 具体是如何工作的我们后面会提到的 </span><br style="color: #000000;" /><span style="color: #000000;">private static HttpClient getSSLInsecureClient() throws Exception { </span><br style="color: #000000;" /><span style="color: #000000;">// 建立一个认证上下文，认可所有安全链接，当然，这是因为我们仅仅是测试，实际中认可所有安全链接是危险的</span><br style="color: #000000;" /><span style="color: #000000;">SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() { </span><br style="color: #000000;" /><span style="color: #000000;">public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException { </span><br style="color: #000000;" /><span style="color: #000000;">return true; </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">}).build(); </span><br style="color: #000000;" /><span style="color: #000000;">SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext); </span><br style="color: #000000;" /><span style="color: #000000;">return HttpClients.custom().// </span><br style="color: #000000;" /><span style="color: #000000;">setSSLSocketFactory(sslsf)// </span><br style="color: #000000;" /><span style="color: #000000;">// .setProxy(new HttpHost(&#8220;127.0.0.1&#8243;, 8888)) </span><br style="color: #000000;" /><span style="color: #000000;">.build(); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 获取我们需要的Post流，如果你是把我的代码复制过去，请记得更改为你的用户名和密码 </span><br style="color: #000000;" /><span style="color: #000000;">private static HttpPost getPost() { </span><br style="color: #000000;" /><span style="color: #000000;">HttpPost post = new HttpPost(&#8220;https://passport.tianya.cn/login&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 首先我们初始化请求头 </span><br style="color: #000000;" /><span style="color: #000000;">post.addHeader(&#8220;Referer&#8221;, &#8220;https://passport.tianya.cn/login.jsp&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">post.addHeader(&#8220;Host&#8221;, &#8220;passport.tianya.cn&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">post.addHeader(&#8220;Origin&#8221;, &#8220;http://passport.tianya.cn&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 然后我们填入我们想要传递的表单参数（主要也就是传递我们的用户名和密码） </span><br style="color: #000000;" /><span style="color: #000000;">// 我们可以先建立一个List，之后通过post.setEntity方法传入即可 </span><br style="color: #000000;" /><span style="color: #000000;">// 写在一起主要是为了大家看起来方便，大家在正式使用的当然是要分开处理，优化代码结构的 </span><br style="color: #000000;" /><span style="color: #000000;">List&lt;NameValuePair&gt; paramsList = new ArrayList&lt;NameValuePair&gt;(); </span><br style="color: #000000;" /><span style="color: #000000;">/* </span><br style="color: #000000;" /><span style="color: #000000;">* 添加我们要的参数，这些可以通过查看浏览器中的网络看到，如下面我的截图中看到的一样 </span><br style="color: #000000;" /><span style="color: #000000;">* 不论你用的是firebut,httpWatch或者是谷歌自带的查看器也好,都能查看到（后面会推荐辅助工具来查看） </span><br style="color: #000000;" /><span style="color: #000000;">* 要把表单需要的参数都填齐，顺序不影响 </span><br style="color: #000000;" /><span style="color: #000000;">*/ </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;Submit&#8221;, &#8220;&#8221;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;fowardURL&#8221;, &#8220;http://www.tianya.cn&#8221;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;from&#8221;, &#8220;&#8221;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;method&#8221;, &#8220;name&#8221;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;returnURL&#8221;, &#8220;&#8221;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;rmflag&#8221;, &#8220;1&#8243;)); </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;__sid&#8221;, &#8220;1#1#1.0#a6c606d9-1efa-4e12-8ad5-3eefd12b8254&#8243;)); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 你可以申请一个天涯的账号 并在下两行代码中替换为你的用户名和密码 </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;vwriter&#8221;, &#8220;ifugletest2014&#8243;));// 替换为你的用户名 </span><br style="color: #000000;" /><span style="color: #000000;">paramsList.add(new BasicNameValuePair(&#8220;vpassword&#8221;, &#8220;test123456&#8243;));// 你的密码 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 将这个参数list设置到post中 </span><br style="color: #000000;" /><span style="color: #000000;">post.setEntity(new UrlEncodedFormEntity(paramsList, Consts.UTF_8)); </span><br style="color: #000000;" /><span style="color: #000000;">return post; </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">执行上面这个Main函数你会得到一下的结果： </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">我们看到，响应码确实是200，表明成功了，其实这个响应相当于是302，它是需要跳转的，只不过它的跳转写到了body部分的js里面而已。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">&lt;script&gt; </span><br style="color: #000000;" /><span style="color: #000000;">location.href=&#8221;http://passport.tianya.cn:80/online/loginSuccess.jsp?fowardurl=http%3A%2F%2Fwww.tianya.cn%2F94693372&amp;userthird=&amp;regOrlogin=%E7%99%BB%E5%BD%95%E4%B8%AD&#8230;&#8230;&amp;t=1410746182629&amp;k=8cd4d967491c44c5eab1097e0f30c054&amp;c=6fc7ebf8d782a07bb06624d9c6fbbf3f&#8221;;</span><br style="color: #000000;" /><span style="color: #000000;">&lt;/script&gt; </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">它这是一个页面上的跳转 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">那这个时候如果你使用HttpClient就头疼了（当然也是可以处理的，后面讲到）。如果你使用的是HtmlUnit，整个过程显得简单轻松。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">public class TianyaTestByHtmlUnit { </span><br style="color: #000000;" /><span style="color: #000000;">public static void main(String[] args) throws Exception { </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">WebClient webClient = new WebClient(); </span><br style="color: #000000;" /><span style="color: #000000;">// 拿到这个网页 </span><br style="color: #000000;" /><span style="color: #000000;">HtmlPage page = webClient.getPage(&#8220;http://passport.tianya.cn/login.jsp&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 填入用户名和密码 </span><br style="color: #000000;" /><span style="color: #000000;">HtmlInput username = (HtmlInput) page.getElementById(&#8220;userName&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">username.type(&#8220;ifugletest2014&#8243;); </span><br style="color: #000000;" /><span style="color: #000000;">HtmlInput password = (HtmlInput) page.getElementById(&#8220;password&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">password.type(&#8220;test123456&#8243;); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">// 提交 </span><br style="color: #000000;" /><span style="color: #000000;">HtmlButton submit = (HtmlButton) page.getElementById(&#8220;loginBtn&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">HtmlPage nextPage = submit.click(); </span><br style="color: #000000;" /><span style="color: #000000;">System.out.println(nextPage.asXml()); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">这样简单的几行代码就完成了。 </span><br style="color: #000000;" /><span style="color: #000000;">      </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">三、并行控制 和串行控制 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">        既然HtmlUnit封装了那么多的底层api和hHttpClient操作，那么它有没有给我们提供自定义各种响应策略和监听整个执行过程的方法呢？，答案是肯定的。由于HtmlUnit提供的监听和控制方法比较多，我说几个大家可能接触比较少，但很有用的方法。其他的类似于:设置CSS有效，设置不抛出JS异常，设置使用SSL安全链接，诸如此类，大家通过webClient.getOptions().set***，就可以设置了，这种大家都比较熟了。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">        （1）首先来看一下JS错误处理监听机制，我们打开HtmlUnit源码可以看到（该源码位置在JavaScriptEngine类中的handleJavaScriptException方法处） </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">  protected void handleJavaScriptException(final ScriptException scriptException, final boolean triggerOnError) { </span><br style="color: #000000;" /><span style="color: #000000;">        // Trigger window.onerror, if it has been set. </span><br style="color: #000000;" /><span style="color: #000000;">        final HtmlPage page = scriptException.getPage(); </span><br style="color: #000000;" /><span style="color: #000000;">        if (triggerOnError &amp;&amp; page != null) { </span><br style="color: #000000;" /><span style="color: #000000;">            final WebWindow window = page.getEnclosingWindow(); </span><br style="color: #000000;" /><span style="color: #000000;">            if (window != null) { </span><br style="color: #000000;" /><span style="color: #000000;">                final Window w = (Window) window.getScriptObject(); </span><br style="color: #000000;" /><span style="color: #000000;">                if (w != null) { </span><br style="color: #000000;" /><span style="color: #000000;">                    try { </span><br style="color: #000000;" /><span style="color: #000000;">                        w.triggerOnError(scriptException); </span><br style="color: #000000;" /><span style="color: #000000;">                    } </span><br style="color: #000000;" /><span style="color: #000000;">                    catch (final Exception e) { </span><br style="color: #000000;" /><span style="color: #000000;">                        handleJavaScriptException(new ScriptException(page, e, null), false); </span><br style="color: #000000;" /><span style="color: #000000;">                    } </span><br style="color: #000000;" /><span style="color: #000000;">                } </span><br style="color: #000000;" /><span style="color: #000000;">            } </span><br style="color: #000000;" /><span style="color: #000000;">        } </span><br style="color: #000000;" /><span style="color: #000000;">        // 这里尝试去取我们设置的JavaScript错误处理器 </span><br style="color: #000000;" /><span style="color: #000000;">        final JavaScriptErrorListener javaScriptErrorListener = getWebClient().getJavaScriptErrorListener(); </span><br style="color: #000000;" /><span style="color: #000000;">        if (javaScriptErrorListener != null) { </span><br style="color: #000000;" /><span style="color: #000000;">            javaScriptErrorListener.scriptException(page, scriptException); </span><br style="color: #000000;" /><span style="color: #000000;">        } </span><br style="color: #000000;" /><span style="color: #000000;">        // Throw a Java exception if the user wants us to. </span><br style="color: #000000;" /><span style="color: #000000;">        if (getWebClient().getOptions().isThrowExceptionOnScriptError()) { </span><br style="color: #000000;" /><span style="color: #000000;">            throw scriptException; </span><br style="color: #000000;" /><span style="color: #000000;">        } </span><br style="color: #000000;" /><span style="color: #000000;">        // Log the error; ScriptException instances provide good debug info. </span><br style="color: #000000;" /><span style="color: #000000;">        LOG.info(&#8220;Caught script exception&#8221;, scriptException); </span><br style="color: #000000;" /><span style="color: #000000;">    } </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">也就是说我们它在发现JS错误的时候会自动去寻找我们是否有处理器，有的话就会用我们设置的处理器来处理，要在webClient里加一个处理器也非常的方便。使用： </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">webClient.setJavaScriptErrorListener(new 你自己的JavaScriptErrorListener());即可。自己的JavaScriptErrorListener也很好实现，直接继承JavaScriptErrorListener接口即可，然后你就可以在javaScript出错时自行处理，你可以选择分析它的url、修正它的url、重新再获取或者直接忽略等等。有js错误处理器，当然也还有别的了，这一类型的我就只说一个了。为了防止有小白不明白，我还是贴出一个简单的实现好了。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">/** </span><br style="color: #000000;" /><span style="color: #000000;">* @author CaiBo </span><br style="color: #000000;" /><span style="color: #000000;">* @date 2014年8月12日 上午12:32:08 </span><br style="color: #000000;" /><span style="color: #000000;">* @version $Id: WaiJavaScriptErrorListener.java 3943 2014-08-12 03:54:25Z CaiBo $ </span><br style="color: #000000;" /><span style="color: #000000;">* </span><br style="color: #000000;" /><span style="color: #000000;">*/ </span><br style="color: #000000;" /><span style="color: #000000;">public class WaiJavaScriptErrorListener implements JavaScriptErrorListener { </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">public WaiJavaScriptErrorListener() { </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">@Override </span><br style="color: #000000;" /><span style="color: #000000;">public void scriptException(HtmlPage htmlPage, ScriptException scriptException) { </span><br style="color: #000000;" /><span style="color: #000000;">// TODO Auto-generated method stub </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">@Override </span><br style="color: #000000;" /><span style="color: #000000;">public void timeoutError(HtmlPage htmlPage, long allowedTime, long executionTime) { </span><br style="color: #000000;" /><span style="color: #000000;">// TODO Auto-generated method stub </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">@Override </span><br style="color: #000000;" /><span style="color: #000000;">public void malformedScriptURL(HtmlPage htmlPage, String url, MalformedURLException malformedURLException) { </span><br style="color: #000000;" /><span style="color: #000000;">// TODO Auto-generated method stub </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">@Override </span><br style="color: #000000;" /><span style="color: #000000;">public void loadScriptError(HtmlPage htmlPage, URL scriptUrl, Exception exception) { </span><br style="color: #000000;" /><span style="color: #000000;">// TODO Auto-generated method stub </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">public static void main(String[] args) { </span><br style="color: #000000;" /><span style="color: #000000;">WebClient webClient = new WebClient(); </span><br style="color: #000000;" /><span style="color: #000000;">webClient.setJavaScriptErrorListener(new WaiJavaScriptErrorListener()); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">Main方法处实现了JS错误自定义处理的webClient </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">（2）链接响应监听 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">       很多时候我们想看看HtmlUnit到底去拿了什么东西，或者说我想对它拿的东西过滤一下，再或者我想把它拿到的某些东西存起来，那这个时候响应监听就很必要了。比如说一个最简单的响应监听。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">/** </span><br style="color: #000000;" /><span style="color: #000000;">* @author CaiBo </span><br style="color: #000000;" /><span style="color: #000000;">* @date 2014年9月15日 上午10:59:30 </span><br style="color: #000000;" /><span style="color: #000000;">* @version $Id$ </span><br style="color: #000000;" /><span style="color: #000000;">* </span><br style="color: #000000;" /><span style="color: #000000;">*/ </span><br style="color: #000000;" /><span style="color: #000000;">public class SimpleConectionListener extends FalsifyingWebConnection { </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">private static final Logger LOGGER = LoggerFactory.getLogger(SimpleConectionListener.class); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">public SimpleConectionListener(WebClient webClient) throws IllegalArgumentException { </span><br style="color: #000000;" /><span style="color: #000000;">super(webClient); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">@Override </span><br style="color: #000000;" /><span style="color: #000000;">public WebResponse getResponse(WebRequest request) throws IOException { </span><br style="color: #000000;" /><span style="color: #000000;">// 得到了这个响应，你想怎么处理就怎么处理了，不多写了 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">WebResponse response = super.getResponse(request); </span><br style="color: #000000;" /><span style="color: #000000;">String url = response.getWebRequest().getUrl().toString(); </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">if (LOGGER.isDebugEnabled()) { </span><br style="color: #000000;" /><span style="color: #000000;">LOGGER.debug(&#8220;下载文件链接：&#8221; + url); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">if (check(url)) { </span><br style="color: #000000;" /><span style="color: #000000;">return createWebResponse(response.getWebRequest(), &#8220;&#8221;, &#8220;application/javascript&#8221;, 200, &#8220;Ok&#8221;); </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">return response; </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">private boolean check(String url) { </span><br style="color: #000000;" /><span style="color: #000000;">// TODO 加入你自己的判断什么的 </span><br style="color: #000000;" /><span style="color: #000000;">return false; </span><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">} </span><br style="color: #000000;" /><span style="color: #000000;">这样我们就实现了一个自己的监听器，虽然比较简陋。现在我们把它设置到我们的webClient里面去。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">                WebClient webClient = new WebClient(); </span><br style="color: #000000;" /><span style="color: #000000;">// 如果你好奇这里仅仅传进去没有返回，怎么webClient就改变了，你可以到这个实例化里面看下就明白了 </span><br style="color: #000000;" /><span style="color: #000000;">new WebConnectionListener(webClient); </span><br style="color: #000000;" /><span style="color: #000000;">// 这个webClient在上一步之后，已经被监听了 </span><br style="color: #000000;" /><span style="color: #000000;">webClient.getPage(&#8220;someUrl&#8221;); </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">结果就如上图所示了。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">HtmlUnit还有其他许多并、串行控制方法，统一cookie，统一连接池等等，就不一一叙述了。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">四、强大的缓存机制 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">        为什么第一次获取一个网页可能会比较慢，但是第二次来拿就特别快呢？在HtmlUnit源码webClient类中的loadWebResponseFromWebConnection方法中我们可以看到。 </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">final WebResponse fromCache = getCache().getCachedResponse(webRequest); </span><br style="color: #000000;" /><span style="color: #000000;">        final WebResponse webResponse; </span><br style="color: #000000;" /><span style="color: #000000;">        if (fromCache != null) { </span><br style="color: #000000;" /><span style="color: #000000;">            webResponse = new WebResponseFromCache(fromCache, webRequest); </span><br style="color: #000000;" /><span style="color: #000000;">        } </span><br style="color: #000000;" /><span style="color: #000000;">        else { </span><br style="color: #000000;" /><span style="color: #000000;">            try { </span><br style="color: #000000;" /><span style="color: #000000;">                webResponse = getWebConnection().getResponse(webRequest); </span><br style="color: #000000;" /><span style="color: #000000;">            } </span><br style="color: #000000;" /><span style="color: #000000;">            catch (final NoHttpResponseException e) { </span><br style="color: #000000;" /><span style="color: #000000;">                return new WebResponse(responseDataNoHttpResponse_, webRequest, 0); </span><br style="color: #000000;" /><span style="color: #000000;">            } </span><br style="color: #000000;" /><span style="color: #000000;">            getCache().cacheIfPossible(webRequest, webResponse, null); </span><br style="color: #000000;" /><span style="color: #000000;">        } </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">当然，它还有许多别的缓存机制来加快我们的访问速度，减少带宽压力。 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">劣势： </span><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">       相对于HttpClient来说，HtmlUnit的优点大致就这么多了，那相对于HttpClient来说，短程距离上（访问量小的情况下），HtmlUnit的性能是不如HttpClient的，这也很容易理解，HtmlUnit把HttpClient封装了一层嘛，在短程距离行不如HttpClient就很正常了，在具体的业务下，那就要看程序员水平了。 </span><br style="color: #000000;" /><br style="color: #000000;" /><br style="color: #000000;" /><span style="color: #000000;">写太长我自己容易疏忽，大家看着也累，所以第一篇就只谈一下HtmlUnit的优势和劣势了，下一篇将讲述HttpClient的优势和劣势，之后再对他们进行详细比较以及介绍技巧。</span></p>
+<p>&nbsp;</p>
+<div class="wumii-hook">
+    <input type="hidden" name="wurl" value="http://www.haohaoblog.com/?p=1327" /><br />
+    <input type="hidden" name="wtitle" value="对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦" /><br />
+    <input type="hidden" name="wpic" value="" />
+</div>
+<p></p>
+<br></br>
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_qzone">QQ空间</a>
+	<a class="jiathis_button_tsina">新浪微博</a>
+	<a class="jiathis_button_tqq">腾讯微博</a>
+	<a class="jiathis_button_renren">人人网</a>
+	<a class="jiathis_button_kaixin001">开心网</a>
+	<a class="jiathis_button_fav">收藏夹</a>
+	<a class="jiathis_button_email">邮件</a>
+	<a class="jiathis_button_copy">复制网址</a>
+	<a class="jiathis_button_weixin">微信</a>
+	<a class="jiathis_button_cqq">QQ好友</a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1394245379159479" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<p></p>
+<br></br>
+<p>本文固定链接: <a href="http://www.haohaoblog.com/?p=1327" rel="bookmark" title="对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦">http://www.haohaoblog.com/?p=1327 | java编程网</a></p></div>
+        <p style="text-align:center;"></p>
+
+</div>
+</div>
+
+
+
+<div class="articles">
+
+
+<div class="author_pic">
+					<a href="#" title=""></a>
+				</div>
+<div class="author_text">
+			<span class="spostinfo">
+				该日志由 java_bird 于2014年09月19日发表在 <a href="http://www.haohaoblog.com/?cat=12" title="查看java编程中的全部文章" rel="category">java编程</a> 分类下，
+								你可以<a href="#respond">发表评论</a>，并在保留<a href="http://www.haohaoblog.com/?p=1327" rel="bookmark">原文地址</a>及作者的情况下<a href="http://www.haohaoblog.com/wp-trackback.php?p=1327" rel="trackback">引用</a>到你的网站或博客。
+				<br/>
+				java编程网关于java编程的文章均为原创文章，转载请注明: <a href="http://www.haohaoblog.com/?p=1327" rel="bookmark" title="本文固定链接 http://www.haohaoblog.com/?p=1327">对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦 | java编程网</a><br/>
+				关键字: <a href="http://www.haohaoblog.com/?tag=htmlunit" rel="tag">HtmlUnit</a>, <a href="http://www.haohaoblog.com/?tag=httpclient" rel="tag">HttpClient</a>			</span>
+				</div>
+</div>
+
+<div class="articles">
+【上一篇】<a href="http://www.haohaoblog.com/?p=1324" rel="prev">用java实现HTTP读取，独立收发数据，不需jar包</a><br/>【下一篇】<a href="http://www.haohaoblog.com/?p=1329" rel="next">如何面对Java并发编程，面试也可以很简单，掌握这八个Java并发知识即可</a></div>
+
+<div class="articles">
+<div class="relatedposts">
+	<h3>您可能还会对这些文章感兴趣！</h3><ol>		<!-- 没有相关文章显示随机文章 -->
+	<ol>
+				<li><a href="http://www.haohaoblog.com/?p=128" rel="bookmark" title="Permanent Link to java中运用DOM解析XML文件">java中运用DOM解析XML文件 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1588" rel="bookmark" title="Permanent Link to 均化路由器，负载均衡来帮忙(1)">均化路由器，负载均衡来帮忙(1) </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=495" rel="bookmark" title="Permanent Link to java线程放弃CPU使用权的三种方式">java线程放弃CPU使用权的三种方式(5)</a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1593" rel="bookmark" title="Permanent Link to 网络负载均衡之主控内容">网络负载均衡之主控内容 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=40" rel="bookmark" title="Permanent Link to 夜来风声起">夜来风声起(3)</a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1630" rel="bookmark" title="Permanent Link to A10发布内置Anti DDoS的应用交付控制器">A10发布内置Anti DDoS的应用交付控制器 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=96" rel="bookmark" title="Permanent Link to 宝宝的话">宝宝的话(14)</a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1661" rel="bookmark" title="Permanent Link to 盘点JSP语言令开发人员钟爱的五大优势">盘点JSP语言令开发人员钟爱的五大优势 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1584" rel="bookmark" title="Permanent Link to CDN负载均衡为网站浏览提速">CDN负载均衡为网站浏览提速 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=835" rel="bookmark" title="Permanent Link to myeclipse或者eclipse因为异常而不能部署项目">myeclipse或者eclipse因为异常而不能部署项目 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1589" rel="bookmark" title="Permanent Link to porxy负载均衡的验证">porxy负载均衡的验证 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=103" rel="bookmark" title="Permanent Link to 浅谈java在C/S模式下的运作原理">浅谈java在C/S模式下的运作原理 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=818" rel="bookmark" title="Permanent Link to RedHat EnterPrise Linux 5的图文并茂安装过程">RedHat EnterPrise Linux 5的图文并茂安装过 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1457" rel="bookmark" title="Permanent Link to 真巧,我刚好做了一个扫描整个网段的多线程程序,不过利用ping加参数">真巧,我刚好做了一个扫描整个网段的多线程程序,不 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1319" rel="bookmark" title="Permanent Link to 对于java教程中关于回调函数的一些见解和感悟">对于java教程中关于回调函数的一些见解和感悟 </a></li>
+				<li><a href="http://www.haohaoblog.com/?p=1454" rel="bookmark" title="Permanent Link to 上传图片的缩放处理-非常实用！（感谢loveyourvv兄弟）">上传图片的缩放处理-非常实用！（感谢loveyourvv兄 </a></li>
+			</ol>
+	</div><div class="clear"></div>
+</div>
+
+<div class="articles">
+<!-- You can start editing here. -->
+			<!-- If comments are open, but there are no comments. -->
+        <h3 id="comments" style="margin-bottom:10px">对于HttpClient和HtmlUnit的理解，这个Java教程中可以不多见哦：等您坐沙发呢！</h3>
+	 			<div id="respond_box">
+	<div id="respond">
+		<h3>发表评论</h3>	
+		<div class="cancel-comment-reply">
+		<div id="real-avatar">
+				</div>	
+			<small><a rel="nofollow" id="cancel-comment-reply-link" href="/index.php?p=1327#respond" style="display:none;">点击这里取消回复。</a></small>
+		</div>
+		    <form action="http://www.haohaoblog.com/wp-comments-post.php" method="post" id="commentform">
+      		<div id="comment-author-info">
+		<p>
+			<input type="text" name="author" id="author" class="commenttext" value="" size="22" tabindex="1" />
+			<label for="author">昵称 *</label>
+		</p>
+		<p>
+			<input type="text" name="email" id="email" class="commenttext" value="" size="22" tabindex="2" />
+			<label for="email">邮箱 *<label>
+		</p>
+		<p>
+			<input type="text" name="url" id="url" class="commenttext" value="" size="22" tabindex="3" />
+			<label for="url">网址</label>
+		</p>
+	</div>
+      		<!--<p><small><strong>XHTML:</strong> You can use these tags: <code>&lt;a href=&quot;&quot; title=&quot;&quot;&gt; &lt;abbr title=&quot;&quot;&gt; &lt;acronym title=&quot;&quot;&gt; &lt;b&gt; &lt;blockquote cite=&quot;&quot;&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=&quot;&quot;&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=&quot;&quot;&gt; &lt;strike&gt; &lt;strong&gt; </code></small></p>-->
+      <div class="clear"></div>
+      <p><script type="text/javascript">
+/* <![CDATA[ */
+    function grin(tag) {
+    	var myField;
+    	tag = ' ' + tag + ' ';
+        if (document.getElementById('comment') && document.getElementById('comment').type == 'textarea') {
+    		myField = document.getElementById('comment');
+    	} else {
+    		return false;
+    	}
+    	if (document.selection) {
+    		myField.focus();
+    		sel = document.selection.createRange();
+    		sel.text = tag;
+    		myField.focus();
+    	}
+    	else if (myField.selectionStart || myField.selectionStart == '0') {
+    		var startPos = myField.selectionStart;
+    		var endPos = myField.selectionEnd;
+    		var cursorPos = endPos;
+    		myField.value = myField.value.substring(0, startPos)
+    					  + tag
+    					  + myField.value.substring(endPos, myField.value.length);
+    		cursorPos += tag.length;
+    		myField.focus();
+    		myField.selectionStart = cursorPos;
+    		myField.selectionEnd = cursorPos;
+    	}
+    	else {
+    		myField.value += tag;
+    		myField.focus();
+    	}
+    }
+/* ]]> */
+</script>
+<a href="javascript:grin(':?:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_question.gif" alt="" /></a>
+<a href="javascript:grin(':razz:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_razz.gif" alt="" /></a>
+<a href="javascript:grin(':sad:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_sad.gif" alt="" /></a>
+<a href="javascript:grin(':evil:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_evil.gif" alt="" /></a>
+<a href="javascript:grin(':!:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_exclaim.gif" alt="" /></a>
+<a href="javascript:grin(':smile:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_smile.gif" alt="" /></a>
+<a href="javascript:grin(':oops:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_redface.gif" alt="" /></a>
+<a href="javascript:grin(':grin:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_biggrin.gif" alt="" /></a>
+<a href="javascript:grin(':eek:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_surprised.gif" alt="" /></a>
+<a href="javascript:grin(':shock:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_eek.gif" alt="" /></a>
+<a href="javascript:grin(':???:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_confused.gif" alt="" /></a>
+<a href="javascript:grin(':cool:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_cool.gif" alt="" /></a>
+<a href="javascript:grin(':lol:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_lol.gif" alt="" /></a>
+<a href="javascript:grin(':mad:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_mad.gif" alt="" /></a>
+<a href="javascript:grin(':twisted:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_twisted.gif" alt="" /></a>
+<a href="javascript:grin(':roll:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_rolleyes.gif" alt="" /></a>
+<a href="javascript:grin(':wink:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_wink.gif" alt="" /></a>
+<a href="javascript:grin(':idea:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_idea.gif" alt="" /></a>
+<a href="javascript:grin(':arrow:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_arrow.gif" alt="" /></a>
+<a href="javascript:grin(':neutral:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_neutral.gif" alt="" /></a>
+<a href="javascript:grin(':cry:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_cry.gif" alt="" /></a>
+<a href="javascript:grin(':mrgreen:')"><img src="http://www.haohaoblog.com/wp-includes/images/smilies/icon_mrgreen.gif" alt="" /></a>
+<br />
+</p>
+		<p><textarea name="comment" id="comment" tabindex="4"></textarea></p>
+		<p>
+			<input class="submit" name="submit" type="submit" id="submit" tabindex="5" value="提交留言" />
+			<input class="reset" name="reset" type="reset" id="reset" tabindex="6" value="重写" />
+			<input type='hidden' name='comment_post_ID' value='1327' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+		</p>
+		<script type="text/javascript">	//Crel+Enter
+			$(document).keypress(function(e){
+				if(e.ctrlKey && e.which == 13 || e.which == 10) { 
+					$(".submit").click();
+					document.body.focus();
+				} else if (e.shiftKey && e.which==13 || e.which == 10) {
+					$(".submit").click();
+				}          
+			})
+		</script>
+		<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="559d3e84d0" /></p>		<span style="padding:0 0 2px 8px">快捷键：Ctrl+Enter</span>
+    </form>
+
+	<div class="clear"></div>
+      </div>
+  </div>
+  </div>
+
+	</div>
+
+<div id="sidebar">
+
+<div class="widget">
+					<h3>近期文章</h3>		<ul>
+					<li>
+				<a href="http://www.haohaoblog.com/?p=1681">三层架构与MVC谜团之答案揭晓</a>
+						</li>
+					<li>
+				<a href="http://www.haohaoblog.com/?p=1680">JSP自定义标签实现数据字典</a>
+						</li>
+					<li>
+				<a href="http://www.haohaoblog.com/?p=1679">Maven Web项目部署到Tomcat</a>
+						</li>
+					<li>
+				<a href="http://www.haohaoblog.com/?p=1669">使用JDK1.6的JAX-WS编写WebService</a>
+						</li>
+					<li>
+				<a href="http://www.haohaoblog.com/?p=1668">不需要Web应用服务器Java实现WebServices</a>
+						</li>
+				</ul>
+		<h3>近期评论</h3><ul id="recentcomments"><li class="recentcomments">Tony发表在《<a href="http://www.haohaoblog.com/?p=1239#comment-15506">如何更加高效地进行安卓应用开发，建议有哪些？</a>》</li><li class="recentcomments"><a href='http://jemlog.com' rel='external nofollow' class='url'>jemlog</a>发表在《<a href="http://www.haohaoblog.com/?p=1014#comment-11757">java的NIO介绍</a>》</li><li class="recentcomments">java_bird发表在《<a href="http://www.haohaoblog.com/?p=609#comment-7637">效率至上之列表和java数组的性能优劣</a>》</li><li class="recentcomments">java_bird发表在《<a href="http://www.haohaoblog.com/?p=1125#comment-7636">修作玉颜色，卖于帝王家(java笔试面试&#8212;-求职经历)</a>》</li><li class="recentcomments"><a href='http://www.javawxs.com' rel='external nofollow' class='url'>王雪松的站点</a>发表在《<a href="http://www.haohaoblog.com/?p=1125#comment-4793">修作玉颜色，卖于帝王家(java笔试面试&#8212;-求职经历)</a>》</li></ul><h3>功能</h3>			<ul>
+			<li><a href="http://www.haohaoblog.com/wp-login.php?action=register">注册</a></li>			<li><a href="http://www.haohaoblog.com/wp-login.php">登录</a></li>
+			<li><a href="http://www.haohaoblog.com/?feed=rss2" title="使用RSS 2.0订阅本站点内容">文章<abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://www.haohaoblog.com/?feed=comments-rss2" title="使用RSS订阅本站点的所有文章的近期评论">评论<abbr title="Really Simple Syndication">RSS</abbr></a></li>
+<li><a href="https://cn.wordpress.org/" title="基于WordPress，一个优美、先进的个人信息发布平台。">WordPress.org</a></li>			</ul>
+</div>
+
+<div class="widget"><div id="tab-title"><h3><span>最新日志</span><span class="selected">热评日志</span><span>随机日志</span></h3>
+	<div id="tab-content">
+		<ul class="hide">					<li><a href="http://www.haohaoblog.com/?p=1681" rel="bookmark" title="详细阅读 三层架构与MVC谜团之答案揭晓">三层架构与MVC谜团之答案揭晓</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1680" rel="bookmark" title="详细阅读 JSP自定义标签实现数据字典">JSP自定义标签实现数据字典</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1679" rel="bookmark" title="详细阅读 Maven Web项目部署到Tomcat">Maven Web项目部署到Tomcat</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1669" rel="bookmark" title="详细阅读 使用JDK1.6的JAX-WS编写WebService">使用JDK1.6的JAX-WS编写WebSe</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1668" rel="bookmark" title="详细阅读 不需要Web应用服务器Java实现WebServices">不需要Web应用服务器Java实现WebSer</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1667" rel="bookmark" title="详细阅读 Objective-Cloud将Objective-C搬到了云端">Objective-Cloud将Objective-C搬到了</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1666" rel="bookmark" title="详细阅读 VisualAge for Java开发Servlets">VisualAge for Java开发Servlets</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1665" rel="bookmark" title="详细阅读 JSP架构、JSP开发工具优缺点比较">JSP架构、JSP开发工具优缺点比较</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1664" rel="bookmark" title="详细阅读 Servlet与JSP间的传值问题">Servlet与JSP间的传值问题</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1663" rel="bookmark" title="详细阅读 Java高并发：静态页面生成方案">Java高并发：静态页面生成方案</a></li>
+					</ul>
+		<ul></ul>
+		<ul class="hide">					<li><a href="http://www.haohaoblog.com/?p=119" rel="bookmark" title="详细阅读 一个菜鸟如何在淘宝上快速开店">一个菜鸟如何在淘宝上快速开店</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1612" rel="bookmark" title="详细阅读 应用交付设备性能高成本低">应用交付设备性能高成本低</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=241" rel="bookmark" title="详细阅读 VMware虚拟机中的系统安装过程（图文）">VMware虚拟机中的系统安装过程（图文）</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=234" rel="bookmark" title="详细阅读 学习服务器环境配置前的心情">学习服务器环境配置前的心情</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1603" rel="bookmark" title="详细阅读 生产环境下的高可用NFS文件服务器(1)">生产环境下的高可用NFS文件服务器(1)</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=631" rel="bookmark" title="详细阅读 不同平台,系统的对接技术之java中的webservice">不同平台,系统的对接技术之java中的webs</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=614" rel="bookmark" title="详细阅读 集合强悍类&#8212;Collection以及集合的相关细节问题">集合强悍类---Collection以及集合的相关</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=1626" rel="bookmark" title="详细阅读 梭子鱼政府电子政务负载均衡解决方案">梭子鱼政府电子政务负载均衡解决方案</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=222" rel="bookmark" title="详细阅读 wordpress插件SEO优化Platinum SEO Plugin配置">wordpress插件SEO优化Platinum SE</a></li>
+										<li><a href="http://www.haohaoblog.com/?p=253" rel="bookmark" title="详细阅读 在XP下配置IIS6.0的总结">在XP下配置IIS6.0的总结</a></li>
+					</ul>
+					</div></div></div>
+
+<div class="widget"><h3>大家赞助</h3></div>
+<div class="widget">
+		</div>
+
+<div class="widget"><div class="top_comment">
+	<h3>最活跃的读者</h3>
+<ul>
+			</ul></div>
+</div>
+
+<div class="widget">
+		</div>
+
+<div class="widget"><h3>最新评论</h3>
+<div class="r_comment">
+<ul>
+		
+<li>Tony:<br /> <a href="http://www.haohaoblog.com/?p=1239#comment-15506" title="查看 如何更加高效地进行安卓应用开发，建议有哪些？">Java——bird 你好，我是</a></li>
+<li>jemlog:<br /> <a href="http://www.haohaoblog.com/?p=1014#comment-11757" title="查看 java的NIO介绍">写到很明白，博主V5</a></li>
+<li>王雪松的站点:<br /> <a href="http://www.haohaoblog.com/?p=1125#comment-4793" title="查看 修作玉颜色，卖于帝王家(java笔试面试----求职经历)">仔细读了博主的文章，感觉对自己很</a></li>
+<li>aaa@aaa.com:<br /> <a href="http://www.haohaoblog.com/?p=609#comment-4103" title="查看 效率至上之列表和java数组的性能优劣">运用的设计模式很受启发，非常感谢</a></li>
+<li>jioealk:<br /> <a href="http://www.haohaoblog.com/?p=1023#comment-2597" title="查看 java导出excel遇到的异常">java导出excel遇到的异常</a></li>
+<li>铭心:<br /> <a href="http://www.haohaoblog.com/?p=524#comment-1756" title="查看 多线程同步------解决共享变量问题（血汗钱的存取）">System.out.print</a></li>
+<li>吵吵:<br /> <a href="http://www.haohaoblog.com/?p=1125#comment-1755" title="查看 修作玉颜色，卖于帝王家(java笔试面试----求职经历)">好长的啊！</a></li>
+<li>大鲨鱼:<br /> <a href="http://www.haohaoblog.com/?p=981#comment-1512" title="查看 冒泡插入选择排序解析以及信号量机制">字体颜色，看着太费眼睛了。</a></li>
+<li>yishe:<br /> <a href="http://www.haohaoblog.com/?p=961#comment-1319" title="查看 java中的String详解----new对象和常量池的概念">String a="1"+"2"</a></li>
+<li>除螨吸尘器:<br /> <a href="http://www.haohaoblog.com/?p=985#comment-1037" title="查看 归并排序和快速排序的浅析">国庆刚过完 seo工作又开始了 </a></li> 
+</ul>
+</div></div>
+
+<div class="widget"><h3>标签云集</h3>	
+</a><a href='http://www.haohaoblog.com/?tag=linux' class='tag-link-108' title='4个话题' style="color:#8d5fa0;font-size: 12.8791208791px;;">linux</a>
+</a><a href='http://www.haohaoblog.com/?tag=ajax' class='tag-link-145' title='2个话题' style="color:#abc60b;font-size: 12.3956043956px;;">ajax</a>
+</a><a href='http://www.haohaoblog.com/?tag=android' class='tag-link-111' title='6个话题' style="color:#e83689;font-size: 13.2087912088px;;">android</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%8e%a5%e5%8f%a3' class='tag-link-130' title='2个话题' style="color:#699149;font-size: 12.3956043956px;;">接口</a>
+</a><a href='http://www.haohaoblog.com/?tag=jsf' class='tag-link-110' title='1个话题' style="color:#922466;font-size: 12px;;">JSF</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e7%bc%96%e7%a8%8b%e7%bd%91' class='tag-link-113' title='1个话题' style="color:#bf9e28;font-size: 12px;;">java编程网</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%a1%83%e8%8a%b1%e6%b6%a7' class='tag-link-91' title='1个话题' style="color:#032458;font-size: 12px;;">桃花涧</a>
+</a><a href='http://www.haohaoblog.com/?tag=this' class='tag-link-78' title='2个话题' style="color:#025575;font-size: 12.3956043956px;;">this</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1%e5%99%a8' class='tag-link-208' title='2个话题' style="color:#8d9df8;font-size: 12.3956043956px;;">负载均衡器</a>
+</a><a href='http://www.haohaoblog.com/?tag=android%e5%bc%80%e5%8f%91' class='tag-link-172' title='11个话题' style="color:#4d0895;font-size: 13.7142857143px;;">android开发</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e5%ae%89%e5%8d%93%e5%bc%80%e5%8f%91' class='tag-link-119' title='2个话题' style="color:#b66985;font-size: 12.3956043956px;;">安卓开发</a>
+</a><a href='http://www.haohaoblog.com/?tag=asc%e2%85%a1' class='tag-link-122' title='1个话题' style="color:#c75d84;font-size: 12px;;">ASCⅡ</a>
+</a><a href='http://www.haohaoblog.com/?tag=java' class='tag-link-117' title='3个话题' style="color:#b0ee98;font-size: 12.6593406593px;;">java</a>
+</a><a href='http://www.haohaoblog.com/?tag=merge_sort' class='tag-link-81' title='1个话题' style="color:#8a77b6;font-size: 12px;;">merge_sort</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%b3%9b%e5%9e%8b' class='tag-link-125' title='1个话题' style="color:#341863;font-size: 12px;;">泛型</a>
+</a><a href='http://www.haohaoblog.com/?tag=ejb' class='tag-link-115' title='1个话题' style="color:#ecfce9;font-size: 12px;;">EJB</a>
+</a><a href='http://www.haohaoblog.com/?tag=super' class='tag-link-76' title='1个话题' style="color:#525c8d;font-size: 12px;;">super</a>
+</a><a href='http://www.haohaoblog.com/?tag=java-nio' class='tag-link-142' title='3个话题' style="color:#d90fa0;font-size: 12.6593406593px;;">java nio</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%b5%81%e9%87%8f%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1' class='tag-link-206' title='2个话题' style="color:#b28536;font-size: 12.3956043956px;;">流量负载均衡</a>
+</a><a href='http://www.haohaoblog.com/?tag=sql-server-2005' class='tag-link-204' title='2个话题' style="color:#a657c8;font-size: 12.3956043956px;;">Sql Server 2005</a>
+</a><a href='http://www.haohaoblog.com/?tag=asp-net' class='tag-link-186' title='2个话题' style="color:#941a08;font-size: 12.3956043956px;;">Asp.Net</a>
+</a><a href='http://www.haohaoblog.com/?tag=jsp' class='tag-link-103' title='5个话题' style="color:#5f05b6;font-size: 13.0549450549px;;">jsp</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e7%a8%8b%e5%ba%8f%e8%ae%be%e8%ae%a1' class='tag-link-132' title='3个话题' style="color:#92f523;font-size: 12.6593406593px;;">Java程序设计</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f' class='tag-link-123' title='2个话题' style="color:#48c166;font-size: 12.3956043956px;;">设计模式</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b' class='tag-link-133' title='2个话题' style="color:#dc8c50;font-size: 12.3956043956px;;">并发编程</a>
+</a><a href='http://www.haohaoblog.com/?tag=sql-server' class='tag-link-189' title='2个话题' style="color:#5fbc2d;font-size: 12.3956043956px;;">SQL Server</a>
+</a><a href='http://www.haohaoblog.com/?tag=it%e4%bc%91%e9%97%b2' class='tag-link-102' title='1个话题' style="color:#fbab9e;font-size: 12px;;">IT休闲</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e7%ba%bf%e7%a8%8b' class='tag-link-93' title='17个话题' style="color:#078ef7;font-size: 14.1098901099px;;">线程</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e5%a4%9a%e7%ba%bf%e7%a8%8b' class='tag-link-92' title='24个话题' style="color:#3ec7a6;font-size: 14.4175824176px;;">java多线程</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e9%9b%86%e7%be%a4' class='tag-link-190' title='2个话题' style="color:#1d5838;font-size: 12.3956043956px;;">集群</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8' class='tag-link-120' title='1个话题' style="color:#2edcb9;font-size: 12px;;">线程安全</a>
+</a><a href='http://www.haohaoblog.com/?tag=dns' class='tag-link-197' title='2个话题' style="color:#16d3dd;font-size: 12.3956043956px;;">Dns</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e7%ba%bf%e8%b7%af%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1' class='tag-link-212' title='2个话题' style="color:#0d2e50;font-size: 12.3956043956px;;">线路负载均衡</a>
+</a><a href='http://www.haohaoblog.com/?tag=jboss' class='tag-link-112' title='2个话题' style="color:#de2e2b;font-size: 12.3956043956px;;">jboss</a>
+</a><a href='http://www.haohaoblog.com/?tag=xml' class='tag-link-138' title='2个话题' style="color:#71baba;font-size: 12.3956043956px;;">XML</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%95%a3%e6%96%87' class='tag-link-101' title='1个话题' style="color:#dae32e;font-size: 12px;;">散文</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e7%bd%91%e7%bb%9c%e6%8a%80%e6%9c%af' class='tag-link-82' title='6个话题' style="color:#8de581;font-size: 13.2087912088px;;">网络技术</a>
+</a><a href='http://www.haohaoblog.com/?tag=spring' class='tag-link-97' title='8个话题' style="color:#d5513b;font-size: 13.4285714286px;;">spring</a>
+</a><a href='http://www.haohaoblog.com/?tag=socket%e7%bc%96%e7%a8%8b' class='tag-link-126' title='1个话题' style="color:#07ace5;font-size: 12px;;">socket编程</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84' class='tag-link-96' title='2个话题' style="color:#65123d;font-size: 12.3956043956px;;">数据结构</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e9%9b%86%e5%90%88' class='tag-link-105' title='8个话题' style="color:#f2418e;font-size: 13.4285714286px;;">集合</a>
+</a><a href='http://www.haohaoblog.com/?tag=io' class='tag-link-107' title='12个话题' style="color:#57469b;font-size: 13.7802197802px;;">io</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e8%b4%9f%e8%bd%bd%e5%9d%87%e8%a1%a1' class='tag-link-187' title='28个话题' style="color:#15c38c;font-size: 14.5494505495px;;">负载均衡</a>
+</a><a href='http://www.haohaoblog.com/?tag=final' class='tag-link-89' title='4个话题' style="color:#1e854f;font-size: 12.8791208791px;;">final</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%b5%81%e5%aa%92%e4%bd%93%e6%9c%8d%e5%8a%a1%e5%99%a8' class='tag-link-188' title='3个话题' style="color:#918699;font-size: 12.6593406593px;;">流媒体服务器</a>
+</a><a href='http://www.haohaoblog.com/?tag=static' class='tag-link-88' title='1个话题' style="color:#9610af;font-size: 12px;;">static</a>
+</a><a href='http://www.haohaoblog.com/?tag=struts' class='tag-link-109' title='2个话题' style="color:#0e65d5;font-size: 12.3956043956px;;">struts</a>
+</a><a href='http://www.haohaoblog.com/?tag=hibernate' class='tag-link-94' title='7个话题' style="color:#269f97;font-size: 13.3186813187px;;">hibernate</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%95%99%e7%a8%8b' class='tag-link-173' title='11个话题' style="color:#9de6f9;font-size: 13.7142857143px;;">教程</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%8a%bd%e8%b1%a1%e7%b1%bb' class='tag-link-131' title='2个话题' style="color:#c9138c;font-size: 12.3956043956px;;">抽象类</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e9%9b%b6%e9%85%8d%e7%bd%ae' class='tag-link-116' title='1个话题' style="color:#07c614;font-size: 12px;;">零配置</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e5%8f%8d%e5%b0%84' class='tag-link-124' title='1个话题' style="color:#d3655a;font-size: 12px;;">反射</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%a4%84%e7%90%86' class='tag-link-121' title='1个话题' style="color:#5b97ef;font-size: 12px;;">字符串处理</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e6%9d%82%e8%b0%88' class='tag-link-84' title='18个话题' style="color:#319485;font-size: 14.1538461538px;;">杂谈</a>
+</a><a href='http://www.haohaoblog.com/?tag=properties' class='tag-link-118' title='1个话题' style="color:#42288c;font-size: 12px;;">properties</a>
+</a><a href='http://www.haohaoblog.com/?tag=%e7%ae%97%e6%b3%95' class='tag-link-95' title='6个话题' style="color:#684aeb;font-size: 13.2087912088px;;">算法</a>
+</a><a href='http://www.haohaoblog.com/?tag=jsp%e5%ad%a6%e4%b9%a0' class='tag-link-104' title='3个话题' style="color:#fefda2;font-size: 12.6593406593px;;">jsp学习</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e5%ae%b9%e5%99%a8' class='tag-link-146' title='2个话题' style="color:#34b6ef;font-size: 12.3956043956px;;">java容器</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e6%95%99%e7%a8%8b' class='tag-link-135' title='6个话题' style="color:#16c161;font-size: 13.2087912088px;;">Java教程</a>
+</a><a href='http://www.haohaoblog.com/?tag=eigrp' class='tag-link-195' title='2个话题' style="color:#1a727e;font-size: 12.3956043956px;;">eigrp</a>
+</a><a href='http://www.haohaoblog.com/?tag=seo' class='tag-link-86' title='2个话题' style="color:#da2b63;font-size: 12.3956043956px;;">seo</a>
+</a><a href='http://www.haohaoblog.com/?tag=java%e7%bc%96%e7%a8%8b' class='tag-link-87' title='130个话题' style="color:#e6ceed;font-size: 16px;;">java编程</a>
+</a><a href='http://www.haohaoblog.com/?tag=webservice' class='tag-link-106' title='2个话题' style="color:#c4e5e8;font-size: 12.3956043956px;;">webservice</a>
+</a><a href='http://www.haohaoblog.com/?tag=wordpress' class='tag-link-114' title='1个话题' style="color:#1c3237;font-size: 12px;;">wordpress</a>
+</a><a href='http://www.haohaoblog.com/?tag=jdk' class='tag-link-127' title='1个话题' style="color:#147588;font-size: 12px;;">JDK</a></div>
+
+<div class="widget"><h3>博客统计</h3>
+   <ul>
+<li>日志总数：330 篇</li>
+<li>评论总数：7411 篇</li>
+<li>标签数量：137 个</li>
+<li>链接总数：15 个</li>
+<li>建站日期：2007-04-22<br />
+<li>运行天数：3174 天</li>
+<li>最后更新：2014-12-25</li>
+   </ul></div>
+
+<div class="widget">
+<h3>友情链接</h3>
+<div class="v-links"><li><a href="http://www.gzfltzs.com/" target="_blank">洗脚盆什么牌子好</a></li>
+<li><a href="http://www.cadkong.com" target="_blank">图形图像处理软件</a></li>
+<li><a href="http://www.tiaoma100.com" target="_blank">二维码识别软件</a></li>
+<li><a href="http://feitianyc.com" target="_blank">原创文章代写</a></li>
+<li><a href="http://xse.ybebaby.com" target="_blank">新生儿喂养</a></li>
+<li><a href="http://fangsai.net" target="_blank">拉夏贝尔</a></li>
+<li><a href="http://www.010305.com" target="_blank">热门查询网</a></li>
+<li><a href="http://www.4gdh.net" target="_blank">4g网络电话</a></li>
+<li><a href="http://www.wifiwldh.com" target="_blank">WIFI电话</a></li>
+<li><a href="http://www.eckck.com" target="_blank">吉祥彩平台</a></li>
+<li><a href="http://www.vzhuan8.com" target="_blank">天天微赚吧</a></li>
+<li><a href="http://www.zggznet.com" target="_blank">广州网络推广公司</a></li>
+<li><a href="http://bbs.jingjing001.com" target="_blank">seo论坛</a></li>
+<li><a href="http://www.1688fzw.com" rel="acquaintance" target="_blank">怎样减肥最快最有效</a></li>
+<li><a href="http://www.yangshenghuo99.com" target="_blank">养生活99</a></li>
+</div></div><div class="clear"></div>
+
+<div class="widget">
+<form id="loginform" action="http://www.haohaoblog.com/wp-login.php" method="post"><h3>用户登录</h3>
+<p>
+<label>用户名：<input class="login" type="text" name="log" id="log" value="" size="12" /></label>
+</p>
+<p>
+<label>密　码：<input class="login" type="password" name="pwd" id="pwd" value="" size="12" /></label>
+</p>
+<p>
+<input class="denglu" type="submit" name="submit" value="登陆" /> <label>记住我 <input id="comment_mail_notify" type="checkbox" name="rememberme" value="forever" /></label>
+</p>
+<p>
+<input type="hidden" name="redirect_to" value="/index.php?p=1327"/>
+</p>
+</form>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">Copyright &copy; 2012-2014 java编程网.  I'm  <a href="http://www.haohaoblog.com/" rel="external">java编程网</a>.<script src="http://s20.cnzz.com/stat.php?id=3997047&web_id=3997047&show=pic" language="JavaScript"></script>
+ <a href="http://www.miitbeian.gov.cn/" rel="external">冀ICP备14019756号-3</a>. .	 </div>
+
+<p style="margin:0;padding:0;height:1px;overflow:hidden;">
+    <script type="text/javascript"><!--
+        var wumiiSitePrefix = "http://www.haohaoblog.com";
+        var wumiiEnableCustomPos = false;
+        var wumiiParams = "&num=8&mode=3&displayInFeed=1&version=1.0.5.7&pf=WordPress3.9.9";
+        var wumiiCategories = ["\u7f51\u7edc\u6280\u672f"];
+    //--></script><script type="text/javascript" src="http://widget.wumii.cn/ext/relatedItemsWidget"></script><a href="http://www.wumii.com/widget/relatedItems" style="border:0;"><img src="http://static.wumii.cn/images/pixel.png" alt="无觅相关文章插件，快速提升流量" style="border:0;padding:0;margin:0;" /></a>
+</p></div>
+<!-- bingshiblog.com Baidu tongji analytics -->
+<!-- haohaoblog.com Baidu tongji analytics -->
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fe0eaa5a726aaebe794561de9a4663317' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F4131e7d89e0dcf024bef7c84d385b13a' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+</body>
+</html>

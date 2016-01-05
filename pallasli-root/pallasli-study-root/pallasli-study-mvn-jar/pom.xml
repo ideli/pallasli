@@ -11,7 +11,7 @@
 	<!-- 传递依赖发现 Dependency mediation Dependency management Dependency scope 
 		Excluded dependencies Optional dependencies -->
 	<!-- 依赖范围 compile provided runtime test system import -->
- 
+
 	<!-- svn仓库 -->
 	<scm>
 		<url>http://www.svn.com</url>
@@ -113,7 +113,7 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<!-- 发布项目插件-->
+			<!-- 发布项目插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -123,16 +123,47 @@
 					<goals>deploy</goals>
 					<scmCommentPrefix>[bus-core-api-release-checkin]-</scmCommentPrefix>
 				</configuration>
-			</plugin> 
+			</plugin>
+			<!-- 自动化部署插件 -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<container>
+						<containerId>tomcat7x</containerId>
+						<home>/Users/lyt1987Desktop/mypcsoft/apache-tomcat-7.0.59</home>
+					</container>
+					<configuration>
+						<type>standalone</type>
+						<home>/Users/lyt1987/Documents/tomcat7x</home>
+					</configuration>
+				</configuration>
+			</plugin>
+			
+			<!-- 测试报表插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<!-- 是否跳过测试 -->
+					<skipTests>false</skipTests>
+					<!-- 添加自定义测试支持，默认Test开头结尾的类和TestCase结尾的类 -->
+					<includes>
+						<include>**/*Testkk.java</include>
+					</includes>
+					<!-- 排除测试 -->
+					<excludes>
+						<exclude>**/*ServiceTest.java</exclude>
+					</excludes>
+					<reportsDirectory>/Users/lyt1987/Documents/test-reports</reportsDirectory>
+				</configuration>
+			</plugin>
 		</plugins>
-		<!-- 使用wagon部署网站
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-webdav-jackrabbit</artifactId>
-				<version>1.0-beta-7</version>
-			</extension>
-		</extensions>  -->
+		<!-- 使用wagon部署网站 <extensions> <extension> <groupId>org.apache.maven.wagon</groupId> 
+			<artifactId>wagon-webdav-jackrabbit</artifactId> <version>1.0-beta-7</version> 
+			</extension> </extensions> -->
 		<!-- 打包项目名称 -->
 		<finalName>CounterWebApp</finalName>
 	</build>

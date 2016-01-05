@@ -1,0 +1,713 @@
+<!DOCTYPE html PUBliC "-//W3C//dtD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/dtD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+<link rel="stylesheet" href="http://www.2cto.com/statics/css/article.css" type="text/css"/>
+<link href="http://www.2cto.com/statics/css/dialog.css" rel="stylesheet" type="text/css"/>
+<title>Java Http协议服务器demo - JAVA编程语言程序开发技术文章 - 红黑联盟</title>
+<meta name="keywords" content="服务器"/>
+<meta name="description" content="import java io *;  import java net *;   **  * MyHttpServer 实现一个简单的HTTP服务器端，可以获取用户提交的内容  * 并给用户一个response  * 因为时间的关系，对http头的处理显得不规   "/>
+<script type="text/javascript" src="http://www.2cto.com/statics/js/jquery.min.js"></script>
+<script type="text/javascript" src="http://www.2cto.com/statics/js/jquery.sgallery.js"></script>
+<script type="text/javascript" src="http://www.2cto.com/statics/js/search_common.js"></script>
+<script type="text/javascript" src="http://cbjs.baidu.com/js/m.js"></script>
+<script type="text/javascript" src="http://www.2cto.com/statics/js/json.js"></script>
+<script language="javascript" type="text/javascript" src="http://www.2cto.com/statics/js/dialog.js"></script>
+<script language="javascript" type="text/javascript" src="http://www.2cto.com/statics/js/syntaxhighlighter.js"></script>
+<link type="text/css" rel="stylesheet" href="http://www.2cto.com/statics/js/syntaxhighlighter/styles/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="http://www.2cto.com/statics/js/syntaxhighlighter/styles/shThemeDefault.css"/>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<div class="line_top_box">
+<dl class="top_box_left">
+<dd class="left_logo"><a href="http://www.2cto.com"></a></dd>
+<dd class="left_menu_link">
+<a class='Channel' href='/News/'>资讯</a>&nbsp;|&nbsp;
+<a class='Channel' href='/Article/'>安全</a>&nbsp;|&nbsp;
+<a class='Channel' href='http://bbs.2cto.com'>论坛</a>&nbsp;|&nbsp;
+<a class='Channel' href='/Soft/'>下载</a>&nbsp;|&nbsp;
+<a class='Channel' href='http://book.2cto.com'>读书</a>&nbsp;|&nbsp;
+<a class='Channel' href='/kf/'>程序开发</a>&nbsp;|&nbsp;
+<a class='Channel' href='/database/'>数据库</a>&nbsp;|&nbsp;
+<a class='Channel' href='/os/'>系统</a>&nbsp;|&nbsp;
+<a class='Channel' href='/net/'>网络</a>&nbsp;|&nbsp;
+<a class='Channel' href='/ebook/'>电子书</a>&nbsp;|&nbsp;
+<a class='Channel' href='/weixin/'>微信学院</a>&nbsp;|&nbsp;
+<a class='Channel' href='http://zz.2cto.com/'>站长学院</a>&nbsp;|&nbsp;
+<a class='Channel' href='/ym/'>源码</a>&nbsp;|&nbsp;
+<a class='Channel' href='/QQ/'>QQ</a>&nbsp;|&nbsp;
+<a class='Channel' href='http://space.2cto.com'>专栏</a>&nbsp;|&nbsp;
+<a class='Channel' href='/px/'>考试</a>&nbsp;|&nbsp;
+</dd>
+</dl>
+</div>
+<div class="line_top_lmbox">
+<dl class="lmpic"></dl>
+<dl class="lmlinkbox"><dd>
+<a class='Channel' href='http://www.2cto.com/kf/ware/'>软件开发</a>|
+<a class='Channel' href='http://www.2cto.com/kf/qianduan/'>web前端</a>|
+<a class='Channel' href='http://www.2cto.com/kf/web/'>Web开发</a>|
+<a class='Channel' href='http://www.2cto.com/kf/yidong/'>移动开发</a>|
+<a class='Channel' href='http://www.2cto.com/kf/all/'>综合编程</a>|
+</dd></dl>
+<dl class="LoginBox"><dd><script type="text/javascript">document.write('<iframe src="http://www.2cto.com/index.php?m=member&c=index&a=mini&forward='+encodeURIComponent(location.href)+'&siteid=1" allowTransparency="true"  width="150" height="32" frameborder="0" scrolling="no"></iframe>')</script></dd></dl>
+</div>
+<div class="divline8"></div>
+<div class="tadv">
+ 
+<script type="text/javascript">BAIDU_CLB_fillSlot("298612");</script>
+</div>
+<div class="divline8"></div>
+<div class="it165_box">
+<div class="box_left">
+<dl class="box_p">
+<dd class="pRight"><a href="http://www.2cto.com">首页</a><span> > </span><a href="http://www.2cto.com/kf/">程序开发</a> > <a href="http://www.2cto.com/kf/ware/">软件开发</a> > <a href="http://www.2cto.com/kf/ware/Java/">Java</a> > 正文</dd>
+<script type="text/javascript">BAIDU_CLB_fillSlot("703722");</script>
+</dl>
+<dl class="box_t"><dd>Java Http协议服务器demo</dd></dl>
+<dl class="box_INFO">
+<dd class="frinfo line_blue">2015-03-02 &nbsp;&nbsp;&nbsp;&nbsp;
+<a style="font-weight:bold;padding:5px 0px 5px 20px;background:url('http://www.2cto.com/statics/images/icon/user_comment.png') left center no-repeat" href="#SOHUCS" id="changyan_count_unit"></a><a href="#SOHUCS">&nbsp;个评论</a>
+<script type="text/javascript" src="http://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+&nbsp;&nbsp; 来源：Coder_android&nbsp;&nbsp; </dd>
+<dd class="frsize line_blue">
+<span id='favorite'>
+<a href="javascript:;" onclick="add_favorite('Java Http协议服务器demo');" class="t6">收藏</a>
+</span>&nbsp;&nbsp;
+<a target="_blank" href="http://www.2cto.com/index.php?m=member&c=content&a=publish&modid=1&siteid=1"><img border="0" src="http://www.2cto.com/statics/images/dl.jpg"/>我要投稿</a>
+</dd>
+</dl>
+<dl class="box_body" id="fontzoom"><dd id="Article">
+<pre class="brush:java;">import java.io.*;  
+import java.net.*;  
+/** 
+ * MyHttpServer 实现一个简单的HTTP服务器端，可以获取用户提交的内容 
+ * 并给用户一个response 
+ * 因为时间的关系，对http头的处理显得不规范 
+ * **/  
+public class MyHttpServer {  
+    //服务器根目录，post.html, upload.html都放在该位置  
+    public static String WEB_ROOT = "c:/root";  
+    //端口  
+    private int port;  
+    //用户请求的文件的url  
+    private String requestPath;  
+    //mltipart/form-data方式提交post的分隔符,   
+    private String boundary = null;  
+    //post提交请求的正文的长度  
+    private int contentLength = 0;  
+  
+    public MyHttpServer(String root, int port) {  
+        WEB_ROOT = root;  
+        this.port = port;  
+        requestPath = null;  
+    }  
+    //处理GET请求  
+    private void doGet(DataInputStream reader, OutputStream out) throws Exception {  
+        if (new File(WEB_ROOT + this.requestPath).exists()) {  
+            //从服务器根目录下找到用户请求的文件并发送回<a href="http://www.2cto.com/os/liulanqi/" target="_blank" class="keylink">浏览器</a>  
+            InputStream fileIn = new FileInputStream(WEB_ROOT + this.requestPath);  
+            byte[] buf = new byte[fileIn.available()];  
+            fileIn.read(buf);  
+            out.write(buf);  
+            out.close();  
+            fileIn.close();  
+            reader.close();  
+            System.out.println("request complete.");  
+        }  
+    }  
+    //处理post请求  
+    private void doPost(DataInputStream reader, OutputStream out) throws Exception {  
+        String line = reader.readLine();  
+        while (line != null) {  
+            System.out.println(line);  
+            line = reader.readLine();  
+            if ("".equals(line)) {  
+                break;  
+            } else if (line.indexOf("Content-Length") != -1) {  
+                this.contentLength = Integer.parseInt(line.substring(line.indexOf("Content-Length") + 16));  
+            }  
+            //表明要上传附件， 跳转到doMultiPart方法。  
+            else if(line.indexOf("multipart/form-data")!= -1){  
+                //得multiltipart的分隔符  
+                this.boundary = line.substring(line.indexOf("boundary") + 9);  
+                this.doMultiPart(reader, out);  
+                return;  
+            }  
+        }  
+        //继续读取普通post（没有附件）提交的数据  
+        System.out.println("begin reading posted data......");  
+        String dataLine = null;  
+        //用户发送的post数据正文  
+        byte[] buf = {};  
+        int size = 0;  
+        if (this.contentLength != 0) {  
+            buf = new byte[this.contentLength];  
+            while(size<this.contentLength){  
+                int c = reader.read();  
+                buf[size++] = (byte)c;  
+                  
+            }  
+            System.out.println("The data user posted: " + new String(buf, 0, size));  
+        }  
+        //发送回浏览器的内容  
+        String response = "";  
+        response += "HTTP/1.1 200 OK/n";  
+        response += "Server: Sunpache 1.0/n";  
+        response += "Content-Type: text/<a href="http://www.2cto.com/kf/qianduan/css/" target="_blank" class="keylink">html</a>/n";  
+        response += "Last-Modified: Mon, 11 Jan 1998 13:23:42 GMT/n";  
+        response += "Accept-ranges: bytes";  
+        response += "/n";  
+        String body = "<html><head><title>test server</title></head><body><p>post ok:</p>" + new String(buf, 0, size) + "</body></html>";  
+        System.out.println(body);  
+        out.write(response.getBytes());  
+        out.write(body.getBytes());  
+        out.flush();  
+        reader.close();  
+        out.close();  
+        System.out.println("request complete.");  
+    }  
+    //处理附件  
+    private void doMultiPart(DataInputStream reader, OutputStream out) throws Exception {  
+        System.out.println("doMultiPart ......");  
+        String line = reader.readLine();  
+        while (line != null) {  
+            System.out.println(line);  
+            line = reader.readLine();  
+            if ("".equals(line)) {  
+                break;  
+            } else if (line.indexOf("Content-Length") != -1) {  
+                this.contentLength = Integer.parseInt(line.substring(line.indexOf("Content-Length") + 16));  
+                System.out.println("contentLength: " + this.contentLength);  
+            } else if (line.indexOf("boundary") != -1) {  
+                //获取multipart分隔符  
+                this.boundary = line.substring(line.indexOf("boundary") + 9);  
+            }  
+        }  
+        System.out.println("begin get data......");  
+        /*下面的注释是一个浏览器发送带附件的请求的全文，所有中文都是说明性的文字***** 
+        <HTTP头部内容略> 
+        ............ 
+        Cache-Control: no-cache 
+        <这里有一个空行，表明接下来的内容都是要提交的正文> 
+        -----------------------------7d925134501f6<这是multipart分隔符> 
+        Content-Disposition: form-data; name="myfile"; filename="mywork.doc" 
+        Content-Type: text/plain 
+         
+        <附件正文>........................................ 
+        ................................................. 
+         
+        -----------------------------7d925134501f6<这是multipart分隔符> 
+        Content-Disposition: form-data; name="myname"<其他字段或附件> 
+        <这里有一个空行> 
+        <其他字段或附件的内容> 
+        -----------------------------7d925134501f6--<这是multipart分隔符，最后一个分隔符多两个-> 
+        ****************************************************************/  
+        /** 
+         * 上面的注释是一个带附件的multipart类型的POST的全文模型， 
+         * 要把附件去出来，就是要找到附件正文的起始位置和结束位置 
+         * **/  
+        if (this.contentLength != 0) {  
+            //把所有的提交的正文，包括附件和其他字段都先读到buf.  
+            byte[] buf = new byte[this.contentLength];  
+            int totalRead = 0;  
+            int size = 0;  
+            while (totalRead < this.contentLength) {  
+                size = reader.read(buf, totalRead, this.contentLength - totalRead);  
+                totalRead += size;  
+            }  
+            //用buf构造一个字符串，可以用字符串方便的计算出附件所在的位置  
+            String dataString = new String(buf, 0, totalRead);  
+            System.out.println("the data user posted:/n" + dataString);  
+            int pos = dataString.indexOf(boundary);  
+            //以下略过4行就是第一个附件的位置  
+            pos = dataString.indexOf("/n", pos) + 1;  
+            pos = dataString.indexOf("/n", pos) + 1;  
+            pos = dataString.indexOf("/n", pos) + 1;  
+            pos = dataString.indexOf("/n", pos) + 1;  
+            //附件开始位置  
+            int start = dataString.substring(0, pos).getBytes().length;  
+            pos = dataString.indexOf(boundary, pos) - 4;  
+            //附件结束位置  
+            int end = dataString.substring(0, pos).getBytes().length;  
+            //以下找出filename  
+            int fileNameBegin = dataString.indexOf("filename") + 10;  
+            int fileNameEnd = dataString.indexOf("/n", fileNameBegin);  
+            String fileName = dataString.substring(fileNameBegin, fileNameEnd);  
+            /** 
+             * 有时候上传的文件显示完整的文件名路径,比如c:/my file/somedir/project.doc 
+             * 但有时候只显示文件的名字，比如myphoto.jpg. 
+             * 所以需要做一个判断。 
+            */  
+            if(fileName.lastIndexOf("//")!=-1){  
+                fileName = fileName.substring(fileName.lastIndexOf("//") + 1);  
+            }  
+            fileName = fileName.substring(0, fileName.length()-2);  
+            OutputStream fileOut = new FileOutputStream("c://" + fileName);  
+            fileOut.write(buf, start, end-start);  
+            fileOut.close();  
+            fileOut.close();  
+        }  
+        String response = "";  
+        response += "HTTP/1.1 200 OK/n";  
+        response += "Server: Sunpache 1.0/n";  
+        response += "Content-Type: text/html/n";  
+        response += "Last-Modified: Mon, 11 Jan 1998 13:23:42 GMT/n";  
+        response += "Accept-ranges: bytes";  
+        response += "/n";  
+        out.write("<html><head><title>test server</title></head><body><p>Post is ok</p></body></html>".getBytes());  
+        out.flush();  
+        reader.close();  
+        System.out.println("request complete.");  
+    }  
+  
+    public void service() throws Exception {  
+        ServerSocket serverSocket = new ServerSocket(this.port);  
+        System.out.println("server is ok.");  
+        //开启serverSocket等待用户请求到来，然后根据请求的类别作处理  
+        //在这里我只针对GET和POST作了处理  
+        //其中POST具有解析单个附件的能力  
+        while (true) {  
+            Socket socket = serverSocket.accept();  
+            System.out.println(socket.getInetAddress());
+            System.out.println("new request coming.");  
+            DataInputStream reader = new DataInputStream((socket.getInputStream()));  
+            String line = reader.readLine();  
+            String method = line.substring(0, 4).trim();  
+            OutputStream out = socket.getOutputStream();  
+            this.requestPath = line.split(" ")[1];  
+            System.out.println(method);  
+            if ("GET".equalsIgnoreCase(method)) {  
+                System.out.println("do get......");  
+                this.doGet(reader, out);  
+            } else if ("POST".equalsIgnoreCase(method)) {  
+                System.out.println("do post......");  
+                this.doPost(reader, out);  
+            }  
+            socket.close();  
+            System.out.println("socket closed.");  
+        }  
+    }  
+    public static void main(String args[]) throws Exception {  
+        MyHttpServer server = new MyHttpServer("c:/root", 8080);  
+        server.service();  
+    }  
+}  </pre><br>						</dd></dl>
+		<script type="text/javascript">
+		<!--
+		$(function(){
+		  $('#Article img').LoadImage(true, 630, 560,'http://www.2cto.com/statics/images/s_nopic.gif');    
+		})
+		
+		//-->
+		</script>
+	<div id="pages" class="box_body" id="fontzoom">	</div>
+	<dl style="width:650px;height:100px;padding-top:10px;float:left;padding-left:10px">
+		<dd><script type="text/javascript">BAIDU_CLB_fillSlot("771048");</script></dd>
+	</dl>
+	<dl class="box_Nsc">
+		<dd class="lcopy"><a class="ckcopy" onclick="copyToClipBoard()">点击复制链接 与好友分享!</a><a class="ckhome" href="http://www.2cto.com/">回本站首页</a></dd>
+		<script> 
+		function copyToClipBoard(){ 
+		var clipBoardContent=document.title + '\r\n' + document.location; 
+		clipBoardContent+='\r\n'; 
+		window.clipboardData.setData("Text",clipBoardContent); 
+		alert("恭喜您！复制成功"); 
+		} 
+		</script>
+
+		<div class="Article-Tool">
+  <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_mshare" data-cmd="mshare" title="分享到一键分享"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+                                
+	  </div>
+
+		
+		</dd>
+		 	</dl>
+	<dl class="box_NPre">
+		<dd class="TLineX"><strong>上一篇：</strong><a href="http://www.2cto.com/kf/201503/379569.html">简单 的java 读取 excel</a></dd>
+		<dd><strong>下一篇：</strong><a href="http://www.2cto.com/kf/201503/379590.html">Spring JDBC详解</a></dd>
+	</dl>
+	<dl class="linetb"></dl>
+	<dl class="about"><dd>相关文章</dd></dl>
+				<div class="alistline"><a href="http://www.2cto.com/kf/200609/13468.html" target=blank>用Java实现多线程服务器程序</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13478.html" target=blank>Java Socket编程（三）服务器Sockets</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13479.html" target=blank>Java Socket编程（四） 重复和并发服</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13480.html" target=blank>Java Socket编程（五）简单的WEB服务器</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13523.html" target=blank>运行headless Java服务器</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13675.html" target=blank>用Java实现FTP服务器解决方案</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13694.html" target=blank>理解Java应用服务器的七种武器</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13810.html" target=blank>用Java实现Web服务器</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13928.html" target=blank>应用服务器－关于Resin服务器的使用</a></div>
+			<div class="alistline"><a href="http://www.2cto.com/kf/200609/13981.html" target=blank>用Java实现Web服务器 HTTP协议</a></div>
+			<dl class="linetb"></dl>
+	<dl style="width:650px;height:70px;padding-top:10px;float:left;padding-left:10px">
+		<dd><script type="text/javascript">BAIDU_CLB_fillSlot("182716");</script></dd>
+	</dl>
+
+	<dl style="width:650px;float:left;padding-left:10px">
+		<dd><script type="text/javascript">BAIDU_CLB_fillSlot("517916");</script></dd>
+	</dl>
+	<dl class="linetb"></dl>
+	<dl class="about"><dd>图文推荐</dd></dl>
+	<div class="picbox">
+				
+		<dl class="wbox">
+			<dd class="npicbox"><a target="_blank" href="http://www.2cto.com/kf/201509/440818.html"><img src="http://www.2cto.com/uploadfile/Collfiles/20150903/2015090309112170.png"  width='126' height='90' border='0' /></a></dd>
+			<dd class="npictext"><a href="http://www.2cto.com/kf/201509/440818.html">Jetty应用服务器的安</a></dd>
+		</dl>
+		
+		<dl class="wbox">
+			<dd class="npicbox"><a target="_blank" href="http://www.2cto.com/kf/201509/440815.html"><img src="http://www.2cto.com/uploadfile/Collfiles/20150903/2015090309095724.png"  width='126' height='90' border='0' /></a></dd>
+			<dd class="npictext"><a href="http://www.2cto.com/kf/201509/440815.html">两个栈实现一个队列以</a></dd>
+		</dl>
+		
+		<dl class="wbox">
+			<dd class="npicbox"><a target="_blank" href="http://www.2cto.com/kf/201509/440323.html"><img src="http://www.2cto.com/uploadfile/Collfiles/20150902/20150902083048212.jpg"  width='126' height='90' border='0' /></a></dd>
+			<dd class="npictext"><a href="http://www.2cto.com/kf/201509/440323.html">Java&mdash;&mdash;用户激活邮件</a></dd>
+		</dl>
+		
+		<dl class="wbox">
+			<dd class="npicbox"><a target="_blank" href="http://www.2cto.com/kf/201509/440305.html"><img src="http://www.2cto.com/uploadfile/Collfiles/20150902/20150902082833188.png"  width='126' height='90' border='0' /></a></dd>
+			<dd class="npictext"><a href="http://www.2cto.com/kf/201509/440305.html">三分钟理解&ldquo;工厂模式</a></dd>
+		</dl>
+					</div>
+	
+
+<!--高速版，加载速度快，使用前需测试页面的兼容性-->
+<div id="SOHUCS"></div>
+<script>
+  (function(){
+    var appid = 'cyrBEfE7C',
+    conf = 'prod_830794cf494da8b808afb2994cfe0fee';
+    var doc = document,
+    s = doc.createElement('script'),
+    h = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement;
+    s.type = 'text/javascript';
+    s.charset = 'utf-8';
+    s.src =  'http://assets.changyan.sohu.com/upload/changyan.js?conf='+ conf +'&appid=' + appid;
+    h.insertBefore(s,h.firstChild);
+    window.SCS_NO_IFRAME = true;
+  })()
+</script> 
+
+
+	<dl style="width:650px;float:left;padding-left:10px">
+		<dd><script type="text/javascript">BAIDU_CLB_fillSlot("771057");</script></dd>
+	</dl>
+	</div>
+	<div class="box_right">
+		<div style="float:left;width:300px;background:white;padding-left:10px;height:250px">
+
+
+			<!-- 广告位：内容页顶部300X250 --><script type="text/javascript">BAIDU_CLB_fillSlot("1126333");</script>
+
+
+</div>
+		<div class="box_right_line"><div class="xline"></div></div>
+		<div class="box_right_box">
+			<dl class="bTitle">
+				<dd onmousemove="m_tabs(1)" id="ArticlesW" class="tablinkschecked">文章</dd>
+				<dd onmousemove="m_tabs(3)" id="BookW" class="tablinkscheck">读书</dd>
+			</dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index" id="Articles">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="Win2000下关闭无用端口" href="http://www.2cto.com/Article/200410/1.html">Win2000下关闭无用端口</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="禁止非法用户登录综合设置 [win9x篇]" href="http://www.2cto.com/Article/200410/2.html">禁止非法用户登录综合设置 [win9x篇]</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="关上可恶的后门——消除NetBIOS隐患" href="http://www.2cto.com/Article/200410/3.html">关上可恶的后门——消除NetBIOS隐患</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="网络入侵检测系统" href="http://www.2cto.com/Article/200410/4.html">网络入侵检测系统</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="潜伏在Windows默认设置中的陷井" href="http://www.2cto.com/Article/200410/5.html">潜伏在Windows默认设置中的陷井</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="调制解调器的不安全" href="http://www.2cto.com/Article/200410/6.html">调制解调器的不安全</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="构建Windows 2000服务器的安全防护林" href="http://www.2cto.com/Article/200410/7.html">构建Windows 2000服务器的安全防护林</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="SQL Server 2000的安全配置" href="http://www.2cto.com/Article/200410/8.html">SQL Server 2000的安全配置</a></dd>
+														</dl>
+				<dl class="index" id="Book" style="display:none">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="黑客攻防技术宝典：Web实战篇（第2版）" href="http://book.2cto.com/201206/20.html">黑客攻防技术宝典：Web实战篇（第2版）</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="超级网管员——网络安全" href="http://book.2cto.com/201207/43.html">超级网管员——网络安全</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="代码大全（第二版）" href="http://book.2cto.com/201207/64.html">代码大全（第二版）</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="软件之道:软件开发争议问题剖析" href="http://book.2cto.com/201207/68.html">软件之道:软件开发争议问题剖析</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CSS插件工具箱" href="http://book.2cto.com/201207/78.html">CSS插件工具箱</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CSS入门经典(第3版)" href="http://book.2cto.com/201207/139.html">CSS入门经典(第3版)</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="C#并行编程高级教程：精通.NET 4 Parallel Extension" href="http://book.2cto.com/201207/169.html">C#并行编程高级教程：精通.NET 4 Pa</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CMMI+敏捷整合开发" href="http://book.2cto.com/201207/190.html">CMMI+敏捷整合开发</a></dd>
+														</dl>
+			</div>
+			
+		</div>
+		<!--
+		<div class="box_right_box">
+			<dl class="bTitle"><dd onmousemove="m_tab(1)" id="indexW" class="tablinkschecked">排行</dd><dd onmousemove="m_tab(2)" id="hotW" class="tablinkscheck">热门</dd></dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index" id="index">
+					<dd class="picline"></dd>
+															<dd class="list">370 | <a target="_blank" title="Java WebService入门实例 " href="http://www.2cto.com/kf/201304/205609.html">Java WebService入门实例 </a></dd>
+										<dd class="list">327 | <a target="_blank" title="java中long类型转换为int类型" href="http://www.2cto.com/kf/201311/260815.html">java中long类型转换为int类型</a></dd>
+										<dd class="list">209 | <a target="_blank" title="java笔记--关于线程同步（5种同步方式）" href="http://www.2cto.com/kf/201408/324061.html">java笔记--关于线程同步（5种同步方式</a></dd>
+										<dd class="list">200 | <a target="_blank" title="StringUtils中 isNotEmpty 和isNotBlank的区别" href="http://www.2cto.com/kf/201210/161016.html">StringUtils中 isNotEmpty 和isNotB</a></dd>
+										<dd class="list">150 | <a target="_blank" title="Spring与Mybatis整合的MapperScannerConfigurer处理过程源码分析" href="http://www.2cto.com/kf/201409/331321.html">Spring与Mybatis整合的MapperScannerC</a></dd>
+										<dd class="list">134 | <a target="_blank" title="SpringMVC 中HttpMessageConverter简介和Http请求415 Unsupported Media Type的问题" href="http://www.2cto.com/kf/201312/262557.html">SpringMVC 中HttpMessageConverter简</a></dd>
+										<dd class="list">128 | <a target="_blank" title="Java强引用、 软引用、 弱引用、虚引用" href="http://www.2cto.com/kf/201207/139522.html">Java强引用、 软引用、 弱引用、虚引用</a></dd>
+										<dd class="list">120 | <a target="_blank" title="java基础知识入门（一些基本概念）" href="http://www.2cto.com/kf/201109/104478.html">java基础知识入门（一些基本概念）</a></dd>
+														</dl>
+				<dl class="index" id="hot" style="display:none">
+					<dd class="picline"></dd>
+															<dd class="list"><a target="_blank" title="10种排序算法总结" href="http://www.2cto.com/kf/201109/104886.html">10种排序算法总结</a></dd>
+										<dd class="list"><a target="_blank" title="java中static作用详解" href="http://www.2cto.com/kf/201109/104884.html">java中static作用详解</a></dd>
+										<dd class="list"><a target="_blank" title="Java中List转换为数组,数组转List " href="http://www.2cto.com/kf/201204/125820.html">Java中List转换为数组,数组转List </a></dd>
+										<dd class="list"><a target="_blank" title="Java读取txt文件" href="http://www.2cto.com/kf/201107/96812.html">Java读取txt文件</a></dd>
+										<dd class="list"><a target="_blank" title="理解HTTP session原理及应用" href="http://www.2cto.com/kf/201206/135471.html">理解HTTP session原理及应用</a></dd>
+										<dd class="list"><a target="_blank" title="Eclipse使用入门教程" href="http://www.2cto.com/kf/201202/118313.html">Eclipse使用入门教程</a></dd>
+										<dd class="list"><a target="_blank" title="java中long类型转换为int类型" href="http://www.2cto.com/kf/201311/260815.html">java中long类型转换为int类型</a></dd>
+										<dd class="list"><a target="_blank" title="Java中23种经典设计模式详解" href="http://www.2cto.com/kf/201204/125818.html">Java中23种经典设计模式详解</a></dd>
+														</dl>
+			</div>
+			-->
+			<script type="text/javascript">
+			<!--
+				function m_tab(index)
+				{
+					if (index == 1){
+						document.getElementById("indexW").className = "tablinkschecked";
+						document.getElementById("hotW").className = "tablinkscheck";
+						document.getElementById("index").style.display = "block";
+						document.getElementById("hot").style.display = "none";
+					}
+					else{
+						document.getElementById("hotW").className = "tablinkschecked";
+						document.getElementById("indexW").className = "tablinkscheck";
+						document.getElementById("index").style.display = "none";
+						document.getElementById("hot").style.display = "block";
+					}
+				}
+			//-->
+			</script>
+			
+		</div>
+		<div class="rightlineT"><div class="rxline"></div></div>
+		<div style="float:left;width:300px;background:white;padding-left:10px;height:60px">
+				<!-- 广告位：内容页右侧小广告位 -->
+			<script type="text/javascript">BAIDU_CLB_fillSlot("406189");</script>
+		</div>
+		<div class="rightlineT"><div class="rxline"></div></div>
+		<div style="float:left;width:300px;background:white;padding-left:10px;height:80px">
+				<!-- 广告位：内容页右侧小广告位 -->
+			<script type="text/javascript">BAIDU_CLB_fillSlot("703749");</script>
+		</div>
+		<div class="rightlineNo"></div>
+		<!--
+		<div class="box_right_box">
+			<dl class="bTitle borT"><dd class="newarc"></dd></dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index">
+									<iframe frameborder="0" name="Iframe1" src="http://www.2cto.com/bbsdy/index.html" width="100%" height="200">	
+				您的浏览器不支持嵌入式框架，或者当前配置为不显示嵌入式框架。
+			</iframe>
+								</dl>
+			</div>
+		</div>-->
+		<div class="box_right_box">
+			<dl class="bTitle" style="border-top: 1px #E1E1E1 solid;border-right: 1px #E1E1E1 solid;">
+				<dd onmousemove="m_tabs(1)" id="ArticlesW" class="tablinkschecked">点击排行</dd>
+			</dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index" id="Articles">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="Java WebService入门实例 " href="http://www.2cto.com/kf/201304/205609.html">Java WebService入门实例 </a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="java中long类型转换为int类型" href="http://www.2cto.com/kf/201311/260815.html">java中long类型转换为int类型</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="java笔记--关于线程同步（5种同步方式）" href="http://www.2cto.com/kf/201408/324061.html">java笔记--关于线程同步（5种同步方式</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="StringUtils中 isNotEmpty 和isNotBlank的区别" href="http://www.2cto.com/kf/201210/161016.html">StringUtils中 isNotEmpty 和isNotB</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="Spring与Mybatis整合的MapperScannerConfigurer处理过程源码分析" href="http://www.2cto.com/kf/201409/331321.html">Spring与Mybatis整合的MapperScannerC</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="SpringMVC 中HttpMessageConverter简介和Http请求415 Unsupported Media Type的问题" href="http://www.2cto.com/kf/201312/262557.html">SpringMVC 中HttpMessageConverter简</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="Java强引用、 软引用、 弱引用、虚引用" href="http://www.2cto.com/kf/201207/139522.html">Java强引用、 软引用、 弱引用、虚引用</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="java基础知识入门（一些基本概念）" href="http://www.2cto.com/kf/201109/104478.html">java基础知识入门（一些基本概念）</a></dd>
+														</dl>
+			</div>
+		</div>
+                                <div class="rightlineT"><div class="rxline"></div></div>
+
+		<div style="float:left;width:300px;background:white;padding-left:10px;height:250px"><script type="text/javascript">BAIDU_CLB_fillSlot("182692");</script> </div>
+		<div class="box_right_line"><div class="xline"></div></div>
+		<!--
+		<div class="box_right_box">
+			<dl class="bTitle">
+				<dd onmousemove="m_tabs(1)" id="ArticlesW" class="tablinkschecked">文章</dd>
+				<dd onmousemove="m_tabs(2)" id="DownW" class="tablinkscheck">下载</dd>
+				<dd onmousemove="m_tabs(3)" id="BookW" class="tablinkscheck">读书</dd>
+			</dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index" id="Articles">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="Win2000下关闭无用端口" href="http://www.2cto.com/Article/200410/1.html">Win2000下关闭无用端口</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="禁止非法用户登录综合设置 [win9x篇]" href="http://www.2cto.com/Article/200410/2.html">禁止非法用户登录综合设置 [win9x篇]</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="关上可恶的后门——消除NetBIOS隐患" href="http://www.2cto.com/Article/200410/3.html">关上可恶的后门——消除NetBIOS隐患</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="网络入侵检测系统" href="http://www.2cto.com/Article/200410/4.html">网络入侵检测系统</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="潜伏在Windows默认设置中的陷井" href="http://www.2cto.com/Article/200410/5.html">潜伏在Windows默认设置中的陷井</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="调制解调器的不安全" href="http://www.2cto.com/Article/200410/6.html">调制解调器的不安全</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="构建Windows 2000服务器的安全防护林" href="http://www.2cto.com/Article/200410/7.html">构建Windows 2000服务器的安全防护林</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="SQL Server 2000的安全配置" href="http://www.2cto.com/Article/200410/8.html">SQL Server 2000的安全配置</a></dd>
+														</dl>
+				<dl class="index" id="Down" style="display:none">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="Windows优化大师注册机源码" href="http://www.2cto.com/soft/200409/53.html">Windows优化大师注册机源码</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="Aspcode动画教程" href="http://www.2cto.com/soft/200409/79.html">Aspcode动画教程</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="WIN 2000服务器防止ICMP数据包攻击教程" href="http://www.2cto.com/soft/200409/128.html">WIN 2000服务器防止ICMP数据包攻击教程</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="实现网络隐身的简单方法" href="http://www.2cto.com/soft/200409/129.html">实现网络隐身的简单方法</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="手工进行克隆帐号" href="http://www.2cto.com/soft/200409/130.html">手工进行克隆帐号</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="用W32DASM破解网页合并器的密码" href="http://www.2cto.com/soft/200409/134.html">用W32DASM破解网页合并器的密码</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="注册表操作动画教程" href="http://www.2cto.com/soft/200409/138.html">注册表操作动画教程</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="冰河陷阱v1.2" href="http://www.2cto.com/soft/200409/140.html">冰河陷阱v1.2</a></dd>
+														</dl>
+				<dl class="index" id="Book" style="display:none">
+					<dd class="picline"></dd>
+															<dd class="list">·&nbsp;<a target="_blank" title="黑客攻防技术宝典：Web实战篇（第2版）" href="http://book.2cto.com/201206/20.html">黑客攻防技术宝典：Web实战篇（第2版）</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="超级网管员——网络安全" href="http://book.2cto.com/201207/43.html">超级网管员——网络安全</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="代码大全（第二版）" href="http://book.2cto.com/201207/64.html">代码大全（第二版）</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="软件之道:软件开发争议问题剖析" href="http://book.2cto.com/201207/68.html">软件之道:软件开发争议问题剖析</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CSS插件工具箱" href="http://book.2cto.com/201207/78.html">CSS插件工具箱</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CSS入门经典(第3版)" href="http://book.2cto.com/201207/139.html">CSS入门经典(第3版)</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="C#并行编程高级教程：精通.NET 4 Parallel Extension" href="http://book.2cto.com/201207/169.html">C#并行编程高级教程：精通.NET 4 Pa</a></dd>
+										<dd class="list">·&nbsp;<a target="_blank" title="CMMI+敏捷整合开发" href="http://book.2cto.com/201207/190.html">CMMI+敏捷整合开发</a></dd>
+														</dl>
+			</div>
+		</div>-->
+		<script type="text/javascript">
+			<!--
+				function m_tabs(index)
+				{
+					if (index == 1){
+						document.getElementById("ArticlesW").className = "tablinkschecked";
+						document.getElementById("BookW").className = "tablinkscheck";
+						document.getElementById("Articles").style.display = "block";
+						document.getElementById("Book").style.display = "none";
+					}
+					else if (index == 2){
+						document.getElementById("ArticlesW").className = "tablinkscheck";
+						document.getElementById("BookW").className = "tablinkscheck";
+						document.getElementById("Articles").style.display = "none";
+						document.getElementById("Book").style.display = "none";
+					}
+					else{
+						document.getElementById("ArticlesW").className = "tablinkscheck";
+						document.getElementById("BookW").className = "tablinkschecked";
+						document.getElementById("Articles").style.display = "none";
+						document.getElementById("Book").style.display = "block";
+					}
+				}
+			//-->
+			</script>
+		<!--
+		<div class="rightlineNo"></div>
+		<div class="box_right_box">
+			<dl class="bTitle borT"><dd class="newdown"></dd></dl>
+		</div>
+		<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index">
+															<dd class="picbox"><a target="_blank" class="plink" href="http://www.2cto.com/kf/201301/181639.html"><img class='pic1' src='http://up.2cto.com/2013/0108/20130108112638885.png'  width='126' height='90' border='0' /></a><span><a href="http://www.2cto.com/kf/201301/181639.html">Java中的递归原理分析</a></span></dd>
+															<dd class="picline"></dd>
+															<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201111/111185.html">如何自学java迅速成为java高手</a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201111/111372.html">Java学习这七年  </a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201111/111537.html">一个Java程序员应该掌握的10项技能  </a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201202/118294.html">Java编程语言程序的认识误区  </a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201202/118556.html">java中的接口和抽象类是什么？</a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201204/125818.html">Java中23种经典设计模式详解</a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201206/135296.html">Java静态代码块(static block)调用陷</a></dd>
+										<dd class="list">&#9642;&nbsp;<a target="_blank" href="http://www.2cto.com/kf/201207/141901.html">Hibernate基础：Configuration</a></dd>
+														</dl>
+			</div>
+			<div class="xline"></div>
+		</div>
+		-->
+
+
+
+
+<div class="box_right_box">
+			<div class="paddingbox">
+				<dl class="index" id="Articles">
+					<dd class="picline">
+
+
+
+</dd>
+<!-- 代码1：放在页面需要展示的位置  -->
+<!-- 如果您配置过sourceid，建议在div标签中配置sourceid、cid(分类id)，没有请忽略  -->
+<div id="cyHotnews" role="cylabs" data-use="hotnews"></div>
+<!-- 代码2：用来读取评论框配置，此代码需放置在代码1之后。 -->
+<!-- 如果当前页面有评论框，代码2请勿放置在评论框代码之前。 -->
+<!-- 如果页面同时使用多个实验室项目，以下代码只需要引入一次，只配置上面的div标签即可 -->
+<script type="text/javascript" charset="utf-8" src="http://changyan.itc.cn/js/??lib/jquery.js,changyan.labs.js?appid=cyrBEfE7C"></script>
+	
+					 
+				</dl>
+			</div>
+		</div>
+
+
+
+		<div class="box_right_line"><div class="xline"></div></div>
+		<div style="float:left;width:300px;background:white;padding-left:10px;height:250px">
+			<script type="text/javascript">BAIDU_CLB_fillSlot("771043");</script></div>
+		<div class="box_right_line"><div class="xline"></div></div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+<!--
+function showLogin(){
+	window.art.dialog({id:'Login',iframe:'http://www.2cto.com/index.php?m=member&c=index&a=login&tupe=mini', title:'快捷登陆', width:'450', height:'310', lock:true}, function(){var d = window.art.dialog({id:'Login'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.art.dialog({id:'Login'}).close()});void(0);
+}
+function add_favorite(title) {
+		$.getJSON('http://www.2cto.com/api.php?op=add_favorite&title='+encodeURIComponent(title)+'&url='+encodeURIComponent(location.href)+'&'+Math.random()+'&callback=?', function(data){
+			if(data.status==1)	{
+				$("#favorite").html('收藏成功');
+			} else {
+				alert('请登陆');
+				window.location.href='http://home.2cto.com/?forward='+encodeURIComponent(location.href);
+			}
+		});
+	}
+//-->
+</script>
+<script language="JavaScript" src="http://www.2cto.com/api.php?op=count&id=379571&modelid=1"></script>
+<!-- 广告位：右侧漂浮 -->
+<script type="text/javascript">BAIDU_CLB_fillSlot("137946");</script>
+
+<div style="width:980px;padding:8px 0px 8px 0px;margin:auto"><script type="text/javascript">BAIDU_CLB_fillSlot("333829");</script></div>
+</div>
+
+<div class="foot">
+<p>
+<a target="_blank" href="http://www.2cto.com/about">关于我们</a> |
+<a target="_blank" href="http://www.2cto.com/about/contact.html">联系我们</a> |
+<a target="_blank" href="http://www.2cto.com/about/ads.html">广告服务</a> |
+<a target="_blank" href="http://www.2cto.com/about/touzi.html">投资合作</a> |
+<a target="_blank" href="http://www.2cto.com/about/Copyright.html">版权申明</a> |
+<a target="_blank" href="http://www.2cto.com/about/faq.html">在线帮助</a> |
+<a target="_blank" href="http://www.2cto.com/about/map.html">网站地图</a> |
+<a target="_blank" href="http://www.2cto.com/about/tg.html">作品发布</a> |
+<a target="_blank" href="http://vip.2cto.com/"><span style="COLOR: red">Vip技术培训</span></a>
+<br />
+<span class="style4">版权所有: <a href="http://www.2cto.com" target="_blank">红黑联盟</a>--致力于做最好的IT技术学习网站<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F1898984a3d796e86ad73ad1f4bc9f240' type='text/javascript'%3E%3C/script%3E"));
+</script>    
+</span>
+</div></body>
+
+</html>
