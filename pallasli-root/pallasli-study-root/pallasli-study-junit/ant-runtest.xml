@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-compile" default="report">
+	<property name="src.dir" value="src">
+	</property>
+	<property name="src.java.dir" value="${src.dir}/main/java">
+	</property>
+	<property name="src.test.dir" value="${src.dir}/test/java">
+	</property>
+
+
+	<property name="target.dir" value="build">
+	</property>
+	<property name="target.classes.java.dir" value="${target.dir}/classes">
+	</property>
+	<property name="target.classes.test.dir" value="${target.dir}/test-classes">
+	</property>
+
+	<property name="target.report.dir" value="${target.dir}/test-report">
+	</property>
+
+	<path id="master-classpath">
+		<pathelement location="/Users/lyt1987/Desktop/study/01_maven/repo/org/mortbay/jetty/jetty/6.1.22/jetty-6.1.22.jar" />
+		<pathelement location="/Users/lyt1987/Desktop/study/01_maven/repo/junit/junit/4.10/junit-4.10.jar" />
+		<pathelement location="/Users/lyt1987/Desktop/study/01_maven/repo/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" />
+		<pathelement location="/Users/lyt1987/Desktop/study/01_maven/repo/org/mortbay/jetty/jetty-util/6.1.22/jetty-util-6.1.22.jar" />
+		<pathelement location="/Users/lyt1987/Desktop/study/01_maven/repo/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar" />
+	</path>
+
+	<target name="compile.java" description="Compile main 
+      source tree java files">
+		<mkdir dir="${target.classes.java.dir}" />
+		<javac destdir="${target.classes.java.dir}" source="1.7" target="1.7" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.java.dir}" />
+			<classpath>
+				<path refid="master-classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+
+	<target name="compile.test" depends="compile.java">
+		<mkdir dir="${target.classes.test.dir}" />
+		<javac destdir="${target.classes.test.dir}" includeantruntime="on">
+			<src path="${src.test.dir}" />
+			<classpath>
+				<path refid="master-classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="compile.test">
+		<mkdir dir="${target.report.dir}" />
+
+		<property name="tests" value="Test*" />
+
+		<junit printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="yes">
+
+			<!--<formatter type="plain" usefile="false" />-->
+			<formatter type="xml"   />
+
+			<test name="com.pallasli.runners.Junit38Test"/>
+
+			<classpath>
+				<path refid="master-classpath" />
+				<pathelement location="${target.classes.java.dir}" />
+				<pathelement location="${target.classes.test.dir}" />
+			</classpath>
+		</junit>
+		<junit printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="yes">
+
+			<!--<formatter type="plain" usefile="false" />-->
+			<formatter type="xml"   />
+
+			<batchtest todir="${target.report.dir}">
+				<fileset dir="${target.classes.test.dir}">
+					<include name="**/Test*.class" />
+					<include name="**/*Test.class" />
+					<exclude name="**/*AllTest.class" />
+				</fileset>
+			</batchtest>
+
+			<classpath>
+				<path refid="master-classpath" />
+				<pathelement location="${target.classes.java.dir}" />
+				<pathelement location="${target.classes.test.dir}" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="report" depends="test">
+		<mkdir dir="${target.report.dir}/html" />
+		<junitreport   todir="${target.report.dir}">
+			<fileset dir="${target.report.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${target.report.dir}/html" />
+		</junitreport>
+	</target>
+
+</project>

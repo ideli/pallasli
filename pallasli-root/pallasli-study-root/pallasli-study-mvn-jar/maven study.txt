@@ -1,0 +1,119 @@
+依赖范围scope用来控制依赖和编译，测试，运行的classpath的关系. 主要的是三种依赖关系如下：
+　　　　1.compile： 默认编译依赖范围。对于编译，测试，运行三种classpath都有效
+　　　　2.test：测试依赖范围。只对于测试classpath有效
+　　　　3.provided：已提供依赖范围。对于编译，测试的classpath都有效，但对于运行无效。因为由容器已经提供，例如servlet-api
+　　　　4.runtime:运行时提供。例如:jdbc驱动
+
+
+
+Maven有三套相互独立的生命周期，请注意这里说的是"三套"，而且"相互独立"，这三套生命周期分别是：
+
+Clean Lifecycle 在进行真正的构建之前进行一些清理工作。
+Default Lifecycle 构建的核心部分，编译，测试，打包，部署等等。
+Site Lifecycle 生成项目报告，站点，发布站点。
+　　再次强调一下它们是相互独立的，你可以仅仅调用clean来清理工作目录，仅仅调用site来生成站点。当然你也可以直接运行 mvn clean install site 运行所有这三套生命周期。 
+　　clean生命周期每套生命周期都由一组阶段(Phase)组成，我们平时在命令行输入的命令总会对应于一个特定的阶段。比如，运行mvn clean ，这个的clean是Clean生命周期的一个阶段。有Clean生命周期，也有clean阶段。Clean生命周期一共包含了三个阶段：
+
+pre-clean 执行一些需要在clean之前完成的工作
+clean 移除所有上一次构建生成的文件
+post-clean 执行一些需要在clean之后立刻完成的工作
+　　"mvn clean" 中的clean就是上面的clean，在一个生命周期中，运行某个阶段的时候，它之前的所有阶段都会被运行，也就是说，"mvn clean"等同于 mvn pre-clean clean ，如果我们运行 mvn post-clean ，那么 pre-clean，clean 都会被运行。这是Maven很重要的一个规则，可以大大简化命令行的输入。 
+　　Site生命周期pre-site 执行一些需要在生成站点文档之前完成的工作
+
+site 生成项目的站点文档
+post-site 执行一些需要在生成站点文档之后完成的工作，并且为部署做准备
+site-deploy 将生成的站点文档部署到特定的服务器上
+　　这里经常用到的是site阶段和site-deploy阶段，用以生成和发布Maven站点，这可是Maven相当强大的功能，Manager比较喜欢，文档及统计数据自动生成，很好看。
+　　Default生命周期Default生命周期是Maven生命周期中最重要的一个，绝大部分工作都发生在这个生命周期中。这里，只解释一些比较重要和常用的阶段：
+
+validate
+generate-sources
+process-sources
+generate-resources
+process-resources 复制并处理资源文件，至目标目录，准备打包。
+compile 编译项目的源代码。
+process-classes
+generate-test-sources
+process-test-sources
+generate-test-resources
+process-test-resources 复制并处理资源文件，至目标测试目录。
+test-compile 编译测试源代码。
+process-test-classes
+test 使用合适的单元测试框架运行测试。这些测试代码不会被打包或部署。
+prepare-package
+package 接受编译好的代码，打包成可发布的格式，如 JAR 。
+pre-integration-test
+integration-test
+post-integration-test
+verify
+install 将包安装至本地仓库，以让其它项目依赖。
+deploy 将最终的包复制到远程的仓库，以让其它开发人员与项目共享。
+　　运行任何一个阶段的时候，它前面的所有阶段都会被运行，这也就是为什么我们运行mvn install 的时候，代码会被编译，测试，打包。此外，Maven的插件机制是完全依赖Maven的生命周期的，因此理解生命周期至关重要。
+
+
+
+<!-- 将Web项目自动部署到tomcat服务器的相关 配置信息-->
+20   <build>
+21       <!-- 将WebProject项目打包成WebProject.war自动部署到tomcat服务器的webapps目录下面 -->
+22     <finalName>WebProject</finalName>
+23     <plugins>
+24           <plugin>
+25               <groupId>org.codehaus.cargo</groupId>
+26               <artifactId>cargo-maven2-plugin</artifactId>
+27                 <version>1.2.3</version>
+28                 <configuration>
+29                     <container>
+30                           <!-- 指明使用的tomcat服务器版本 -->
+31                         <containerId>tomcat7x</containerId>
+32                         <!--指明tomcat服务器的安装目录 -->
+33                         <home>D:/apache-tomcat-7.0.53</home>
+34                     </container>
+35                     <configuration>
+36                         <type>existing</type>
+37                         <!--指明tomcat服务器的安装目录 -->
+38                         <home>D:/apache-tomcat-7.0.53</home>
+39                     </configuration>
+40                 </configuration>
+41                 <executions>  
+42                   <execution>  
+43                       <id>cargo-run</id>  
+44                       <phase>install</phase>  
+45                       <goals>  
+46                           <goal>run</goal>  
+47                       </goals>  
+48                   </execution>  
+49               </executions>
+50           </plugin>
+51       </plugins>
+52   </build>
+
+
+
+
+在maven的编译插件中声明正确的字符集编码编码——编译使用的字符集编码与代码文件使用的字符集编码一致！！
+
+　　安装系统之后，一般中文系统默认字符集是GBK。我们安装的软件一般都继承使用操作系统的默认字符集。所以当在中文XP或者win7系统开发，在使用maven（mvn compile）编译项目的时候，就会出现“编码 gbk 的不可映射字符”： 这个是由于代码使用的UTF-8，而maven编译的时候使用的GBK的缘故。 可以通过修改项目的pom文件，可以告诉maven这个项目使用UTF-8编码来编译。在项目的pom.xml文件中添加下面的配置：
+
+1 <!-- 指明编译源代码时使用的字符编码，maven编译的时候默认使用的GBK编码， 通过project.build.sourceEncoding属性设置字符编码，告诉maven这个项目使用UTF-8来编译 -->
+2     <properties>
+3         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+4     </properties>
+　　或者在pom.xml的/project/build/plugins/下的编译插件声明 中加入下面的配置：
+
+1 <encoding>utf8</encoding>
+即：
+
+ 1 <plugin>
+ 2     <artifactId>maven-compiler-plugin</artifactId>
+ 3     <configuration>
+ 4         <source>1.6</source>
+ 5         <target>1.6</target>
+ 6         <!-- 指明编译源代码时使用的字符编码，
+ 7         maven编译的时候默认使用的GBK编码， 
+ 8           通过encoding属性设置字符编码，
+ 9           告诉maven这个项目使用UTF-8来编译 -->
+10         <encoding>utf8</encoding> 
+11     </configuration>
+12 </plugin>
+
+

@@ -1,0 +1,17 @@
+首先，取消发布也需要定制wsdd文件，undeploy.wsdd具体格式如下：
+
+ 
+
+<undeployment xmlns="http://xml.apache.org/axis/wsdd/">
+    <service name="HelloWorldWSDD"/>
+</undeployment>
+ 
+
+ 
+
+同样，像上面发布WebService一样，用命令完成。
+
+命令如下：
+
+java -Djava.ext.dirs=lib org.apache.axis.client.AdminClient -lhttp://localhost:8080/AxisWebService/services/AdminService undeploy.wsdd
+

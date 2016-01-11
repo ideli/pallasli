@@ -41,5 +41,6 @@
       <module>pallasli-study-htmlunit</module>
       <module>pallasli-study-ivy</module>
       <module>pallasli-study-httpclient</module>
+      <module>pallasli-study-htmlparser</module>
   </modules>
 </project>

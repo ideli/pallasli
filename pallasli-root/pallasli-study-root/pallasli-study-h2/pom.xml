@@ -13,10 +13,6 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.pallasli</groupId>
 	        <artifactId>pallasli-utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

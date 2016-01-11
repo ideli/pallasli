@@ -3,17 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.pallasli</groupId>
-		<artifactId>pallasli-root</artifactId>
+		<artifactId>pallasli-webapp</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>pallasli-web-study</artifactId>
 	<packaging>war</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
+	<dependencies> 
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -136,15 +132,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -189,11 +177,6 @@
 		<dependency>
 			<groupId>fakepath</groupId>
 			<artifactId>yuicompressor</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

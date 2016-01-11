@@ -60,8 +60,46 @@ public class WaOaLogging {
 		// setCookieStore(httpResp);
 		int statusCode = httpResp.getStatusLine().getStatusCode();
 		System.out.println(statusCode);
+		if (statusCode == 200) {
 
+			System.out.println(EntityUtils.toString(httpResp.getEntity()));
+
+		}
 		CookieStore cookieStore = httpclient.getCookieStore();
+		httpclient.setCookieStore(cookieStore);
+
+		uri = new URIBuilder().setScheme("http").setHost("oa.atwasoft.net")
+				.setPort(7001).setPath("/portal/home.do").build();
+		httpGet.setHeader("Accept",
+				"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		httpGet.setHeader("Accept-Encoding", "gzip, deflate");
+		httpGet.setHeader("Accept-Language", "zh-CN,zh;q=0.8");
+		httpGet.setHeader("Connection", "keep-alive");
+		// httpGet.setHeader("Content-Length", "287");
+		httpGet.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		httpGet.setHeader("Cache-Control", "max-age=0");
+		httpGet.setHeader("Host", "oa.atwasoft.net:7001");
+		httpGet.setHeader("Origin", "http://oa.atwasoft.net:7001");
+		httpGet.setHeader("Referer",
+				"http://oa.atwasoft.net:7001/portal/login.do");
+
+		// httpGet.setHeader("Cookie",
+		// "JSESSIONID=AD57B728A4F1D088D79112DF610C5C14.jvm1");
+		httpGet.setHeader(
+				"User-Agent",
+				"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36");
+		httpGet.setHeader("X-Requested-With", "XMLHttpRequest");
+		// HttpGet httpGet = new HttpGet("http://itindex.net/");
+
+		httpResp = httpclient.execute(httpGet);
+		// setCookieStore(httpResp);
+		statusCode = httpResp.getStatusLine().getStatusCode();
+		System.out.println(statusCode);
+		if (statusCode == 200) {
+
+			System.out.println(EntityUtils.toString(httpResp.getEntity()));
+
+		}
 
 		uri = new URIBuilder().setScheme("http").setHost("oa.atwasoft.net")
 				.setPort(7001).setPath("/OA/direct").build();

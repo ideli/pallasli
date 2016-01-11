@@ -13,5 +13,10 @@
 		<module>pallasli-ws-bpm</module>
 		<module>pallasli-ws-container</module>
 		<module>pallasli-ws-core</module>
+		<module>pallasli-ws-study-bean</module>
+		<module>pallasli-ws-study-ws</module>
+		<module>pallasli-ws-study-client</module>
+		<module>pallasli-ws-study-security</module>
+		<module>pallasli-ws-jdk</module>
 	</modules>
 </project>

@@ -1,25 +1,52 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="wasoft bpm" default="build2jar"
+<project name="wasoft bpm" default="compile.test"
 	xmlns:ivy="antlib:org.apache.ivy.ant"
  	basedir=".">
  	<ivy:retrieve file="./ivy.xml" sync="true" />
-	<description>
-		wasoft bpm
-    </description>
-	<!--生成jar文件名-->
-	<property file="ivy_build.properties" />
-	<property name="jar.filename" value="${src.jar.filename}"/>
-	<!--项目上下文路径-->
-	<property name="classes.dir" value="${src.classes.dir}"/>
-	<property name="dist.dir" value="${src.dist.dir}"/> 
-	
-	<!--打jar包-->
-	<target name="build2jar" description="-->生成jar包">
-		<jar jarfile="${dist.dir}/${jar.filename}">
-			<fileset dir="${classes.dir}">
-				<include name="com/**/*.*"/>
-			</fileset>
-		</jar>
-	</target>
+	<property name="src.dir" value="src">
+		</property>
+		<property name="src.java.dir" value="${src.dir}/main/java">
+		</property>
+		<property name="src.test.dir" value="${src.dir}/test/java">
+		</property>
+
+
+		<property name="target.dir" value="build">
+		</property>
+		<property name="target.classes.java.dir" value="${target.dir}/classes">
+		</property>
+		<property name="target.classes.test.dir" value="${target.dir}/test-classes">
+		</property>
+
+		<property name="target.report.dir" value="${target.dir}/test-report">
+		</property>
+
+		<target name="compile.java" description="Compile main 
+	      source tree java files">
+			<mkdir dir="${target.classes.java.dir}" />
+			<javac destdir="${target.classes.java.dir}" source="1.7" target="1.7" debug="true" deprecation="false" optimize="false" failonerror="true">
+				<src path="${src.java.dir}" />
+				<classpath>
+					<fileset dir="${lib}">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</javac>
+		</target>
+
+
+		<target name="compile.test" depends="compile.java">
+			<mkdir dir="${target.classes.test.dir}" />
+			<javac destdir="${target.classes.test.dir}" includeantruntime="on">
+				<src path="${src.test.dir}" />
+				<classpath>
+					<fileset dir="${lib}">
+						<include name="*.jar" />
+					</fileset>
+					<pathelement location="${target.classes.java.dir}" />
+				</classpath>
+			</javac>
+		</target>
+ 
 	
 </project>

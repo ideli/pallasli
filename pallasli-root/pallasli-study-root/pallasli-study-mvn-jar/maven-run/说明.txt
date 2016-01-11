@@ -1,24 +1,24 @@
-Maven¿âÒÀÀµ»úÖÆ¼°Ìí¼Ó×Ô¶¨Òå¿â
-2013.09.19 / ±êÇ©: java, maven, ¿ª·¢, ·­Òë / ·ÖÀà: ÎÒµÄ·­Òë
+Mavenåº“ä¾èµ–æœºåˆ¶åŠæ·»åŠ è‡ªå®šä¹‰åº“
+2013.09.19 / æ ‡ç­¾: java, maven, å¼€å‘, ç¿»è¯‘ / åˆ†ç±»: æˆ‘çš„ç¿»è¯‘
 Sofa
-Ò».Maven¿âÒÀÀµ»úÖÆ
-MavenµÄ¿âÒÀÀµ»úÖÆ¿ÉÒÔ°ïÖúÎÒÃÇ×Ô¶¯ÏÂÔØÒÀÀµµÄ¿âÎÄ¼þ£¬²¢ÇÒ»¹ÄÜ¸üÐÂ°æ±¾¡£¡£
+ä¸€.Mavenåº“ä¾èµ–æœºåˆ¶
+Mavençš„åº“ä¾èµ–æœºåˆ¶å¯ä»¥å¸®åŠ©æˆ‘ä»¬è‡ªåŠ¨ä¸‹è½½ä¾èµ–çš„åº“æ–‡ä»¶ï¼Œå¹¶ä¸”è¿˜èƒ½æ›´æ–°ç‰ˆæœ¬ã€‚ã€‚
 
-¿¼ÂÇÒ»¸öÇé¾³À´Àí½â»úÖÆµÄ¹¤×÷Ô­Àí£¬¼ÙÉèÎÒÃÇÒªÊ¹ÓÃLog4J¿â×÷ÎªÏîÄ¿µÄÈÕÖ¾¼ÇÂ¼¡£ÒÔÏÂÊÇÎÒÃÇÒª×öµÄ
+è€ƒè™‘ä¸€ä¸ªæƒ…å¢ƒæ¥ç†è§£æœºåˆ¶çš„å·¥ä½œåŽŸç†ï¼Œå‡è®¾æˆ‘ä»¬è¦ä½¿ç”¨Log4Jåº“ä½œä¸ºé¡¹ç›®çš„æ—¥å¿—è®°å½•ã€‚ä»¥ä¸‹æ˜¯æˆ‘ä»¬è¦åšçš„
 
-1.´«Í³µÄ·½Ê½
-1£©·ÃÎÊLog4JÍøÕ¾http://logging.apache.org/log4j/2.x/
+1.ä¼ ç»Ÿçš„æ–¹å¼
+1ï¼‰è®¿é—®Log4Jç½‘ç«™http://logging.apache.org/log4j/2.x/
 
-2£©ÏÂÔØLog4JµÄjar°ü
+2ï¼‰ä¸‹è½½Log4Jçš„jaråŒ…
 
-3£©¸´ÖÆ½øÏîÄ¿µÄclasspathÀï
+3ï¼‰å¤åˆ¶è¿›é¡¹ç›®çš„classpathé‡Œ
 
-4£©ÊÖ¹¤°üº¬µ½ÏîÄ¿µÄÒÀÀµÀï
+4ï¼‰æ‰‹å·¥åŒ…å«åˆ°é¡¹ç›®çš„ä¾èµ–é‡Œ
 
-¿´µ½Ã»£¬ÄãÒª´ÓÍ·×öµ½Î²£¬Èç¹ûLog4J¸üÐÂÁË£¬ÄãµÃÔÙÀ´Ò»±é¡£¡£
+çœ‹åˆ°æ²¡ï¼Œä½ è¦ä»Žå¤´åšåˆ°å°¾ï¼Œå¦‚æžœLog4Jæ›´æ–°äº†ï¼Œä½ å¾—å†æ¥ä¸€éã€‚ã€‚
 
-2.MavenµÄ·½Ê½
-1£©ÐèÒªÖªµÀLog4JµÄMaven×ø±ê(coordinates,Õâ¸öÔÝÊ±Ã»Ïëµ½ºÃÃû×Ö)£¬¾ÍÊÇÕâÑùµÄ¶«Î÷
+2.Mavençš„æ–¹å¼
+1ï¼‰éœ€è¦çŸ¥é“Log4Jçš„Mavenåæ ‡(coordinates,è¿™ä¸ªæš‚æ—¶æ²¡æƒ³åˆ°å¥½åå­—)ï¼Œå°±æ˜¯è¿™æ ·çš„ä¸œè¥¿
 
 
 1
@@ -27,9 +27,9 @@ MavenµÄ¿âÒÀÀµ»úÖÆ¿ÉÒÔ°ïÖúÎÒÃÇ×Ô¶¯ÏÂÔØÒÀÀµµÄ¿âÎÄ¼þ£¬²¢ÇÒ»¹ÄÜ¸üÐÂ°æ±¾¡£¡£
 <groupId>log4j</groupId>
     <artifactId>log4j</artifactId>
     <version>1.2.14</version>
-È»ºóMaven¾Í»á×Ô¶¯ÏÂÔØ1.2.14°æ±¾µÄLog4JÁË¡£Èç¹ûversionÕâ¸öÔªËØÃ»ÓÐ£¬ÄÇÃ´Èç¹ûÓÐÁËÐÂ°æ±¾£¬Maven»á×Ô¶¯ÏÂÔØÐÂ°æ±¾µÄ¡£
+ç„¶åŽMavenå°±ä¼šè‡ªåŠ¨ä¸‹è½½1.2.14ç‰ˆæœ¬çš„Log4Jäº†ã€‚å¦‚æžœversionè¿™ä¸ªå…ƒç´ æ²¡æœ‰ï¼Œé‚£ä¹ˆå¦‚æžœæœ‰äº†æ–°ç‰ˆæœ¬ï¼ŒMavenä¼šè‡ªåŠ¨ä¸‹è½½æ–°ç‰ˆæœ¬çš„ã€‚
 
-2£©ÔÚpom.xmlÀïÉùÃ÷Õâ¸öMaven×ø±ê
+2ï¼‰åœ¨pom.xmlé‡Œå£°æ˜Žè¿™ä¸ªMavenåæ ‡
 
 
 1
@@ -46,31 +46,31 @@ MavenµÄ¿âÒÀÀµ»úÖÆ¿ÉÒÔ°ïÖúÎÒÃÇ×Ô¶¯ÏÂÔØÒÀÀµµÄ¿âÎÄ¼þ£¬²¢ÇÒ»¹ÄÜ¸üÐÂ°æ±¾¡£¡£
     <version>1.2.14</version>
     </dependency>
 </dependencies>
-3£©µ±Maven±àÒë»òÕßbuildµÄÊ±ºò£¬Log4J»á×Ô¶¯ÏÂÔØ£¬·ÅÈë±¾µØ²Ö¿âÀï
+3ï¼‰å½“Mavenç¼–è¯‘æˆ–è€…buildçš„æ—¶å€™ï¼ŒLog4Jä¼šè‡ªåŠ¨ä¸‹è½½ï¼Œæ”¾å…¥æœ¬åœ°ä»“åº“é‡Œ
 
-4£©MavenÈ«²¿½Ó¹Ü
+4ï¼‰Mavenå…¨éƒ¨æŽ¥ç®¡
 
-3.½âÊÍ
-ËÑË÷Ë³ÐòÇ°ÃæËµ¹ýÁË¡£±¾µØ-¡·ÖÐÑë-¡·Ô¶³Ì²Ö¿â
+3.è§£é‡Š
+æœç´¢é¡ºåºå‰é¢è¯´è¿‡äº†ã€‚æœ¬åœ°-ã€‹ä¸­å¤®-ã€‹è¿œç¨‹ä»“åº“
 
-Maven×ø±êÕ¦À´µÄ£¬µ±È»È¥ÖÐÑë²Ö¿âËÑË÷Ö®ÁË£¬ËÑË÷½á¹ûÇåÎúµÄÁîÈË·¢Ö¸
+Mavenåæ ‡å’‹æ¥çš„ï¼Œå½“ç„¶åŽ»ä¸­å¤®ä»“åº“æœç´¢ä¹‹äº†ï¼Œæœç´¢ç»“æžœæ¸…æ™°çš„ä»¤äººå‘æŒ‡
 
-¶þ.Ìí¼Ó×Ô¶¨Òå¿âµ½±¾µØ²Ö¿â
-ÓÐÁ½¸öÇé¿ö£¬ÐèÒªÎÒÃÇ°üº¬×Ô¶¨ÒåµÄ¿âµ½±¾µØ²Ö¿âÀï
+äºŒ.æ·»åŠ è‡ªå®šä¹‰åº“åˆ°æœ¬åœ°ä»“åº“
+æœ‰ä¸¤ä¸ªæƒ…å†µï¼Œéœ€è¦æˆ‘ä»¬åŒ…å«è‡ªå®šä¹‰çš„åº“åˆ°æœ¬åœ°ä»“åº“é‡Œ
 
-1ÊÇÄãÏëÊ¹ÓÃµÄjarÎÄ¼þ²»ÔÙÖÐÑë²Ö¿â
+1æ˜¯ä½ æƒ³ä½¿ç”¨çš„jaræ–‡ä»¶ä¸å†ä¸­å¤®ä»“åº“
 
-2ÊÇÄã´´½¨ÁËÒ»¸ö×Ô¶¨ÒåµÄjar°ü£¬ÐèÒªÁíÒ»¸öÏîÄ¿Ê¹ÓÃÕâ¸öjar
+2æ˜¯ä½ åˆ›å»ºäº†ä¸€ä¸ªè‡ªå®šä¹‰çš„jaråŒ…ï¼Œéœ€è¦å¦ä¸€ä¸ªé¡¹ç›®ä½¿ç”¨è¿™ä¸ªjar
 
-±ÈÈç£¬kaptche£¬Ò»¸öµÚÈý·½µÄjava¿â£¬Éú³ÉÑéÖ¤Âë£¬ÏÖÔÚÖÐÑë²Ö¿âÃ»ÓÐÁË¡£
+æ¯”å¦‚ï¼Œkaptcheï¼Œä¸€ä¸ªç¬¬ä¸‰æ–¹çš„javaåº“ï¼Œç”ŸæˆéªŒè¯ç ï¼ŒçŽ°åœ¨ä¸­å¤®ä»“åº“æ²¡æœ‰äº†ã€‚
 
-ÎÒÃÇÏëÒª¼Óµ½±¾µØ²Ö¿âÀï
+æˆ‘ä»¬æƒ³è¦åŠ åˆ°æœ¬åœ°ä»“åº“é‡Œ
 
-1.mvn°²×°
-ÏÂÔØkaptche£¬½âÑ¹²¢ÇÒ¿½±´kaptcha-version.jarµ½ÆäËûÈÎºÎÄãÏ²»¶µÄµØ·½£¬±ÈÈçcÅÌ£¬È»ºóÊäÈëÈçÏÂ¸ñÊ½µÄÃüÁî
+1.mvnå®‰è£…
+ä¸‹è½½kaptcheï¼Œè§£åŽ‹å¹¶ä¸”æ‹·è´kaptcha-version.jaråˆ°å…¶ä»–ä»»ä½•ä½ å–œæ¬¢çš„åœ°æ–¹ï¼Œæ¯”å¦‚cç›˜ï¼Œç„¶åŽè¾“å…¥å¦‚ä¸‹æ ¼å¼çš„å‘½ä»¤
 
 mvn install:install-file -Dfile=c:\kaptcha-{version}.jar -DgroupId=com.google.code -DartifactId=kaptcha -Dversion={version} -Dpackaging=jar
-ÕâÀïÎÒÕâÑùÊäÈë
+è¿™é‡Œæˆ‘è¿™æ ·è¾“å…¥
 mvn install:install-file -Dfile=c:\kaptcha-2.3.2.jar -DgroupId=com.google.code -DartifactId=kaptcha -Dversion=2.3.2 -Dpackaging=jar
 1
 2
@@ -112,9 +112,9 @@ D:\maven_repo\com\google\code\kaptcha\2.3\kaptcha-2.3.jar
 [INFO] Finished at: Tue May 12 13:41:42 SGT 2009
 [INFO] Final Memory: 3M/6M
 [INFO] ------------------------------------------------------------------------
-ÕâÑùÍê³ÉÁË¡£kaptchaÒÑ¾­´æÔÚ±¾µØ¿âÁË
+è¿™æ ·å®Œæˆäº†ã€‚kaptchaå·²ç»å­˜åœ¨æœ¬åœ°åº“äº†
 
-2.pom.xmlÅäÖÃÒ»ÏÂ
+2.pom.xmlé…ç½®ä¸€ä¸‹
 
 1
 2
@@ -126,4 +126,4 @@ D:\maven_repo\com\google\code\kaptcha\2.3\kaptcha-2.3.jar
       &lt;artifactId&gt;kaptcha&lt;/artifactId&gt;
       &lt;version&gt;2.3&lt;/version&gt;
  &lt;/dependency&gt;
-Õâ¸öÇ°ÃæËµ¹ýÁË£¬Maven×ø±êÂï
+è¿™ä¸ªå‰é¢è¯´è¿‡äº†ï¼ŒMavenåæ ‡å˜›

@@ -1,0 +1,41 @@
+Java远程调试
+-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=3999,suspend=n
+
+-XDebug               启用调试。
+-Xnoagent             禁用默认sun.tools.debug调试器。
+-Djava.compiler=NONE  禁止 JIT 编译器的加载。
+-Xrunjdwp             加载JDWP的JPDA参考执行实例。
+transport             用于在调试程序和 VM 使用的进程之间通讯。
+dt_socket             套接字传输。
+dt_shmem              共享内存传输，仅限于 Windows。
+server=y/n            VM 是否需要作为调试服务器执行。
+address=3999          调试服务器的端口号，客户端用来连接服务器的端口号。
+suspend=y/n           是否在调试客户端建立连接之后启动 VM 。
+
+ 
+
+Java的远程调试JDPA是基于JDWP协议的一种交互式调试方式，最大的特点是VM的运行环境和调试环境相互独立。这样就可以很好的解决运行和调试的环境问题。
+
+要实现远程调试，需要在server端的虚拟机参数中加入：
+
+-Xdebug -Xrunjdwp:transport=dt_socket,address=5050,server=y,suspend=y
+
+即：使用端口的方式进行JDWP通讯，端口为5050，采用挂起的方式，只有客户端连上才启动虚拟机。
+
+对于ant来说，此参数无疑要加到启动ant主类的参数中。我们分析ant.bat看到：
+
+"%_JAVACMD%" %ANT_OPTS% -classpath "%ANT_HOME%/lib/ant-launcher.jar" "-Dant.home=%ANT_HOME%" org.apache.tools.ant.launch.Launcher %ANT_ARGS% %ANT_CMD_LINE_ARGS%
+
+而%ANN_OPTS%这个环境变量在批处理之前并没有得到设置，看来这就是ANT留给我们的操作参数变量，创建一个debug_ant.bat
+
+ 
+
+set ANT_OPTS=
+
+-Xdebug -Xrunjdwp:transport=dt_socket,address=5050,server=y,suspend=y
+
+call ant %*
+
+ 
+
+用bebug_ant.bat来替换ant.bat就可以在不影响任何其它环境变量的情况下，启动远程调试server。

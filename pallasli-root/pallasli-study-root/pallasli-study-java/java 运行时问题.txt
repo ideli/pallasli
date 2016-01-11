@@ -1,0 +1,282 @@
+JAVA运行时问题诊断-工具应用篇
+
+该BLOG内容是之前在部门组织讨论运行时问题时自己写的PPT内容，内容以点带面，主要是方便以后自己回顾查看。
+
+大纲包括：1、运行时问题分类 2、服务器自带工具 3、其他工具 4、例子 5、实际情况
+
+运行时问题分类-软件角度：1、内存泄漏，对象未释放 2、线程阻塞、死锁 3、线程死循环 4、网络IO连接超时时间过长 5、磁盘不可写 .....
+
+运行时问题分类-硬件角度：1、内存占用高 2、CPU占用高 3、网络无反应 4、硬盘空间满 ....
+
+Linux指令：1、top, top -Hp pid 2、free 3、df 4、netstat, netstat -natp ...
+
+JDK指令：1、jps, jps -v 2、jstack, jstack pid 3、jmap, jmap -dump:format=b,file=/opt/...  4、jstat, jstat -gcutil(gc,gccapacity) pid ....
+
+工具：
+
+实时分析工具： 1、Jconsole 2、VisualVM  3、JProfiler  4、JavaMelody  5、LambdaProbe ....
+
+离线分析工具： 1、MemoryAnalyzer tool  2、Thread Dump Analyzer ....
+
+DEMO：1、内存溢出  2、CPU占用过高  3、线程死锁  4、线程阻塞
+
+准备工作：堆栈内存设置低一点，打印GC日志和OOM时输出dump文件： set JAVA_OPTS=-server -Xms24m -Xmx50m -XX:PermSize=28M -XX:MaxPermSize=80m -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=d:\temp\dump
+
+内存溢出：
+
+        Map<String, Person> map = new HashMap<String, Person>();
+        Object[] array = new Object[1000000];
+        for (int i = 0; i < 1000000; i++) {
+            String d = new Date().toString();
+            Person p = new Person(d, i);
+            map.put(i + "person", p);
+            array[i] = p;
+        }
+
+
+
+
+
+
+
+
+
+
+MAT-关键字(个人理解，不一定准确):
+
+Histogram：内存中的类对象实例的对象的个数和大小
+
+Dominator Tree：堆对象树，对象大小和占用百分比
+
+Leak Suspects：MAT分析的内存泄漏的可疑点
+
+shallow heap：对象自身占用内存大小
+
+retained heap：对象自身和引用的对象占用内存大小
+
+Merge Shortest Paths to GC Roots：从GC根节点到该对象的路径视图
+
+with outgoing references：对象持有的外部对象引用
+
+with incomming references：对象被哪些外部对象引用
+
+....
+
+ 
+
+CPU占用过高：
+
+		int i = 0;
+		while (i < 1000000) {
+			i++;
+			System.out.println(i);
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+　　
+
+ 
+
+线程死锁:
+
+		Thread t1 = new Thread(new SyncThread(obj1, obj2), "t1");
+		Thread t2 = new Thread(new SyncThread(obj2, obj1), "t2");
+
+		t1.start();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		t2.start();
+		synchronized (obj1) {
+			System.out.println("主线程 lock on " + obj1.getName());
+		}
+　　
+
+	private Person obj1;
+	private Person obj2;
+
+	public SyncThread(Person o1, Person o2) {
+		this.obj1 = o1;
+		this.obj2 = o2;
+	}
+
+	public void run() {
+		String name = Thread.currentThread().getName();
+		System.out.println(name + " acquiring lock on " + obj1.getName());
+		synchronized (obj1) {
+			System.out.println(name + " acquired lock on " + obj1.getName());
+			work();
+			System.out.println(name + " acquiring lock on " + obj2.getName());
+			synchronized (obj2) {
+				System.out.println(name + " acquired lock on " + obj2.getName());
+				work();
+			}
+			System.out.println(name + " released lock on " + obj2.getName());
+		}
+		System.out.println(name + " released lock on " + obj1.getName());
+		System.out.println(name + " finished execution.");
+	}
+
+	private void work() {
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+　　
+
+
+
+ 
+
+线程阻塞：
+
+		WaitThread thread1 = new WaitThread();
+		thread1.setName("线程1");
+		NotifyThread thread2 = new NotifyThread();
+		thread2.setName("线程2");
+
+		thread1.start();
+
+		try {
+			Thread.sleep(20000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		thread2.start();
+　　
+
+public class NotifyThread extends Thread {
+	@Override
+	public void run() {
+		synchronized (RequestThreadWait.object) {
+			System.out.println("线程" + Thread.currentThread().getName() + "占用了锁");
+			try {
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			RequestThreadWait.object.notify();
+			System.out.println("线程" + Thread.currentThread().getName() + "调用了object.notify()");
+			try {
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("线程" + Thread.currentThread().getName() + "释放了锁");
+	}
+}
+public class WaitThread extends Thread {
+
+	public void run() {
+		synchronized (RequestThreadWait.object) {
+			System.out.println("线程" + Thread.currentThread().getName() + "获取到了锁开始");
+			try {
+				RequestThreadWait.object.wait();
+			} catch (InterruptedException e) {
+			}
+			System.out.println("线程" + Thread.currentThread().getName() + "获取到了锁结束！");
+		}
+	}
+}
+　　
+
+
+
+线程状态（个人理解，不一定准确）：
+
+WAITING (parking):线程自身挂起等待，正常
+
+WAITING (on object monitor)：线程主动执行wait，等待资源，如果是自己的程序，需要关注
+
+BLOCKED (on object monitor)：线程阻塞，等待对方释放资源，如果是互相等待对方阻塞的线程，则发生死锁
+
+TIMED_WAITING (on object monitor)：线程调用了wait(long timeout)，在特定时间内等待
+
+TIMED_WAITING (sleeping)：调用了sleeping，休眠一段时间
+
+ 
+
+JavaMelody：
+
+
+
+LambdaProbe
+
+
+
+ 
+
+实际情况：
+
+用户反馈各种千奇百怪的问题！
+
+网络访问连接不上
+
+网站、接口访问超时
+
+特定功能很慢
+
+部分功能部分人打不开
+
+.......
+
+->
+
+ping,telnet,traceroute....
+
+top,top -Hp pid,jstack pid....
+
+jstat -gc,gcutil,gccapacity pid...
+
+jmap -dump:format=b,file=/opt/.... tail, df -lh....
+
+netstat -natp....
+
+.....
+
+生产问题没有统一解决办法，具体问题具体分析
+
+内存查看：jstat
+
+
+
+线程情况查看：top -Hp pid
+
+
+
+CPU查看：jstack
+
+
+
+网络查看：netstat
+
+
+
+ 
+
+实际问题分析：
+
+线上查看 服务器情况分析 获取内存dump 获取javacore
+
+线下分析 工具调试分析内存线程
+
+代码调试 Eclipse Class Decompiler（自动反编译，选择JD-Core，精确行数）
+
+...
+
+转载请注明：http://lawson.cnblogs.com
+
+上面是实际生产问题的自己写的PPT，copy下来的，JDK自带的工具和指令比较强大，本篇文章没有太多介绍。

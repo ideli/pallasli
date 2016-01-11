@@ -1,0 +1,135 @@
+Hessian是一个轻量级的remoting on http工具,采用的是Binary RPC协议，所以它很适合于发送二进制数据,同时又具有防火墙穿透能力。Hessian一般是通过Web应用来提供服务，因此非常类似于平时我们用的 WebService。只是它不使用SOAP协议,但相比webservice而言更简单、快捷。
+
+Hessian官网：http://hessian.caucho.com/
+
+Hessian 可通过Servlet提供远程服务，需要将匹配某个模式的请求映射到Hessian服务。也可Spring框架整合，通过它的 DispatcherServlet可以完成该功能，DispatcherServlet可将匹配模式的请求转发到Hessian服务。Hessian的server端提供一个servlet基类, 用来处理发送的请求，而Hessian的这个远程过程调用，完全使用动态代理来实现的,，建议采用面向接口编程，Hessian服务通过接口暴露。
+
+Hessian处理过程示意图：客户端——>序列化写到输出流——>远程方法(服务器端)——>序列化写到输出流 ——>客户端读取输入流——>输出结果
+
+在进行基于Hessian的项目开发时，应当注意以下几点：
+
+　　JAVA服务器端必须具备以下几点：
+
+包含Hessian的jar包。
+设计一个接口，用来给客户端调用。
+实现该接口的功能。
+配置web.xml，配好相应的servlet。
+对象必须实现Serializable 接口。
+对于复杂对像可以使用Map的方法传递。
+　
+　客户端必须具备以下几点：
+
+java客户端包含Hessian.jar的包。
+具有和服务器端结构一样的接口。
+利用HessianProxyFactory调用远程接口。
+
+
+
+hessian简介
+
+Hessian是二进制的web service协议，官方网站提供Java、Flash/Flex、Python、C++、.NET C#等实现。Hessian和Axis、XFire都能实现web service方式的远程方法调用，区别是Hessian是二进制协议，Axis、XFire则是SOAP协议，所以从性能上说Hessian远优于后两者，并且Hessian的JAVA使用方法非常简单。Hessian由于没有WSDL这种服务描述文件去对实现进行规定，似乎更适合内部分布式系统之间的交互，对外提供服务还是使用后两者更体面些。hessian采用的是二进制RPC协议，因为采用了二进制协议，所以它很适合于发送二进制数据，Hessian主要作面向对象的消息通信。Hessian的初衷就是支持动态类型，格式紧凑，跨语言Hessian是使用自己的序列化机制实现的编组和反编组，其支持的数据类型是有限制的，不支持复杂的对象，可以穿透防火墙，在这里不得不说一下RMI：RMI是一组用户开发分布式应用程序的API。他使用的是java序列化机制实现调用及返回值的编组于反编组。它使用Java语言接口定义了远程对象，它集合了Java序列化和Java远程方法协议（Java Remote Method Protocol）。他可以被看做是RPC的Java版本，因为传统的RPC并不能很好的应用于分布式对象系统。而Java RMI则支持存储于不同地址空间的程序级对象之间彼此进行通信，实现远程对象之间的无缝远程调用。他也有它的缺点，他只能通过RMI协议来进行访问无法通过HTTP协议访问，无法穿透防火墙。
+
+JAVA服务端使用步骤：
+1、导入Hessian的Jar包
+2、设计接口
+3、实现接口：必须继承HessianServlet，接口参数对象必须实现序列化
+4、配置web.xml
+
+  <servlet>
+        <!-- 配置 HessianServlet，Servlet的名字随便配置，例如这里配置成ServiceServlet-->
+        <servlet-name>ServiceServlet</servlet-name>
+        <servlet-class>com.caucho.hessian.server.HessianServlet</servlet-class>
+        
+        <!-- 配置接口的具体实现类 -->
+        <init-param>
+            <param-name>service-class</param-name>
+            <param-value>com.hessian.service.impl.ServiceImpl</param-value>
+        </init-param>
+    </servlet>
+    <!-- 映射 HessianServlet的访问URL地址-->
+    <servlet-mapping>
+        <servlet-name>ServiceServlet</servlet-name>
+        <url-pattern>/ServiceServlet</url-pattern>
+    </servlet-mapping>
+hessian与spring结合.
+
+下面来自http://blog.sina.com.cn/s/blog_7f73e06d0100xn9j.html
+
+在实际应用中，我们不只是简单的只使用hessian来进行通信的，如果方法多得话，还不如直接写在客户端来调用，然而：当hessian与spring结合后，大大减少了这些操作，将dao层的操作全部放在hessian服务端，将业务逻辑全部放在hessian客户端，这样的话我们的hessian客户端和服务端完全分离，因此我们的业务逻辑和dao层就真正的达到了分离，就可以放在不同的服务器上，当然hessian的通信的作用不仅仅只有这些。
+接口和实现和上边的一样：只是在web.xml中配置比较麻烦：
+例子：
+1、服务器端：增加remoting-servlet.xml配置文件：用来配置bean，并将bean导出为hessian服务：
+
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop = "http://www.springframework.org/schema/aop"
+       xmlns:tx = "http://www.springframework.org/schema/tx"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" >    
+          
+  <!-- 定义普通的bean实例 -->
+  <bean id="Hello" class="com.kcpt.hessian.service.IHelloImpl"/>
+    <!--  使用HessianServiceExporter 将普通bean导出成Hessian服务-->
+    <bean name="/remoting" class="org.springframework.remoting.caucho.HessianServiceExporter">
+    <!--  需要导出的目标bean-->
+     <property name="service" ref="Hello"/>
+       <!--  Hessian服务的接口-->
+     <property name="serviceInterface" value="com.kcpt.hessian.service.IHello"/>
+    </bean>
+  </beans>
+ 
+
+
+2、web.xml文件的配置：
+首先是监听器：spring的监听器
+
+<listener>
+<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> <!--添加监听器 -->
+</listener>
+<!-- 指定spring的配置文件在哪里，在这个配置文件中导出了Hessian服务 -->
+<context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/remoting-servlet.xml</param-value> 
+</context-param>
+<!-- Hessian通过Servlet提供远程服务，需要将某个匹配的模式映射到hessian服务中，spring的dispatcherServlet能完成此功能，DispatcherServlet可将匹配模式的请求转发到Hessian服务，web.xml只是定义了“请求转发器”，该转发器将匹配/remoting/*的请求截获，转发给context的bean处理。而HessianServiceExporter提供bean服务。 -->
+<servlet>
+   <servlet-name>remoting</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+           <load-on-startup>1</load-on-startup>
+    </servlet>
+<servlet-mapping>
+<servlet-name>remoting</servlet-name>
+<url-pattern>/remoting/*</url-pattern>
+</servlet-mapping>
+3、在客户端：
+同样要加spring监听器和context-param指定bean的文件
+声明bean的xml文件：
+
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+       xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop = "http://www.springframework.org/schema/aop"
+       xmlns:tx = "http://www.springframework.org/schema/tx"
+       xsi:schemaLocation = "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" >    
+<bean id="myServiceClient" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+<property name="serviceUrl">            //hessian的地址和名称请求转发的名称
+<value>http://127.0.0.1:8080/HessianService/remoting</value>
+</property>                          
+<property name="serviceInterface">   //hessian所要调用的接口
+<value>com.kcpt.hessian.service.IHello</value>
+</property>
+</bean>
+</beans>
+4、客户端的程序中要写：
+
+ApplicationContext context = new ClassPathXmlApplicationContext("com/kcpt/hessian/client/remoting-client.xml") 
+ //这里只是你声明的bean的xml文件所在的路径
+
+IHello b = (IHello) context.getBean("myServiceClient");
+ 
+
+来获取到ihello这个接口，从而就能够调用这个接口里的方法进行操作

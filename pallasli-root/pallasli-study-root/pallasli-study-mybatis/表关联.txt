@@ -1,0 +1,48 @@
+
+
+一个班有一个班主任和多个学生
+
+<!-- 
+ 5     方式一: 嵌套结果: 使用嵌套结果映射来处理重复的联合结果的子集
+ 6     SELECT * FROM class c, teacher t,student s WHERE c.teacher_id=t.t_id AND c.C_id=s.class_id AND  c.c_id=1
+ 7      -->
+ 8     <select id="getClass3" parameterType="int" resultMap="ClassResultMap3">
+ 9         select * from class c, teacher t,student s where c.teacher_id=t.t_id and c.C_id=s.class_id and  c.c_id=#{id}
+10     </select>
+11     <resultMap type="me.gacl.domain.Classes" id="ClassResultMap3">
+12         <id property="id" column="c_id"/>
+13         <result property="name" column="c_name"/>
+14         <association property="teacher" column="teacher_id" javaType="me.gacl.domain.Teacher">
+15             <id property="id" column="t_id"/>
+16             <result property="name" column="t_name"/>
+17         </association>
+18         <!-- ofType指定students集合中的对象类型 -->
+19         <collection property="students" ofType="me.gacl.domain.Student">
+20             <id property="id" column="s_id"/>
+21             <result property="name" column="s_name"/>
+22         </collection>
+23     </resultMap>
+24     
+25     <!-- 
+26         方式二：嵌套查询：通过执行另外一个SQL映射语句来返回预期的复杂类型
+27             SELECT * FROM class WHERE c_id=1;
+28             SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id的值
+29             SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段的值
+30      -->
+31      <select id="getClass4" parameterType="int" resultMap="ClassResultMap4">
+32         select * from class where c_id=#{id}
+33      </select>
+34      <resultMap type="me.gacl.domain.Classes" id="ClassResultMap4">
+35         <id property="id" column="c_id"/>
+36         <result property="name" column="c_name"/>
+37         <association property="teacher" column="teacher_id" javaType="me.gacl.domain.Teacher" select="getTeacher2"></association>
+38         <collection property="students" ofType="me.gacl.domain.Student" column="c_id" select="getStudent"></collection>
+39      </resultMap>
+40      
+41      <select id="getTeacher2" parameterType="int" resultType="me.gacl.domain.Teacher">
+42         SELECT t_id id, t_name name FROM teacher WHERE t_id=#{id}
+43      </select>
+44      
+45      <select id="getStudent" parameterType="int" resultType="me.gacl.domain.Student">
+46         SELECT s_id id, s_name name FROM student WHERE class_id=#{id}
+47      </select>

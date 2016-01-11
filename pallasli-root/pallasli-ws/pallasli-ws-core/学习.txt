@@ -1,0 +1,19 @@
+Web Service中的几个重要术语
+
+4.1、WSDL(web service definition language)
+
+　　WSDL是webservice定义语言, 对应.wsdl文档, 一个webservice会对应一个唯一的wsdl文档, 定义了客户端与服务端发送请求和响应的数据格式和过程
+
+4.2、SOAP(simple object  access protocal)
+
+　　SOAP是"简单对象访问协议"
+
+是一种简单的、基于HTTP和XML的协议, 用于在WEB上交换结构化的数据
+soap消息：请求消息和响应消息
+4.3、SEI(WebService EndPoint Interface)
+
+　　SEI是web service的终端接口，就是WebService服务器端用来处理请求的接口
+
+4.4、CXF(Celtix + XFire)
+
+　　一个apache的用于开发webservice服务器端和客户端的框架。

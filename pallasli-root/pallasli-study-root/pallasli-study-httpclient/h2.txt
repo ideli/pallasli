@@ -1,0 +1,43 @@
+<!-- 使用监听器启动和停止数据库 -->
+      <listener>
+        <listener-class>me.gacl.web.listener.H2DBServerStartListener</listener-class>
+    </listener>
+    
+    <!-- 使用H2控制台的Servlet H2控制台是一个独立的应用程序，包括它自己的Web服务器，但它可以作为一个servlet作为-->
+    <servlet>
+        <servlet-name>H2Console</servlet-name>
+        <servlet-class>org.h2.server.web.WebServlet</servlet-class>
+         <init-param>
+            <param-name>webAllowOthers</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <param-name>trace</param-name>
+            <param-value></param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- 映射H2控制台的访问路径 -->
+    <servlet-mapping>
+        <servlet-name>H2Console</servlet-name>
+        <url-pattern>/console/*</url-pattern>
+    </servlet-mapping>
+    
+    
+    "http://localhost:8080/H2DBTest/console/"
+    
+    <servlet>
+    <description>注册H2数据库的扩展函数</description>
+    <servlet-name>RegisterH2DBExtFunction</servlet-name>
+    <servlet-class>me.gacl.sys.init.RegisterH2ExtFuncServlet</servlet-class>
+    <!-- 
+    1、load-on-startup元素标记容器是否在启动的时候就加载这个servlet(实例化并调用其init()方法)。
+    2、它的值必须是一个整数，表示servlet应该被载入的顺序
+    3、当值为0或者大于0时，表示容器在应用启动时就加载并初始化这个servlet；
+    4、当值小于0或者没有指定时，则表示容器在该servlet被选择时才会去加载。
+    5、正数的值越小，该servlet的优先级越高，应用启动时就越先加载。
+    6、当值相同时，容器就会自己选择顺序来加载。
+    所以，<load-on-startup>x</load-on-startup>，中x的取值1，2，3，4，5代表的是优先级，而非启动延迟时间。
+     -->
+     <load-on-startup>1</load-on-startup>
+</servlet>

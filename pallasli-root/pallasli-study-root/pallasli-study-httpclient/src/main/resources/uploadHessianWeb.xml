@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+    <servlet-name>FileUploadService</servlet-name>
+    <servlet-class>com.caucho.hessian.server.HessianServlet</servlet-class>
+    <init-param>
+    <!-- home-class也可以写为service-class -->
+      <param-name>home-class</param-name>
+      <!-- 服务器对接口的现实，供客户端调用 --> 
+      <param-value>file.upload.service.impl.FileUploadServiceImpl</param-value>
+    </init-param>
+    <init-param>
+    
+    <!--
+        提供给客户端调用的接口，这里的home-api配置不是必须的，可以不配置
+    -->
+    <!--home-api也可以写为api-class  -->
+      <param-name>home-api</param-name>
+      <!-- 客户端接口 -->
+      <param-value>file.upload.service.FileUploadServiceI</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FileUploadService</servlet-name>
+    <url-pattern>/FileUploadService</url-pattern>
+  </servlet-mapping>
+  
+</web-app>

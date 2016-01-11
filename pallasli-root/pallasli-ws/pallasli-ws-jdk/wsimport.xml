@@ -1,0 +1,50 @@
+﻿<project default="build">
+	<!-- 
+wsgen与wsimport命令说明
+wsgen命令的主要功能是用来生成合适的JAX-WS。它读取Web Service的终端类文件，在我们的例子中就是test.jws.service.HelloWorld，同时生成所有用于发布Web Service所依赖的源代码文件和经过编译过的二进制类文件，通常Web Service Bean中用到的异常类会另外生成一个描述Bean。它还能生成WSDL和符合规范的HelloWorld类Web Service。wsgen从资源文件生成一个完整的操作列表并验证是合法的。如果Web Service Bean中的主法有申明抛出异常，这一步是必需的，否则服务器无法绑定该对像。
+命令参数说明：
+-cp 定义classpath
+-r 生成 bean的wsdl文件的存放目录
+-s 生成发布Web Service的源代码文件的存放目录（如果方法有抛出异常，则会生成该异常的描述类源文件）
+-d 生成发布Web Service的编译过的二进制类文件的存放目录（该异常的描述类的class文件）
+ 
+       wsimport命令的主要功能是根据wsdl文件生成客户端存根及框架，负责与Web Service 服务器通信，并在将其封装成实例，客户端可以直接使用，就像使用本地实例一样。
+命令参数说明：
+-d 生成客户端执行类的class文件的存放目录
+-s 生成客户端执行类的源文件的存放目录
+-p 定义生成类的包名
+-d <directory>       specify where to place generated output files（指定生成文件的路径）
+-verbose             output messages about what the compiler is doing（输出详细信息）
+-keep                keep generated files（生成java文件,不带此参数将只生成class文件）
+-p <pkg>             specifies the target package 生成代码的目标包
+-->
+	<property name="ws_server" value="localhost" />
+	<property name="ws_port" value="8989" />
+	<property name="target" value="./release" />
+
+	<target name="wsimport">
+		<mkdir dir="${target}/classes"/>
+		<exec executable="wsimport">
+			<arg line="-p com.pallasli.client.test.ws.wsimport -d ${target}/classes http://${ws_server}:${ws_port}/WS_Server/Webservice?wsdl" />
+		</exec>
+		<exec executable="wsimport">
+			<arg line="-p com.pallasli.client.test.ws.wsimport -d ${target}/classes http://${ws_server}:${ws_port}/WS_Server/CopyOfWebservice?wsdl" />
+		</exec>
+	</target> 
+	<target name="jar" depends="wsimport">
+		<jar destfile="${target}/jar/test_wsimport.jar">
+			<fileset dir="${target}/classes">
+				<include name="**/*.class" />
+			</fileset>
+		</jar>
+	</target>
+	<target name="build" depends="jar">
+		<copy todir="./tmplib">
+			<fileset dir="${target}/jar" includes="*.jar" />
+		</copy>
+		<delete includeemptydirs="true">
+			<fileset dir="${target}" includes="**/*" />
+		</delete>
+	</target>
+
+</project>

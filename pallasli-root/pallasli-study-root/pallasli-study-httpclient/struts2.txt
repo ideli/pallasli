@@ -1,0 +1,12 @@
+　由于使用了convention-plugin插件的提供的注解方式映射Action的访问路径，
+所以我们不再需要像以前那样在Struts.xml文件中配置Action的访问路径了，测试结果如下
+
+
+
+我们的项目中还使用到了config-browser-plugin插件，
+下面我们来感受一下这个config-browser-plugin插件带来的便利之处
+
+　　输入访问URL:http://localhost:8080/项目名/config-browser/index.action来访问
+config-browser-plugin插件提供的视图页面，
+例如：http://localhost:8080/Struts2AnnotationMavenProject/config-browser/index.action，
+这样就可以进入config-browser-plugin插件提供的视图界面，如下图所示

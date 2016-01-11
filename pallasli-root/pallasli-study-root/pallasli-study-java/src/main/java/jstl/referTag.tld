@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+    
+    <description>孤傲苍狼开发的简单标签库</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>TagLib</short-name>
+    <uri>/gaclTagLib</uri>
+    
+    <tag>
+        <!-- 标签名 -->
+        <name>referer</name>
+        <!-- 标签处理器类 -->
+        <tag-class>me.gacl.web.simpletag.RefererTag</tag-class>
+        <!-- 标签体允许的内容 -->
+        <body-content>empty</body-content>
+        <!-- 标签的属性描述 -->
+        <attribute>
+            <description>描述标签的site属性</description>
+            <!-- 标签的site属性 -->
+            <name>site</name>
+            <required>true</required>
+            <!-- rtexprvalue用来指示标签的属性值是否可以是一个表达式， 一般设置为true,true就表示允许标签的属性值可以是一个表达式 -->
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>描述标签的page属性</description>
+            <!-- 标签的page属性 -->
+            <name>page</name>
+            <required>true</required>
+            <!-- rtexprvalue用来指示标签的属性值是否可以是一个表达式， 一般设置为true,true就表示允许标签的属性值可以是一个表达式 -->
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    
+</taglib>

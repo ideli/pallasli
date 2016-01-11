@@ -1,0 +1,10 @@
+免费的web service查询国内手机号码归属地:http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx
+免费的web service获取天气预报信息:http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx 
+
+
+
+使用wsimport工具直接生成客户端代码会抛异常, 无法生成客户端代码, 只是因为我们要调用的WebService是用.net写的，
+这个是Java调用net的webservice都有的问题，这个问题的解决办法如下：
+1.将对应的wsdl文档保存到本地
+2.修改wsdl文档的部分内容:将 <s:element ref="s:schema" /><s:any /> 替换成 <s:any minOccurs="2" maxOccurs="2"/>
+3.　再次执行wsimport生成代码，这次使用保存在本地的WeatherWS.wsdl文件来进行生成

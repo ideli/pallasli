@@ -1,0 +1,28 @@
+<servlet>
+	<servlet-name>DruidStatView</servlet-name>
+	<servlet-class>com.alibaba.druid.support.http.StatViewServlet
+	</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>DruidStatView</servlet-name>
+	<url-pattern>/druid/*</url-pattern>
+</servlet-mapping>
+
+
+
+<!-- 远程访问 -->
+
+<servlet>
+	<servlet-name>DruidStatView</servlet-name>
+	<servlet-class>com.alibaba.druid.support.http.StatViewServlet
+	</servlet-class>
+	<init-param>
+		<param-name>jmxUrl</param-name>
+		<param-value>service:jmx:rmi:///jndi/rmi://localhost:9004/jmxrmi
+		</param-value>
+	</init-param>
+</servlet>
+<servlet-mapping>
+	<servlet-name>DruidStatView</servlet-name>
+	<url-pattern>/druid/*</url-pattern>
+</servlet-mapping>

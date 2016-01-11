@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-root</artifactId>
+    <artifactId>pallasli-webapp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>pallasli-webapp-learning</artifactId>
@@ -16,20 +16,8 @@
 		<quartz.version>1.8.5</quartz.version>
 	</properties>
   <dependencies>
-	
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
+	 
 		 
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-			</dependency>
 		<dependency>
 			<groupId>com.pallasli</groupId>
 			<artifactId>pallasli-utils</artifactId>

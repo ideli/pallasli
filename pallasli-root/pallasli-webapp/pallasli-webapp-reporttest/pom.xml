@@ -25,9 +25,5 @@
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>6.0.0</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-		</dependency>
 	</dependencies>
 </project>

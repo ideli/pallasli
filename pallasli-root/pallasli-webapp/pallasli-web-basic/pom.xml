@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.pallasli</groupId>
-		<artifactId>pallasli-root</artifactId>
+		<artifactId>pallasli-webapp</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>pallasli-web-basic</artifactId>
@@ -15,11 +15,7 @@
             <url>http://server.kafeitu.me:8081/nexus/content/groups/public</url> 
         </repository> 
     </repositories> 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
+	<dependencies> 
 
 		<!-- Spring -->
 		<dependency>
@@ -181,15 +177,7 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -238,10 +226,6 @@
 			<artifactId>pallasli-orgnization</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-			</dependency>
 			<!-- <dependency>
 	<groupId>org.quartz-scheduler</groupId>
 	<artifactId>quartz</artifactId>

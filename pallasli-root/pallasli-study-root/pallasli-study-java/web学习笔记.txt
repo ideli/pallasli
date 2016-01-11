@@ -1,0 +1,200 @@
+jsp 中 使用<%=request.getContextPath()%>和使用${pageContext.request.contextPath}达到同样的效果
+
+
+在<Host></Host>这对标签加上<Context path="/JavaWebApp" docBase="F:\JavaWebDemoProject" />
+即可将在F盘下的JavaWebDemoProject这个JavaWeb应用映射到JavaWebApp这个虚拟目录上，
+JavaWebApp这个虚拟目录是由Tomcat服务器管理的，JavaWebApp是一个硬盘上不存在的目录，也就是"虚拟目录" 
+
+hosts文件添加映射 127.0.0.1  www.pallasli.com
+<Host name="www.pallasli.com" appBase="F:\JavaWebApps">
+    
+</Host>
+
+web请求过程：---->解析域名（先从本机hosts映射查找，在到dns服务器查找）----->根据查找到的ip找到服务器（找到主机、应用、资源）---->返回结果
+
+
+HTTP请求的细节——请求行
+
+　　请求行中的GET称之为请求方式，请求方式有：POST、GET、HEAD、OPTIONS、DELETE、TRACE、PUT，常用的有： GET、 POST
+　　用户如果没有设置，默认情况下浏览器向服务器发送的都是get请求，例如在浏览器直接输地址访问，点超链接访问等都是get，用户如想把请求方式改为post，可通过更改表单的提交方式实现。
+　　不管POST或GET，都用于向服务器请求某个WEB资源，这两种方式的区别主要表现在数据传递上：如果请求方式为GET方式，则可以在请求的URL地址后以?的形式带上交给服务器的数据，多个数据之间以&进行分隔，例如：GET /mail/1.html?name=abc&password=xyz HTTP/1.1
+　　GET方式的特点：在URL地址后附带的参数是有限制的，其数据容量通常不能超过1K。
+　　如果请求方式为POST方式，则可以在请求的实体内容中向服务器发送数据，Post方式的特点：传送的数据量无限制。
+
+HTTP请求的细节——消息头
+
+　　HTTP请求中的常用消息头
+
+　　accept:浏览器通过这个头告诉服务器，它所支持的数据类型
+　　Accept-Charset: 浏览器通过这个头告诉服务器，它支持哪种字符集
+　　Accept-Encoding：浏览器通过这个头告诉服务器，支持的压缩格式
+　　Accept-Language：浏览器通过这个头告诉服务器，它的语言环境
+　　Host：浏览器通过这个头告诉服务器，想访问哪台主机
+　　If-Modified-Since: 浏览器通过这个头告诉服务器，缓存数据的时间
+　　Referer：浏览器通过这个头告诉服务器，客户机是哪个页面来的  防盗链
+　　Connection：浏览器通过这个头告诉服务器，请求完后是断开链接还是何持链接
+
+例如：
+
+
+ Accept: application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, 
+     application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*
+ Referer: http://localhost:8080/JavaWebDemoProject/Web/2.jsp
+ Accept-Language: zh-CN
+ User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; InfoPath.3)
+ Accept-Encoding: gzip, deflate
+ Host: localhost:8080
+ Connection: Keep-Alive
+ 
+ 
+ 
+ HTTP响应细节——常用响应头
+
+　　HTTP响应中的常用响应头(消息头)
+　　Location: 服务器通过这个头，来告诉浏览器跳到哪里
+　　Server：服务器通过这个头，告诉浏览器服务器的型号
+　　Content-Encoding：服务器通过这个头，告诉浏览器，数据的压缩格式
+　　Content-Length: 服务器通过这个头，告诉浏览器回送数据的长度
+　　Content-Language: 服务器通过这个头，告诉浏览器语言环境
+　　Content-Type：服务器通过这个头，告诉浏览器回送数据的类型
+　　Refresh：服务器通过这个头，告诉浏览器定时刷新
+　　Content-Disposition: 服务器通过这个头，告诉浏览器以下载方式打数据
+　　Transfer-Encoding：服务器通过这个头，告诉浏览器数据是以分块方式回送的
+　　Expires: -1  控制浏览器不要缓存
+　　Cache-Control: no-cache  
+　　Pragma: no-cache
+
+
+
+
+		response.setStatus(302);//设置服务器的响应状态码
+        /**
+          *设置响应头，服务器通过 Location这个头，来告诉浏览器跳到哪里，这就是所谓的请求重定向
+         */
+        response.setHeader("Location", "/JavaWeb_HttpProtocol_Study_20140528/1.jsp");
+		
+		
+		 /**
+           * 设置refresh响应头，让浏览器每隔3秒定时刷新
+           */
+          // response.setHeader("refresh", "3");
+          /**
+           * 设置refresh响应头，让浏览器3秒后跳转到http://www.baidu.com
+           */
+          response.setHeader("refresh", "3;url='http://www.baidu.com'");
+
+   /**
+           * 设置content-disposition响应头，让浏览器下载文件
+		   文件下载功能是web开发中经常使用到的功能，使用HttpServletResponse对象就可以实现文件的下载
+			文件下载功能的实现思路：
+			　　1.获取要下载的文件的绝对路径
+			　　2.获取要下载的文件名
+			　　3.设置content-disposition响应头控制浏览器以下载的形式打开文件
+			　　4.获取要下载的文件输入流
+			　　5.创建数据缓冲区
+			　　6.通过response对象获取OutputStream流
+			　　7.将FileInputStream流写入到buffer缓冲区
+			　　8.使用OutputStream将缓冲区的数据输出到客户端浏览器
+			
+			　文件下载注意事项：编写文件下载功能时推荐使用OutputStream流，避免使用PrintWriter流，
+			  因为OutputStream流是字节流，可以处理任意类型的数据，
+			  而PrintWriter流是字符流，只能处理字符数据，如果用字符流处理字节数据，会导致数据丢失。
+           */
+          response.setHeader("content-disposition", "attachment;filename="+URLEncoder.encode(fileName, "UTF-8"));
+          InputStream in = this.getServletContext().getResourceAsStream("/img/1.jpg");
+          byte buffer[] = new byte[1024];
+          int len = 0;
+          OutputStream out = response.getOutputStream();
+          while ((len = in.read(buffer)) > 0) {
+              out.write(buffer, 0, len);
+          }
+		
+		浏览器支持的压缩类型gzip, deflate,
+		 String data = "abcdabcdabcdabcdabcdabcdab" +
+                  "cdabcdabcdabcdabcdabcdabcdabcdabc" +
+                  "dabcdabcdabcdabcdabcdabcdabcdabc" +
+                  "dabcdabcdabcdabcdabcdabcdabcdabcdab" +
+                  "cdabcdabcdabcdabcdabcdabcdabcdabcdab" +
+                  "cdabcdabcdabcdabcdabcdabcdabcdabcdab" +
+                  "cdabcdabcdabcdabcdabcdabcdabcdabcdab" +
+                  "cdabcdabcdabcdabcdabcdabcdabcdabcdabcd";
+          System.out.println("原始数据的大小为：" + data.getBytes().length);
+          
+          ByteArrayOutputStream bout = new ByteArrayOutputStream();
+          GZIPOutputStream gout = new GZIPOutputStream(bout); //buffer
+          gout.write(data.getBytes());
+          gout.close();
+          //得到压缩后的数据
+          byte g[] = bout.toByteArray();
+          response.setHeader("Content-Encoding", "gzip");
+          response.setHeader("Content-Length",g.length +"");
+          response.getOutputStream().write(g);
+		
+		HttpSevlet上下文：		
+  /**
+           * ServletConfig对象中维护了ServletContext对象的引用，开发人员在编写servlet时，
+           * 可以通过ServletConfig.getServletContext方法获得ServletContext对象。
+           */
+          ServletContext context = this.getServletConfig().getServletContext();//获得ServletContext对象
+          context.setAttribute("data", data);  //将data存储到ServletContext对象中
+		  
+		  也可以：
+		    ServletContext context = this.getServletContext();
+          String data = (String) context.getAttribute("data");//从ServletContext对象中取出数据
+		  //获取整个web站点的初始化参数
+          String contextInitParam = context.getInitParameter("***");
+		  
+		  
+		  
+		  
+		   /**使用OutputStream输出中文注意问题：
+           * 在服务器端，数据是以哪个码表输出的，那么就要控制客户端浏览器以相应的码表打开，
+           * 比如：outputStream.write("中国".getBytes("UTF-8"));//使用OutputStream流向客户端浏览器输出中文，以UTF-8的编码进行输出
+           * 此时就要控制客户端浏览器以UTF-8的编码打开，否则显示的时候就会出现中文乱码，那么在服务器端如何控制客户端浏览器以以UTF-8的编码显示数据呢？
+           * 可以通过设置响应头控制浏览器的行为，例如：
+           * response.setHeader("content-type", "text/html;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据
+           */
+          String data = "中国";
+          OutputStream outputStream = response.getOutputStream();//获取OutputStream输出流
+          response.setHeader("content-type", "text/html;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据，如果不加这句话，那么浏览器显示的将是乱码
+          /**
+           * data.getBytes()是一个将字符转换成字节数组的过程，这个过程中一定会去查码表，
+           * 如果是中文的操作系统环境，默认就是查找查GB2312的码表，
+           * 将字符转换成字节数组的过程就是将中文字符转换成GB2312的码表上对应的数字
+           * 比如： "中"在GB2312的码表上对应的数字是98
+           *         "国"在GB2312的码表上对应的数字是99
+           */
+          /**
+           * getBytes()方法如果不带参数，那么就会根据操作系统的语言环境来选择转换码表，如果是中文操作系统，那么就使用GB2312的码表
+           */
+          byte[] dataByteArr = data.getBytes("UTF-8");//将字符转换成字节数组，指定以UTF-8编码进行转换
+          outputStream.write(dataByteArr);//使用OutputStream流向客户端输出字节数组
+		  
+		  
+		  
+		  PrintWriter out = response.getWriter();//获取PrintWriter输出流
+          /**
+           * 多学一招：使用HTML语言里面的<meta>标签来控制浏览器行为，模拟通过设置响应头控制浏览器行为
+           * out.write("<meta http-equiv='content-type' content='text/html;charset=UTF-8'/>");
+           * 等同于response.setHeader("content-type", "text/html;charset=UTF-8");
+           */
+          out.write("<meta http-equiv='content-type' content='text/html;charset=UTF-8'/>");
+          out.write(data);//使用PrintWriter流向客户端输出字符
+		  
+		  
+		  
+		  不知道一个变量是否已定义的用typeof验证
+		  typeof(mapTooltipIntervalTime) == "undefined"?1000:mapTooltipIntervalTime
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  

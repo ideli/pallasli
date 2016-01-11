@@ -1,0 +1,217 @@
+   getRequestURL方法返回客户端发出请求时的完整URL。
+　　getRequestURI方法返回请求行中的资源名部分。
+　　getQueryString 方法返回请求行中的参数部分。
+　　getPathInfo方法返回请求URL中的额外路径信息。额外路径信息是请求URL中的位于Servlet的路径之后和查询参数之前的内容，它以“/”开头。
+　　getRemoteAddr方法返回发出请求的客户机的IP地址。
+　　getRemoteHost方法返回发出请求的客户机的完整主机名。
+　　getRemotePort方法返回客户机所使用的网络端口号。
+　　getLocalAddr方法返回WEB服务器的IP地址。
+　　getLocalName方法返回WEB服务器的主机名。
+
+
+  
+  poset 请求 使用request.setCharacterEncoding("UTF-8");设置服务器以UTF-8的编码接收数据后，此时就不会产生中文乱码问题了
+  get 请求 String name = request.getParameter("name");//接收数据
+          name =new String(name.getBytes("ISO8859-1"), "UTF-8") ;//获取request对象以ISO8859-1字符编码接收到的原始数据的字节数组，然后通过字节数组以指定的编码构建字符串，解决乱码问题
+          
+          
+          
+    要想在cookie中存储中文，那么必须使用URLEncoder类里面的encode(String s, String enc)方法进行中文转码，例如：
+
+ Cookie cookie = new Cookie("userName", URLEncoder.encode("孤傲苍狼", "UTF-8"));
+ response.addCookie(cookie);
+　　在获取cookie中的中文数据时，再使用URLDecoder类里面的decode(String s, String enc)进行解码，例如：
+
+ URLDecoder.decode(cookies[i].getValue(), "UTF-8")      
+    
+    
+    web.xml
+    <!-- 设置Session的有效时间:以分钟为单位-->
+     <session-config>
+         <session-timeout>15</session-timeout>
+     </session-config>
+    
+    
+    
+    
+    当使用<jsp:include>和<jsp:forward>标签引入或将请求转发给其它资源时，可以使用<jsp:param>标签向这个资源传递参数。
+　　语法1：
+    <jsp:include page="relativeURL | <%=expression%>">
+        <jsp:param name="parameterName" value="parameterValue|<%= expression %>" />
+    </jsp:include>
+　　语法2：
+    <jsp:forward page="relativeURL | <%=expression%>">
+        <jsp:param name="parameterName" value="parameterValue|<%= expression %>" />
+    </jsp:include>
+　　<jsp:param>标签的name属性用于指定参数名，value属性用于指定参数值。在<jsp:include>和<jsp:forward>标签中可以使用多个<jsp:param>标签来传递多个参数。
+    
+    
+    
+    
+    Model（模型）：数据模型，提供要展示的数据，因此包含数据和行为，可以认为是领域模型(domain)或JavaBean组件（包含数据和行为），不过现在一般都分离开来：Value Object（数据） 和 服务层（行为）。也就是模型提供了模型数据查询和模型数据的状态更新等功能，包括数据和业务。
+
+　　View（视图）：负责进行模型的展示，一般就是我们见到的用户界面，客户想看到的东西。
+
+　　Controller（控制器）：接收用户请求，委托给模型进行处理（状态改变），处理完毕后把返回的模型数据返回给视图，由视图负责展示。 也就是说控制器做了个调度员的工作。
+
+
+
+　ServletContextListener接口用于监听ServletContext对象的创建和销毁事件。实现了ServletContextListener接口的类都可以对ServletContext对象的创建和销毁进行监听。
+
+　　当ServletContext对象被创建时，激发contextInitialized (ServletContextEvent sce)方法。
+
+　　当ServletContext对象被销毁时，激发contextDestroyed(ServletContextEvent sce)方法。
+
+　　ServletContext域对象创建和销毁时机：
+　　　　创建：服务器启动针对每一个Web应用创建ServletContext
+　　　　销毁：服务器关闭前先关闭代表每一个web应用的ServletContext
+
+<!-- 注册针对ServletContext对象进行监听的监听器 -->
+  <listener>
+      <description>ServletContextListener监听器</description>
+      <!--实现了ServletContextListener接口的监听器类 -->
+      <listener-class>me.gacl.web.listener.MyServletContextListener</listener-class>
+  </listener>
+
+
+
+HttpSessionListener 接口用于监听HttpSession对象的创建和销毁
+　　创建一个Session时，激发sessionCreated (HttpSessionEvent se) 方法
+　　销毁一个Session时，激发sessionDestroyed (HttpSessionEvent se) 方法。
+
+<!--注册针对HttpSession对象进行监听的监听器-->
+   <listener>
+      <description>HttpSessionListener监听器</description>
+      <listener-class>me.gacl.web.listener.MyHttpSessionListener</listener-class>
+  </listener>
+  <!-- 配置HttpSession对象的销毁时机 -->
+  <session-config>
+      <!--配置HttpSession对象的1分钟之后销毁 -->
+      <session-timeout>1</session-timeout>
+  </session-config>
+  
+  
+  ServletRequestListener接口用于监听ServletRequest 对象的创建和销毁
+　　Request对象被创建时，监听器的requestInitialized(ServletRequestEvent sre)方法将会被调用
+　　Request对象被销毁时，监听器的requestDestroyed(ServletRequestEvent sre)方法将会被调用
+  
+  <!--注册针对ServletRequest对象进行监听的监听器-->
+2    <listener>
+3       <description>ServletRequestListener监听器</description>
+4       <listener-class>me.gacl.web.listener.MyServletRequestListener</listener-class>
+5   </listener>
+
+这三个监听器接口分别是ServletContextAttributeListener, HttpSessionAttributeListener 和ServletRequestAttributeListener，
+这三个接口中都定义了三个方法来处理被监听对象中的属性的增加，删除和替换的事件，同一个事件在这三个接口中对应的方法名称完全相同，只是接受的参数类型不同。
+    attributeAdded 方法
+    attributeRemoved 方法
+    attributeReplaced 方法
+
+
+  public class MyServletContextAttributeListener implements
+11        ServletContextAttributeListener, HttpSessionAttributeListener, ServletRequestAttributeListener
+  <listener>
+2       <description>MyServletContextAttributeListener监听器</description>
+3       <listener-class>me.gacl.web.listener.MyServletContextAttributeListener</listener-class>
+4   </listener>
+  
+  
+  
+Servlet 规范中定义了两个特殊的监听器接口"HttpSessionBindingListener和HttpSessionActivationListener"来帮助JavaBean 对象了解自己在Session域中的这些状态： ，实现这两个接口的类不需要 web.xml 文件中进行注册。
+
+2.1、HttpSessionBindingListener接口
+
+　　实现了HttpSessionBindingListener接口的JavaBean对象可以感知自己被绑定到Session中和 Session中删除的事件
+　　当对象被绑定到HttpSession对象中时，web服务器调用该对象的void valueBound(HttpSessionBindingEvent event)方法
+　　当对象从HttpSession对象中解除绑定时，web服务器调用该对象的void valueUnbound(HttpSessionBindingEvent event)方法
+
+
+
+
+
+/**
+    实现了HttpSessionActivationListener接口的 JavaBean 对象可以感知自己被活化和钝化的事件
+    活化:javabean对象和Session一起被反序列化(活化)到内存中。
+    钝化:javabean对象存在Session中，当服务器把session序列化到硬盘上时，如果Session中的javabean对象实现了Serializable接口
+    那么服务器会把session中的javabean对象一起序列化到硬盘上，javabean对象和Session一起被序列化到硬盘中的这个操作称之为钝化
+    如果Session中的javabean对象没有实现Serializable接口，那么服务器会先把Session中没有实现Serializable接口的javabean对象移除
+    然后再把Session序列化(钝化)到硬盘中
+    当绑定到 HttpSession对象中的javabean对象将要随 HttpSession对象被钝化之前，
+    web服务器调用该javabean对象对象的 void sessionWillPassivate(HttpSessionEvent event)方法
+    这样javabean对象就可以知道自己将要和 HttpSession对象一起被序列化(钝化)到硬盘中
+    当绑定到HttpSession对象中的javabean对象将要随 HttpSession对象被活化之后，
+    web服务器调用该javabean对象的 void sessionDidActive(HttpSessionEvent event)方法
+    这样javabean对象就可以知道自己将要和 HttpSession对象一起被反序列化(活化)回到内存中
+*
+*/ 
+    
+    为了观察绑定到HttpSession对象中的javabean对象随HttpSession对象一起被钝化到硬盘上和从硬盘上重新活化回到内存中的的过程，
+    我们需要借助tomcat服务器帮助我们完成HttpSession对象的钝化和活化过程，具体做法如下：
+
+　　在WebRoot\META-INF文件夹下创建一个context.xml文件，
+    <Context>
+       <Manager className="org.apache.catalina.session.PersistentManager" maxIdleSwap="1">
+           <Store className="org.apache.catalina.session.FileStore" directory="webappname"/>
+       </Manager>
+    </Context>
+访问这个jsp页面，服务器就会马上创建一个HttpSession对象，然后将实现了HttpSessionActivationListener接口的JavaBean对象绑定到session对象中，
+这个jsp页面在等待1分钟之后没有人再次访问，那么服务器就会自动将这个HttpSession对象钝化(序列化)到硬盘上
+我们可以在tomcat服务器的work\Catalina\localhost\JavaWeb_Listener_20140908\gacl文件夹下找到序列化到本地存储的session
+　当再次访问这个Jsp页面时，服务器又会自动将已经钝化(序列化)到硬盘上HttpSession对象重新活化(反序列化)回到内存中。运行结果如下：
+
+
+
+
+
+Filter开发分为二个步骤：
+
+编写java类实现Filter接口，并实现其doFilter方法。
+在 web.xml 文件中使用<filter>和<filter-mapping>元素对编写的filter类进行注册，并设置它所能拦截的资源。
+用户在配置filter时，可以使用<init-param>为filter配置一些初始化参数，当web容器实例化Filter对象，调用其init方法时，会把封装了filter初始化参数的filterConfig对象传递进来。因此开发人员在编写filter时，通过filterConfig对象的方法，就可获得：
+　　String getFilterName()：得到filter的名称。
+　　String getInitParameter(String name)： 返回在部署描述中指定名称的初始化参数的值。如果不存在返回null.
+　　Enumeration getInitParameterNames()：返回过滤器的所有初始化参数的名字的枚举集合。
+　　public ServletContext getServletContext()：返回Servlet上下文对象的引用。
+
+
+   <filter-mapping>元素用于设置一个 Filter 所负责拦截的资源。一个Filter拦截的资源可通过两种方式来指定：Servlet 名称和资源访问的请求路径
+　　<filter-name>子元素用于设置filter的注册名称。该值必须是在<filter>元素中声明过的过滤器的名字
+　　<url-pattern>设置 filter 所拦截的请求路径(过滤器关联的URL样式)
+　　<servlet-name>指定过滤器所拦截的Servlet名称。
+　　<dispatcher>指定过滤器所拦截的资源被 Servlet 容器调用的方式，可以是REQUEST,INCLUDE,FORWARD和ERROR之一，默认REQUEST。用户可以设置多个<dispatcher> 子元素用来指定 Filter 对资源的多种调用方式进行拦截。如下：
+<filter>
+          <description>FilterDemo02过滤器</description>
+          <filter-name>FilterDemo02</filter-name>
+          <filter-class>me.gacl.web.filter.FilterDemo02</filter-class>
+          <!--配置FilterDemo02过滤器的初始化参数-->
+          <init-param>
+              <description>配置FilterDemo02过滤器的初始化参数</description>
+              <param-name>name</param-name>
+              <param-value>gacl</param-value>
+          </init-param>
+          <init-param>
+              <description>配置FilterDemo02过滤器的初始化参数</description>
+              <param-name>like</param-name>
+              <param-value>java</param-value>
+          </init-param>
+</filter>
+    
+    <dispatcher> 子元素可以设置的值及其意义：
+
+REQUEST：当用户直接访问页面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。
+INCLUDE：如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。
+FORWARD：如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。
+ERROR：如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。
+
+
+
+
+
+
+
+
+
+
+    
+    
+    

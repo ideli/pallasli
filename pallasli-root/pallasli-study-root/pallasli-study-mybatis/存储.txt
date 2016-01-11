@@ -1,0 +1,15 @@
+<!-- 
+ 2         查询得到男性或女性的数量, 如果传入的是0就女性否则是男性
+ 3      -->
+ 4     <select id="getUserCount" parameterMap="getUserCountMap" statementType="CALLABLE">
+ 5         CALL mybatis.ges_user_count(?,?)
+ 6     </select>
+ 7     
+ 8     <!--
+ 9         parameterMap.put("sexid", 0);
+10         parameterMap.put("usercount", -1);
+11      -->
+12     <parameterMap type="java.util.Map" id="getUserCountMap">
+13         <parameter property="sexid" mode="IN" jdbcType="INTEGER"/>
+14         <parameter property="usercount" mode="OUT" jdbcType="INTEGER"/>
+15     </parameterMap>

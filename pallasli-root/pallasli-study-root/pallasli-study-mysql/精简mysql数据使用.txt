@@ -5,3 +5,113 @@ mysql -uroot -proot
 create database lyt
 create tabel.....
 mysqladmin -uroot -proot shutdown
+
+
+
+
+start transaction;
+
+commit;
+rollback;
+
+如果事务不考虑隔离性，可能会引发如下问题：
+
+　　1、脏读
+
+　　　　　脏读指一个事务读取了另外一个事务未提交的数据。
+
+　　　　　这是非常危险的，假设Ａ向Ｂ转帐100元，对应sql语句如下所示
+    　　　　　　1.update account set money=money+100 where name='B';    
+    　　　　　　2.update account set money=money-100  where name='A';
+    　　　 当第1条sql执行完，第2条还没执行(A未提交时)，如果此时Ｂ查询自己的帐户，就会发现自己多了100元钱。如果A等B走后再回滚，B就会损失100元。　　
+
+　　2、不可重复读
+
+　　不可重复读指在一个事务内读取表中的某一行数据，多次读取结果不同。
+　　例如银行想查询A帐户余额，第一次查询A帐户为200元，此时A向帐户内存了100元并提交了，银行接着又进行了一次查询，此时A帐户为300元了。银行两次查询不一致，可能就会很困惑，不知道哪次查询是准的。
+　　不可重复读和脏读的区别是，脏读是读取前一事务未提交的脏数据，不可重复读是重新读取了前一事务已提交的数据。
+　　很多人认为这种情况就对了，无须困惑，当然是后面的为准。我们可以考虑这样一种情况，比如银行程序需要将查询结果分别输出到电脑屏幕和写到文件中，结果在一个事务中针对输出的目的地，进行的两次查询不一致，导致文件和屏幕中的结果不一致，银行工作人员就不知道以哪个为准了。
+
+　　3、虚读(幻读)
+
+　　虚读(幻读)是指在一个事务内读取到了别的事务插入的数据，导致前后读取不一致。
+　　如丙存款100元未提交，这时银行做报表统计account表中所有用户的总额为500元，然后丙提交了，这时银行再统计发现帐户为600元了，造成虚读同样会使银行不知所措，到底以哪个为准。
+
+
+MySQL数据库共定义了四种隔离级别：
+
+Serializable(串行化)：可避免脏读、不可重复读、虚读情况的发生。
+Repeatable read(可重复读)：可避免脏读、不可重复读情况的发生。
+Read committed(读已提交)：可避免脏读情况发生。
+Read uncommitted(读未提交)：最低级别，以上情况均无法保证。
+　　mysql数据库查询当前事务隔离级别：select @@tx_isolation
+ 
+
+　　mysql数据库默认的事务隔离级别是：Repeatable read(可重复读)
+
+　　mysql数据库设置事务隔离级别：set transaction isolation level Repeatable read
+
+
+
+
+
+
+
+
+使用MySQL数据库演示不同隔离级别下的并发问题
+
+　　同时打开两个窗口模拟2个用户并发访问数据库
+
+1、当把事务的隔离级别设置为read uncommitted时，会引发脏读、不可重复读和虚读
+
+　　A窗口
+　　　　set transaction isolation level  read uncommitted;--设置A用户的数据库隔离级别为Read uncommitted(读未提交)
+　　　　start transaction;--开启事务
+　　　　select * from account;--查询A账户中现有的钱，转到B窗口进行操作
+　　　　select * from account--发现a多了100元，这时候A读到了B未提交的数据（脏读）
+
+　　B窗口
+　　　　start transaction;--开启事务
+　　　　update account set money=money+100 where name='A';--不要提交，转到A窗口查询
+
+2、当把事务的隔离级别设置为read committed时，会引发不可重复读和虚读，但避免了脏读
+
+　　A窗口
+　　　　set transaction isolation level  read committed;
+　　　　start transaction;
+　　　　select * from account;--发现a帐户是1000元，转到b窗口
+　　　　select * from account;--发现a帐户多了100,这时候，a读到了别的事务提交的数据，两次读取a帐户读到的是不同的结果（不可重复读）
+　　B窗口
+　　　　start transaction;
+　　　　update account set money=money+100 where name='aaa';
+　　　　commit;--转到a窗口
+
+3、当把事务的隔离级别设置为repeatable read(mysql默认级别)时，会引发虚读，但避免了脏读、不可重复读
+
+　　A窗口
+　　　　set transaction isolation level repeatable read;
+　　　　start transaction;
+　　　　select * from account;--发现表有4个记录，转到b窗口
+　　　　select * from account;--可能发现表有5条记录，这时候发生了a读取到另外一个事务插入的数据（虚读）
+　　B窗口
+　　　　start transaction;
+　　　　insert into account(name,money) values('ggg',1000);
+　　　　commit;--转到a窗口
+
+4、当把事务的隔离级别设置为Serializable时，会避免所有问题
+
+　　A窗口
+　　　　set transaction isolation level Serializable;
+　　　　start transaction;
+　　　　select * from account;--转到b窗口
+
+　　B窗口
+　　　　start transaction;
+　　　　insert into account(name,money) values('ggg',1000);--发现不能插入，只能等待a结束事务才能插入
+
+
+
+
+
+
+
