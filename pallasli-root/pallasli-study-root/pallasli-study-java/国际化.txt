@@ -1,0 +1,11 @@
+
+
+
+//加载i18n资源文件，request.getLocale()获取访问用户所在的国家地区
+ResourceBundle myResourcesBundle = ResourceBundle.getBundle("me.gacl.i18n.resource.myproperties",request.getLocale());
+
+
+//js
+loadResourcescript(basename,local)
+
+

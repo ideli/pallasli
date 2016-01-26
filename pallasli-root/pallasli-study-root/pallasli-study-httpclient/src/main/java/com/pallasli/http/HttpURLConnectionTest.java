@@ -23,6 +23,10 @@ public class HttpURLConnectionTest {
 
 		HttpURLConnection httpurlconnection = (HttpURLConnection) url
 				.openConnection();
+		// 防止被禁用ip可使用代理
+		// SocketAddress proxyAddress = new InetSocketAddress(ipAddress, port);
+		// Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddress);
+		// urlconnection = url.openConnection(proxy);
 		// 下面的设置对应HTTP请求中的消息报头
 		httpurlconnection.setRequestProperty("User-Agent",
 				CommonValues.User_Agent);

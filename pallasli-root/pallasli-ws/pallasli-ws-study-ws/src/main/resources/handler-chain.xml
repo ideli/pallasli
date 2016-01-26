@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 
+handler可以作用于客户端，也可以作用了服务端
+
+handler分为：1、LogicalHandler:只能获取到soap消息的body。
+
+　　　　　　 2、SOAPHandler:可以获取SOAPMessage的信息（我们通常用这种）。
+
+客户端- - >服务端的请求中通过handler的顺序：
+
+假如客户端和服务端的handler-chain.xml中定义的顺序都是：LogicalHandler1/SOAPHandler1/LogicalHandler2/SOAPHandler2
+
+那么请求的顺序将是：
+
+client- - >LogicalHandler1- - >LogicalHandler2- - >SOAPHandler1- - >SOAPHandler2
+- - >|服务器容器|- - >SOAPHandler1- - >SOAPHandler2- - >LogicalHandler1- - >LogicalHandler2
+- - >service
+ -->
+<javaee:handler-chains 
+     xmlns:javaee="http://java.sun.com/xml/ns/javaee" 
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <javaee:handler-chain>
+    <!-- <javaee:handler>
+      <javaee:handler-class>com.pallasli.ws.study.webservice.jdk.handler.ServiceSoapHandler</javaee:handler-class>
+    </javaee:handler> -->
+    <javaee:handler>
+      <javaee:handler-class>com.pallasli.ws.study.webservice.jdk.handler.MySoapHandler</javaee:handler-class>
+    </javaee:handler>
+  </javaee:handler-chain>
+</javaee:handler-chains>

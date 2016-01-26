@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<header>
+</header>
+<body>
+
+ftl语言与jstl语言类似  支持中文变量名
+
+<#assign x=2.582/> 
+<#assign y=4/> 
+#{x; M2} <#-- 输出2.58 --> 
+#{y; M2} <#-- 输出4 --> 
+#{x; m2} <#-- 输出2.6 --> 
+#{y; m2} <#-- 输出4.0 --> 
+#{x; m1M2} <#-- 输出2.58 --> 
+#{x; m1M2} <#-- 输出4.0 --> 
+
+
+<#if condition>... 
+<#elseif condition>... 
+<#elseif condition>... 
+<#else> ... 
+</#if> 
+
+
+<#switch value> 
+<#case refValue>...<#break> 
+<#case refValue>...<#break> 
+<#default>... 
+</#switch> 
+
+
+
+<#list ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"] as x> 
+${x_index + 1}.${x}<#if x_has_next>,</if> 
+<#if x="星期四"><#break></#if> 
+</#list> 
+
+
+<#assign 语法> 
+  java 
+</#assign> 
+${语法} 
+
+
+</body>
+
+
+
+
+</html>
+
+
+
+

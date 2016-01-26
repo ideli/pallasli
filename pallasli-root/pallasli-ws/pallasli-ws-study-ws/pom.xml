@@ -8,9 +8,8 @@
   <artifactId>pallasli-ws-study-ws</artifactId>
 	<dependencies>
 		<dependency>
-
 			<groupId>com.pallasli</groupId>
-			<artifactId>pallasli-ws-study-bean</artifactId>
+			<artifactId>pallasli-ws-study-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

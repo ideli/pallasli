@@ -1,0 +1,21 @@
+这篇文章主要介绍用JavaScript和jQuery、HTML、CSS以及用第三方聊天JavaScript（jsjac）框架构建一个BS Web的聊天应用程序。此程序可以和所有连接到Openfire服务器的应用进行通信、发送消息。如果要运行本程序还需要一个聊天服务器Openfire，
+
+以及需要用到Http方式和Openfire通信的第三方库（JabberHTTPBind）。
+
+JabberHTTPBind是jabber提供的XMPP协议通信的Http bind发送的形式，它可以完成WebBrowser和Openfire建立长连接通信。
+
+jquery.easydrag.js 窗口拖拽JavaScript lib
+
+jsjac JavaScript lib下载：https://github.com/sstrigler/JSJaC/
+
+如果你不喜欢用jsjac JavaScript lib和Openfire通信，那么有一款jQuery的plugin可以供你使用，下载地址
+
+jQuery-XMPP-plugin https://github.com/maxpowel/jQuery-XMPP-plugin
+
+这里有所以能支持Openfire通信的第三方库，有兴趣的可以研究下 http://xmpp.org/xmpp-software/libraries/
+
+jquery.easydrag 下载：http://fromvega.com/code/easydrag/jquery.easydrag.js
+
+jquery 下载：http://code.jquery.com/jquery-1.7.1.min.js
+
+JabberHTTPBind jhb.jar 下载：http://download.csdn.net/detail/ibm_hoojo/4489188

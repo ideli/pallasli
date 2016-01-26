@@ -236,3 +236,28 @@ STRUCT	java.sql.Struct	SetStruct	getStruct
 rs.close();
 stmt.close();
 conn.close();
+
+
+
+
+
+分批处理
+
+for(int i=1;i<1000008;i++){  //i=1000  2000
+30                 st.setInt(1, i);
+31                 st.setString(2, "aa" + i);
+32                 st.addBatch();
+33                 if(i%1000==0){
+34                     st.executeBatch();
+35                     st.clearBatch();
+36                 }
+37             }
+38             st.executeBatch();
+
+
+Statement.addBatch()效率稍差
+采用PreparedStatement.addBatch()实现批处理
+　　　　优点：发送的是预编译后的SQL语句，执行效率高。
+　　　　缺点：只能应用在SQL语句相同，但参数不同的批处理中。因此此种形式的批处理经常用于在同一个表中批量插入数据，或批量更新表的数据。
+
+

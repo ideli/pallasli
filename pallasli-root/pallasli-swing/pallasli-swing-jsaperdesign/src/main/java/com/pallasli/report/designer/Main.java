@@ -293,12 +293,12 @@ public class Main extends JFrame {
 		JToolBar toolBar = new JToolBar();
 		panel_3.add(toolBar);
 		Object[][] biaogezhonglei = {
-				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+				{ 1, new Font("Helvetica", Font.PLAIN, 9), Color.RED,
 						new MyIcon("/designer/icons/report/blank.gif"), "空白报表" },
-				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 2, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/report/styletable.gif"),
 						"表格报表" },
-				{ 3, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 3, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/report/crosstabstyle.gif"),
 						"交叉报表" } };
 		JComboBox comboBox_2 = new JImageComboBox(biaogezhonglei);
@@ -511,30 +511,30 @@ public class Main extends JFrame {
 		// toolBar_3.add(comboBox_3);
 
 		Object movetype[][] = {
-				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+				{ 1, new Font("Helvetica", Font.PLAIN, 9), Color.RED,
 						new MyIcon("/designer/icons/tool/movedown.gif"), "置后" },
-				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 2, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/tool/moveup.gif"), "置前" } };
 
 		JComboBox comboBox_3 = new JImageComboBox(movetype);
 		toolBar_3.add(comboBox_3);
 
 		Object[][] duiqi = {
-				{ 1, new Font("Helvetica", Font.PLAIN, 20), Color.RED,
+				{ 1, new Font("Helvetica", Font.PLAIN, 9), Color.RED,
 						new MyIcon("/designer/icons/align/alignleft.gif"),
 						"左对齐" },
-				{ 2, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 2, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/align/alignright.gif"),
 						"右对齐" },
-				{ 3, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 3, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/align/alignhcenter.gif"),
 						"水平居中" },
-				{ 4, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 4, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/align/alignvcenter.gif"),
 						"垂直居中" },
-				{ 5, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 5, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/align/aligntop.gif"), "上对齐" },
-				{ 6, new Font("TimesRoman", Font.BOLD, 14), Color.BLUE,
+				{ 6, new Font("TimesRoman", Font.BOLD, 9), Color.BLUE,
 						new MyIcon("/designer/icons/align/alignbottom.gif"),
 						"下对齐" } };
 		JComboBox comboBox = new JImageComboBox(duiqi);
@@ -671,7 +671,7 @@ public class Main extends JFrame {
 
 		JTree tree = new JTree();
 		tree.setPreferredSize(new Dimension(200, 270));
-		panel_11.add(tree);
+		panel_9.add(tree);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBorder(new EmptyBorder(0, 0, 0, 0));

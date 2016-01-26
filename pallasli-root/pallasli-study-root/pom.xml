@@ -42,5 +42,10 @@
       <module>pallasli-study-ivy</module>
       <module>pallasli-study-httpclient</module>
       <module>pallasli-study-htmlparser</module>
+      <module>pallasli-study-web</module>
+      <module>pallasli-study-webim</module>
+      <module>pallasli-study-im</module>
+      <module>pallasli-study-openssl</module>
+      <module>pallasli-study-openfire</module>
   </modules>
 </project>

@@ -28,18 +28,18 @@ public class MyIcon implements Icon {
 
 	@Override
 	public int getIconHeight() {
-		return 20;
+		return 15;
 	}
 
 	@Override
 	public int getIconWidth() {
-		return 20;
+		return 15;
 	}
 
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		g.setColor(Color.RED);
-		g.drawRect(0, 0, 25, 25);
-		g.drawImage(this.bufferedImage, 0, 0, 20, 20, null);
+		g.drawRect(0, 0, 15, 15);
+		g.drawImage(this.bufferedImage, 0, 0, 15, 15, null);
 	}
 }
