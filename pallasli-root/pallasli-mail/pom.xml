@@ -9,6 +9,15 @@
 			<artifactId>mail</artifactId>
 			<version>1.5.0-b01</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.pallasli</groupId>
+			<artifactId>pallasli-utils</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies> 
 	<parent>
 		<groupId>com.pallasli</groupId>

@@ -47,5 +47,6 @@
       <module>pallasli-study-im</module>
       <module>pallasli-study-openssl</module>
       <module>pallasli-study-openfire</module>
+      <module>pallasli-study-html5-websocket</module>
   </modules>
 </project>
