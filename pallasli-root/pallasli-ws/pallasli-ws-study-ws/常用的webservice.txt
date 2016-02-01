@@ -1,5 +1,7 @@
 免费的web service查询国内手机号码归属地:http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx
 免费的web service获取天气预报信息:http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx 
+免费的web service获取IP所在地:http://webservice.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx?op=getCountryCityByIp
+							或getGeoIPContext或getVersionTime
 
 
 
