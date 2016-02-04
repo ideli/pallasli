@@ -48,5 +48,6 @@
       <module>pallasli-study-openssl</module>
       <module>pallasli-study-openfire</module>
       <module>pallasli-study-html5-websocket</module>
+      <module>pallasli-study-mvn-jasmine</module>
   </modules>
 </project>

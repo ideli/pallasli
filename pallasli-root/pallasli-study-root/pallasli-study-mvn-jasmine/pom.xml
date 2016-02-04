@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.pallasli</groupId>
+    <artifactId>pallasli-study-root</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>pallasli-study-mvn-jasmine</artifactId>
+  <packaging>war</packaging>
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration> 
+	<keepServerAlive>true</keepServerAlive>
+				</configuration>
+
+				<!-- <configuration> <preloadSources> <source>lib/require.js</source> 
+					<source>lib/testr.js</source> </preloadSources> <customRunnerTemplate>src/test/config/testr_runner.htmltemplate</customRunnerTemplate> 
+					</configuration> -->
+			</plugin>
+			<plugin>
+			<!-- mvn verify -->
+				<groupId>com.github.timurstrekalov</groupId>
+				<artifactId>saga-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>coverage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+					<outputDir>target/coverage</outputDir>
+					<noInstrumentPatterns>
+						<pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
+					</noInstrumentPatterns>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
