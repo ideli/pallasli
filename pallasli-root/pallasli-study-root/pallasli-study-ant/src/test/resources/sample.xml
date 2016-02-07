@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-jar" >
+	<target name="build-jar">
+	</target>
+	<target name="build-war">
+	</target>
+	<target name="compile">
+	</target>
+	<target name="start">
+	</target>
+	<target name="deploy">
+	</target>
+	<target name="build">
+	</target>
+	<target name="generate-javadoc">
+	</target>
+	<target name="upload-ftp">
+	</target>
+	<target name="send-mail">
+	</target>
+</project>

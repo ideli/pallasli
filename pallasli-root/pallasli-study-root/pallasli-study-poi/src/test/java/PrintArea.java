@@ -25,7 +25,6 @@ public class PrintArea {
 		FileOutputStream out = new FileOutputStream(new File("printarea.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("printarea.xlsx written successfully");
 	}
 }

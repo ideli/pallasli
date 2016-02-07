@@ -7,8 +7,8 @@
         <id name="uuid">  
             <generator class="assigned"/>  
         </id>  
-        <property name=“userId”></property>  
-        <property name=“name”></property>  
+        <property name="userId"></property>  
+        <property name="name"></property>  
         <property name="age"></property>  
     </class>  
 </hibernate-mapping>  

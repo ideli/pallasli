@@ -24,8 +24,7 @@ public class InstanceServiceImpl implements InstanceService {
 	 */
 	@Override
 	@WebMethod
-	public InstanceInfo startProcessInstance(
-			@WebParam(name = "user") String user,
+	public InstanceInfo startProcessInstance(@WebParam(name = "user") String user,
 			@WebParam(name = "processDefinitionKey") String processDefinitionKey,
 			@WebParam(name = "businessKey") String businessKey,
 			@WebParam(name = "variables") Map<String, Object> variables) {
@@ -46,10 +45,29 @@ public class InstanceServiceImpl implements InstanceService {
 	 */
 	@Override
 	@WebMethod
-	public InstanceInfo openProcessInstance(
-			@WebParam(name = "user") String user,
-			@WebParam(name = "processKey") String processKey,
-			@WebParam(name = "instanceId") String instanceId) {
+	public InstanceInfo openProcessInstance(@WebParam(name = "user") String user,
+			@WebParam(name = "processKey") String processKey, @WebParam(name = "instanceId") String instanceId) {
+		return null;
+	}
+
+	@Override
+	public InstanceInfo suspendProcessInstance(String user, String processDefinitionKey, String businessKey,
+			Map<String, Object> variables) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InstanceInfo activeProcessInstance(String user, String processDefinitionKey, String businessKey,
+			Map<String, Object> variables) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InstanceInfo cancelProcessInstance(String user, String processDefinitionKey, String businessKey,
+			Map<String, Object> variables) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

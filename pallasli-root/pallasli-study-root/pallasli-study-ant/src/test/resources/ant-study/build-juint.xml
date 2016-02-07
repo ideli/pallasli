@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ant" default="report" basedir=".">
-
+<!--
 	<target name="compile" depends="compile.java,compile.test,jar"></target>
-
+-->
+	<target name="compile" ></target>
 	<target name="test" depends="compile">
 		<mkdir dir="${target.report.dir}" />
 

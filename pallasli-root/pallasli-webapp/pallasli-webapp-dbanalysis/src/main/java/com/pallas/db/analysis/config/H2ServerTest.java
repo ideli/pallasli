@@ -7,11 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.h2.tools.Server;
-import org.junit.Test;
 
 public class H2ServerTest {
 
-	@Test
 	public void h2Test() {
 		start();
 		crudTest();
@@ -23,9 +21,7 @@ public class H2ServerTest {
 	public void start() {
 		try {
 			System.out.println("正在启动h2...");
-			server = Server.createTcpServer(
-					new String[] { "-tcp", "-tcpAllowOthers", "-tcpPort",
-							"8043" }).start();
+			server = Server.createTcpServer(new String[] { "-tcp", "-tcpAllowOthers", "-tcpPort", "8043" }).start();
 			System.out.println("启动成功：" + server.getStatus());
 		} catch (SQLException e) {
 			System.out.println("启动h2出错：" + e.toString());
@@ -48,8 +44,7 @@ public class H2ServerTest {
 			Class.forName("org.h2.Driver");
 
 			// connect to h2
-			Connection conn = DriverManager.getConnection(
-					"jdbc:h2:./h2db/sxaz42b4", "sa", "sa");
+			Connection conn = DriverManager.getConnection("jdbc:h2:./h2db/sxaz42b4", "sa", "sa");
 
 			Statement stat = conn.createStatement();
 

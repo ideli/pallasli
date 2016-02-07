@@ -3,16 +3,16 @@ package com.pallas.sys.dispatch.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.activiti.engine.impl.util.json.JSONArray;
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class HomeAction implements Controller {
 
 	@Override
-	public ModelAndView handleRequest(HttpServletRequest arg0,
-			HttpServletResponse arg1) throws Exception {
+	public ModelAndView handleRequest(HttpServletRequest arg0, HttpServletResponse arg1) throws Exception {
 		ModelAndView view = getLoginView();
 		return view;
 	}
@@ -31,10 +31,10 @@ public class HomeAction implements Controller {
 		 * 
 		 * 
 		 */
-		JSONArray tbars = new JSONArray();
-		JSONObject tbar = new JSONObject();
-		tbar.append("text", "字段设置");
-		tbars.put(tbar);
+		JsonArray tbars = new JsonArray();
+		JsonObject tbar = new JsonObject();
+		tbar.addProperty("text", "字段设置");
+		tbars.add(tbar);
 		view.addObject("tbars", tbars);
 		return view;
 	}

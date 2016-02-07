@@ -76,7 +76,7 @@
     <jaxws:endpoint id="portalTodoMessageService" implementor="com.mixky.ws.implement.TodoMessageServiceImp" address="/portalTodoMessageService">
         <jaxws:serviceFactory>
             <ref bean="jaxws-and-aegis-service-factory"/>
-        </jaxws:serviceFactory>
+        </jaxws:serviceFactory> 
     </jaxws:endpoint>
 	
 	<jaxws:endpoint id="IMMessageService" implementor="com.wasoft.websocket.ws.IMService" address="/IMService">

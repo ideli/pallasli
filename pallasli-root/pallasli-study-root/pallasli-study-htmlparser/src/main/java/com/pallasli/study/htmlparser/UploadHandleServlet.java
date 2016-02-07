@@ -1,3 +1,5 @@
+package com.pallasli.study.htmlparser;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,19 +17,25 @@ import javax.servlet.http.HttpServletResponse;
 //import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 //import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.ProgressListener;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 /**
  * 
  * 文件上传功能有许多需要注意的小细节问题，以下列出的几点需要特别注意的
  * 
- * 　　1、为保证服务器安全，上传文件应该放在外界无法直接访问的目录下，比如放于WEB-INF目录下。
+ * 1、为保证服务器安全，上传文件应该放在外界无法直接访问的目录下，比如放于WEB-INF目录下。
  * 
- * 　　2、为防止文件覆盖的现象发生，要为上传文件产生一个唯一的文件名。
+ * 2、为防止文件覆盖的现象发生，要为上传文件产生一个唯一的文件名。
  * 
- * 　　3、为防止一个目录下面出现太多文件，要使用hash算法打散存储。
+ * 3、为防止一个目录下面出现太多文件，要使用hash算法打散存储。
  * 
- * 　　4、要限制上传文件的最大值。
+ * 4、要限制上传文件的最大值。
  * 
- * 　　5、要限制上传文件的类型，在收到上传文件名时，判断后缀名是否合法。
+ * 5、要限制上传文件的类型，在收到上传文件名时，判断后缀名是否合法。
  * 
  * @ClassName: UploadHandleServlet
  * @Description: TODO(这里用一句话描述这个类的作用)
@@ -38,11 +46,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UploadHandleServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 得到上传文件的保存目录，将上传的文件存放于WEB-INF目录下，不允许外界直接访问，保证上传文件的安全
-		String savePath = this.getServletContext().getRealPath(
-				"/WEB-INF/upload");
+		String savePath = this.getServletContext().getRealPath("/WEB-INF/upload");
 		// 上传时生成的临时文件保存目录
 		String tempPath = this.getServletContext().getRealPath("/WEB-INF/temp");
 		File tmpFile = new File(tempPath);
@@ -65,10 +71,10 @@ public class UploadHandleServlet extends HttpServlet {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			// 监听文件上传进度
 			upload.setProgressListener(new ProgressListener() {
-				public void update(long pBytesRead, long pContentLength,
-						int arg2) {
-					System.out.println("文件大小为：" + pContentLength + ",当前已处理："
-							+ pBytesRead);
+
+				@Override
+				public void update(long pBytesRead, long pContentLength, int arg2) {
+					System.out.println("文件大小为：" + pContentLength + ",当前已处理：" + pBytesRead);
 					/**
 					 * 文件大小为：14608,当前已处理：4096 文件大小为：14608,当前已处理：7367
 					 * 文件大小为：14608,当前已处理：11419 文件大小为：14608,当前已处理：14608
@@ -107,11 +113,9 @@ public class UploadHandleServlet extends HttpServlet {
 					// 注意：不同的浏览器提交的文件名是不一样的，有些浏览器提交上来的文件名是带有路径的，如：
 					// c:\a\b\1.txt，而有些只是单纯的文件名，如：1.txt
 					// 处理获取到的上传文件的文件名的路径部分，只保留文件名部分
-					filename = filename
-							.substring(filename.lastIndexOf("\\") + 1);
+					filename = filename.substring(filename.lastIndexOf("\\") + 1);
 					// 得到上传文件的扩展名
-					String fileExtName = filename.substring(filename
-							.lastIndexOf(".") + 1);
+					String fileExtName = filename.substring(filename.lastIndexOf(".") + 1);
 					// 如果需要限制上传的文件类型，那么可以通过文件的扩展名来判断上传的文件类型是否合法
 					System.out.println("上传的文件的扩展名是：" + fileExtName);
 					// 获取item中的上传文件的输入流
@@ -121,8 +125,7 @@ public class UploadHandleServlet extends HttpServlet {
 					// 得到文件的保存目录
 					String realSavePath = makePath(saveFilename, savePath);
 					// 创建一个文件输出流
-					FileOutputStream out = new FileOutputStream(realSavePath
-							+ "\\" + saveFilename);
+					FileOutputStream out = new FileOutputStream(realSavePath + "\\" + saveFilename);
 					// 创建一个缓冲区
 					byte buffer[] = new byte[1024];
 					// 判断输入流中的数据是否已经读完的标识
@@ -145,14 +148,12 @@ public class UploadHandleServlet extends HttpServlet {
 		} catch (FileUploadBase.FileSizeLimitExceededException e) {
 			e.printStackTrace();
 			request.setAttribute("message", "单个文件超出最大值！！！");
-			request.getRequestDispatcher("/message.jsp").forward(request,
-					response);
+			request.getRequestDispatcher("/message.jsp").forward(request, response);
 			return;
 		} catch (FileUploadBase.SizeLimitExceededException e) {
 			e.printStackTrace();
 			request.setAttribute("message", "上传文件的总的大小超出限制的最大值！！！");
-			request.getRequestDispatcher("/message.jsp").forward(request,
-					response);
+			request.getRequestDispatcher("/message.jsp").forward(request, response);
 			return;
 		} catch (Exception e) {
 			message = "文件上传失败！";
@@ -207,8 +208,7 @@ public class UploadHandleServlet extends HttpServlet {
 	}
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		doGet(request, response);
 	}

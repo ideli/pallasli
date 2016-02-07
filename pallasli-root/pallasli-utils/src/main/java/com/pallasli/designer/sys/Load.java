@@ -4,13 +4,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import org.junit.Test;
-
 public class Load {
 	/**
 	 * 初始化组件html
 	 */
-	@Test
 	public void init() {
 		CompHtml.compInitMap.clear();
 

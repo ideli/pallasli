@@ -46,11 +46,9 @@ public class TypesofCells {
 		row = spreadsheet.createRow((short) 8);
 		row.createCell(0).setCellValue("set cell type string");
 		row.createCell(1).setCellValue("A String");
-		FileOutputStream out = new FileOutputStream(new File(
-				"typesofcells.xlsx"));
+		FileOutputStream out = new FileOutputStream(new File("typesofcells.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("typesofcells.xlsx written successfully");
 	}
 }

@@ -1,23 +1,12 @@
-*/.project
-*/.classpath
-*/.settings/*
-*/*/.project
-*/*/.classpath
-*/*/.settings/*
-*/*/*/.project
-*/*/*/.classpath
-*/*/*/.settings/*
+**/.project
+**/.classpath
+**/.settings/*
 
-
-*/target/*
-*/*/target/*
-*/*/*/target/*
-*/*/*/*/target/*
-*/*/*/*/*/target/*
-
-
+**/target/*
 
 *.class
 
 pallasli-root/pallasli-webapp/pallasli-webapp-portal/webapp/*
  
+
+pallasli-root/**/node_modules/*

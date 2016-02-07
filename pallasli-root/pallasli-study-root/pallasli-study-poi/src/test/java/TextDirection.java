@@ -47,11 +47,9 @@ public class TextDirection {
 		cell = row.createCell(12);
 		cell.setCellValue("360D angle");
 		cell.setCellStyle(myStyle);
-		FileOutputStream out = new FileOutputStream(new File(
-				"textdirection.xlsx"));
+		FileOutputStream out = new FileOutputStream(new File("textdirection.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("textdirection.xlsx written successfully");
 	}
 }

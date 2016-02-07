@@ -1,19 +1,17 @@
 package com.pallas.activiti.service;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pallasli.bpm.api.service.ModelService;
 import com.pallasli.bpm.api.service.ProcessDefinitionService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:activitiContext.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration("classpath:activitiContext.xml")
 public class BpmServiceTest {
 
 	@Autowired
@@ -30,6 +28,7 @@ public class BpmServiceTest {
 
 	@SuppressWarnings("deprecation")
 	@Test
+	@Ignore
 	public void saveProcessDefinition() {
 		String source0 = modelService.getEditorSource("1062501");
 		System.out.println(source0);
@@ -43,8 +42,8 @@ public class BpmServiceTest {
 		ObjectNode stencilSetNode = objectMapper.createObjectNode();
 		stencilSetNode.put("namespace", "http://b3mn.org/stencilset/bpmn2.0#");
 		editorNode.put("stencilset", stencilSetNode);
-		String id = defineService.saveProcessDefinition("1062501", "key",
-				"new_name", "category", "description", editorNode);
+		String id = defineService.saveProcessDefinition("1062501", "key", "new_name", "category", "description",
+				editorNode);
 
 		String source = modelService.getEditorSource("1062501");
 		System.out.println(source);

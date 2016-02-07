@@ -14,11 +14,11 @@
 			<artifactId>poi</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>fakepath</groupId>
+			<groupId>org.apache.poi </groupId>
 			<artifactId>poi-ooxml</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>fakepath</groupId>
+			<groupId>org.apache.poi </groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
 		</dependency>
 		<dependency>
@@ -63,10 +63,6 @@
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-dbutils</groupId>
-			<artifactId>commons-dbutils</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>

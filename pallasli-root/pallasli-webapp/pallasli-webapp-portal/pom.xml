@@ -10,7 +10,6 @@
 	<packaging>war</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>4.0.6.RELEASE</spring.version>
 		<aspectj.version>1.6.2</aspectj.version>
 		<jboss.netty.version>3.2.0.Final</jboss.netty.version>
 		<mysql.version>5.1.10</mysql.version>

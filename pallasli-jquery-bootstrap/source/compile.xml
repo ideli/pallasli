@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>  
-<project name="today" default="all" basedir="."><!-- '.'表示当前目录-->  
-    <!---------以下定义变量 -------->  
+<project name="today"  basedir=".">
+	<!-- '.'表示当前目录-->  
+    <!-------
+    以下定义变量 
+    -------->  
     <property name="base" value=".."></property>  
     <property name="jsFolder" value="${base}/teach_left_main"></property>  
     <property name="cfolder" value="mypress"></property>  

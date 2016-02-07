@@ -1,7 +1,9 @@
 package com.bpm.service.test;
 
 import org.activiti.engine.impl.test.PluggableActivitiTestCase;
+import org.junit.Ignore;
 
+@Ignore
 public class DeployTest extends PluggableActivitiTestCase {
 
 	public String bpmnJsonFile = "test.json";

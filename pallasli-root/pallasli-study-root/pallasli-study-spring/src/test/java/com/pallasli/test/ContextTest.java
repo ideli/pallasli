@@ -39,7 +39,7 @@ public class ContextTest {
 		assertNotNull(importTestBean);
 		assertNotNull(userController);
 		userController.execute();
-		userRepository.findALL();
+		// userRepository.findALL();
 		System.out.println("end");
 	}
 }

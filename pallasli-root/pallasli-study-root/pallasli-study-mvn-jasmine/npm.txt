@@ -1,0 +1,15 @@
+
+1.Karma介绍
+Karma是Testacular的新名字，在2012年google开源了Testacular，2013年Testacular改名为Karma。Karma是一个让人感到非常神秘的名字，表示佛教中的缘分，因果报应，比Cassandra这种名字更让人猜不透！
+Karma是一个基于Node.js的JavaScript测试执行过程管理工具（Test Runner）。该工具可用于测试所有主流Web浏览器，也可集成到CI（Continuous integration）工具，也可和其他代码编辑器一起使用。这个测试工具的一个强大特性就是，它可以监控(Watch)文件的变化，然后自行执行，通过console.log显示测试结果。
+2.Jasmine介绍
+Jasmine （茉莉）是一款 JavaScript BDD（行为驱动开发）测试框架，它不依赖于其他任何 JavaScript 组件。它有干净清晰的语法，让您可以很简单的写出测试代码。对基于 JavaScript 的开发来说，它是一款不错的测试框架选择。
+比较流行的有Qunit和Jasmine,如果你想更详细了解二者的区别，请狠狠的点击Javascript单元测试框架Qunit和Jasmine的比较。
+
+
+npm install -g gulp
+npm install -g karma
+npm install -g grunt
+npm install karma-jasmine karma-chrome-launcher --save-dev
+npm install  karma-cli
+npm install karma-coverage

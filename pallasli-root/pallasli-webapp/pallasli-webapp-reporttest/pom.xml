@@ -10,12 +10,6 @@
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
-
-			<groupId>com.pallasli</groupId>
-			<artifactId>pallasli-report</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency> 
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-asian</artifactId>
 			<version>5.2.0</version>
@@ -25,5 +19,11 @@
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>6.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.1.1</version>
+		</dependency>
+	
 	</dependencies>
 </project>

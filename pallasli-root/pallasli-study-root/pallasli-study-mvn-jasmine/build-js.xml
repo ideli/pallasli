@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
+
+<project name="pallasli-study-mvn-jasmine-js" default="runFrame" basedir=".">
+
+  <!-- ====================================================================== -->
+  <!-- Import maven-build.xml into the current project                        -->
+  <!-- ====================================================================== -->
+ 
+	<target name="runFrame" description="-->runFrame" >
+			<echo message="runFrame"/>
+			<exec executable="/bin/sh" dir="${basedir}" >
+				<arg value="-c"/>	
+				<arg value="karma start karma.conf.js"/>			
+			</exec>
+		</target>
+
+</project>

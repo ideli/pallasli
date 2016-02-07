@@ -25,7 +25,7 @@ public class CellStyle {
 				1, // last row (0-based)
 				1, // first column (0-based)
 				4 // last column (0-based)
-				));
+		));
 		// CELL Alignment
 		row = spreadsheet.createRow(5);
 		cell = row.createCell(0);
@@ -101,7 +101,6 @@ public class CellStyle {
 		FileOutputStream out = new FileOutputStream(new File("cellstyle.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("cellstyle.xlsx written successfully");
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="build-compile" default="compile">
 	<property name="build.dir" value="../tmp/build/classes"></property>
-	<property name="src.dir" value="../../../main/java"></property>
+	<property name="src.dir" value="src/main/java"></property>
 	<target name="compile" description="Compile main 
       source tree java files">
 		<mkdir dir="${build.dir}" />

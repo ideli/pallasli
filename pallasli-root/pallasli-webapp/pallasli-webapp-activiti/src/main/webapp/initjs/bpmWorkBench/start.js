@@ -1,6 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
-<script language='javascript'>
 	Ext.require([ 'Ext.direct.*', 'Ext.data.*', 'Ext.tree.*' ]);
 	Ext.onReady(function() {
 
@@ -86,4 +83,3 @@
 		
 		panel.add(form);
 	});
-</script>

@@ -6,6 +6,7 @@ public class OtherTest {
 	@Test(expectedExceptions = ArithmeticException.class)
 	public void testExpectedExceptions() {
 		System.out.println("Inside testPrintMessage()");
+		throw new ArithmeticException();
 	}
 
 	@Test(enabled = false)

@@ -13,7 +13,10 @@ import java.util.regex.Pattern;
 //import freemarker.template.Configuration;
 //import freemarker.template.Template;
 
-import javax.security.auth.login.Configuration;
+import org.apache.commons.mail.HtmlEmail;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * 发送电子邮件
@@ -28,6 +31,7 @@ public class SendMailUtil {
 	private static final String password = "123456";
 
 	private static Map<String, String> hostMap = new HashMap<String, String>();
+
 	static {
 		// 126
 		hostMap.put("smtp.126", "smtp.126.com");
@@ -97,8 +101,7 @@ public class SendMailUtil {
 	 * @param map
 	 *            模板map
 	 */
-	public static void sendFtlMail(String toMailAddr, String subject,
-			String templatePath, Map<String, Object> map) {
+	public static void sendFtlMail(String toMailAddr, String subject, String templatePath, Map<String, Object> map) {
 		Template template = null;
 		Configuration freeMarkerConfig = null;
 		HtmlEmail hemail = new HtmlEmail();
@@ -111,14 +114,11 @@ public class SendMailUtil {
 			hemail.setAuthentication(username, password);
 			hemail.setSubject(subject);
 			freeMarkerConfig = new Configuration();
-			freeMarkerConfig.setDirectoryForTemplateLoading(new File(
-					getFilePath()));
+			freeMarkerConfig.setDirectoryForTemplateLoading(new File(getFilePath()));
 			// 获取模板
-			template = freeMarkerConfig.getTemplate(getFileName(templatePath),
-					new Locale("Zh_cn"), "UTF-8");
+			template = freeMarkerConfig.getTemplate(getFileName(templatePath), new Locale("Zh_cn"), "UTF-8");
 			// 模板内容转换为string
-			String htmlText = FreeMarkerTemplateUtils
-					.processTemplateIntoString(template, map);
+			String htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
 			System.out.println(htmlText);
 			hemail.setMsg(htmlText);
 			hemail.send();
@@ -139,8 +139,7 @@ public class SendMailUtil {
 	 * @param message
 	 *            发送email信息
 	 */
-	public static void sendCommonMail(String toMailAddr, String subject,
-			String message) {
+	public static void sendCommonMail(String toMailAddr, String subject, String message) {
 		HtmlEmail hemail = new HtmlEmail();
 		try {
 			hemail.setHostName(getHost(from));
@@ -160,21 +159,17 @@ public class SendMailUtil {
 
 	}
 
-	public static String getHtmlText(String templatePath,
-			Map<String, Object> map) {
+	public static String getHtmlText(String templatePath, Map<String, Object> map) {
 		Template template = null;
 		String htmlText = "";
 		try {
 			Configuration freeMarkerConfig = null;
 			freeMarkerConfig = new Configuration();
-			freeMarkerConfig.setDirectoryForTemplateLoading(new File(
-					getFilePath()));
+			freeMarkerConfig.setDirectoryForTemplateLoading(new File(getFilePath()));
 			// 获取模板
-			template = freeMarkerConfig.getTemplate(getFileName(templatePath),
-					new Locale("Zh_cn"), "UTF-8");
+			template = freeMarkerConfig.getTemplate(getFileName(templatePath), new Locale("Zh_cn"), "UTF-8");
 			// 模板内容转换为string
-			htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(
-					template, map);
+			htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
 			System.out.println(htmlText);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -36,10 +36,8 @@ public class ModelServiceImpl implements ModelService {
 	 */
 	@Override
 	@WebMethod
-	public List<ModelInfo> findProcessModelInfo(
-			@WebParam(name = "keyword") String keyword,
-			@WebParam(name = "firstNumber") int firstResult,
-			@WebParam(name = "pageNumber") int pageSize) {
+	public List<ModelInfo> findProcessModelInfo(@WebParam(name = "keyword") String keyword,
+			@WebParam(name = "firstNumber") int firstResult, @WebParam(name = "pageNumber") int pageSize) {
 
 		return null;
 	}
@@ -71,8 +69,7 @@ public class ModelServiceImpl implements ModelService {
 	@Override
 	@WebMethod
 	public String copyProcessModel(@WebParam(name = "name") String name,
-			@WebParam(name = "description") String description,
-			@WebParam(name = "modelId") String modelId) {
+			@WebParam(name = "description") String description, @WebParam(name = "modelId") String modelId) {
 		return null;
 	}
 
@@ -85,8 +82,7 @@ public class ModelServiceImpl implements ModelService {
 	 */
 	@Override
 	@WebMethod
-	public ModelInfo exportProcessModelInfo(
-			@WebParam(name = "modelId") String modelId) {
+	public ModelInfo exportProcessModelInfo(@WebParam(name = "modelId") String modelId) {
 		return null;
 	}
 
@@ -97,9 +93,9 @@ public class ModelServiceImpl implements ModelService {
 	 * @Param isOverride 是否覆盖，true是覆盖
 	 * @return
 	 */
+	@Override
 	@WebMethod
-	public boolean importProcessModelInfo(ModelInfo modelXMLInfo,
-			boolean isOverride) {
+	public boolean importProcessModelInfo(ModelInfo modelXMLInfo, boolean isOverride) {
 		return false;
 	}
 
@@ -124,8 +120,13 @@ public class ModelServiceImpl implements ModelService {
 	 */
 	@Override
 	@WebMethod
-	public boolean unDeployProcessModel(
-			@WebParam(name = "modelId") String modelId) {
+	public boolean unDeployProcessModel(@WebParam(name = "modelId") String modelId) {
+		return false;
+	}
+
+	@Override
+	public boolean createProcessModel() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

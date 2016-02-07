@@ -1,11 +1,5 @@
 package com.bpm.service.test;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyCodeSource;
-import groovy.lang.GroovyObject;
-import groovy.lang.GroovyShell;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -15,12 +9,19 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyCodeSource;
+import groovy.lang.GroovyObject;
+import groovy.lang.GroovyShell;
+
+@Ignore
 public class GroovyRuleTest {
 	Log log = LogFactory.getLog(getClass());
-	GroovyClassLoader loader = new GroovyClassLoader(getClass()
-			.getClassLoader());
+	GroovyClassLoader loader = new GroovyClassLoader(getClass().getClassLoader());
 
 	@Test
 	public void testFindGroovyRules() {
@@ -28,7 +29,8 @@ public class GroovyRuleTest {
 		MatcherAssert.assertThat(2, CoreMatchers.not(3));
 		MatcherAssert.assertThat(2, CoreMatchers.is(2));
 		MatcherAssert.assertThat(2, CoreMatchers.is(CoreMatchers.not(3)));
-		// "create table act_re_rule(id varchar(16),rule_type varchar(2),caption varchar(50),scripts text )";
+		// "create table act_re_rule(id varchar(16),rule_type varchar(2),caption
+		// varchar(50),scripts text )";
 
 		// 可以在Service中把创建表的sql拼接好，
 		// DAO中这样写：
@@ -41,8 +43,7 @@ public class GroovyRuleTest {
 		// <update id="createTableSql" parameterType="map">
 		// ${sql}
 		// </update>
-		File f = new File(
-				"J:/bpm-test/src/test/resources/groovyRules/上级领导.groovy");
+		File f = new File("J:/bpm-test/src/test/resources/groovyRules/上级领导.groovy");
 
 		if (!f.exists()) {
 			log.error("not found groovy " + f.getPath());
@@ -63,8 +64,7 @@ public class GroovyRuleTest {
 			binding.setVariable("foo", new Integer(2));
 			GroovyShell shell = new GroovyShell(binding);
 			String script = "import org.apache.commons.lang.StringUtils; \t\r\n"
-					+ "def a = 12; println 'C# md5:' + StringUtils.indexOf(\"dds\", 'd'); "
-					+ "return foo * a ";
+					+ "def a = 12; println 'C# md5:' + StringUtils.indexOf(\"dds\", 'd'); " + "return foo * a ";
 			Object value = shell.evaluate(script);
 			System.out.println(value.toString());
 
@@ -75,12 +75,10 @@ public class GroovyRuleTest {
 			binding.setVariable("to", to);
 			shell = new GroovyShell(binding);
 			script = "import org.activiti.engine.impl.persistence.entity.UserEntity; "
-					+ "def getTitle(UserEntity to) { return to.getFirstName()}; "
-					+ "getTitle(to)";
+					+ "def getTitle(UserEntity to) { return to.getFirstName()}; " + "getTitle(to)";
 			value = shell.evaluate(script);
 			System.out.println(value.toString());
-		} catch (CompilationFailedException | InstantiationException
-				| IllegalAccessException | IOException e) {
+		} catch (CompilationFailedException | InstantiationException | IllegalAccessException | IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -97,11 +97,11 @@
 			<artifactId>poi</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>fakepath</groupId>
+			<groupId>org.apache.poi </groupId>
 			<artifactId>poi-ooxml</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>fakepath</groupId>
+			<groupId>org.apache.poi </groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
 		</dependency>
 		<dependency>

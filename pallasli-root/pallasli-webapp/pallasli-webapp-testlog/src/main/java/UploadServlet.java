@@ -1,3 +1,4 @@
+
 /**1、使用注解@MultipartConfig将一个Servlet标识为支持文件上传。
 
 　　2、Servlet3.0将multipart/form-data的POST请求封装成Part，通过Part对上传的文件进行操作。
@@ -9,11 +10,14 @@ import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 //  import javax.servlet.annotation.MultipartConfig;
 // import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 // import javax.servlet.http.Part;
 
 //使用@WebServlet配置UploadServlet的访问路径
@@ -24,14 +28,12 @@ import javax.servlet.http.HttpServletResponse;
 public class UploadServlet extends HttpServlet {
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
 		// 存储路径
-		String savePath = request.getServletContext().getRealPath(
-				"/WEB-INF/uploadFile");
+		String savePath = request.getServletContext().getRealPath("/WEB-INF/uploadFile");
 		// 获取上传的文件集合
 		Collection<Part> parts = request.getParts();
 		// 上传单个文件
@@ -86,14 +88,12 @@ public class UploadServlet extends HttpServlet {
 		 */
 		String[] tempArr2 = tempArr1[2].split("=");
 		// 获取文件名，兼容各种浏览器的写法
-		String fileName = tempArr2[1].substring(
-				tempArr2[1].lastIndexOf("\\") + 1).replaceAll("\"", "");
+		String fileName = tempArr2[1].substring(tempArr2[1].lastIndexOf("\\") + 1).replaceAll("\"", "");
 		return fileName;
 	}
 
 	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
 	}
 }

@@ -20,10 +20,12 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
+import org.junit.Ignore;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Ignore
 public class ActivitiTest extends PluggableActivitiTestCase {
 
 	@Override
@@ -51,8 +53,7 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 
 	public void testProcess() {
 
-		InputStream jsonStream = this.getClass().getClassLoader()
-				.getResourceAsStream("test.json");
+		InputStream jsonStream = this.getClass().getClassLoader().getResourceAsStream("test.json");
 
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:activiti=\"http://activiti.org/bpmn\" xmlns:bpmndi=\"http://www.omg.org/spec/BPMN/20100524/DI\" xmlns:omgdc=\"http://www.omg.org/spec/DD/20100524/DC\" xmlns:omgdi=\"http://www.omg.org/spec/DD/20100524/DI\" typeLanguage=\"http://www.w3.org/2001/XMLSchema\" expressionLanguage=\"http://www.w3.org/1999/XPath\" targetNamespace=\"bpm\">"
@@ -91,8 +92,8 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 			byte[] xmlData = xmlConverter.convertToXML(bpmnModel, "utf-8");
 
 			System.out.println(new String(xmlData));
-			Deployment deployment = repositoryService.createDeployment()
-					.addString("lyttest.bpmn", new String(xmlData)).deploy();
+			Deployment deployment = repositoryService.createDeployment().addString("lyttest.bpmn", new String(xmlData))
+					.deploy();
 			Map<String, Object> map = new HashMap<String, Object>();
 			List<String> assigneeList = new ArrayList<String>();
 			assigneeList.add("kermit");
@@ -100,11 +101,9 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 			assigneeList.add("gonzo");
 			map.put("assigneeList", assigneeList);
 			identityService.setAuthenticatedUserId("gonzo");
-			ProcessInstance processInstance = runtimeService
-					.startProcessInstanceByKey("lyttest", map);
+			ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("lyttest", map);
 			// runtimeService.updateBusinessKey(processInstanceId, businessKey);
-			List<Task> taskList = taskService.createTaskQuery()
-					.taskInvolvedUser("fozzie").list();
+			List<Task> taskList = taskService.createTaskQuery().taskInvolvedUser("fozzie").list();
 			System.out.println("taskListsize" + taskList.size());
 			try {
 				for (Task t : taskList) {
@@ -113,29 +112,22 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 					taskService.claim(t.getId(), "fozzie");
 					System.out.println("getOwner:" + t.getOwner());
 					System.out.println("getAssignee:" + t.getAssignee());
-					System.out.println("linksize:"
-							+ taskService.getIdentityLinksForTask(t.getId())
-									.size());
-					taskService.addUserIdentityLink(t.getId(), "gonzo",
-							IdentityLinkType.CANDIDATE);
-					System.out.println("linksize:"
-							+ taskService.getIdentityLinksForTask(t.getId())
-									.size());
+					System.out.println("linksize:" + taskService.getIdentityLinksForTask(t.getId()).size());
+					taskService.addUserIdentityLink(t.getId(), "gonzo", IdentityLinkType.CANDIDATE);
+					System.out.println("linksize:" + taskService.getIdentityLinksForTask(t.getId()).size());
 					taskService.unclaim(t.getId());
 					taskService.claim(t.getId(), "gonzo");
 					System.out.println("gonzo claim " + t.getName());
 					taskService.complete(t.getId());
 
-					System.out.println("gonzo complete " + t.getId() + "  "
-							+ t.getName());
+					System.out.println("gonzo complete " + t.getId() + "  " + t.getName());
 					System.out.println("end");
 				}
 			} catch (Exception e) {
 				System.out.println("error");
 			}
 			taskList.clear();
-			taskList = taskService.createTaskQuery().taskInvolvedUser("fozzie")
-					.list();
+			taskList = taskService.createTaskQuery().taskInvolvedUser("fozzie").list();
 			for (Task t : taskList) {
 				System.out.println(t.getId() + ":" + t.getName());
 				t.setName("new Name");
@@ -144,18 +136,9 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 			taskList = taskService.createTaskQuery().list();
 			for (Task t : taskList) {
 				System.out.println(t.getId() + ":" + t.getName());
-				System.out
-						.println("linksize:"
-								+ taskService
-										.getIdentityLinksForTask(t.getId())
-										.size());
-				taskService.addUserIdentityLink(t.getId(), "fozzie",
-						IdentityLinkType.CANDIDATE);
-				System.out
-						.println("linksize:"
-								+ taskService
-										.getIdentityLinksForTask(t.getId())
-										.size());
+				System.out.println("linksize:" + taskService.getIdentityLinksForTask(t.getId()).size());
+				taskService.addUserIdentityLink(t.getId(), "fozzie", IdentityLinkType.CANDIDATE);
+				System.out.println("linksize:" + taskService.getIdentityLinksForTask(t.getId()).size());
 				taskService.unclaim(t.getId());
 				taskService.claim(t.getId(), "fozzie");
 				System.out.println("fozzie claim " + t.getName());
@@ -208,21 +191,18 @@ public class ActivitiTest extends PluggableActivitiTestCase {
 				taskService.complete(t.getId());
 				System.out.println("kermit complete " + t.getName());
 			}
-			List<HistoricProcessInstance> list = historyService
-					.createHistoricProcessInstanceQuery().involvedUser("gonzo")
-					.list();
+			List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+					.involvedUser("gonzo").list();
 			for (HistoricProcessInstance hi : list) {
 				System.out.println(hi.getProcessDefinitionId());
 			}
-			List<HistoricTaskInstance> tlist = historyService
-					.createHistoricTaskInstanceQuery()
+			List<HistoricTaskInstance> tlist = historyService.createHistoricTaskInstanceQuery()
 					.taskInvolvedUser("gonzo").list();
 			for (HistoricTaskInstance ti : tlist) {
 				System.out.println(ti.getId());
 			}
 
-			historyService.deleteHistoricProcessInstance(processInstance
-					.getId());
+			historyService.deleteHistoricProcessInstance(processInstance.getId());
 			// runtimeService.deleteProcessInstance(processInstance.getId(),
 			// "clean");
 			repositoryService.deleteDeployment(deployment.getId());

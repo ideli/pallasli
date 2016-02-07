@@ -25,31 +25,27 @@ public class HyperlinkEX {
 		// URL Link
 		cell = spreadsheet.createRow(1).createCell((short) 1);
 		cell.setCellValue("URL Link");
-		XSSFHyperlink link = (XSSFHyperlink) createHelper
-				.createHyperlink(Hyperlink.LINK_URL);
+		XSSFHyperlink link = (XSSFHyperlink) createHelper.createHyperlink(Hyperlink.LINK_URL);
 		link.setAddress("http://www.yiibai.com/");
 		cell.setHyperlink(link);
 		cell.setCellStyle(hlinkstyle);
 		// Hyperlink to a file in the current directory
 		cell = spreadsheet.createRow(2).createCell((short) 1);
 		cell.setCellValue("File Link");
-		link = (XSSFHyperlink) createHelper
-				.createHyperlink(Hyperlink.LINK_FILE);
+		link = (XSSFHyperlink) createHelper.createHyperlink(Hyperlink.LINK_FILE);
 		link.setAddress("cellstyle.xlsx");
 		cell.setHyperlink(link);
 		cell.setCellStyle(hlinkstyle);
 		// e-mail link
 		cell = spreadsheet.createRow(3).createCell((short) 1);
 		cell.setCellValue("Email Link");
-		link = (XSSFHyperlink) createHelper
-				.createHyperlink(Hyperlink.LINK_EMAIL);
+		link = (XSSFHyperlink) createHelper.createHyperlink(Hyperlink.LINK_EMAIL);
 		link.setAddress("mailto:contact@yiibai.com?" + "subject=Hyperlink");
 		cell.setHyperlink(link);
 		cell.setCellStyle(hlinkstyle);
 		FileOutputStream out = new FileOutputStream(new File("hyperlink.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("hyperlink.xlsx written successfully");
 	}
 }

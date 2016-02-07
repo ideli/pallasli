@@ -30,7 +30,6 @@ public class FontStyle {
 		FileOutputStream out = new FileOutputStream(new File("fontstyle.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("fontstyle.xlsx written successfully");
 	}
 }

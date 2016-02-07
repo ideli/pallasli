@@ -69,7 +69,6 @@ public class Formula {
 		FileOutputStream out = new FileOutputStream(new File("formula.xlsx"));
 		workbook.write(out);
 		out.close();
-		workbook.close();
 		System.out.println("fromula.xlsx written successfully");
 	}
 }

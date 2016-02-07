@@ -1,18 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.pallasli</groupId>
-    <artifactId>pallasli-study-root</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>pallasli-study-mvn-jasmine</artifactId>
-  <packaging>war</packaging>
-  <build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.pallasli</groupId>
+		<artifactId>pallasli-study-root</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>pallasli-study-mvn-jasmine</artifactId>
+	<packaging>war</packaging>
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.github.searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
-				<version>2.1</version>
 				<executions>
 					<execution>
 						<goals>
@@ -20,8 +20,8 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration> 
-	<keepServerAlive>true</keepServerAlive>
+				<configuration>
+					<keepServerAlive>true</keepServerAlive>
 				</configuration>
 
 				<!-- <configuration> <preloadSources> <source>lib/require.js</source> 
@@ -29,10 +29,9 @@
 					</configuration> -->
 			</plugin>
 			<plugin>
-			<!-- mvn verify -->
+				<!-- mvn verify -->
 				<groupId>com.github.timurstrekalov</groupId>
 				<artifactId>saga-maven-plugin</artifactId>
-				<version>1.4.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -47,6 +46,29 @@
 						<pattern>.*/spec/.*</pattern> <!-- Don't instrument specs -->
 					</noInstrumentPatterns>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ant-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<property name="maven.project.url" value="${project.url}" />
+								<ant antfile="build-js.xml" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

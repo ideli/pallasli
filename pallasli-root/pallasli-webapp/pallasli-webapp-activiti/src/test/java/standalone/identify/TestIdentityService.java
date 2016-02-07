@@ -10,13 +10,14 @@ import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
 import org.activiti.engine.test.ActivitiRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+@Ignore
 public class TestIdentityService {
 	@Rule
-	public ActivitiRule activitiRule = new ActivitiRule(
-			"/standalone/activiti.cfg.xml");
+	public ActivitiRule activitiRule = new ActivitiRule("/standalone/activiti.cfg.xml");
 
 	@Test
 	public void testUser() {
@@ -27,12 +28,10 @@ public class TestIdentityService {
 		user.setEmail("ytli1987@163.com");
 		identityService.saveUser(user);
 
-		User userInDb = identityService.createUserQuery().userId("PallasLi")
-				.singleResult();
+		User userInDb = identityService.createUserQuery().userId("PallasLi").singleResult();
 		assertNotNull(userInDb);
 		identityService.deleteUser("PallasLi");
-		userInDb = identityService.createUserQuery().userId("PallasLi")
-				.singleResult();
+		userInDb = identityService.createUserQuery().userId("PallasLi").singleResult();
 		assertNull(userInDb);
 	}
 
@@ -51,15 +50,12 @@ public class TestIdentityService {
 
 		identityService.createMembership(user.getId(), group.getId());
 
-		List<Group> groupList = identityService.createGroupQuery()
-				.groupMember("PallasLi").list();
+		List<Group> groupList = identityService.createGroupQuery().groupMember("PallasLi").list();
 		assertEquals(1, groupList.size());
-		List<User> userList = identityService.createUserQuery()
-				.memberOfGroup("PallasLyt").list();
+		List<User> userList = identityService.createUserQuery().memberOfGroup("PallasLyt").list();
 		assertEquals(1, userList.size());
 		identityService.deleteGroup("PallasLyt");
-		userList = identityService.createUserQuery().memberOfGroup("PallasLyt")
-				.list();
+		userList = identityService.createUserQuery().memberOfGroup("PallasLyt").list();
 		assertEquals(0, userList.size());
 	}
 
@@ -71,12 +67,10 @@ public class TestIdentityService {
 		group.setType("assignment");
 		identityService.saveGroup(group);
 
-		Group groupInDb = identityService.createGroupQuery()
-				.groupId("PallasLyt").singleResult();
+		Group groupInDb = identityService.createGroupQuery().groupId("PallasLyt").singleResult();
 		assertNotNull(groupInDb);
 		identityService.deleteGroup("PallasLyt");
-		groupInDb = identityService.createGroupQuery().groupId("PallasLyt")
-				.singleResult();
+		groupInDb = identityService.createGroupQuery().groupId("PallasLyt").singleResult();
 		assertNull(groupInDb);
 	}
 }

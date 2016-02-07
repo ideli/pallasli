@@ -15,12 +15,14 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/activiti.cfg.xml" })
 public class TestManagerService {
@@ -42,23 +44,19 @@ public class TestManagerService {
 	@Test
 	public void startProcess() {
 		// 发布
-		repositoryService.createDeployment()
-				.addClasspathResource("standalone/MyProcess.bpmn").deploy();
+		repositoryService.createDeployment().addClasspathResource("standalone/MyProcess.bpmn").deploy();
 		long deploycount = repositoryService.createDeploymentQuery().count();
 		assertEquals(1, deploycount);
 
 		// 启动
-		ProcessInstance processInstance = runtimeService
-				.startProcessInstanceByKey("myProcess");
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("myProcess");
 		assertNotNull(processInstance);
-		Task curTask = taskService.createTaskQuery().taskAssignee("activiti")
-				.singleResult();
+		Task curTask = taskService.createTaskQuery().taskAssignee("activiti").singleResult();
 		assertNotNull(curTask);
 		assertEquals("审核", curTask.getName());
 		// 签收
 		taskService.claim(curTask.getId(), "activiti");
-		List<Deployment> deployes = repositoryService.createDeploymentQuery()
-				.orderByDeploymenTime().desc().list();
+		List<Deployment> deployes = repositoryService.createDeploymentQuery().orderByDeploymenTime().desc().list();
 		Deployment deploy = deployes.remove(0);
 		repositoryService.deleteDeployment(deploy.getId(), false);
 		deploycount = repositoryService.createDeploymentQuery().count();

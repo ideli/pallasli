@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8"%>
-<script language='javascript'>
+ 
 	Ext.onReady(function() {
 
 		var panel = Ext.getCmp("${panelId}");
@@ -171,4 +169,3 @@
 		});
 		panel.add(ui);
 	});
-</script>
