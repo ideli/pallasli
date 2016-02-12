@@ -26,7 +26,6 @@
 		<module>pallasli-webapp</module>
 		<module>pallasli-ws</module>
 		<module>pallasli-testlog</module>
-		<module>pallasli-beanutils</module>
 		<module>pallasli-iputils</module>
 		<module>pallasli-xmljson</module>
 	</modules>
