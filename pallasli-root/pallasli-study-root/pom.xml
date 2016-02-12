@@ -19,8 +19,6 @@
       <module>pallasli-study-spring</module>
       <module>pallasli-study-jms</module>
       <module>pallasli-study-struts2</module>
-      <module>pallasli-study-mvn-jar</module>
-      <module>pallasli-study-mvn-war</module>
       <module>pallasli-study-mvn-webroot</module>
       <module>pallasli-study-spring-boot</module>
       <module>pallasli-study-spring-boot-web</module>

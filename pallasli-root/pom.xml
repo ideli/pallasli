@@ -29,6 +29,7 @@
 		<module>pallasli-iputils</module>
 		<module>pallasli-xmljson</module>
 		<module>pallasli-study</module>
+		<module>pallasli-build</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
