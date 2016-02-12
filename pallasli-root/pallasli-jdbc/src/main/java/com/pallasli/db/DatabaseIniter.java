@@ -10,13 +10,13 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.pallasli.db.bean.Component;
-import com.pallasli.designer.sys.SqlPropUtils;
+import com.pallasli.utils.FileUtils;
 
 public class DatabaseIniter {
 	// 根据SQL脚本初始化数据库。
 	public void initDatabase() {
 		ConvertUtilsExtend.init();
-		List<String> sqlList = SqlPropUtils.loadSqlFile("init.sql");
+		List<String> sqlList = FileUtils.loadSqlFile("init.sql");
 		Connection c = DbOper.getConn();
 
 		try {

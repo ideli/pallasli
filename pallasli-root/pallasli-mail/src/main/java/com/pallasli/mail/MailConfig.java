@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.apache.commons.mail.Email;
 
-import com.pallasli.designer.sys.SqlPropUtils;
+import com.pallasli.utils.FileUtils;
 
 public class MailConfig {
 	public static final int MAIL_TYPE_126 = 1;
@@ -23,6 +23,7 @@ public class MailConfig {
 
 	private static Map<String, String> hostMap = new HashMap<String, String>();
 	private static Map<String, Integer> mailTypeMap = new HashMap<String, Integer>();
+
 	static {
 		// 126
 		hostMap.put("smtp.126", "smtp.126.com");
@@ -58,13 +59,12 @@ public class MailConfig {
 
 	public void buildConfig(Email email) {
 
-		Properties rc = SqlPropUtils.getProperties("email.properties");
+		Properties rc = FileUtils.getProperties("email.properties");
 
 		// 设置主机名称
 		email.setHostName(rc.getProperty("send"));
 		// 设置用户名，密码
-		email.setAuthentication(rc.getProperty("username"),
-				rc.getProperty("password"));
+		email.setAuthentication(rc.getProperty("username"), rc.getProperty("password"));
 		// 设置字符编码方式
 		email.setCharset("GB2312");
 	}

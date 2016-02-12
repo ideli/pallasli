@@ -16,9 +16,8 @@ import com.google.gson.JsonObject;
 import com.pallas.knowledge.bean.TreeNode;
 import com.pallas.knowledge.service.WordService;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.utils.Dom4jXmlFileUtils;
-import com.pallasli.utils.Dom4jXmlParseUtils;
-import com.pallasli.utils.WordUtils;
+import com.pallasli.xml.Dom4jXmlFileUtils;
+import com.pallasli.xml.Dom4jXmlParseUtils;
 
 public class WordServiceImpl implements WordService {
 	@SuppressWarnings("unchecked")
@@ -26,13 +25,10 @@ public class WordServiceImpl implements WordService {
 	public List<TreeNode> loadWordType(JsonArray data) {
 		List<TreeNode> list = new ArrayList<TreeNode>();
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String node = addNode.has("node") ? addNode.get("node").getAsString()
-				: "";
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT
-				+ "data/WordsTypeTree.xml");
+		String node = addNode.has("node") ? addNode.get("node").getAsString() : "";
+		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml");
 		try {
-			list = (List<TreeNode>) Dom4jXmlParseUtils.parseXml2List(doc,
-					TreeNode.class, "node[id='" + node + "']");
+			list = (List<TreeNode>) Dom4jXmlParseUtils.parseXml2List(doc, TreeNode.class, "node[id='" + node + "']");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,23 +39,17 @@ public class WordServiceImpl implements WordService {
 	public List<TreeNode> addWordType(JsonArray data) {
 		List<TreeNode> list = new ArrayList<TreeNode>();
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String path = addNode.has("path") ? addNode.get("path").getAsString()
-				: "";
-		String parentId = addNode.has("parentId") ? addNode.get("parentId")
-				.getAsString() : "";
-		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf")
-				.getAsBoolean() : false;
-		String text = addNode.has("text") ? addNode.get("text").getAsString()
-				: "";
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT
-				+ "data/WordsTypeTree.xml");
+		String path = addNode.has("path") ? addNode.get("path").getAsString() : "";
+		String parentId = addNode.has("parentId") ? addNode.get("parentId").getAsString() : "";
+		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf").getAsBoolean() : false;
+		String text = addNode.has("text") ? addNode.get("text").getAsString() : "";
+		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml");
 
 		org.dom4j.Node maxidn = doc.selectSingleNode("//maxId");
 		long maxid = Long.parseLong(maxidn.getText()) + 1;
 		maxidn.setText(maxid + "");
 
-		org.dom4j.Node n = doc
-				.selectSingleNode("//node[id='" + parentId + "']");
+		org.dom4j.Node n = doc.selectSingleNode("//node[id='" + parentId + "']");
 		Element newN = ((Element) n).addElement("node");
 		newN.addElement("id").setText(maxid + "");
 		newN.addElement("text").setText(text);
@@ -70,14 +60,12 @@ public class WordServiceImpl implements WordService {
 		XMLWriter writer;
 		try {
 			if (isLeaf) {
-				WordUtils.exportDoc(SystemConstant.WEB_ROOT + path + ".doc",
-						" ");
+				WordUtils.exportDoc(SystemConstant.WEB_ROOT + path + ".doc", " ");
 			} else {
 				new File(SystemConstant.WEB_ROOT + path).mkdir();
 			}
 			writer = new XMLWriter(
-					new FileWriterWithEncoding(SystemConstant.WEB_ROOT
-							+ "data/WordsTypeTree.xml", "UTF-8"), format);
+					new FileWriterWithEncoding(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml", "UTF-8"), format);
 			writer.write(doc);
 			writer.close();
 		} catch (IOException e) {
@@ -98,8 +86,7 @@ public class WordServiceImpl implements WordService {
 		// JsonObject addNode = data.get(0).getAsJsonObject();
 		// String parentId = addNode.has("parentId") ? addNode.get("parentId")
 		// .getAsString() : "";
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT
-				+ "data/WordsTypeTree.xml");
+		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml");
 		// org.dom4j.Node n = doc
 		// .selectSingleNode("//node[id='" + parentId + "']");
 		OutputFormat format = OutputFormat.createPrettyPrint();
@@ -107,8 +94,7 @@ public class WordServiceImpl implements WordService {
 		XMLWriter writer;
 		try {
 			writer = new XMLWriter(
-					new FileWriterWithEncoding(SystemConstant.WEB_ROOT
-							+ "data/WordsTypeTree.xml", "UTF-8"), format);
+					new FileWriterWithEncoding(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml", "UTF-8"), format);
 			writer.write(doc);
 			writer.close();
 		} catch (IOException e) {

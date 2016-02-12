@@ -2,7 +2,7 @@ package lyt.portal.config;
 
 import java.util.List;
 
-import com.pallasli.utils.XmlUtils;
+import com.pallasli.xml.XmlUtils;
 
 public class Config {
 	public static List<CompBean> load(String path) throws Exception {

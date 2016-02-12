@@ -10,9 +10,9 @@ import com.pallas.knowledge.bean.KnowledgeType;
 import com.pallas.knowledge.dao.impl.KnowledgeDAOImpl;
 import com.pallas.knowledge.dao.impl.KnowledgeTypeDAOImpl;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.utils.Dom4jXmlFileUtils;
-import com.pallasli.utils.Dom4jXmlParseUtils;
-import com.pallasli.utils.XmlUtils;
+import com.pallasli.xml.Dom4jXmlFileUtils;
+import com.pallasli.xml.Dom4jXmlParseUtils;
+import com.pallasli.xml.XmlUtils;
 
 public class XmlToSql {
 
@@ -21,14 +21,12 @@ public class XmlToSql {
 	}
 
 	public void generateKnowledgeTypes() {
-		System.out.println(SystemConstant.WEB_ROOT
-				+ "data/knowledgesTypeTree.xml");
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT
-				+ "data/knowledgesTypeTree.xml");
+		System.out.println(SystemConstant.WEB_ROOT + "data/knowledgesTypeTree.xml");
+		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/knowledgesTypeTree.xml");
 		List<Element> nodes = doc.selectNodes("//node");
 		try {
-			List<KnowledgeType> nodeList = (List<KnowledgeType>) Dom4jXmlParseUtils
-					.parseXml2List(nodes, KnowledgeType.class);
+			List<KnowledgeType> nodeList = (List<KnowledgeType>) Dom4jXmlParseUtils.parseXml2List(nodes,
+					KnowledgeType.class);
 			for (KnowledgeType n : nodeList) {
 				if (n.getText() != null) {
 					// n.setId(null);
@@ -43,8 +41,7 @@ public class XmlToSql {
 					String dir = SystemConstant.WEB_ROOT + "data/学习总结/";
 					String path = "";
 					while (parentId != 0) {
-						KnowledgeType tmp = new KnowledgeTypeDAOImpl()
-								.select(parentId);
+						KnowledgeType tmp = new KnowledgeTypeDAOImpl().select(parentId);
 						path = tmp.getText() + "/" + path + "/";
 						parentId = tmp.getParentId();
 					}
@@ -54,14 +51,12 @@ public class XmlToSql {
 					// List<Knowledge> nodeList2 = (List<Knowledge>)
 					// Dom4jXmlParseUtils
 					// .parseXml2List(nodes2, Knowledge.class);
-					List<Knowledge> nodeList2 = XmlUtils.parseXmlToList(path,
-							Knowledge.class);
+					List<Knowledge> nodeList2 = XmlUtils.parseXmlToList(path, Knowledge.class);
 					for (Knowledge k : nodeList2) {
 						if (k.getCaption() != null) {
 							k.setParentId(n.getId());
 							k.setId(null);
-							System.out.println(k.getId() + "  "
-									+ k.getCaption() + " " + n.getText());
+							System.out.println(k.getId() + "  " + k.getCaption() + " " + n.getText());
 							new KnowledgeDAOImpl().insert(k);
 						}
 					}

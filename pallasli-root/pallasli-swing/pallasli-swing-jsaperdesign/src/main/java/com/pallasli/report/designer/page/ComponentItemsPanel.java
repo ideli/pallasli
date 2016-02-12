@@ -12,11 +12,10 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.pallasli.db.bean.Component;
 import com.pallasli.report.designer.Main;
 
 public class ComponentItemsPanel extends JPanel {
-	public List<Component> list = null;
+	public List list = null;
 	public JButton selectedComp;
 
 	/**
@@ -41,8 +40,7 @@ public class ComponentItemsPanel extends JPanel {
 				// selectedComp=
 			}
 		});
-		btnNewButton_5.setIcon(new ImageIcon(Main.class
-				.getResource("/designer/icons/tool/new.gif")));
+		btnNewButton_5.setIcon(new ImageIcon(Main.class.getResource("/designer/icons/tool/new.gif")));
 		btnNewButton_5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

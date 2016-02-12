@@ -5,14 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.pallasli.designer.sys.SqlPropUtils;
+import com.pallasli.utils.FileUtils;
 
 public class DbOper {
 	static Connection conn = null;
 
 	public static void open() {
 
-		Properties p = SqlPropUtils.getProperties("database.properties");
+		Properties p = FileUtils.getProperties("database.properties");
 		String url = p.getProperty("jdbc.url");
 		String user = p.getProperty("jdbc.username");
 		String pwd = p.getProperty("jdbc.password");

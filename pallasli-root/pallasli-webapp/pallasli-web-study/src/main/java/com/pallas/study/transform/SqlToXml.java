@@ -14,7 +14,7 @@ import org.dom4j.io.XMLWriter;
 import com.pallas.knowledge.bean.KnowledgeType;
 import com.pallas.knowledge.dao.impl.KnowledgeTypeDAOImpl;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.utils.Dom4jXmlFileUtils;
+import com.pallasli.xml.Dom4jXmlFileUtils;
 
 public class SqlToXml {
 
@@ -27,8 +27,7 @@ public class SqlToXml {
 		new File(dir).mkdir();
 		String path = "";
 		Node parentnode = node.getParent();
-		while (parentnode != null
-				&& parentnode.selectSingleNode("text") != null) {
+		while (parentnode != null && parentnode.selectSingleNode("text") != null) {
 			path += parentnode.selectSingleNode("text").getText() + "/";
 			parentnode = parentnode.getParent();
 		}
@@ -41,8 +40,7 @@ public class SqlToXml {
 		String id = "0";
 		if (idNode != null)
 			id = idNode.getText();
-		List<KnowledgeType> list = new KnowledgeTypeDAOImpl()
-				.selectChildrenByParentId(Long.parseLong(id));
+		List<KnowledgeType> list = new KnowledgeTypeDAOImpl().selectChildrenByParentId(Long.parseLong(id));
 		for (KnowledgeType k : list) {
 			Element node = nodes.addElement("node");
 			node.addElement("id").setText(k.getId() + "");
@@ -61,14 +59,11 @@ public class SqlToXml {
 	}
 
 	public void generateKnowledgeTypes() {
-		List<KnowledgeType> list = new KnowledgeTypeDAOImpl()
-				.selectChildrenByParentId(0l);
+		List<KnowledgeType> list = new KnowledgeTypeDAOImpl().selectChildrenByParentId(0l);
 		int count = new KnowledgeTypeDAOImpl().count();
-		Dom4jXmlFileUtils.create(SystemConstant.WEB_ROOT
-				+ "test/knowledgesTypeTree.xml");
+		Dom4jXmlFileUtils.create(SystemConstant.WEB_ROOT + "test/knowledgesTypeTree.xml");
 
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT
-				+ "test/knowledgesTypeTree.xml");
+		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "test/knowledgesTypeTree.xml");
 		Element nodes = doc.getRootElement();
 		nodes.selectSingleNode("//maxId").setText(count + "");
 		generateChildKnowledgeTypes(nodes);
@@ -77,9 +72,9 @@ public class SqlToXml {
 		format.setEncoding("UTF-8");// 设置XML文件的编码格式
 		XMLWriter writer;
 		try {
-			writer = new XMLWriter(new FileWriterWithEncoding(
-					SystemConstant.WEB_ROOT + "test/knowledgesTypeTree.xml",
-					"UTF-8"), format);
+			writer = new XMLWriter(
+					new FileWriterWithEncoding(SystemConstant.WEB_ROOT + "test/knowledgesTypeTree.xml", "UTF-8"),
+					format);
 			writer.write(doc);
 			writer.close();
 		} catch (IOException e) {

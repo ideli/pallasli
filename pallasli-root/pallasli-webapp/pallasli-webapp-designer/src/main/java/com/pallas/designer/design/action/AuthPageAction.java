@@ -14,8 +14,8 @@ import com.pallas.designer.design.bean.AuthGrid;
 import com.pallas.designer.design.bean.AuthPage;
 import com.pallas.designer.design.bean.SimpleFormAuthPage;
 import com.pallas.designer.design.bean.SimpleGridAuthPage;
+import com.pallasli.json.JsonUtils;
 import com.pallasli.utils.FileUtils;
-import com.pallasli.utils.JsonUtils;
 
 public class AuthPageAction {
 	public static AuthPageAction instance() {
@@ -25,15 +25,12 @@ public class AuthPageAction {
 	private AuthForm loadAuthForm(String pageKey, String compKey) {
 		// 读取data/designer/pages/pageKey---compKey
 		// grid: columns,api,extraparams,buttons
-		String basePath = this.getClass().getClassLoader().getResource("/")
-				.getPath();
-		String path = basePath.replace("WEB-INF/classes/", "")
-				+ "data/design/pages/p_addMenu/components.json";
+		String basePath = this.getClass().getClassLoader().getResource("/").getPath();
+		String path = basePath.replace("WEB-INF/classes/", "") + "data/design/pages/p_addMenu/components.json";
 
 		String json = FileUtils.readFileToString(path);
 		JsonElement page = JsonUtils.fromStringToJsonElement(json);
-		JsonArray fieldArray = page.getAsJsonObject().get("f_fields")
-				.getAsJsonArray();
+		JsonArray fieldArray = page.getAsJsonObject().get("f_fields").getAsJsonArray();
 
 		Iterator<JsonElement> it0 = fieldArray.iterator();
 		while (it0.hasNext()) {
@@ -42,12 +39,10 @@ public class AuthPageAction {
 				String modelName = tmp.get("modelName").getAsString();
 				tmp.remove("modelName");
 				tmp.add("store", new JsonFunction(
-						"Ext.create('Ext.data.Store', {" + "model: '"
-								+ modelName + "', autoLoad:true" + "}" + ")"));
+						"Ext.create('Ext.data.Store', {" + "model: '" + modelName + "', autoLoad:true" + "}" + ")"));
 			}
 		}
-		JsonArray buttonArray = page.getAsJsonObject().get("f_buttons")
-				.getAsJsonArray();
+		JsonArray buttonArray = page.getAsJsonObject().get("f_buttons").getAsJsonArray();
 		Iterator<JsonElement> it = buttonArray.iterator();
 		while (it.hasNext()) {
 			JsonObject tmp = it.next().getAsJsonObject();
@@ -62,10 +57,8 @@ public class AuthPageAction {
 	}
 
 	private AuthPage loadAuthPage(String pageKey) {
-		String basePath = this.getClass().getClassLoader().getResource("/")
-				.getPath();
-		String path = basePath.replace("WEB-INF/classes/", "")
-				+ "data/design/pages/" + pageKey + "/components.json";
+		String basePath = this.getClass().getClassLoader().getResource("/").getPath();
+		String path = basePath.replace("WEB-INF/classes/", "") + "data/design/pages/" + pageKey + "/components.json";
 		String json = FileUtils.readFileToString(path);
 		System.out.println("***************");
 		System.out.println(path);
@@ -73,8 +66,7 @@ public class AuthPageAction {
 		System.out.println("***************");
 		JsonElement page = JsonUtils.fromStringToJsonElement(json);
 		String title = page.getAsJsonObject().get("f_title").getAsString();
-		JsonArray panelArray = page.getAsJsonObject().get("f_panels")
-				.getAsJsonArray();
+		JsonArray panelArray = page.getAsJsonObject().get("f_panels").getAsJsonArray();
 		AuthPage authPage = new AuthPage();
 		authPage.setTitle(title);
 		List<AuthComp> authPageList = new ArrayList<AuthComp>();
@@ -101,8 +93,7 @@ public class AuthPageAction {
 
 			JsonObject extraParamsJson = new JsonObject();
 			if (gridJson.has("f_extraParams")) {
-				extraParamsJson = gridJson.get("f_extraParams")
-						.getAsJsonObject();
+				extraParamsJson = gridJson.get("f_extraParams").getAsJsonObject();
 			}
 
 			JsonArray buttonArray = gridJson.get("f_buttons").getAsJsonArray();
@@ -140,14 +131,11 @@ public class AuthPageAction {
 		// 读取data/designer/pages/pageKey---compKey
 		// grid: columns,api,extraparams,buttons
 
-		String basePath = this.getClass().getClassLoader().getResource("/")
-				.getPath();
-		String path = basePath.replace("WEB-INF/classes/", "")
-				+ "data/design/pages/" + pageKey + "/components.json";
+		String basePath = this.getClass().getClassLoader().getResource("/").getPath();
+		String path = basePath.replace("WEB-INF/classes/", "") + "data/design/pages/" + pageKey + "/components.json";
 		String json = FileUtils.readFileToString(path);
 		JsonElement page = JsonUtils.fromStringToJsonElement(json);
-		JsonObject gridJson = page.getAsJsonObject().get("f_panels")
-				.getAsJsonArray().get(0).getAsJsonObject();
+		JsonObject gridJson = page.getAsJsonObject().get("f_panels").getAsJsonArray().get(0).getAsJsonObject();
 		JsonArray columnArray = gridJson.get("f_columns").getAsJsonArray();
 		String modelName = gridJson.get("f_modelName").getAsString();
 
@@ -233,14 +221,11 @@ public class AuthPageAction {
 		} else if (AuthPage.TYPE_TABVIEW == pageType) {
 			authPage = loadAuthPage(pageKey);
 		}
-		String basePath = this.getClass().getClassLoader().getResource("/")
-				.getPath();
-		String json = FileUtils
-				.readFileToString(basePath.replace("WEB-INF/classes/", "")
-						+ "data/designer/pages/m_g_app.m_guiji.m_grzhgl/components.json");
+		String basePath = this.getClass().getClassLoader().getResource("/").getPath();
+		String json = FileUtils.readFileToString(basePath.replace("WEB-INF/classes/", "")
+				+ "data/designer/pages/m_g_app.m_guiji.m_grzhgl/components.json");
 		JsonElement page = JsonUtils.fromStringToJsonElement(json);
-		String customScripts = page.getAsJsonObject().get("f_customscripts")
-				.getAsString();
+		String customScripts = page.getAsJsonObject().get("f_customscripts").getAsString();
 		authPage.setCustomScripts(customScripts);
 		return authPage;
 	}

@@ -15,7 +15,6 @@ import com.pallas.knowledge.service.KnowledgeService;
 import com.pallas.knowledge.service.KnowledgeTypeService;
 import com.pallasli.constant.SystemConstant;
 import com.pallasli.utils.FileUtils;
-import com.pallasli.utils.WordUtils;
 import com.pallasli.utils.ZipUtils;
 import com.softwarementors.extjs.djn.config.annotations.DirectMethod;
 
@@ -34,15 +33,13 @@ public class KnowledgeAction extends BaseAction {
 	public KnowledgeAction() {
 		ApplicationContext ctx = super.getContext();
 		knowledgeService = (KnowledgeService) ctx.getBean("knowledgeService");
-		knowledgeTypeService = (KnowledgeTypeService) ctx
-				.getBean("knowledgeTypeService");
+		knowledgeTypeService = (KnowledgeTypeService) ctx.getBean("knowledgeTypeService");
 	}
 
 	@DirectMethod(method = "loadKnowledgeType")
 	public List<KnowledgeType> loadKnowledgeType(JsonArray data) {
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String node = addNode.has("node") ? addNode.get("node").getAsString()
-				: "0";
+		String node = addNode.has("node") ? addNode.get("node").getAsString() : "0";
 		KnowledgeType type = new KnowledgeType();
 		type.setId(Long.parseLong(node));
 		return knowledgeTypeService.loadKnowledgeType(type);
@@ -56,12 +53,9 @@ public class KnowledgeAction extends BaseAction {
 	@DirectMethod(method = "addKnowledgeType")
 	public List<KnowledgeType> addKnowledgeType(JsonArray data) {
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String parentId = addNode.has("parentId") ? addNode.get("parentId")
-				.getAsString() : "";
-		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf")
-				.getAsBoolean() : false;
-		String text = addNode.has("text") ? addNode.get("text").getAsString()
-				: "";
+		String parentId = addNode.has("parentId") ? addNode.get("parentId").getAsString() : "";
+		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf").getAsBoolean() : false;
+		String text = addNode.has("text") ? addNode.get("text").getAsString() : "";
 		KnowledgeType knowledgeType = new KnowledgeType();
 		knowledgeType.setParentId(Long.parseLong(parentId));
 		knowledgeType.setLeaf(isLeaf);
@@ -73,12 +67,9 @@ public class KnowledgeAction extends BaseAction {
 	public List<KnowledgeType> alterKnowledgeType(JsonArray data) {
 		JsonObject addNode = data.get(0).getAsJsonObject();
 		String node = addNode.has("id") ? addNode.get("id").getAsString() : "0";
-		String parentId = addNode.has("parentId") ? addNode.get("parentId")
-				.getAsString() : "";
-		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf")
-				.getAsBoolean() : false;
-		String text = addNode.has("text") ? addNode.get("text").getAsString()
-				: "";
+		String parentId = addNode.has("parentId") ? addNode.get("parentId").getAsString() : "";
+		boolean isLeaf = addNode.has("leaf") ? addNode.get("leaf").getAsBoolean() : false;
+		String text = addNode.has("text") ? addNode.get("text").getAsString() : "";
 		KnowledgeType knowledgeType = new KnowledgeType();
 		knowledgeType.setId(Long.parseLong(node));
 		knowledgeType.setParentId(Long.parseLong(parentId));
@@ -102,8 +93,7 @@ public class KnowledgeAction extends BaseAction {
 	}
 
 	public JsonObject exportAllDocKnowledge(KnowledgeType ktype, String path) {
-		List<KnowledgeType> list = knowledgeTypeService
-				.loadKnowledgeType(ktype);
+		List<KnowledgeType> list = knowledgeTypeService.loadKnowledgeType(ktype);
 
 		if (list.size() > 0) {
 			for (KnowledgeType type : list) {
@@ -142,10 +132,8 @@ public class KnowledgeAction extends BaseAction {
 		String fileCon = "";
 		fileCon += "<html>";
 		for (Knowledge k : list) {
-			fileCon += "<span style=\"font-size: 28px\"><span style=\"font-family: 黑体\">"
-					+ k.getCaption()
-					+ "<br /> <br /> </span></span> "
-					+ k.getContent();
+			fileCon += "<span style=\"font-size: 28px\"><span style=\"font-family: 黑体\">" + k.getCaption()
+					+ "<br /> <br /> </span></span> " + k.getContent();
 		}
 		fileCon += "</html>";
 		WordUtils.exportDoc(destFile, fileCon);
@@ -157,22 +145,17 @@ public class KnowledgeAction extends BaseAction {
 		JsonObject json = new JsonObject();
 
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String parentId = addNode.has("parentId") ? addNode.get("parentId")
-				.getAsString() : "0";
-		String wordTitle = addNode.has("wordTitle") ? addNode.get("wordTitle")
-				.getAsString() : " ";
-		List<Knowledge> list = knowledgeService.loadKnowledges(Long
-				.parseLong(parentId));
+		String parentId = addNode.has("parentId") ? addNode.get("parentId").getAsString() : "0";
+		String wordTitle = addNode.has("wordTitle") ? addNode.get("wordTitle").getAsString() : " ";
+		List<Knowledge> list = knowledgeService.loadKnowledges(Long.parseLong(parentId));
 		String docKnowledgePath = SystemConstant.WEB_ROOT + "docKnowledge/";
 		FileUtils.createFile(docKnowledgePath, true);
 		String destFile = docKnowledgePath + wordTitle + ".doc";
 		String fileCon = "";
 		fileCon += "<html>";
 		for (Knowledge k : list) {
-			fileCon += "<span style=\"font-size: 28px\"><span style=\"font-family: 黑体\">"
-					+ k.getCaption()
-					+ "<br /> <br /> </span></span> "
-					+ k.getContent();
+			fileCon += "<span style=\"font-size: 28px\"><span style=\"font-family: 黑体\">" + k.getCaption()
+					+ "<br /> <br /> </span></span> " + k.getContent();
 		}
 		fileCon += "</html>";
 		WordUtils.exportDoc(destFile, fileCon);
@@ -186,8 +169,7 @@ public class KnowledgeAction extends BaseAction {
 		for (KnowledgeType ktype : list) {
 			if (!ktype.isLeaf()) {
 				type.setId(ktype.getId());
-				String docKnowledgePath = SystemConstant.WEB_ROOT
-						+ "docKnowledge/" + path + ktype.getText() + "/";
+				String docKnowledgePath = SystemConstant.WEB_ROOT + "docKnowledge/" + path + ktype.getText() + "/";
 				FileUtils.createFile(docKnowledgePath, true);
 				createKnowledgeFolders(type, path + ktype.getText() + "/");
 			}
@@ -195,8 +177,7 @@ public class KnowledgeAction extends BaseAction {
 
 	}
 
-	public void exportAllHtmlKnowledgeMenu(KnowledgeType type, StringBuffer sb,
-			String path) {
+	public void exportAllHtmlKnowledgeMenu(KnowledgeType type, StringBuffer sb, String path) {
 		List<KnowledgeType> list = null;
 
 		list = knowledgeTypeService.loadKnowledgeType(type);
@@ -205,41 +186,30 @@ public class KnowledgeAction extends BaseAction {
 			if (ktype.isLeaf()) {
 				System.out.println(ktype.getText());
 
-				sb.append("\r\n<li><a onclick=\"change('ktype_" + ktype.getId()
-						+ "')\">" + ktype.getText() + "</a>\r\n<ul  id='ktype_"
-						+ ktype.getId() + "'>");
-				List<Knowledge> knowledgeList = knowledgeService
-						.loadKnowledges(ktype.getId());
+				sb.append("\r\n<li><a onclick=\"change('ktype_" + ktype.getId() + "')\">" + ktype.getText()
+						+ "</a>\r\n<ul  id='ktype_" + ktype.getId() + "'>");
+				List<Knowledge> knowledgeList = knowledgeService.loadKnowledges(ktype.getId());
 				// li 不含ul
 				for (Knowledge k : knowledgeList) {
-					sb.append("\r\n<li class='leaf' onclick='stopPropagation()' ><a href='"
-							+ path
-							+ ktype.getText()
-							+ ".html#knowledge_"
-							+ k.getId()
-							+ "' target ='right' >"
-							+ k.getCaption() + "</a><br></li>");
+					sb.append("\r\n<li class='leaf' onclick='stopPropagation()' ><a href='" + path + ktype.getText()
+							+ ".html#knowledge_" + k.getId() + "' target ='right' >" + k.getCaption()
+							+ "</a><br></li>");
 
 				}
 				sb.append("</ul></li>");
 			} else {
 				type.setId(ktype.getId());
-				sb.append("\r\n<li><a onclick=\"change('ktype_" + ktype.getId()
-						+ "')\">" + ktype.getText() + "</a>\r\n<ul  id='ktype_"
-						+ ktype.getId() + "'>");
-				String docKnowledgePath = SystemConstant.WEB_ROOT
-						+ "docKnowledge/" + path + ktype.getText() + "/";
+				sb.append("\r\n<li><a onclick=\"change('ktype_" + ktype.getId() + "')\">" + ktype.getText()
+						+ "</a>\r\n<ul  id='ktype_" + ktype.getId() + "'>");
+				String docKnowledgePath = SystemConstant.WEB_ROOT + "docKnowledge/" + path + ktype.getText() + "/";
 
 				try {
-					FileUtils.createFile(
-							new String(docKnowledgePath.getBytes("utf-8")),
-							true);
+					FileUtils.createFile(new String(docKnowledgePath.getBytes("utf-8")), true);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				exportAllHtmlKnowledgeMenu(type, sb, path + ktype.getText()
-						+ "/");
+				exportAllHtmlKnowledgeMenu(type, sb, path + ktype.getText() + "/");
 				sb.append("\r\n</ul>\r\n</li>");
 			}
 		}
@@ -253,18 +223,15 @@ public class KnowledgeAction extends BaseAction {
 	 * @param sb
 	 */
 	private void initHtml(KnowledgeType type, StringBuffer sb) {
-		String begin = FileUtils.readFileToString(SystemConstant.WEB_ROOT
-				+ "data/学习总结/menuHtmlBegin.txt");
-		String end = FileUtils.readFileToString(SystemConstant.WEB_ROOT
-				+ "data/学习总结/menuHtmlEnd.txt");
+		String begin = FileUtils.readFileToString(SystemConstant.WEB_ROOT + "data/学习总结/menuHtmlBegin.txt");
+		String end = FileUtils.readFileToString(SystemConstant.WEB_ROOT + "data/学习总结/menuHtmlEnd.txt");
 		sb.append(begin.trim());
 		exportAllHtmlKnowledgeMenu(type, sb, "");
 		sb.append(end.trim());
 	}
 
 	public void exportAllHtmlKnowledge(KnowledgeType ktype, String path) {
-		List<KnowledgeType> list = knowledgeTypeService
-				.loadKnowledgeType(ktype);
+		List<KnowledgeType> list = knowledgeTypeService.loadKnowledgeType(ktype);
 		if (list.size() > 0) {
 			for (KnowledgeType type : list) {
 				ktype.setId(type.getId());
@@ -297,22 +264,16 @@ public class KnowledgeAction extends BaseAction {
 		String destFile = SystemConstant.WEB_ROOT + "docKnowledge/menu.html";
 		FileUtils.writeFile(destFile, sb.toString());
 
-		String indexHtml = FileUtils.readFileToString(SystemConstant.WEB_ROOT
-				+ "data/学习总结/index.html");
-		FileUtils.writeFile(
-				SystemConstant.WEB_ROOT + "docKnowledge/index.html",
-				indexHtml.trim());
-		FileUtils.createFile(SystemConstant.WEB_ROOT + "docKnowledge/images",
-				true);
+		String indexHtml = FileUtils.readFileToString(SystemConstant.WEB_ROOT + "data/学习总结/index.html");
+		FileUtils.writeFile(SystemConstant.WEB_ROOT + "docKnowledge/index.html", indexHtml.trim());
+		FileUtils.createFile(SystemConstant.WEB_ROOT + "docKnowledge/images", true);
 		try {
 			String fromPath = SystemConstant.WEB_ROOT + "data/学习总结/folder.gif";
-			String toPath = SystemConstant.WEB_ROOT
-					+ "docKnowledge/images/folder.gif";
+			String toPath = SystemConstant.WEB_ROOT + "docKnowledge/images/folder.gif";
 			FileUtils.copyImageFileFrom(fromPath, toPath);
 
 			fromPath = SystemConstant.WEB_ROOT + "data/学习总结/folder-open.gif";
-			toPath = SystemConstant.WEB_ROOT
-					+ "docKnowledge/images/folder-open.gif";
+			toPath = SystemConstant.WEB_ROOT + "docKnowledge/images/folder-open.gif";
 
 			FileUtils.copyImageFileFrom(fromPath, toPath);
 		} catch (IOException e1) {
@@ -327,8 +288,7 @@ public class KnowledgeAction extends BaseAction {
 		String zipPath = SystemConstant.WEB_ROOT + "download/test.zip";
 		try {
 			FileUtils.createFile(SystemConstant.WEB_ROOT + "download", true);
-			ZipUtils.zipFolder(zipPath, SystemConstant.WEB_ROOT
-					+ "docKnowledge");
+			ZipUtils.zipFolder(zipPath, SystemConstant.WEB_ROOT + "docKnowledge");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -337,22 +297,19 @@ public class KnowledgeAction extends BaseAction {
 		return json;
 	}
 
-	private JsonObject exportHtmlKnowledge(Knowledge knowledge,
-			KnowledgeType knowledgeType, String path) {
+	private JsonObject exportHtmlKnowledge(Knowledge knowledge, KnowledgeType knowledgeType, String path) {
 		JsonObject json = new JsonObject();
 
 		long parentId = knowledge.getParentId();
 		String wordTitle = knowledgeType.getText();
 
 		List<Knowledge> list = knowledgeService.loadKnowledges(parentId);
-		String docKnowledgePath = SystemConstant.WEB_ROOT + "docKnowledge/"
-				+ path;
+		String docKnowledgePath = SystemConstant.WEB_ROOT + "docKnowledge/" + path;
 		String destFile = docKnowledgePath + wordTitle + ".html";
 		String fileCon = "";
 		fileCon += "<html><body>";
 		for (Knowledge k : list) {
-			fileCon += "<a name='knowledge_" + k.getId() + "'>"
-					+ k.getCaption() + "<br><a>" + "<div id='knowledge_"
+			fileCon += "<a name='knowledge_" + k.getId() + "'>" + k.getCaption() + "<br><a>" + "<div id='knowledge_"
 					+ k.getId() + "'> " + k.getContent() + "</div>";
 		}
 		fileCon += "</body></html>";
@@ -364,10 +321,8 @@ public class KnowledgeAction extends BaseAction {
 	public JsonObject exportHtmlKnowledge(JsonArray data) {
 
 		JsonObject addNode = data.get(0).getAsJsonObject();
-		String parentId = addNode.has("parentId") ? addNode.get("parentId")
-				.getAsString() : "0";
-		String wordTitle = addNode.has("wordTitle") ? addNode.get("wordTitle")
-				.getAsString() : " ";
+		String parentId = addNode.has("parentId") ? addNode.get("parentId").getAsString() : "0";
+		String wordTitle = addNode.has("wordTitle") ? addNode.get("wordTitle").getAsString() : " ";
 		Knowledge k = new Knowledge();
 		k.setParentId(Long.parseLong(parentId));
 		KnowledgeType type = new KnowledgeType();
