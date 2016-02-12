@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import com.pallasli.db.bean.Component;
-import com.pallasli.designer.sys.ConvertUtilsExtend;
 import com.pallasli.designer.sys.SqlPropUtils;
 
 public class DatabaseIniter {
@@ -56,8 +55,7 @@ public class DatabaseIniter {
 				while (rs.next()) {
 					Object object = clazz.newInstance();
 					for (String columnName : tableColumnNames) {
-						BeanUtils.setProperty(object, columnName.toLowerCase(),
-								rs.getObject(columnName));
+						BeanUtils.setProperty(object, columnName.toLowerCase(), rs.getObject(columnName));
 					}
 					datas.add((Component) object);
 				}

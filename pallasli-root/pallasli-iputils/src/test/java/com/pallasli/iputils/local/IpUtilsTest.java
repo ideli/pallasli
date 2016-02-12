@@ -1,4 +1,4 @@
-package com.palllasli.utils;
+package com.pallasli.iputils.local;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import com.pallasli.utils.IpUtils;
 
 @RunWith(value = Parameterized.class)
 @Ignore
@@ -29,8 +27,9 @@ public class IpUtilsTest {
 	public static Collection<String[]> getTestParameters() {
 		return Arrays.asList(new String[][] {
 
-		{ "159.226.115.22" } // , { "222.11.122.34" }, { "199.226.115.22" }
-				});
+				{ "159.226.115.22" } // , { "222.11.122.34" }, {
+										// "199.226.115.22" }
+		});
 	}
 
 	@Test

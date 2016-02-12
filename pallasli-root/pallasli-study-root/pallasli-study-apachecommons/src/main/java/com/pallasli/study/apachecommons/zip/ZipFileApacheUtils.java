@@ -1,4 +1,4 @@
-package com.pallasli.utils;
+package com.pallasli.study.apachecommons.zip;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

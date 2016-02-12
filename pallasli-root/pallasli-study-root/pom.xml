@@ -49,5 +49,6 @@
       <module>pallasli-study-html5-websocket</module>
       <module>pallasli-study-mvn-jasmine</module>
       <module>pallasli-study-annotation</module>
+      <module>pallasli-study-apachecommons</module>
   </modules>
 </project>

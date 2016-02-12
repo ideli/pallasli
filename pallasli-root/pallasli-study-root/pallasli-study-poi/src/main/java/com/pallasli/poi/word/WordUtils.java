@@ -1,4 +1,4 @@
-package com.pallasli.utils;
+package com.pallasli.poi.word;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;

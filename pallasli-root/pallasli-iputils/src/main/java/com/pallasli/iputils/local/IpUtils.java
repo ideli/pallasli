@@ -1,4 +1,4 @@
-package com.pallasli.utils;
+package com.pallasli.iputils.local;
 
 import java.io.IOException;
 

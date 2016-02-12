@@ -1,4 +1,4 @@
-package com.palllasli.utils;
+package com.pallasli.poi.excel;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.google.gson.JsonArray;
-import com.pallasli.utils.ExcelUtils;
 
 public class ExcelUtilsTest {
 
@@ -20,8 +19,7 @@ public class ExcelUtilsTest {
 		List<String> sheets = new ArrayList<String>();
 		List<String> autoColumns = new ArrayList<String>();
 
-		boolean flag = ExcelUtils.writeExcel(filePath, sheets, dataArrayList,
-				autoColumns);
+		boolean flag = ExcelUtils.writeExcel(filePath, sheets, dataArrayList, autoColumns);
 		assertTrue(flag);
 	}
 
