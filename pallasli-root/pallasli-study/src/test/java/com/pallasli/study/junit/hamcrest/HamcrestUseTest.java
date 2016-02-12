@@ -1,4 +1,4 @@
-package com.pallasli.study.hamcrest;
+package com.pallasli.study.junit.hamcrest;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;

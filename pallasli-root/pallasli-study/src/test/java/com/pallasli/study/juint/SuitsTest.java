@@ -1,4 +1,4 @@
-package com.pallasli.runners;
+package com.pallasli.study.juint;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

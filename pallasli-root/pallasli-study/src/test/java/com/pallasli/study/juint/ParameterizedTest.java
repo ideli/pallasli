@@ -1,4 +1,4 @@
-package com.pallasli.runners;
+package com.pallasli.study.juint;
 
 import static org.junit.Assert.assertEquals;
 

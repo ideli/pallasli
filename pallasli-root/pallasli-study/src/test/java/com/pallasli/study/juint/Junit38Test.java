@@ -1,4 +1,4 @@
-package com.pallasli.runners;
+package com.pallasli.study.juint;
 
 import junit.framework.TestCase;
 

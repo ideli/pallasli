@@ -1,3 +1,5 @@
+package com.pallasli.study.log4j;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,35 +15,31 @@ public class log4jExample {
 
 	@Test
 	public void testHtml() {
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-html.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-html.properties");
 		pringlog();
 	}
 
 	@Test
 	public void testFile() {
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-file.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-file.properties");
 		pringlog();
 	}
 
 	@Test
 	public void testUseXmlConfig() {
-		PropertyConfigurator.configure("src/test/resources/log4j-xml.xml");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-xml.xml");
 		pringlog();
 	}
 
 	@Test
 	public void testPattern() {
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-pattern.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-pattern.properties");
 		pringlog();
 	}
 
 	@Test
 	public void testDailyRollingFile() {
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-daily-rolling-file.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-daily-rolling-file.properties");
 		pringlog();
 	}
 
@@ -50,30 +48,27 @@ public class log4jExample {
 		Connection conn = null;
 		try {
 			Class.forName("org.h2.Driver");
-			conn = DriverManager.getConnection(
-					"jdbc:h2:database/h2db;IFEXISTS=TRUE", "sa", "sa");
+			conn = DriverManager.getConnection("jdbc:h2:database/h2db;IFEXISTS=TRUE", "sa", "sa");
 		} catch (Exception e) {
 			System.out.println("not exists");
 		}
 		if (conn == null) {
 
 			try {
-				conn = DriverManager.getConnection("jdbc:h2:database/h2db",
-						"sa", "sa");
+				conn = DriverManager.getConnection("jdbc:h2:database/h2db", "sa", "sa");
 				Statement s = conn.createStatement();
-				s.execute("CREATE TABLE LOGS   (USER_ID VARCHAR(20) NOT NULL,    DATED   DATE NOT NULL,    LOGGER  VARCHAR(50) NOT NULL,    LEVEL   VARCHAR(10) NOT NULL,    MESSAGE VARCHAR(1000) NOT NULL  )");
+				s.execute(
+						"CREATE TABLE LOGS   (USER_ID VARCHAR(20) NOT NULL,    DATED   DATE NOT NULL,    LOGGER  VARCHAR(50) NOT NULL,    LEVEL   VARCHAR(10) NOT NULL,    MESSAGE VARCHAR(1000) NOT NULL  )");
 
 				conn.commit();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-database.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-database.properties");
 		pringlog();
 		try {
-			conn = DriverManager.getConnection("jdbc:h2:database/h2db", "sa",
-					"sa");
+			conn = DriverManager.getConnection("jdbc:h2:database/h2db", "sa", "sa");
 			Statement s = conn.createStatement();
 			ResultSet result = s.executeQuery("select * from LOGS");
 			System.out.println(result.getRow());
@@ -86,8 +81,7 @@ public class log4jExample {
 
 	@Test
 	public void testRollingFile() {
-		PropertyConfigurator
-				.configure("src/test/resources/log4j-rolling-file.properties");
+		PropertyConfigurator.configure("src/test/resources/log4j/log4j-rolling-file.properties");
 		pringlog();
 	}
 
