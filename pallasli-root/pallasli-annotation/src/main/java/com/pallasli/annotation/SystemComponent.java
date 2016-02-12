@@ -1,6 +1,5 @@
 package com.pallasli.annotation;
 
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +10,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SystemComponent {
-	String value() default "system";
+	/**
+	 * 类注解
+	 * 
+	 * system:(默认)系统组件 user:用户组件
+	 * 
+	 * @return
+	 */
+	String value() default SystemComponentType.SYSTEM;
 }
