@@ -1,4 +1,4 @@
-package com.pallasli.opensource.zip;
+package com.pallasli.study.apachecommons.compress;
 
 import java.io.File;
 import java.io.FileInputStream;

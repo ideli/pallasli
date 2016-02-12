@@ -1,3 +1,5 @@
+package com.pallasli.study.apachecommons.compress;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -9,8 +11,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntryRequest;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.parallel.InputStreamSupplier;
 import org.junit.Test;
-
-import com.pallasli.opensource.zip.CommonsCompress;
 
 public class CommonsCompressTest {
 
