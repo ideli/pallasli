@@ -1,4 +1,4 @@
-package com.pallasli.utils;
+package com.pallasli.json;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

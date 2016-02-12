@@ -9,11 +9,71 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
 public class FileUtils {
+	public static Properties getProperties(String path) {
+
+		String rootPath = "/" + FileUtils.class.getResource("/").getPath();
+		// 数据库配置文件
+		String filePath = rootPath + path;// + "database.properties";
+		Properties p = new Properties();
+		File pFile = new File(filePath);
+		FileInputStream pInStream = null;
+		try {
+			pInStream = new FileInputStream(pFile);
+			p.load(pInStream);
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return p;
+	}
+
+	public static List<String> loadSqlFile(String path) {
+
+		String rootPath = FileUtils.class.getResource("/").getPath();
+		String filePath = rootPath + path;// "init.sql";
+		// 从SQL文件中读取SQL语句，每行一条，末尾没有分号
+		List<String> sqlList = new ArrayList<String>();
+
+		try {
+			File file = new File(filePath);
+			FileInputStream in = new FileInputStream(file);
+			// 指定读取文件时以UTF-8的格式读取
+			BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+			String instring;
+
+			String sql = "";
+			while ((instring = br.readLine()) != null) {
+				if (0 != instring.length()) {
+					String line = instring.trim();
+					if (line.startsWith("--")) {
+						sqlList.add(line);
+					} else if (line.endsWith(";")) {
+						sql += line + " ";
+						sqlList.add(sql);
+						sql = "";
+					} else {
+						sql += line + " ";
+					}
+				}
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return sqlList;
+	}
 
 	/**
 	 * 读取文件路径对应的文件
@@ -46,8 +106,7 @@ public class FileUtils {
 		try {
 			if (file.exists()) {
 				FileInputStream fis = new FileInputStream(file);
-				InputStreamReader isReader = new InputStreamReader(fis,
-						codeType);
+				InputStreamReader isReader = new InputStreamReader(fis, codeType);
 
 				while (true) {
 					char[] buf = new char[1024];
@@ -95,8 +154,7 @@ public class FileUtils {
 		return false;
 	}
 
-	public static boolean copyImageFileFrom(String fromPath, String toPath)
-			throws IOException {
+	public static boolean copyImageFileFrom(String fromPath, String toPath) throws IOException {
 
 		File from = new File(fromPath);
 		BufferedImage image = ImageIO.read(from);
@@ -141,8 +199,7 @@ public class FileUtils {
 	public long getFileRow(String filePath) {
 		int i_line = 0;
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(filePath), charset));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), charset));
 			String Line = br.readLine();
 			br.close();
 			while (Line != null) {
@@ -264,8 +321,7 @@ public class FileUtils {
 			// FileReader fr = new FileReader(filePahtName);
 			// BufferedReader br = new BufferedReader(fr);
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(filePathName), charset));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filePathName), charset));
 			String Line = br.readLine();
 
 			while (Line != null) {
@@ -361,27 +417,21 @@ public class FileUtils {
 	public String getFileName(int cmd) {
 		String str = String.valueOf(cmd);
 		str = StringUtils.repeat("0", (3 - str.length())) + str;
-		return data_dir + File.separator + str
-				+ DateUtils.formatDate(new Date(), "_yyyyMMdd_HHmmss_SS")
-				+ ".txt";
+		return data_dir + File.separator + str + DateUtils.formatDate(new Date(), "_yyyyMMdd_HHmmss_SS") + ".txt";
 	}
 
 	public String getRandFileaName(int cmd) {
 		String str = String.valueOf(cmd);
 		str = StringUtils.repeat("0", (3 - str.length())) + str;
-		return data_dir + File.separator + str + "_"
-				+ (new RandomGUID()).toString() + ".txt";
+		return data_dir + File.separator + str + "_" + (new RandomGUID()).toString() + ".txt";
 	}
 
-	public String getFileName(String prefix, String postfix, String ext,
-			String pattern) {
+	public String getFileName(String prefix, String postfix, String ext, String pattern) {
 		return getFileName(prefix, postfix, ext, pattern, new Date());
 	}
 
-	public String getFileName(String prefix, String postfix, String ext,
-			String pattern, Date dt) {
-		return data_dir + File.separator + prefix
-				+ DateUtils.formatDate(dt, pattern) + postfix + "." + ext;
+	public String getFileName(String prefix, String postfix, String ext, String pattern, Date dt) {
+		return data_dir + File.separator + prefix + DateUtils.formatDate(dt, pattern) + postfix + "." + ext;
 	}
 
 }

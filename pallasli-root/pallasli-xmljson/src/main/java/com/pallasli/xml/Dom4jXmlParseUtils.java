@@ -1,4 +1,4 @@
-package com.pallasli.utils;
+package com.pallasli.xml;
 
 import java.lang.reflect.Field;
 import java.net.URL;

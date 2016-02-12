@@ -28,6 +28,7 @@
 		<module>pallasli-testlog</module>
 		<module>pallasli-beanutils</module>
 		<module>pallasli-iputils</module>
+		<module>pallasli-xmljson</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
