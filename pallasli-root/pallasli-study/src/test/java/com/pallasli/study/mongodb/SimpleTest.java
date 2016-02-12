@@ -1,3 +1,4 @@
+package com.pallasli.study.mongodb;
 //import java.util.ArrayList;
 //import java.util.List;
 //

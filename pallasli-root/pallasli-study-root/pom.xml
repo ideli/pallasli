@@ -10,10 +10,7 @@
   <modules>
       <module>pallasli-study-easymock</module>
       <module>pallasli-study-dubbo</module>
-      <module>pallasli-study-mongodb</module>
       <module>pallasli-study-mybatis</module>
-      <module>pallasli-study-poi</module>
-      <module>pallasli-study-quartz</module>
       <module>pallasli-study-hibernate</module>
       <module>pallasli-study-ant</module>
       <module>pallasli-study-java</module>
@@ -22,7 +19,6 @@
       <module>pallasli-study-spring</module>
       <module>pallasli-study-jms</module>
       <module>pallasli-study-struts2</module>
-      <module>pallasli-study-testng</module>
       <module>pallasli-study-mvn-jar</module>
       <module>pallasli-study-mvn-war</module>
       <module>pallasli-study-mvn-webroot</module>
@@ -30,7 +26,6 @@
       <module>pallasli-study-spring-boot-web</module>
       <module>pallasli-study-web-start</module>
       <module>pallasli-study-cmdorsh</module>
-      <module>pallasli-study-mail</module>
       <module>pallasli-study-ftp</module>
       <module>pallasli-study-htmlunit</module>
       <module>pallasli-study-ivy</module>
@@ -39,8 +34,6 @@
       <module>pallasli-study-web</module>
       <module>pallasli-study-webim</module>
       <module>pallasli-study-im</module>
-      <module>pallasli-study-openssl</module>
-      <module>pallasli-study-openfire</module>
       <module>pallasli-study-html5-websocket</module>
       <module>pallasli-study-mvn-jasmine</module>
   </modules>
