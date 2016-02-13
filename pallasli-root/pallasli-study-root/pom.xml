@@ -8,30 +8,20 @@
   <artifactId>pallasli-study-root</artifactId>
   <packaging>pom</packaging>
   <modules>
-      <module>pallasli-study-easymock</module>
       <module>pallasli-study-dubbo</module>
       <module>pallasli-study-mybatis</module>
-      <module>pallasli-study-hibernate</module>
       <module>pallasli-study-ant</module>
       <module>pallasli-study-java</module>
       <module>pallasli-study-opensource</module>
       <module>pallasli-study-redis</module>
       <module>pallasli-study-spring</module>
       <module>pallasli-study-jms</module>
-      <module>pallasli-study-struts2</module>
-      <module>pallasli-study-mvn-webroot</module>
-      <module>pallasli-study-spring-boot</module>
       <module>pallasli-study-spring-boot-web</module>
       <module>pallasli-study-web-start</module>
-      <module>pallasli-study-cmdorsh</module>
       <module>pallasli-study-ftp</module>
       <module>pallasli-study-htmlunit</module>
-      <module>pallasli-study-ivy</module>
       <module>pallasli-study-httpclient</module>
-      <module>pallasli-study-htmlparser</module>
-      <module>pallasli-study-web</module>
       <module>pallasli-study-webim</module>
-      <module>pallasli-study-html5-websocket</module>
       <module>pallasli-study-mvn-jasmine</module>
   </modules>
 </project>
