@@ -30,6 +30,8 @@
 		<module>pallasli-xmljson</module>
 		<module>pallasli-study</module>
 		<module>pallasli-build</module>
+		<module>pallasli-study-webroot</module>
+		<module>pallasli-study-test</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

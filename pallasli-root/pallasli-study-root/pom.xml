@@ -31,7 +31,6 @@
       <module>pallasli-study-htmlparser</module>
       <module>pallasli-study-web</module>
       <module>pallasli-study-webim</module>
-      <module>pallasli-study-im</module>
       <module>pallasli-study-html5-websocket</module>
       <module>pallasli-study-mvn-jasmine</module>
   </modules>
