@@ -1,4 +1,4 @@
-package com.pallasli.opensource.collection;
+package com.pallasli.study.google.collection;
 
 import java.util.Iterator;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.pallasli.opensource.collection;
+package com.pallasli.study.google.collection;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;

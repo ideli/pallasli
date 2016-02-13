@@ -1,4 +1,4 @@
-package com.pallasli.opensource.datetime;
+package com.pallasli.study.joda.date;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

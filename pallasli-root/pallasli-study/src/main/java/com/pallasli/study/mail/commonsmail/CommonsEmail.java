@@ -1,4 +1,4 @@
-package com.pallasli.opensource.email;
+package com.pallasli.study.mail.commonsmail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
