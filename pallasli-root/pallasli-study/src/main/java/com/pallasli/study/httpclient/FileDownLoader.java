@@ -1,4 +1,4 @@
-package com.pallasli.study.htmlparser;
+package com.pallasli.study.httpclient;
 
 import java.io.DataOutputStream;
 import java.io.File;

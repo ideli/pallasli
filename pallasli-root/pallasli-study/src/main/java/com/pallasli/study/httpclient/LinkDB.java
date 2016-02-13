@@ -1,4 +1,4 @@
-package com.pallasli.study.htmlparser;
+package com.pallasli.study.httpclient;
 
 import java.util.HashSet;
 import java.util.Set;
