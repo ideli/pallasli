@@ -1,0 +1,15 @@
+到官网下载redis最新版本，我下载的是3.0.3
+
+http://redis.io/
+
+2、拷贝redis-3.0.3到/usr/local目录
+
+3、解压缩sudo tar -zxf redis-3.0.3.tar.gz
+
+4、进入解压缩后的目录 cd redis-3.0.3
+
+5、编译测试：sudo make test
+
+6、编译安装：sudo make install
+
+7、启动服务：./src/redis-server

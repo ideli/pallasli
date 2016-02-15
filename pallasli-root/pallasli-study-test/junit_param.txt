@@ -1,0 +1,25 @@
+//
+//class TestBean {
+//}
+//@RunWith(value = Parameterized.class)
+//	private final TestBean testBean;
+//	private final String testBeanjson;
+//
+//	public JsonUtilsTest(TestBean testBean, String testBeanjson) {
+//		this.testBean = testBean;
+//		this.testBeanjson = testBeanjson;
+//	}
+//
+//	@Parameters
+//	public static Collection<Integer[]> getTestParameters() {
+//
+//		TestBean bean1=new TestBean();
+//		TestBean bean2=new TestBean();
+//		TestBean bean3=new TestBean();
+//		
+//		
+//		
+//		return Arrays.asList(new Integer[][] {
+//
+//				{ 13 }, { 15 }, { 18 } });
+//	}
