@@ -1,0 +1,1 @@
+javap -classpath ./classes A

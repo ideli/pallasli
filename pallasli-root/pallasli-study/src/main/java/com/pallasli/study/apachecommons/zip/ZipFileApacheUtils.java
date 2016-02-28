@@ -46,16 +46,13 @@ public class ZipFileApacheUtils {
 				fileName = directory + ".zip";
 			} else {
 				if (directory.indexOf(".") > 0) {
-					fileName = directory.substring(0,
-							directory.lastIndexOf("."))
-							+ "zip";
+					fileName = directory.substring(0, directory.lastIndexOf(".")) + "zip";
 				} else {
 					fileName = directory + ".zip";
 				}
 			}
 		}
-		ZipOutputStream zos = new ZipOutputStream(
-				new FileOutputStream(fileName));
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
 		try {
 			zip(zos, relativePath, directory);
 		} catch (IOException ex) {
@@ -78,16 +75,14 @@ public class ZipFileApacheUtils {
 	 *            文件或文件夹绝对路径
 	 * @throws IOException
 	 */
-	private void zip(ZipOutputStream zos, String relativePath,
-			String absolutPath) throws IOException {
+	private void zip(ZipOutputStream zos, String relativePath, String absolutPath) throws IOException {
 		File file = new File(absolutPath);
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
 			for (int i = 0; i < files.length; i++) {
 				File tempFile = files[i];
 				if (tempFile.isDirectory()) {
-					String newRelativePath = relativePath + tempFile.getName()
-							+ File.separator;
+					String newRelativePath = relativePath + tempFile.getName() + File.separator;
 					createZipNode(zos, newRelativePath);
 					zip(zos, newRelativePath, tempFile.getPath());
 				} else {
@@ -110,8 +105,7 @@ public class ZipFileApacheUtils {
 	 *            相对路径
 	 * @throws IOException
 	 */
-	private void zipFile(ZipOutputStream zos, File file, String relativePath)
-			throws IOException {
+	private void zipFile(ZipOutputStream zos, File file, String relativePath) throws IOException {
 		ZipEntry entry = new ZipEntry(relativePath + file.getName());
 		zos.putNextEntry(entry);
 		InputStream is = null;
@@ -143,8 +137,7 @@ public class ZipFileApacheUtils {
 	 *            相对路径
 	 * @throws IOException
 	 */
-	private void createZipNode(ZipOutputStream zos, String relativePath)
-			throws IOException {
+	private void createZipNode(ZipOutputStream zos, String relativePath) throws IOException {
 		ZipEntry zipEntry = new ZipEntry(relativePath);
 		zos.putNextEntry(zipEntry);
 		zos.closeEntry();
@@ -167,8 +160,7 @@ public class ZipFileApacheUtils {
 			zipFile = new ZipFile(zipFilePath);
 			String directoryPath = "";
 			if (null == targetPath || "".equals(targetPath)) {
-				directoryPath = zipFilePath.substring(0,
-						zipFilePath.lastIndexOf("."));
+				directoryPath = zipFilePath.substring(0, zipFilePath.lastIndexOf("."));
 			} else {
 				directoryPath = targetPath;
 			}
@@ -178,17 +170,14 @@ public class ZipFileApacheUtils {
 				while (entryEnum.hasMoreElements()) {
 					zipEntry = (ZipEntry) entryEnum.nextElement();
 					if (zipEntry.isDirectory()) {
-						directoryPath = directoryPath + File.separator
-								+ zipEntry.getName();
+						directoryPath = directoryPath + File.separator + zipEntry.getName();
 						System.out.println(directoryPath);
 						continue;
 					}
 					if (zipEntry.getSize() > 0) {
 						// 文件
-						File targetFile = buildFile(directoryPath
-								+ File.separator + zipEntry.getName(), false);
-						os = new BufferedOutputStream(new FileOutputStream(
-								targetFile));
+						File targetFile = buildFile(directoryPath + File.separator + zipEntry.getName(), false);
+						os = new BufferedOutputStream(new FileOutputStream(targetFile));
 						is = zipFile.getInputStream(zipEntry);
 						byte[] buffer = new byte[4096];
 						int readLen = 0;
@@ -200,9 +189,7 @@ public class ZipFileApacheUtils {
 						os.close();
 					} else {
 						// 空目录
-						buildFile(
-								directoryPath + File.separator
-										+ zipEntry.getName(), true);
+						buildFile(directoryPath + File.separator + zipEntry.getName(), true);
 					}
 				}
 			}
