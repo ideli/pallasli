@@ -8,7 +8,6 @@
 	 http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx 
        http://www.springframework.org/schema/tx/spring-tx.xsd">
-
 	<bean id="processEngineConfiguration"
 		class="org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
 		<property name="databaseSchemaUpdate" value="true" />
@@ -28,14 +27,6 @@
 	<bean id="managementService" factory-bean="processEngine"
 		factory-method="getManagementService" />
 	<bean id="identityService" factory-bean="processEngine"
-		factory-method="getIdentityService" />
-
-	<bean id="userManagerService" class="com.pallas.bpm.service.impl.BpmUserManagerServiceImpl" />
-	<bean id="modelManagerService" class="com.pallas.bpm.service.impl.BpmModelManagerServiceImpl" />
-	<bean id="instanceManagerService"
-		class="com.pallas.bpm.service.impl.BpmInstanceManagerServiceImpl" />
-	<bean id="businessService" class="com.pallas.bpm.service.impl.BpmBusinessServiceImpl" />
-
-	<import resource="classpath*:spring/activiti-dao.cfg.xml" />
-
+		factory-method="getIdentityService" /> 
+	<import resource="classpath*:activiti/pallasli-service-default.xml" />
 </beans>

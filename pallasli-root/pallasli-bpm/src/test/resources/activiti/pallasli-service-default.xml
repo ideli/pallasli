@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="proInstHandlerService"
+		class="com.pallasli.bpm.service.impl.DefaultProcessInstanceHandlerServiceImpl" />
+	<bean id="proInstQueryService"
+		class="com.pallasli.bpm.service.impl.DefaultProcessInstanceQueryServiceImpl" />
+	<bean id="proModelQueryService"
+		class="com.pallasli.bpm.service.impl.DefaultProcessModelQueryServiceImpl" />
+	<bean id="proModelHandlerService"
+		class="com.pallasli.bpm.service.impl.DefaultProcessModelHandlerServiceImpl" />
+	<bean id="taskQueryService"
+		class="com.pallasli.bpm.service.impl.DefaultTaskQueryServiceImpl" />
+	<bean id="taskHandlerService"
+		class="com.pallasli.bpm.service.impl.DefaultTaskHandlerServiceImpl" />
+	<bean id="hisProInstQueryService"
+		class="com.pallasli.bpm.service.impl.DefaultHistoryProcessInstanceQueryServiceImpl" />
+	<bean id="hisTaskQueryService"
+		class="com.pallasli.bpm.service.impl.DefaultHistoryTaskQueryServiceImpl" />
+	<bean id="proDiagramService"
+		class="com.pallasli.bpm.service.impl.DefaultProcessDiagramServiceImpl" />
+</beans>
