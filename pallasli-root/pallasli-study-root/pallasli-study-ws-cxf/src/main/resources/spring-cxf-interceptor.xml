@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+       http://cxf.apache.org/jaxws  
+       http://cxf.apache.org/schemas/jaxws">
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<bean id="helloServiceBean" class="com.pallasli.study.ws.cxf.impl.spring.HelloWorldImpl"/> 
+	<bean id="inMessageInterceptor" class="com.pallasli.study.ws.cxf.interceptor.MessageInterceptor">
+		<constructor-arg value="receive" />
+	</bean>
+
+	<bean id="outLoggingInterceptor"  class="com.pallasli.study.ws.cxf.interceptor.MessageInterceptor">
+		<constructor-arg value="send" />
+	</bean>
+	<!-- 注意下面的address，这里的address的名称就是访问的WebService的name -->
+	<jaxws:server id="helloService"
+		serviceClass="com.pallasli.study.ws.cxf.HelloWorld" address="/hello">
+		<jaxws:serviceBean>
+			<!-- 要暴露的 bean 的引用 -->
+			<ref bean="helloServiceBean" />
+		</jaxws:serviceBean>
+		<jaxws:inInterceptors>
+			<ref bean="inMessageInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="outLoggingInterceptor" />
+		</jaxws:outInterceptors>
+	</jaxws:server>
+</beans>  

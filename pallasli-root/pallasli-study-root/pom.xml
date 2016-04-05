@@ -22,5 +22,8 @@
       <module>pallasli-study-test</module>
       <module>pallasli-study-web-start</module>
       <module>pallasli-study-webroot</module>
+      <module>pallasli-study-wx</module>
+      <module>pallasli-study-zookeeper</module>
+      <module>pallasli-study-ws-cxf</module>
   </modules>
 </project>
