@@ -1,0 +1,2056 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='zh-CN' xml:lang='zh-CN' xmlns='http://www.w3.org/1999/xhtml'>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="Content-Language" content="zh-CN"/>
+  <meta name="robots" content="index, follow" />
+  <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico?t=1451961935000" />
+  <title>struts--token防止表单重复提交（源码分析） -  cookqq - 开源中国社区</title>
+    <meta name="Keywords" content="struts,token,表单重复提交"/>
+      <meta name="Description" content="struts--token防止表单重复提交（源码分析）：表单重复提交 1、造成重复提交主要的两个原因：   （1）         一是，服务器处理时间久。当用..."/>
+    <link rel="stylesheet/less" href="http://my.oschina.net/winHerson/styles.less?ver=20150812&date=20120921110120" type="text/css" media="screen" />
+  <link rel="stylesheet" href="/js/2012/poshytip/tip-yellowsimple/tip-yellowsimple.css?t=1451961936000" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="/js/2011/fancybox/jquery.fancybox-1.3.4.css?t=1451961936000" media="screen" />
+	<!--添加emoji支持-->
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/nature.css?t=1451961936000">
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/object.css?t=1451961936000">
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/people.css?t=1451961936000">
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/place.css?t=1451961936000">
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/Sysmbols.css?t=1451961936000">
+    <link rel="stylesheet" type="text/css" href="/js/team/grunt/dist/emoji/twemoji.css?t=1451961936000">
+
+  <script type="text/javascript" src="/js/2012/jquery-1.7.1.min.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/2012/jquery.form.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/2011/fancybox/jquery.fancybox-1.3.4.pack.js?t=1451961936000?2014031702"></script>
+  <script type="text/javascript" src="/js/2012/poshytip/jquery.poshytip.min.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/2011/oschina.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/2012/less-1.3.0.min.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/scrolltopcontrol.js?t=1451961936000"></script>
+  <script type='text/javascript' src='/js/jquery/jquery.atwho.js?t=1451961936000'></script>
+  <script type="text/javascript" src="/js/lib/angular/angular.min.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/lib/angular/angular-sanitize.min.js?t=1451961936000"></script>
+  <script type="text/javascript" src="/js/lib/angular/angular-resource.min.js?t=1451961936000"></script>
+  <link rel="stylesheet" href="/css/team/font-awesome/font-awesome.css?t=1428390908000" type="text/css">
+  <link rel="stylesheet" type="text/css" href="/js/jquery/jquery.atwho.css?t=1451961936000" />
+  <link rel="alternate" type="application/rss+xml" title="yigeren866最新博客" href="http://my.oschina.net/winHerson/rss" />
+  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://my.oschina.net/action/xmlrpc/rsd?space=200838" />
+  <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://my.oschina.net/action/xmlrpc/wlwmanifest?space=200838" /> 
+  <style type="text/css">
+    body,table,input,textarea,select {font-family:Microsoft YaHei,Verdana,sans-serif,宋体;}
+
+      emoji[data-emoji~=emoji] {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
+          vertical-align: top;
+          text-align: center;
+      }
+  </style>
+  <script type="text/javascript">
+  	scrolltotop.offset(100,165);
+	scrolltotop.init();
+  </script>
+</head>
+<body>
+<div id="OSC_Screen">
+	<style type="text/css">
+    #OSC_Banner {margin: 0 auto;text-align: left;margin-bottom: 5px;height:30px;border-top:0px;}
+    #OSC_Banner a {text-decoration: none;color: #fff;}
+    #OSC_Banner .cs_content a {color: #080;}
+    #OSC_Banner a:hover {color: #eee;}
+	#OSC_Banner a.project{background-color:transparent;}
+    #OSC_Banner #OSC_Channel {float: left;height:30px;}
+    #OSC_Banner #OSC_Channel ul {line-height: 18px;}
+    #OSC_Banner #OSC_Channel ul li.item {float: left;margin: 0 16px 0 0;line-height: 30px;}
+    #OSC_Banner #OSC_Channel ul li a.hl {font-weight: bold;}
+    #OSC_Banner #OSC_Userbar {float: right;	color: #ddd;line-height:30px;margin-right:10px;}
+    #OSC_Banner #OSC_Userbar em {font-style: normal;color: #fff;margin-right: 2px;}
+	/*下拉菜单*/
+	#OSC_Banner .control_select {position: relative;background: url('/img/down3.gif') no-repeat right 14px;padding-right: 8px;cursor: pointer;height: 25px;display: inline-block;z-index: 1001;}
+	#OSC_Banner .control_select a {position: relative;}
+	#OSC_Banner .control_select ul.cs_content {display: none;text-align: left;position: absolute;left: 0px;top: 25px;width: 110px;z-index: 9999;background: white;padding: 5px 0 2px 5px;font-size: 9pt;list-style-type: none;}
+	#OSC_Banner .control_select ul.cs_content li {border: 0;height: 16px;line-height: 16px;margin-bottom: 8px;}
+	#OSC_Banner .control_select ul.cs_content li a:hover {font-weight: bold;background: #fff;color: #A00}
+	#OSC_Banner .group_msg_count {display: inline-block;	padding: 2px;border-radius: 3px;background-color: RGB(255, 113, 112);color: white;font-size: 12px;height: 10px;text-align: center;
+		line-height: 10px;min-width: 15px;box-shadow: 1px 1px 1px RGBA(0, 0, 0, 0.2);-webkit-box-shadow: 1px 1px 1px RGBA(0, 0, 0, 0.2);-moz-box-shadow: 1px 1px 1px RGBA(0, 0, 0, 0.2);}
+	.tip-yellowsimple .tip-arrow-top{left:80%;}
+</style>
+<script type="text/javascript">
+  	g_user = {
+	id:0,
+	name:'',
+	login:false};</script>
+<script type="text/javascript" src="/js/utils.js?t=1451961937000"></script>
+<script type="text/javascript" src="/js/channel.js?t=1451961936000?2014022501"></script>
+<div id='OSC_Banner'>
+        <div id="OSC_Channel" style="float:left;margin-left:10px;">
+        	<ul>
+        	<li class="item"><a href="http://www.oschina.net/" class='home'>首页</a></li>        	<li class="item control_select"><a href="http://www.oschina.net/project" class='project'>开源项目</a>
+				<ul class="cs_content">					
+                	                	<li><a href="http://www.oschina.net/project/lang/19/java">Java 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/194/csharp">C# 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/22/php">PHP 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/21/c">C/C++ 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/26/ruby">Ruby 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/25/python">Python 开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/358/go">Go开源软件</a></li>
+                	<li><a href="http://www.oschina.net/project/lang/28/javascript">JS开源软件</a></li>
+				</ul>
+			</li>
+        	<li class="item control_select">
+				<a href="http://www.oschina.net/question" class='question'>问答</a>				
+				<ul class="cs_content">					
+                	<li><a href="http://www.oschina.net/question?catalog=1"> 技术问答 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/question?catalog=2"> 技术分享 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/question?catalog=3"> IT大杂烩 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/question?catalog=100"> 职业生涯 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/question?catalog=4"> 站务/建议 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/alipay"> 支付宝专区 &raquo; </a></li>
+                	<li><a href="http://www.oschina.net/hardware"> 开源硬件专区 &raquo; </a></li>
+				</ul>
+			</li>
+        	<li class="item"><a href="http://www.oschina.net/code/list" class='code'>代码</a></li>
+        	        	<li class="item"><a href="http://www.oschina.net/blog" class='blog'>博客</a></li>
+        	<li class="item"><a href="http://www.oschina.net/translate" class='tran'>翻译</a></li>
+            <li class="item"><a href="http://www.oschina.net/news" class='news'>资讯</a></li>
+        	<li class="item control_select">
+				<a href="http://www.oschina.net/android" class='mobile'>移动开发</a>
+				<ul class="cs_content cs_mobile">
+                	<li class="android_"><a href="http://www.oschina.net/android">Android开发专区</a></li>
+                	<li class="ios_"><a href="http://www.oschina.net/ios/home">iOS开发专区</a></li>
+                	<li class="ios_"><a href="http://www.oschina.net/ios/codingList">iOS代码库</a></li>
+                	<li class="wp7_"><a href="http://www.oschina.net/wp">Windows Phone</a></li>
+				</ul>
+			</li>
+        	<li class="item t_job"><a href="http://www.oschina.net/job" class='job'>招聘</a></li>
+									            <li class="item control_select">
+                <a href="http://city.oschina.net/" id="MyCities" title="城市圈">城市圈</a>
+							</li>
+        	</ul>
+        </div>
+		<div id="OSC_Userbar">
+                		    		当前访客身份：游客 [ <a href="http://www.oschina.net/home/login?goto_page=http%3A%2F%2Fmy.oschina.net%2FwinHerson%2Fblog%2F92417">登录</a> | <a href="http://www.oschina.net/home/reg">加入开源中国</a> ]
+    				</div>
+		<div class='clear'></div>
+</div>	<div id="OSC_Topbar">
+		<div id="VisitorInfo">
+		当前访客身份：
+				游客 [ <a href="http://www.oschina.net/home/login?goto_page=http%3A%2F%2Fmy.oschina.net%2FwinHerson">登录</a> | <a href="http://www.oschina.net/home/reg">加入开源中国</a> ]
+				
+		</div>
+		<div id="SearchBar">
+    		<form action="http://www.oschina.net/search">
+				<input type='hidden' name='user' value='200838'/>
+																<span class="ipt f_l">
+    			<input type='text' id='txt_q' name='q' class='SERACH' value='在 40672 款开源软件中搜索' onblur="(this.value=='')?this.value='在 40672 款开源软件中搜索':this.value" onfocus="if(this.value=='在 40672 款开源软件中搜索'){this.value='';};this.select();"/>
+				</span>
+				                <div class="search-by selectbox">
+    				<span class="hide">
+    				<select name='scope'>					
+                        <option value='project' selected>软件</option>
+                        <option value='code'>代码</option>
+                        <option value='bbs'>讨论区</option>
+                        <option value='news'>新闻</option>
+                        <option value='blog'>博客</option>
+    				</select>
+    				</span>
+                  <div class="search_on" id="search-item"><span class="text">软件</span></div>
+                  <ul class="search_list">
+                     <li class="search-item"><a href="#1">软件</a></li>
+                     <li><a href="#2">代码</a></li>
+                     <li><a href="#3">讨论区</a></li>
+                     <li><a href="#4">新闻</a></li>
+                     <li><a href="#5">博客</a></li>
+                  </ul>
+                </div>
+				<input type='submit' value='搜索' class='bnt f_r'/>			
+    		</form>
+		</div>
+		<div class='clear'></div>
+	</div>
+	<div id="OSC_Content">            	            			
+
+
+<style>
+	.icon{width:20px;height:20px;vertical-align: middle;display:inline-block;font-size:14px;text-align:center;color:#FFF;font-weight: bold;}
+	.catalogs{padding:0px;margin:0px;position:relative;display:inline-block;}
+    .catalogs ul{padding:0px;margin:0px;position:absolute;left:-8px;top: -21px;clear:left;width:120px;height:14px;overflow:hidden;background:#FFF;z-index:1000;padding:5px;border:1px solid #FFF;}
+    .catalogs ul:hover{height:auto;background:#fff;border:1px solid #4466bb;}
+    .catalogs ul li a:hover{color:#A00;font-weight: bold;}
+	.BlogStat a:hover{background:#FFF;}
+	.BlogStat{font-size:12px;line-height:20px;}
+	.BlogStat .g{color:#40AA53}
+	.BlogTags{margin-top:8px;}
+		.BlogAbstracts{}
+</style>
+<div id='SpaceLeft'>
+<div class='Owner'>
+	    <a href="http://my.oschina.net/winHerson" class='Img'><img src="http://static.oschina.net/uploads/user/100/200838_100.jpg?t=1430717993000" align="absmiddle" alt="cookqq" title="cookqq" class="LargePortrait"/></a>
+    <span class='U'>
+                    <a href="http://my.oschina.net/winHerson" class='Name' title='男'>cookqq</a>
+        		<span class='opts'>
+			<img src="/img/2012/men.png" align='absmiddle' title='男'/>
+        			<script type='text/javascript'>
+var nologin = "<a href='javascript:_follow_nologin()' title='成为TA的粉丝'>关注此人</a>"
+var follow0 = "<a href='javascript:_follow_user(200838,true)' title='成为TA的粉丝'>关注此人</a>";
+var follow1 = "已关注 | <a href='javascript:_follow_user(200838,false)' title='取消关注后，此人的更新信息将不会出现在你的首页'>取消</a>";
+var follow2 = "互相关注 | <a href='javascript:_follow_user(200838,false)' title='取消关注后，此人的更新信息将不会出现在你的首页'>取消</a>";
+var follow4 = "<a href='javascript:_follow_user(200838,true)' title='成为TA的粉丝'>+关注此人</a>";
+
+document.write("<span id='_follow_200838_action_'>");
+	document.write(nologin);
+document.write("</span>");
+
+function _follow_nologin(){
+	if(confirm('必须登录后才能关注，是否现在登录？')){
+		location.href="http://www.oschina.net/home/login?goto_page="+location.href;
+	}
+}
+
+function _follow_user(uid, follow){
+	var action = follow?"/action/user/follow":"/action/user/unfollow";
+	ajax_post(action,"id="+uid+"&user=${g_user.id}",function(result){
+		var act = $('#_follow_200838_action_');
+		if(result == '0')
+			_follow_nologin();
+		else if(result == '1')
+			act.html(follow0);
+		else if(result == '2')
+			act.html(follow1);
+		else if(result == '3')
+			act.html(follow2);
+		else if(result == '4')
+			act.html(follow4);
+	});
+}
+</script>				</span>
+    </span>
+    <div class='clear'></div>
+    <div class='stat'>
+    	<a href="http://my.oschina.net/winHerson/fellow">关注<span>(15)</span></a>
+    	<a href="http://my.oschina.net/winHerson/fans">粉丝<span>(95)</span></a>
+    	<a href="http://www.oschina.net/question/3307_20931" title="查看OSCHINA积分规则">积分<span>(83)</span></a>
+                       
+    </div>
+</div>    	<div class="Medals clearfix">
+        <ul id="Medals">
+                    <li>
+                <a class="clearfix" href="http://my.oschina.net/winHerson/admin/medals" medalId="23" title="参与源创会">
+                    <img src="http://static.oschina.net/uploads/medals/slogo1392108956172.png" alt="参与源创会" width="24" height="24" title="参与源创会"/>
+                </a>
+            </li>
+                </ul>
+	</div>
+	<style type="text/css">
+    #Medals {margin-left: 3px; height: 28px;}
+    #Medals li {float: left;margin: 3px 5px;line-height: 24px;}
+    .tip-yellowsimple-medal {
+        z-index: 1000;
+        text-align: left;
+        border: 1px solid #E6DEB6;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        padding: 6px 8px;
+        min-width: 50px;
+        max-width: 300px;
+        color: #000;
+        background-color: #FFFEF2;
+    }
+	.tip-yellowsimple-medal .tip-arrow-left {
+		visibility: inherit;
+        margin-top: -4px;
+        margin-left: -6px;
+        top: 15px;
+        left: 0;
+        width: 6px;
+        height: 9px;
+        background: url(/js/2012/poshytip/tip-yellowsimple/tip-yellowsimple_arrows.gif?t=1451961936000) no-repeat -27px 0;
+	}
+	div.tip-yellowsimple-medal div.tip-arrow {
+        visibility: hidden;
+        position: absolute;
+        overflow: hidden;
+        font: 1px/1px sans-serif;
+	}
+</style>
+<script type="text/javascript">
+    $(function(){
+        $('#Medals a').poshytip({
+            className: 'tip-yellowsimple-medal',
+            alignTo: 'target',
+            alignX: 'right',
+            alignY: 'bottom',
+            offsetX: 10,
+            offsetY: -30,
+            fade: false,
+            slide: false,
+            content: function(updateCallback) {
+                ajax_get("/action/ajax/get_medal_detail?owner=200838&medalId="+$(this).attr('medalId')+"&time="+new Date().getTime(),false,function(html){
+                    updateCallback(html);
+                    if($('.tip-arrow.tip-arrow-left').last().offset().top >= temp.offset().top) {
+                        $('.tip-arrow.tip-arrow-left').last().css({top : "15px"});
+                    }
+                    else {
+                        $('.tip-arrow.tip-arrow-left').last().css({top : "135px"});
+                    }
+                });
+                temp = $(this);
+                return "<div style='height:100px;'>Loading...</div>";
+            }
+        });
+    });
+</script>
+<style>
+#MyResume textarea {width:170px;height:60px;font-size:9pt;}
+</style>
+<div class='Resume' id='MyResume'>
+本人博客开始迁移，博客整个架构自己搭建及编码http://www.cookqq.com/，本人QQ：136641953,</div>
+
+<div class='Opts clearfix'>
+	<a href="javascript:sendmsg(200838, 0)" class='a1 sendmsg'><i>.</i><span>发送私信</span></a>
+	<a href="http://www.oschina.net/question/ask?user=200838" class='a2 ask'><i>.</i><span>请教问题</span></a>
+</div><div class="Mod" id="BlogCatalogs">
+  <strong> 博客分类</strong>
+  <ul>
+	    	<li><a href="http://my.oschina.net/winHerson/blog?catalog=3510458">netty</a><span>(2)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=434749">mahout</a><span>(10)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=431201">hive</a><span>(5)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=453857">hadoop扩展</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=144946">struts</a><span>(12)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=323313">hadoop</a><span>(29)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=289386">刨根问底</a><span>(30)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=123354">日常记录</a><span>(6)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=123355">转贴的文章</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=144958">jquery</a><span>(7)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=146187">html</a><span>(7)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=260697">ubuntu</a><span>(33)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=162020">数据库</a><span>(6)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=302873">java</a><span>(11)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=307324">eclipse</a><span>(3)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=307673">正则表达式</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=307699">ActiveMQ</a><span>(6)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=357635">http</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=213106">lucene</a><span>(4)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=310162">shell</a><span>(10)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=310555">activiti</a><span>(16)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=310876">github</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=313501">jvm</a><span>(9)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=152807">tomcat</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=143818">swing</a><span>(15)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=357733">设计模式</a><span>(2)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=388729">highcharts</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=407339">C</a><span>(3)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=421779">数据库引擎开发笔记</a><span>(9)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=434827">powerdesigner</a><span>(3)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=320525">大数据</a><span>(4)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=248235">Android</a><span>(16)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=400211">Hama</a><span>(1)</span></li>
+		<li><a href="http://my.oschina.net/winHerson/blog?catalog=533532">android自定义组件</a><span>(1)</span></li>
+	  </ul>
+</div><div class="Mod" id="HotBlogs">
+  <strong>阅读排行</strong>
+  <ol>
+			<li><a href="http://my.oschina.net/winHerson/blog/94088">1. android--AnimationDrawable实现等待动画效果</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/112309">2. ubuntu12.04安装mysql</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/139267">3. activiti--多实例任务实现会签</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/111446">4. ActiveMQ 持久化（文件），查询队列剩余消息数、出队数的实现</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/118172">5. 扩展activiti使用自己的用户表和群组表</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/209420">6. Hadoop面试45个题目及答案</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/84716">7. SSHDroid（SSH Server for Android）通过PC或命令连接android</a></li>
+				<li><a href="http://my.oschina.net/winHerson/blog/91150">8. android--广播BroadcastReceiver的发送过程</a></li>
+		  </ol>
+</div>
+<div class="Mod" id="BlogReplies">
+  <strong> 最新评论</strong>  
+      <ul>
+		<li>
+		<a href="http://my.oschina.net/u/573365">@zhangnan_119</a>：henhao
+		<a href="/action/tweet/go?obj=290149437&type=18&user=573365">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/winHerson">@cookqq</a>：引用来自“Amayadream”的评论请问各位有办法了没...
+		<a href="/action/tweet/go?obj=290063696&type=18&user=200838">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/Amayadream">@Amayadream</a>：请问各位有办法了没?找了很多天还是没有很好的办法
+		<a href="/action/tweet/go?obj=290049322&type=18&user=2242883">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/winHerson">@cookqq</a>：引用来自“philhong”的评论如何动态的制定 Sequ...
+		<a href="/action/tweet/go?obj=289725518&type=18&user=200838">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/philhong">@philhong</a>：如何动态的制定 Sequential的值？
+		<a href="/action/tweet/go?obj=289717697&type=18&user=733781">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/pkm">@雪浪</a>：引用来自“xueyingbing”的评论多实例实现的会签...
+		<a href="/action/tweet/go?obj=289081399&type=18&user=138859">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/pkm">@雪浪</a>：引用来自“wdwnet”的评论多实例怎么实现指定候选...
+		<a href="/action/tweet/go?obj=289081391&type=18&user=138859">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/u/1589878">@xh_anthow</a>：查看效果
+		<a href="/action/tweet/go?obj=288180374&type=18&user=1589878">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/rambowong">@豹保雹包_宝哥</a>：看下效果
+		<a href="/action/tweet/go?obj=287679832&type=18&user=2413277">查看&raquo;</a>
+	</li>
+		<li>
+		<a href="http://my.oschina.net/mttqq">@Tity</a>：请给我发一份，谢谢。447959730@qq.com...
+		<a href="/action/tweet/go?obj=287615003&type=18&user=130620">查看&raquo;</a>
+	</li>
+	  </ul>
+  </div>
+<div class="Mod" id="BlogLinks">
+  <strong>友情链接</strong>
+  <ul>
+	        <li><a href="http://www.cookqq.com/createLabel.action" target="_blank">1. 中文标签云免费工具</a></li>
+	        <li><a href="http://www.cookqq.com" target="_blank">2. 本人博客开始迁移，博客整个架构自己搭建及编码</a></li>
+	  </ul>
+</div>
+<div class='Mod' id='Stat'>
+<strong>访客统计</strong>
+<ul>
+	<li><label>今日访问：</label>20</li>
+    <li><label>昨日访问：</label>254</li>
+    <li><label>本周访问：</label>631</li>
+    <li><label>本月访问：</label>990</li>
+    <li><label>所有访问：</label>168595</li>
+</ul>
+</div></div>
+
+<link rel="stylesheet" type="text/css" href="/js/lib/thinker-md/stylesheets/thinker-md.vendor.css?t=1451961936000">
+<script src="/js/lib/thinker-md/javascripts/thinker-md.vendor.min.js?t=1451961936000" type="text/javascript"/></script>
+
+
+<div class='SpaceList'>
+	<div class='TopBar'>
+    	<div class='NavPath'>
+    		<a href='http://my.oschina.net/winHerson'>空间</a> &raquo; <a href='http://my.oschina.net/winHerson/blog'>博客</a>
+			&raquo;
+						<span class="catalogs">
+    			<ul>
+    										<li ><a href="http://my.oschina.net/winHerson/blog?catalog=144946">struts</a></li>
+					        			        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=3510458">netty</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=434749">mahout</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=431201">hive</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=453857">hadoop扩展</a></li>    				        				    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=323313">hadoop</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=289386">刨根问底</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=123354">日常记录</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=123355">转贴的文章</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=144958">jquery</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=146187">html</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=260697">ubuntu</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=162020">数据库</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=302873">java</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=307324">eclipse</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=307673">正则表达式</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=307699">ActiveMQ</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=357635">http</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=213106">lucene</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=310162">shell</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=310555">activiti</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=310876">github</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=313501">jvm</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=152807">tomcat</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=143818">swing</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=357733">设计模式</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=388729">highcharts</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=407339">C</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=421779">数据库引擎开发笔记</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=434827">powerdesigner</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=320525">大数据</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=248235">Android</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=400211">Hama</a></li>    				        				<li ><a href="http://my.oschina.net/winHerson/blog?catalog=533532">android自定义组件</a></li>    				    				        				<li><a href="http://my.oschina.net/winHerson/blog">所有分类</a></li>
+    				    			</ul>
+			</span>
+    	</div>
+	</div>
+
+    	<div class='BlogEntity'>
+      <div class='BlogTitle'>
+        <h1><span class="icon" style="background:#44ac57;"  title="原创博客">原</span>						<span class="icon" style="background:#fd6245;"  title="个人博客列表置顶博客">顶</span>									struts--token防止表单重复提交（源码分析）</h1>
+        <div class='BlogStat'>
+    		    		发表于3年前(2012-11-28 12:32)&nbsp;&nbsp;
+    		阅读（<span class="g">2367</span>）&nbsp;|&nbsp;评论（<a href="#comments"><span class="g">4</span></a>）
+    					    	    <span class='admin'>
+				<style>
+#TagsSwitcher{color:#A00;}
+#RecTags,#MyTags{margin:5px 0;}
+#RecTags a.tag{line-height:24px;}
+#favor_form p:first-child{margin:5px 0;}
+#favor_form{width:200px;}
+#favor_form p {color:#666;}
+#favor_form form{min-height: 85px;width:200px;}
+#favor_form form ._favor_input{display:block;margin:2px 0;width:199px;}
+#favor_form form ._favor_button{float:left;padding:2px 5px;}
+.favor_ok {text-align:center;font-size:10.5pt;width:199px;height:60px;margin-top:10px;}
+#TagsSwitcher{cursor:pointer;float:right;margin-top:10px;}
+#MyTags{display:none;width:199px;}
+#MyTags a.tag {float:left; background-color: #E0EAF1;border-bottom: 1px solid #3E6D8E;border-right: 1px solid #7F9FB6;color: #3E6D8E;font-size: 8pt;line-height: 16px;margin: 2px 2px 2px 0;padding: 2px 4px;text-decoration: none;white-space: nowrap;}
+#MyTags a.tag:hover{background-color: #3E6D8E;color: #FFF;}
+</style>
+<script type='text/javascript'>
+var favor_add = "<a href='javascript:add_to_favor(92417,3)' id='favor_trigger' title='添加到收藏夹'>我要收藏</a>";
+var favor_del = "<a href='javascript:delete_favor(92417,3)' id='favor_trigger' style='color:#a00;'>取消收藏</a>";
+var favor_ok = "<p class='favor_ok'>已成功添加到收藏夹<br/><br/> <a href='null/favorites?type=3'>我的收藏夹</a> | <a href='javascript:close_favor()'>关闭</a></p>";
+function delete_favor(obi_id, obj_type){
+	$('#attention_it').html(favor_add);
+	$("#p_attention_count").load("/action/favorite/cancel?type="+obj_type+"&id="+obi_id, {user: ''});
+}
+function add_to_favor(obj_id, obj_type){
+	if(confirm('必须登录后才能收藏，是否现在登录？')){
+		location.href="http://www.oschina.net/home/login?goto_page="+encodeURIComponent(location.href);
+	}
+}
+function close_favor(elem_id){
+    $('#favor_trigger').poshytip('destroy');
+}
+function setTag(tv){
+	var t = $("._favor_input");
+	var value = t.val();
+	var tags = value.replace(/，/ig,',').split(',');
+	var exist = false;
+	value = $.map(tags,function(v,i){
+		if($.trim(tv) == $.trim(v)){
+			exist = true;
+			return undefined;
+		}
+		return v;
+	}).join(',');
+	if(exist){
+		t.val(value);
+		return;
+	}
+	if(value!="")
+		t.val(value+","+tv);
+	else
+		t.val(tv)
+}
+function ltrim(str){
+    var whitespace = new String(" \t\n\r");
+    var s = new String(str);
+    if (whitespace.indexOf(s.charAt(0)) != -1){
+        var j=0, i = s.length;
+        while (j < i && whitespace.indexOf(s.charAt(j)) != -1){
+            j++;
+        }
+        s = s.substring(j, i);
+    }
+    return s;
+}
+
+function rtrim(str){
+    var whitespace = new String(" \t\n\r");
+    var s = new String(str);
+    if (whitespace.indexOf(s.charAt(s.length-1)) != -1){
+        var i = s.length - 1;
+        while (i >= 0 && whitespace.indexOf(s.charAt(i)) != -1){
+            i--;
+        }
+        s = s.substring(0, i+1);
+    }
+    return s;
+}
+ 
+function trim(str){
+    return rtrim(ltrim(str));
+}
+</script>
+<em id='p_attention_count'>0</em>人收藏此文章,
+<span id='attention_it'>
+	<script type='text/javascript'>document.write(favor_add);</script>
+</span>
+<script type="text/javascript">
+	$(document).ready(function(){
+    	$.ajax({
+    		url:"/action/favorite/attentionUsersCount",
+    		type:"get",
+    		data:"id="+92417+"&type="+3,
+    		success:function(msg){
+				$("#p_attention_count").html(msg);
+    		}
+    	});
+	});
+</script>			</span>
+			    	</div>
+		<div class="tvote" onclick="vote(92417)" title="都有2个人赞过了，你也来赞一下吧！不会扣积分哦！"><em class="vote">赞</em><em class="num vote_count">2</em></div>
+      </div>
+	  	  <a href="http://click.aliyun.com/m/3873/" target="_blank"><img src="http://static.oschina.net/uploads/space/2016/0314/180158_p2it_2491310.jpg" style="width: 730px; height: 50px;"></a>	  
+	  	  <a  name="kindeditor" ></a>
+	            <div class="BlogAbstracts">
+						           <div class='BlogTags'>
+        	        	<a href="http://www.oschina.net/search?scope=blog&q=struts" class="tag">struts</a>
+        	        	<a href="http://www.oschina.net/search?scope=blog&q=token" class="tag">token</a>
+        	        	<a href="http://www.oschina.net/search?scope=blog&q=%E8%A1%A8%E5%8D%95%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4" class="tag">表单重复提交</a>
+        	           </div>
+		   		  </div><br />
+	          	  	  	  	          <div class='BlogContent'><p> 表单重复提交 </p> 
+<p> 1、造成重复提交主要的两个原因：<br /> &nbsp; </p> 
+<p> （1）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 一是，服务器处理时间久。当用户在表单中填完信息，点击“提交”按钮后，由于服务器反应时间过长没能及时看到响应信息，或者出于其它目的，再次点击“提交”按钮，从而导致在服务器端接收到两条或多条相同的信息。如果信息需要存储到后台数据库中，如此以来就会产生数据库操作异常提示信息，以至于给用户带来错误信息提示，从而给用户的使用带来不便。<br /> &nbsp; </p> 
+<p> <span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:21px;background-color:#CCCED0;">（1） &nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 二是，forward跳转引起的重复提交。当用户将信息提交到服务器，服务器响应采用forward方式调转到下一个页面后，此时地址栏中显示的是上个页面的URL，若刷新当前页面，浏览器会将再次提交用户先前输入的数据，就会再次出现表单重复提交的问题。当然你可以选择redirect方式跳转页面，这样就不会出现重复提交的问题；但有时为了达到某种效果或式。者出于网站安全的目的需要隐藏网页跳转，而不得不采用forward跳转方 </p> 
+<p> <span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:25px;background-color:#CCCED0;">2、 &nbsp; &nbsp;对token的简单理解：</span><br /> <span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:25px;background-color:#CCCED0;"><span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:21px;background-color:#CCCED0;">（1）&nbsp;</span>当用户首次访问包含表单的页面时，服务器会在这次会话中创建一个session对象，并产生一个令牌值，然后将这个令牌值作为隐藏输入域的值，随表单一起发送到服务器端，同时将令牌值保存到Session中。</span><br /> <span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:25px;background-color:#CCCED0;"><span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:21px;background-color:#CCCED0;">（2）&nbsp;</span> 当用户提交页面时，服务器首先判断请求参数中的令牌值和Session中保存的令牌值是否相等，若相等，则清楚Session中的令牌值，然后执行数据处理操作。如果不相等，则提示用户已经提交过了表单，同时产生一个新的令牌值，保存到Session中。当用户重新访问提交数据页面时，将新产生的令牌值作为隐藏输入域的值。</span> </p> 
+<p> 3、应用步骤： </p> 
+<p> （1）<span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;">struts.xml配置文件中添加token拦截器</span> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;"> </span> </p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">&lt;action name=&quot;doAddParameter&quot; class=&quot;com.do.action.CaAction&quot; method=&quot;doAddParameter&quot;&gt;
+ &nbsp; &nbsp;	&lt;interceptor-ref name=&quot;defaultStack&quot; /&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;interceptor-ref name=&quot;token&quot; /&gt;
+ &lt;result name=&quot;success&quot; type=&quot;redirect&quot;&gt;/car/listParameter.action?calculator_product_id=${#request.calculator_product_id}&lt;/result&gt;</pre> 
+<pre class="brush:java; toolbar: true; auto-links: false;"><span style="line-height:18px;font-family:'Courier New';font-size:12px;background-color:#F5F5F5;"> </span><span style="line-height:18px;font-family:'Courier New';font-size:12px;background-color:#F5F5F5;">&lt;!--</span><span style="line-height:18px;font-family:'Courier New';font-size:12px;background-color:#F5F5F5;"> 如果重复提交，跳转到。。。jsp页面 </span><span style="line-height:18px;font-family:'Courier New';font-size:12px;background-color:#F5F5F5;">--&gt;</span> &lt;result name=&quot;<span style="font-family:'Courier New';font-size:12px;line-height:18px;background-color:#F5F5F5;">invalid.token</span>&quot; &nbsp;type=&quot;redirect&quot;&gt;/ca/addParameter.action?calculator_product_id=${#request.calculator_product_id}&lt;/result&gt;
+ &lt;/action&gt;</pre> 这里面重要的代码是：&lt;interceptor-ref name=&quot;defaultStack&quot; /&gt; 
+<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;interceptor-ref name=&quot;token&quot; /&gt; 
+<br /> （2）jsp页面中在form表单中添加&lt;s:token&gt;&lt;/s:token&gt;，并且在jsp头上引入&lt;%@ taglib uri=&quot;/struts-tags&quot; prefix=&quot;s&quot;%&gt; 
+<p> <br /> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;">4、源码分析：</span> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;">（1）&lt;s:token&gt;标签在struts-tags.tld的定义：</span> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;"> </span> </p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">&lt;tag&gt;
+    &lt;name&gt;token&lt;/name&gt;
+    &lt;tag-class&gt;org.apache.struts2.views.jsp.ui.TokenTag&lt;/tag-class&gt;
+    &lt;body-content&gt;JSP&lt;/body-content&gt;
+    &lt;description&gt;&lt;![CDATA[Stop double-submission of forms]]&gt;&lt;/description&gt;
+    &lt;attribute&gt;
+      &lt;name&gt;accesskey&lt;/name&gt;
+      &lt;required&gt;false&lt;/required&gt;
+      &lt;rtexprvalue&gt;false&lt;/rtexprvalue&gt;
+      &lt;description&gt;&lt;![CDATA[Set the html accesskey attribute on rendered html element]]&gt;&lt;/description&gt;
+    &lt;/attribute&gt;
+。。。。</pre> 注释：上面最重要的一行代码是&lt;tag-class&gt;org.apache.struts2.views.jsp.ui.TokenTag&lt;/tag-class&gt;，指定标签对应的类 
+<p> <br /> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;">（2）<span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;font-size:14px;line-height:21px;background-color:#FFFFFF;">TokenTag.java的源码：</span></span> </p> 
+<p> <span style="color:#4B4B4B;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;background-color:#FFFFFF;"> </span> </p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">/**
+ * @see Token
+ */
+public class TokenTag extends AbstractUITag {
+
+    private static final long serialVersionUID = 722480798151703457L;
+
+    public Component getBean(ValueStack stack, HttpServletRequest req, HttpServletResponse res) {
+        return new Token(stack, req, res);
+    }
+}</pre> 
+<p> 注释：在这里面new Token对象。 </p> 
+<p> （3）Token.java的源码： </p> 
+<p> <br /> </p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">@StrutsTag(name=&quot;token&quot;, tldTagClass=&quot;org.apache.struts2.views.jsp.ui.TokenTag&quot;, description=&quot;Stop double-submission of forms&quot;)
+public class Token extends UIBean {
+
+    public static final String TEMPLATE = &quot;token&quot;;
+
+    public Token(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+        super(stack, request, response);
+    }
+
+    protected String getDefaultTemplate() {
+        return TEMPLATE;
+    }
+
+    /**
+     * First looks for the token in the PageContext using the supplied name (or {@link org.apache.struts2.util.TokenHelper#DEFAULT_TOKEN_NAME}
+     * if no name is provided) so that the same token can be re-used for the scope of a request for the same name. If
+     * the token is not in the PageContext, a new Token is created and set into the Session and the PageContext with
+     * the name.
+     */
+    protected void evaluateExtraParams() {
+        super.evaluateExtraParams();
+
+        String tokenName;
+        Map parameters = getParameters();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（1）注释在参数map中查看是否包含name字段，假设没有
+        if (parameters.containsKey(&quot;name&quot;)) {
+            tokenName = (String) parameters.get(&quot;name&quot;);
+        } else {
+            if (name == null) {
+                tokenName = TokenHelper.DEFAULT_TOKEN_NAME; //(2)<span></span> } else {
+                tokenName = findString(name);
+
+                if (tokenName == null) {
+                    tokenName = name;
+                }
+            }
+
+            addParameter(&quot;name&quot;, tokenName);
+        }
+
+        String token = buildToken(tokenName);
+        addParameter(&quot;token&quot;, token);//(3)保存Token
+        addParameter(&quot;tokenNameField&quot;, TokenHelper.TOKEN_NAME_FIELD);
+    }
+
+    /**
+     * This will be removed in a future version of Struts.
+     * @deprecated Templates should use $parameters from now on, not $tag.
+     */
+    public String getTokenNameField() {
+        return TokenHelper.TOKEN_NAME_FIELD;
+    }
+&nbsp;&nbsp;&nbsp;&nbsp;
+<p>
+&nbsp; &nbsp;&nbsp;（4）创建Token
+</p>
+private String buildToken(String name) {
+        Map context = stack.getContext();
+        Object myToken = context.get(name);
+
+        if (myToken == null) {
+            myToken = TokenHelper.setToken(name);
+            context.put(name, myToken);
+        }
+
+        return myToken.toString();
+    }
+}</pre> （4）TokenHelper.setToken(name) 
+<pre class="brush:java; toolbar: true; auto-links: false;">public static String setToken(String tokenName) {
+        Map session = ActionContext.getContext().getSession();
+        String token = generateGUID();
+        try {
+            session.put(tokenName, token);
+        }
+        catch(IllegalStateException e) {
+            // WW-1182 explain to user what the problem is
+            String msg = &quot;Error creating HttpSession due response is commited to client. You can use the CreateSessionInterceptor or create the HttpSession from your action before the result is rendered to the client: &quot; + e.getMessage();
+            LOG.error(msg, e);
+            throw new IllegalArgumentException(msg);
+        }
+
+        return token;
+    }</pre> 
+<p> &nbsp;&nbsp;&nbsp;&nbsp; </p> 
+<p> 注释：产生一个UUID，并且保存到session中. </p> 
+<p></p> 
+<p> 上面的步骤中Token已经创建好了，并且保存到了session中，现在我们看看拦截器是怎么处理的？ </p> 
+<p> （5）<span style="color:#313131;font-family:Arial, Helvetica, simsun, u5b8bu4f53;font-size:14px;line-height:25px;background-color:#CCCED0;">Struts2的内置拦截器</span><span>&lt;</span><span>interceptor name=&quot;token&quot; class=&quot;org.apache.struts2.interceptor.TokenInterceptor&quot;/&gt;</span> </p> 
+<p> <span>中<span>TokenInterceptor.java 的源码：</span></span> </p> 
+<p> <span> </span></p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">* @see TokenSessionStoreInterceptor
+ * @see TokenHelper
+ */
+public class TokenInterceptor extends MethodFilterInterceptor {
+
+    private static final long serialVersionUID = -6680894220590585506L;
+
+    public static final String INVALID_TOKEN_CODE = &quot;invalid.token&quot;;
+
+    /**
+     * @see com.opensymphony.xwork2.interceptor.MethodFilterInterceptor#doIntercept(com.opensymphony.xwork2.ActionInvocation)
+     */
+    protected String doIntercept(ActionInvocation invocation) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug(&quot;Intercepting invocation to check for valid transaction token.&quot;);
+        }
+
+        //see WW-2902: we need to use the real HttpSession here, as opposed to the map
+        //that wraps the session, because a new wrap is created on every request
+        HttpSession session = ServletActionContext.getRequest().getSession(true);
+
+        synchronized (session) {
+			//（1）判断Token是否有效
+            if (!TokenHelper.validToken()) {
+				（2）Token无效，返回结果invalid.token
+                return handleInvalidToken(invocation);
+            }
+        }
+		//（3）Token有效时，去做更多的处理
+        return handleValidToken(invocation);
+    }
+
+    /**
+     * Determines what to do if an invalid token is provided. If the action implements {@link ValidationAware}
+     *
+     * @param invocation the action invocation where the invalid token failed
+     * @return the return code to indicate should be processed
+     * @throws Exception when any unexpected error occurs.
+     */
+    protected String handleInvalidToken(ActionInvocation invocation) throws Exception {
+        Object action = invocation.getAction();
+        String errorMessage = LocalizedTextUtil.findText(this.getClass(), &quot;struts.messages.invalid.token&quot;,
+                invocation.getInvocationContext().getLocale(),
+                &quot;The form has already been processed or no token was supplied, please try again.&quot;, new Object[0]);
+
+        if (action instanceof ValidationAware) {
+            ((ValidationAware) action).addActionError(errorMessage);
+        } else {
+            log.warn(errorMessage);
+        }
+
+        return INVALID_TOKEN_CODE;
+    }
+
+    /**
+     * Called when a valid token is found. This method invokes the action by can be changed to do something more
+     * interesting.
+     *
+     * @param invocation the action invocation
+     * @throws Exception when any unexpected error occurs.
+     */
+    protected String handleValidToken(ActionInvocation invocation) throws Exception {
+        return invocation.invoke();
+    }
+}</pre> 
+<p></p> 
+<p> （6）查看Token是否有效TokenHelper.validToken()源码： </p> 
+<p> </p> 
+<pre class="brush:java; toolbar: true; auto-links: false;">public static boolean validToken() {
+        String tokenName = getTokenName();//（1）获取tokenName
+
+        if (tokenName == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(&quot;no token name found -&gt; Invalid token &quot;);
+            }
+            return false;
+        }
+
+        String token = getToken(tokenName); //(2)获取token的值，注意这是页面上传来的
+
+        if (token == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(&quot;no token found for token name &quot;+tokenName+&quot; -&gt; Invalid token &quot;);
+            }
+            return false;
+        }
+	//（3）在session中获取token值
+        Map session = ActionContext.getContext().getSession();
+        String sessionToken = (String) session.get(tokenName);
+//（4）比较2个token是否一致
+        if (!token.equals(sessionToken)) {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn(LocalizedTextUtil.findText(TokenHelper.class, &quot;struts.internal.invalid.token&quot;, ActionContext.getContext().getLocale(), &quot;Form token {0} does not match the session token {1}.&quot;, new Object[]{
+                        token, sessionToken
+                }));
+            }
+
+            return false;
+        }
+
+        // remove the token so it won't be used again
+		//(5)token合法，把session中的token删除
+        session.remove(tokenName);
+
+        return true;
+    }
+
+public static String getTokenName() {
+        Map params = ActionContext.getContext().getParameters();
+
+        if (!params.containsKey(TOKEN_NAME_FIELD)) {
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn(&quot;Could not find token name in params.&quot;);
+            }
+
+            return null;
+        }
+
+        String[] tokenNames = (String[]) params.get(TOKEN_NAME_FIELD);
+        String tokenName;
+
+        if ((tokenNames == null) || (tokenNames.length &lt; 1)) {
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn(&quot;Got a null or empty token name.&quot;);
+            }
+
+            return null;
+        }
+
+        tokenName = tokenNames[0];
+
+        return tokenName;
+    }
+
+   public static String getToken(String tokenName) {
+        if (tokenName == null ) {
+            return null;
+        }
+        Map params = ActionContext.getContext().getParameters();
+        String[] tokens = (String[]) params.get(tokenName);
+        String token;
+
+        if ((tokens == null) || (tokens.length &lt; 1)) {
+            if (LOG.isWarnEnabled()) {
+        	LOG.warn(&quot;Could not find token mapped to token name &quot; + tokenName);
+            }
+
+            return null;
+        }
+
+        token = tokens[0];
+
+        return token;
+    }</pre> 到这里，结束了。 
+<p></p> 
+<p> <br /> </p></div>
+      	        	      	<div class='BlogShare'>
+    	
+		<strong>分享到：</strong>
+		<a class="share_sina" title="分享到新浪微博" href="javascript:void((function(s,d,e,r,l,p,t,z,c){var%20f='http://v.t.sina.com.cn/share/share.php?appkey=858381728',u=z||d.location,p=['&url=',e(u),'&title=',e(t||d.title),'&source=',e(r),'&sourceUrl=',e(l),'&content=',c||'gb2312','&pic=',e(p||'')].join('');function%20a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=440,height=430,left=',(s.width-440)/2,',top=',(s.height-430)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();})(screen,document,encodeURIComponent,'','','','struts--token防止表单重复提交（源码分析）: 表单重复提交 1、造成重复提交主要的两个原因：   （1）         一是，服务器处理时间久。当用户在表单中填完信息，点击“提交”按钮后，由于服务器反应时间过...','','utf-8'));">
+			<img src="/img/sinaweibo_fb1.png?t=1451961935000" height="29">
+		</a>
+		<a class="share_qq" title="分享到腾讯微博" href="javascript:(function(){window.open('http://v.t.qq.com/share/share.php?url='+encodeURIComponent(document.location)+'&amp;appkey=96f54f97c4de46e393c4835a266207f4&amp;site=&amp;title='+encodeURIComponent(document.title)+encodeURIComponent(': 表单重复提交 1、造成重复提交主要的两个原因：   （1）         一是，服务器处理时间久。当用户在表单中填完信息，点击“提交”按钮后，由于服务器反应时间过...'),'', 'width=450, height=400, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no');}())">
+			<img src="/img/tencent_weibo_fb.jpg?t=1451961935000" height="30">
+		</a>
+    	<span class='BlogVote' onclick="vote(92417)" title="都有2个人赞过了，你也来赞一下吧！不会扣积分哦！">
+			<span class="num vote_count" >2</span><span class="vote" >赞</span>
+		</span>
+	</div>
+
+      <div class='BlogCopyright'>
+	  		声明：OSCHINA 博客文章版权属于作者，受法律保护。未经作者同意不得转载。
+	  	  </div>
+	  
+      <div class='BlogLinks'>
+    	<ul>
+                <li class='prev'><a href="http://my.oschina.net/winHerson/blog/91601" title="上一篇：android--ExpandableListView模仿qq好友">&laquo; 上一篇</a></li>        <li class='next'><a href="http://my.oschina.net/winHerson/blog/94088" title="下一篇：android--AnimationDrawable实现等待动画效果">下一篇 &raquo;</a></li>    	</ul>
+      </div>
+	</div>
+	       <div style='margin:10px 0;'>
+    	<script type="text/javascript" src="http://www.oschina.net/ads/blog"></script>
+      </div>
+      </div>
+<div class="recruitment recruitment-blog" style="margin-top:20px;height:200px">
+	<div class="recruit-heading">
+		<div class="title">
+			最新热门职位
+		</div>
+		<div class="more">
+			更多开发者职位上
+			<a href="http://job.oschina.net/" target="_blank" class="link">开源中国·招聘</a>
+		</div>
+	</div>
+	<div class="recruit-body">
+		<ul>
+									<li>
+				<div class="logo-img">
+					<a href="http://job.oschina.net/position/10287_2641210_24219" target="_blank">
+										<img src="http://static.oschina.net/uploads/company/logo/201602/18163522_p4bv2641210.jpeg">
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="http://job.oschina.net/position/10287_2641210_24219" target="_blank">	Java开发工程师
+</a>
+						<a href="http://job.oschina.net/company/2641210_10287" target="_blank">
+							<small>宜信技术研发中心
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">15-30K</span>
+					</h5>
+				</div>
+			</li>
+												<li>
+				<div class="logo-img">
+					<a href="http://job.oschina.net/position/10287_2641210_24220" target="_blank">
+										<img src="http://static.oschina.net/uploads/company/logo/201602/18163522_p4bv2641210.jpeg">
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="http://job.oschina.net/position/10287_2641210_24220" target="_blank">	高级Java开发
+</a>
+						<a href="http://job.oschina.net/company/2641210_10287" target="_blank">
+							<small>宜信技术研发中心
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">20-35K</span>
+					</h5>
+				</div>
+			</li>
+												<li>
+				<div class="logo-img">
+					<a href="http://job.oschina.net/position/10004_2558536_22915" target="_blank">
+										<img src="http://static.oschina.net/uploads/company/logo/201601/22120020_b4xr2558536.png">
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="http://job.oschina.net/position/10004_2558536_22915" target="_blank">	JAVA开发工程师
+</a>
+						<a href="http://job.oschina.net/company/2558536_10004" target="_blank">
+							<small>嘉驰国际
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">15-30K</span>
+					</h5>
+				</div>
+			</li>
+												<li>
+				<div class="logo-img">
+					<a href="http://job.oschina.net/position/10532_2684957_24468" target="_blank">
+										<img src="http://static.oschina.net/uploads/company/logo/201603/23163319_tna32684957.jpeg">
+										</a>
+				</div>
+				<div class="info-list">
+					<div>
+						<a href="http://job.oschina.net/position/10532_2684957_24468" target="_blank">	Java开发
+</a>
+						<a href="http://job.oschina.net/company/2684957_10532" target="_blank">
+							<small>打造前程
+</small>
+						</a>
+					</div>
+					<h5>
+						月薪：
+						<span class="font-red">5-10K</span>
+					</h5>
+				</div>
+			</li>
+								</ul>
+	</div>
+	<div class="clear"></div>
+</div>
+<style>
+	/*招聘广告位--样式*/
+	.clear{
+		clear:both;
+		font-size:1px;
+		line-height: 0;
+	}
+	.recruitment{
+		font-size: 14px;
+		border:1px solid #eee;
+		color: #333;
+		margin: 20px 0 0 230px;
+		border: 1px solid #eee;
+		background: #fff;
+		word-wrap: break-word;
+	}
+	.recruitment a{
+			text-decoration: none;
+			color: #333;
+		}
+		.recruitment a:hover{
+			text-decoration: none;
+			color: #459120;
+		}
+		.recruitment ul,.recruitment li{
+			list-style-type: none;
+			padding:0;
+			margin:0;
+		}
+		.recruitment h5{
+			font-weight: 400;
+			font-size: 12px;
+			color: #999;
+			margin:0;
+		}
+		.recruitment .recruit-heading{
+			height: 34px;
+			line-height: 34px;
+			border-bottom:1px solid #ddd;
+			margin-bottom: 10px;
+		}
+		.recruitment .recruit-heading .title{
+			float:left;
+		}
+		.recruitment .recruit-heading .more{
+			float:right;
+		}
+		.recruitment .recruit-heading .link{
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.recruitment .recruit-body{
+		}
+		.recruitment .recruit-body li{
+			outline: 0;
+			padding:10px 0;
+			width: 50%;
+			/*width: -webkit-calc(50% - 4px);
+			width: -moz-calc(50% - 4px);
+			width: calc(50% - 4px);
+			display:inline-block;*/
+			height: 50px;
+			margin:0;
+			float: left;
+		}
+		.recruitment .recruit-body li .logo-img{
+			float: left;
+			width: 44px;
+			height: 44px;
+			display: inline-block;
+			padding: 2px;
+			border:1px solid #ccc;
+		}
+		.recruitment .recruit-body li .logo-img img{
+			width: 44px;
+			height: 44px;
+		}
+		.recruitment .recruit-body li .logo-img span{
+			display: block;
+			font-weight: 700;
+			height: 44px;
+			line-height: 44px;
+			font-size: 20px;
+			text-align: center;
+			border-radius: 5px;
+		}
+		.recruitment .recruit-body li .info-list{
+			margin-left:60px;
+		}
+		.recruitment .recruit-body li .info-list div{
+			line-height: 30px;
+		}
+		.recruitment .recruit-body li .info-list div a{
+			margin-right:10px;
+		}
+		.recruitment .recruit-body li .info-list small{
+			color: #666;
+		}
+		.recruitment .font-red{
+			color: #EB6000 !important;
+		}
+		.recruitment-blog{
+			margin-top:20px;
+			border:1px solid #eee;
+		}
+		.recruitment-blog .recruit-heading{
+			padding-top:10px;
+			margin-left:20px;
+			margin-right:20px;
+		}
+		.recruitment-blog .recruit-heading .title{
+			font-size:16px;
+		}
+		.recruitment-blog .recruit-body{
+			margin:0 20px;
+		}
+</style>
+<!-------------------------------------------------------->
+<script type="text/javascript">
+    angular.module('blogComment', ['ngSanitize'])
+	.directive('onFinishRender',function($timeout){
+       return{
+           restrict : 'A',
+		   link:function(scope,element,attr){
+               if(scope.$last){
+				   $timeout(function(){
+                       scope.$emit('ngRepeatFinished');
+				   });
+               }
+		   }
+       }
+    })
+    .controller('ListComment',function($scope, $http,$filter){
+        var url = "/action/blog/listComment?blog=92417&page=1&size=10";
+            $http({method: 'GET', url: url}).success(function(data) {
+				$scope.commentjsons = data;
+			});
+            $scope.totalComment = 4;
+            $scope.currentPage=1;
+            $scope.pageSize=10;
+            $scope.totalPage=Math.ceil($scope.totalComment/$scope.pageSize);
+            if($scope.currentPage>3){
+            	$scope.beginIndex = $scope.currentPage - 3;
+            }else{
+            	$scope.beginIndex = 1;
+            }
+            $scope.endIndex = $scope.beginIndex + 9;
+            if($scope.endIndex>$scope.totalPage){
+            	$scope.endIndex = $scope.totalPage;
+            }
+			var pages = new Array();
+			var index=0;
+			for(var i=$scope.beginIndex;i<=$scope.endIndex;i++){
+				pages[index]=i;
+				index++;
+			}
+			$scope.pages = pages;
+            $scope.delete_c = function(nid,uid,cid){
+                delete_c(nid,uid,cid);
+            };
+                $scope.ReplyInline = function(blog,user,relpy){
+            ReplyInline(blog,user,relpy);
+            };
+
+            $scope.$on('ngRepeatFinished',function(ngRepeatFinishedEvent){
+                var whref = window.location.href;
+                if(whref && whref.indexOf('#')>0){
+                    var goto = whref.substring(whref.indexOf('#'),whref.length);
+                    if(goto && goto !== whref){window.location=goto;}
+                }
+            })
+	});
+</script>
+<div class='SpaceList' style='margin-top:20px;' ng-app="blogComment" ng-controller="ListComment" ng-cloak>
+<div class='BlogComments'>
+  <h2><a name="comments"></a>评论<em ng-bind="totalComment"></em></h2>
+  <ul id="BlogComments">
+      <li ng-repeat="commentjson in commentjsons"
+    id='cmt_{{commentjson.blogId}}_{{commentjson.userId}}_{{commentjson.commentId}}'
+    ng-class="{'even': {{($index+1)%2}} == 0}" on-finish-render="ngRepeatFinished">
+    <table class='ostable'>
+        <tr>
+            <td class='portrait'>
+                <a ng-href="http://my.oschina.net/u/{{commentjson.userId}}" target="_blank">
+                    <img ng-src="{{commentjson.portrait}}" align="absmiddle" title="{{ commentjson.userName }}"
+                         class="SmallPortrait" user="{{ commentjson.userId }}"/>
+                </a>
+            </td>
+            <td class='body'>
+                <div class='title'>
+                    <span ng-bind="(currentPage-1)*pageSize+$index+1"></span>楼：<a
+                        ng-href="http://my.oschina.net/u/{{commentjson.userId}}" target="_blank"
+                        name="{{ commentjson.blogId }}" class="user" ng-bind="commentjson.userName"></a>
+                    <span ng-if="(commentjson.client_type>10000 && commentjson.appApproved)">(<a
+                            href="{{commentjson.appUrl}}" target="_blank"
+                            title="{{commentjson.appTitle}} - {{commentjson.appDescription}}"
+                            ng-bind="commentjson.appTitle"></a>)</span>
+				<span ng-switch="{{commentjson.client_type}}">
+					<span ng-if="(commentjson.client_type==2)" ">手机</span>
+                    <span ng-if="(commentjson.client_type==3)" ">Android</span>
+                    <span ng-if="(commentjson.client_type==4)" ">iPhone</span>
+                    <span ng-if="(commentjson.client_type==5)" ">Windows Phone</span>
+                    <span ng-if="(commentjson.client_type==6)" ">微信</span>
+                    </span>
+                    发表于 <span ng-bind="commentjson.create_time"></span>
+                    <a href="" ng-click="delete_c(commentjson.blogId, commentjson.userId, commentjson.commentId)"
+                       ng-if="commentjson.canAdmin">删除</a>
+                    <a name='rpl_{{commentjson.commentId}}' href="javascript:;" target="_self"
+                       ng-click="ReplyInline(commentjson.blogId, commentjson.userId, commentjson.commentId)"
+                       ng-if="commentjson.canCommit">回复此评论</a>
+                </div>
+                <div class='post' ng-bind-html="commentjson.content"></div>
+                <div id='inline_reply_of_{{commentjson.blogId}}_{{commentjson.userId}}_{{commentjson.commentId}}'
+                     class='inline_reply'></div>
+            </td>
+        </tr>
+    </table>
+</li>  </ul>
+</div>
+
+<ul class="pager">
+<li class='page prev' ng-if="(currentPage>1)"><a href="?p={{currentPage-1}}#comments">&lt;</a></li><li class='page' ng-if="(beginIndex>1)"><a href="?p=1#comments">1</a></li><li class='page' ng-if="totalPage>1" ng-class="{current:{{currentPage==page}}}" ng-repeat="page in pages"><a href="?p={{page}}#comments" ng-bind="page"></a></li><li class='page' ng-if="(endIndex<totalPage)"><a href="?p={{totalPage}}#comments" ng-bind="(totalPage)"></a></li><li class='page next' ng-if="(currentPage<totalPage)"><a href="?p={{currentPage+1}}#comments">&gt;</a></li></ul>
+</div>
+<!-------------------------------------------------------->
+
+
+<div id='inline_reply_editor' style='display:none;'>
+<div class="BlogCommentForm">
+	<form id="form_inline_comment" action="/action/blog/add_comment?blog=92417" method="POST">
+	  <input type='hidden' id='inline_reply_id' name='reply_id' value=''/>
+      <textarea name="content" id="ccom_content" style="width:650px;height:60px;" onkeydown="if((event.metaKey || event.ctrlKey)&&event.keyCode==13){$('#form_inline_comment').submit();}"></textarea><br/>
+	  <p>
+		  <span style="float:right;">
+    	  <input type="button" value="关闭" class="blg_submit_btn" id='btn_close_inline_reply' style="background: rgba(255,255,255,0);color: #555;"/>
+    	  <input type="submit" value="回复" id="btn_comment" class="blg_submit_btn"/> 
+		  </span>
+		  插入：
+				<a href="javascript:;" onclick="javascript:insert_emotions('ccom_content',this);" class="blog_emotion">表情</a>
+				<a href="javascript:insert_projects_c();" class="blog_soft">开源软件</a>
+		 <span class="NoData" id="ficmp_msg" style="color:#F00"></span>
+	  </p>
+    </form>
+</div>
+</div>
+
+<div class='SpaceList' style='margin-top:20px;'>
+  <a name="comments" id="postform"></a>
+      <div class="BlogCommentForm">
+        <form id="form_comment" action="/action/blog/add_comment?blog=92417" method="POST">
+        	<div class="comment_portrait">
+        		<img src="/img/portrait.gif?t=1451961935000" align="absmiddle" alt="cookqq" title="cookqq" class="LargePortrait"/>        	</div>
+        	<div class="comment_form">
+        		<textarea name="content" id="wmd-input" style="width:650px;height:80px;" placeholder=""></textarea>
+				<p>
+					<button type="submit" class="blg_submit_btn" style="float:right;">发表评论</button>
+					插入：
+					<a href="javascript:insert_emotions();" class="blog_emotion">表情</a>
+					<a href="javascript:insert_projects();" class="blog_soft">开源软件</a>
+					<span class="NoData" id="cmt_tip"></span>
+				</p>
+				<div id="TweetFormPopupWraper">
+					<div id="TweetFormPopupArrow">
+        				<div id="TweetFormPopup">
+                        	<div id='TweetEmotions'>
+                            	<div class='TweetPopupTitle'><a href="javascript:;" onclick="$('#TweetFormPopupWraper').hide();return false;">关闭</a>插入表情</div>
+                            	                            	<a href='javascript:;' onclick='return ins_e(0);' class='emotion' style='background-position: -0px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(1);' class='emotion' style='background-position: -24px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(2);' class='emotion' style='background-position: -48px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(3);' class='emotion' style='background-position: -72px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(4);' class='emotion' style='background-position: -96px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(5);' class='emotion' style='background-position: -120px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(6);' class='emotion' style='background-position: -144px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(7);' class='emotion' style='background-position: -168px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(8);' class='emotion' style='background-position: -192px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(9);' class='emotion' style='background-position: -216px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(10);' class='emotion' style='background-position: -240px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(11);' class='emotion' style='background-position: -264px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(12);' class='emotion' style='background-position: -288px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(13);' class='emotion' style='background-position: -312px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(14);' class='emotion' style='background-position: -336px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(15);' class='emotion' style='background-position: -360px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(16);' class='emotion' style='background-position: -384px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(17);' class='emotion' style='background-position: -408px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(18);' class='emotion' style='background-position: -432px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(19);' class='emotion' style='background-position: -456px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(20);' class='emotion' style='background-position: -480px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(21);' class='emotion' style='background-position: -504px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(22);' class='emotion' style='background-position: -528px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(23);' class='emotion' style='background-position: -552px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(24);' class='emotion' style='background-position: -576px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(25);' class='emotion' style='background-position: -600px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(26);' class='emotion' style='background-position: -624px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(27);' class='emotion' style='background-position: -648px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(28);' class='emotion' style='background-position: -672px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(29);' class='emotion' style='background-position: -696px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(30);' class='emotion' style='background-position: -720px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(31);' class='emotion' style='background-position: -744px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(32);' class='emotion' style='background-position: -768px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(33);' class='emotion' style='background-position: -792px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(34);' class='emotion' style='background-position: -816px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(35);' class='emotion' style='background-position: -840px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(36);' class='emotion' style='background-position: -864px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(37);' class='emotion' style='background-position: -888px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(38);' class='emotion' style='background-position: -912px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(39);' class='emotion' style='background-position: -936px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(40);' class='emotion' style='background-position: -960px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(41);' class='emotion' style='background-position: -984px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(42);' class='emotion' style='background-position: -1008px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(43);' class='emotion' style='background-position: -1032px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(44);' class='emotion' style='background-position: -1056px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(45);' class='emotion' style='background-position: -1080px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(46);' class='emotion' style='background-position: -1104px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(47);' class='emotion' style='background-position: -1128px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(48);' class='emotion' style='background-position: -1152px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(49);' class='emotion' style='background-position: -1176px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(50);' class='emotion' style='background-position: -1200px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(51);' class='emotion' style='background-position: -1224px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(52);' class='emotion' style='background-position: -1248px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(53);' class='emotion' style='background-position: -1272px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(54);' class='emotion' style='background-position: -1296px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(55);' class='emotion' style='background-position: -1320px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(56);' class='emotion' style='background-position: -1344px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(57);' class='emotion' style='background-position: -1368px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(58);' class='emotion' style='background-position: -1392px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(59);' class='emotion' style='background-position: -1416px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(60);' class='emotion' style='background-position: -1440px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(61);' class='emotion' style='background-position: -1464px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(62);' class='emotion' style='background-position: -1488px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(63);' class='emotion' style='background-position: -1512px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(64);' class='emotion' style='background-position: -1536px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(65);' class='emotion' style='background-position: -1560px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(66);' class='emotion' style='background-position: -1584px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(67);' class='emotion' style='background-position: -1608px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(68);' class='emotion' style='background-position: -1632px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(69);' class='emotion' style='background-position: -1656px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(70);' class='emotion' style='background-position: -1680px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(71);' class='emotion' style='background-position: -1704px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(72);' class='emotion' style='background-position: -1728px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(73);' class='emotion' style='background-position: -1752px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(74);' class='emotion' style='background-position: -1776px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(75);' class='emotion' style='background-position: -1800px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(76);' class='emotion' style='background-position: -1824px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(77);' class='emotion' style='background-position: -1848px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(78);' class='emotion' style='background-position: -1872px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(79);' class='emotion' style='background-position: -1896px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(80);' class='emotion' style='background-position: -1920px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(81);' class='emotion' style='background-position: -1944px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(82);' class='emotion' style='background-position: -1968px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(83);' class='emotion' style='background-position: -1992px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(84);' class='emotion' style='background-position: -2016px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(85);' class='emotion' style='background-position: -2040px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(86);' class='emotion' style='background-position: -2064px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(87);' class='emotion' style='background-position: -2088px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(88);' class='emotion' style='background-position: -2112px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(89);' class='emotion' style='background-position: -2136px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(90);' class='emotion' style='background-position: -2160px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(91);' class='emotion' style='background-position: -2184px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(92);' class='emotion' style='background-position: -2208px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(93);' class='emotion' style='background-position: -2232px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(94);' class='emotion' style='background-position: -2256px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(95);' class='emotion' style='background-position: -2280px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(96);' class='emotion' style='background-position: -2304px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(97);' class='emotion' style='background-position: -2328px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(98);' class='emotion' style='background-position: -2352px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(99);' class='emotion' style='background-position: -2376px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(100);' class='emotion' style='background-position: -2400px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(101);' class='emotion' style='background-position: -2424px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(102);' class='emotion' style='background-position: -2448px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(103);' class='emotion' style='background-position: -2472px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(104);' class='emotion' style='background-position: -2496px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(105);' class='emotion' style='background-position: -2520px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(106);' class='emotion' style='background-position: -2544px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(107);' class='emotion' style='background-position: -2568px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(108);' class='emotion' style='background-position: -2592px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(109);' class='emotion' style='background-position: -2616px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(110);' class='emotion' style='background-position: -2640px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(111);' class='emotion' style='background-position: -2664px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(112);' class='emotion' style='background-position: -2688px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(113);' class='emotion' style='background-position: -2712px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(114);' class='emotion' style='background-position: -2736px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(115);' class='emotion' style='background-position: -2760px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(116);' class='emotion' style='background-position: -2784px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(117);' class='emotion' style='background-position: -2808px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(118);' class='emotion' style='background-position: -2832px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(119);' class='emotion' style='background-position: -2856px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(120);' class='emotion' style='background-position: -2880px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(121);' class='emotion' style='background-position: -2904px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(122);' class='emotion' style='background-position: -2928px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(123);' class='emotion' style='background-position: -2952px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(124);' class='emotion' style='background-position: -2976px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(125);' class='emotion' style='background-position: -3000px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(126);' class='emotion' style='background-position: -3024px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(127);' class='emotion' style='background-position: -3048px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(128);' class='emotion' style='background-position: -3072px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(129);' class='emotion' style='background-position: -3096px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(130);' class='emotion' style='background-position: -3120px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(131);' class='emotion' style='background-position: -3144px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(132);' class='emotion' style='background-position: -3168px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(133);' class='emotion' style='background-position: -3192px 0px;'></a>
+                            	                            	<a href='javascript:;' onclick='return ins_e(134);' class='emotion' style='background-position: -3216px 0px;'></a>
+                            	                            	<div class='clear'></div>
+                        	</div>
+        				</div>
+					</div>
+				</div>
+            </div>
+        </form>
+    </div>
+  </div>
+<div id="RelativeBlogs">
+	<strong><a id='btn_close'>关闭</a>相关文章阅读</strong>
+	<ul>
+			<li>
+		<span class='date'>2015/04/07</span>
+		<a href="http://my.oschina.net/loveshy/blog/396785" title="struts--token防止表单重复提交（源码分析）">struts--token防止表单重复提交（源...</a>
+	</li>
+				<li>
+		<span class='date'>2015/11/25</span>
+		<a href="http://my.oschina.net/easyean/blog/535122" title="Struts2标签之token防止表单重复提交">Struts2标签之token防止表单重复提交...</a>
+	</li>
+				<li>
+		<span class='date'>2013/11/05</span>
+		<a href="http://my.oschina.net/u/1246663/blog/174322" title="Struts2表单重复提交">Struts2表单重复提交</a>
+	</li>
+				<li>
+		<span class='date'>2015/12/22</span>
+		<a href="http://my.oschina.net/daxiong0615/blog/549330" title="表单重复提交处理总结">表单重复提交处理总结</a>
+	</li>
+				<li>
+		<span class='date'>2015/05/16</span>
+		<a href="http://my.oschina.net/boltwu/blog/415749" title="利用token 防止表单重复提交">利用token 防止表单重复提交</a>
+	</li>
+			</ul>
+</div>
+<script type="text/javascript" src="/action/visit/blog?id=92417" defer="defer"></script>
+
+<script type="text/javascript" src="/js/sh309/scripts/xregexp-min.js?t=1451961936000"></script>
+<script type="text/javascript" src="/js/sh309/scripts/shCore.min.js?t=1451961936000"></script>
+<script type="text/javascript" src="/js/sh309/scripts/shAutoloader.js?t=1451961936000"></script>
+<link type="text/css" rel="stylesheet" href="/js/sh309/styles/shCore.css?t=1451961936000"/>
+<link type="text/css" rel="Stylesheet" href="/js/sh309/styles/shThemeDefault.css?t=1451961936000"/>
+
+<script type="text/javascript">
+    SyntaxHighlighter.autoloader(
+            'applescript			/js/sh309/scripts/shBrushAppleScript.js?t=1451961936000',
+            'actionscript3 as3		/js/sh309/scripts/shBrushAS3.js?t=1451961936000',
+            'bash shell				/js/sh309/scripts/shBrushBash.js?t=1451961936000',
+            'coldfusion cf			/js/sh309/scripts/shBrushColdFusion.js?t=1451961936000',
+            'cpp c					/js/sh309/scripts/shBrushCpp.js?t=1451961936000',
+            'obj-c objc				/js/sh309/scripts/shBrushObjC.js?t=1451961936000',
+            'c# c-sharp csharp		/js/sh309/scripts/shBrushCSharp.js?t=1451961936000',
+            'css					/js/sh309/scripts/shBrushCss.js?t=1451961936000',
+            'delphi pascal			/js/sh309/scripts/shBrushDelphi.js?t=1451961936000',
+            'diff patch pas			/js/sh309/scripts/shBrushDiff.js?t=1451961936000',
+            'erl erlang				/js/sh309/scripts/shBrushErlang.js?t=1451961936000',
+            'groovy					/js/sh309/scripts/shBrushGroovy.js?t=1451961936000',
+            'haxe hx				/js/sh309/scripts/shBrushHaxe.js?t=1451961936000',
+            'java					/js/sh309/scripts/shBrushJava.js?t=1451961936000',
+            'jfx javafx				/js/sh309/scripts/shBrushJavaFX.js?t=1451961936000',
+            'js jscript javascript	/js/sh309/scripts/shBrushJScript.js?t=1451961936000',
+            'perl pl				/js/sh309/scripts/shBrushPerl.js?t=1451961936000',
+            'php					/js/sh309/scripts/shBrushPhp.js?t=1451961936000',
+            'text plain				/js/sh309/scripts/shBrushPlain.js?t=1451961936000',
+            'py python				/js/sh309/scripts/shBrushPython.js?t=1451961936000',
+            'ruby rails ror rb		/js/sh309/scripts/shBrushRuby.js?t=1451961936000',
+            'scala					/js/sh309/scripts/shBrushScala.js?t=1451961936000',
+            'sql					/js/sh309/scripts/shBrushSql.js?t=1451961936000',
+            'vb vbnet				/js/sh309/scripts/shBrushVb.js?t=1451961936000',
+            'xml xhtml xslt html	/js/sh309/scripts/shBrushXml.js?t=1451961936000'
+    );
+    SyntaxHighlighter.all();
+</script>
+<!--[if lt IE 7]>
+<script type="text/javascript" src="/js/minmax.js?t=1451961936000"></script>
+<![endif]-->
+<script type='text/javascript'>
+<!--
+var posting = false;
+var upprev_closed = false;
+var upprev_hidden = true;
+
+$(document).ready(function(){
+				
+    $('.BlogContent img').css('cursor','pointer');
+    jQuery.each($('.BlogContent img'),function(idx,v){
+    	$(v).wrap("<a href='"+$(this).attr('src')+"' target='_blank'></a>");
+    });
+	$('#form_comment').ajaxForm({
+		dataType: 'json',
+		bforeSubmit: function(){
+			posting = true;
+		},
+		success: function(json) {
+        	if(json.msg){
+				///alert(json.msg);
+				$('#cmt_tip').html("<span style='color:#C00;'>"+json.msg+"</span>");
+				$('#wmd-input').focus();
+			}else{
+				var url = "http://my.oschina.net/winHerson/blog_post?_cmt_blog="+json.blog+"&_cmt_user="+json.user+"&_cmt_id="+json.id;
+        		jQuery.get(url, function(data){
+    				$('#form_comment .NoData').hide();
+        			$('ul#BlogComments').append(data);
+        			$('#form_comment').resetForm();
+        		});
+			}
+		}
+	});
+
+    var at_datas = [];
+    $('img.SmallPortrait').each(function(){
+        var name = $(this).attr('alt');
+        if(jQuery.inArray(name, at_datas) < 0 && name != '${g_user.name}')
+            at_datas.push(name);
+    });
+    $("#form_comment textarea").atWho("@", {data: at_datas});
+	$("#form_comment textarea").on("keydown",function(event){
+		if((event.metaKey || event.ctrlKey) && event.keyCode==13){
+			$("#form_comment").submit();
+		}
+	});
+	$("#submiting").ajaxStart(function(){
+	   if(posting){
+    	   $('#btn_submit').attr("disabled","disabled");
+           $(this).show();
+	   }
+    });
+	$("#submiting").ajaxComplete(function(event,request, settings){
+	   if(posting){
+           $(this).hide();
+    	   $('#btn_submit').attr("disabled","");
+	   }
+	   posting = false;
+    });
+
+    $(window).scroll(function() {
+        var lastScreen;
+        if ($("#postform").length > 0)
+            lastScreen = getScrollY() + $(window).height() < $("#postform").offset().top * 1 ? false : true;
+        else
+            lastScreen = getScrollY() + $(window).height() < $(document).height() * 1 ? false : true;
+        if (lastScreen && !upprev_closed) {
+            $("#RelativeBlogs").stop().animate({right:"0px"});
+            upprev_hidden = false;
+        }
+        else if (upprev_closed && getScrollY() == 0) {
+            upprev_closed = false;
+        }
+        else if (!upprev_hidden) {
+            upprev_hidden = true;
+            $("#RelativeBlogs").stop().animate({right:"-400px"});
+        }
+    });
+    $("#RelativeBlogs #btn_close").click(function() {
+        $("#RelativeBlogs").stop().animate({right:"-400px"});
+        upprev_closed = true;
+        upprev_hidden = true;
+    });
+});
+function delete_c(nid,uid,cid){
+  if(confirm("您确认要删除此篇评论？")){
+    var args = "cmt="+cid+"#"+uid+"#"+nid;
+    ajax_post("/action/blog/delete_blog_comments?space=200838",args,function(){$("#cmt_"+nid+"_"+uid+"_"+cid).fadeOut();});
+  }
+}
+var replyinline_dup = false;
+function ReplyInline(blog,user,reply){
+	$('.inline_reply').empty();
+	var div_id = '#inline_reply_of_'+blog+'_'+user+'_'+reply;
+	$('#inline_reply_id').val(user+'_'+reply);
+	$(div_id).html($('#inline_reply_editor').html());
+	$('#ccom_content').focus();
+	$('#btn_close_inline_reply').click(function(){
+		$(div_id).empty();
+	});
+	var li_id = '#cmt_'+blog+'_'+user+'_'+reply;
+	var p_li = $(li_id);
+	var tip = $("#ficmp_msg");
+	$('#form_inline_comment').ajaxForm({
+		dataType: 'json',
+		beforeSubmit:function(){
+			if(replyinline_dup){
+			    tip.html("正在发表评论，请勿重复提交");
+				return false;
+			}
+			replyinline_dup = true;
+			return true;
+		},
+    	success: function(json) {
+			tip.html("");
+        	if(json.msg){
+				tip.html(json.msg);
+				replyinline_dup = false;
+        	}
+        	else if(json.id){
+    			ajax_post("http://my.oschina.net/blog/show_post","_cmt_user="+"&_cmt_id="+json.id,function(html){
+					if(html.length > 0){
+						$(html).insertAfter(p_li);
+						$(div_id).empty();
+					}else{
+						tip.html("获取评论失败");
+					}
+					setTimeout(function(){
+    					replyinline_dup = false;
+					},5000)
+				});
+        	}
+    	}
+	});
+}
+function edit_catalogs(qid){
+	popup("/set-catalogs?parent=1&type=3&id="+qid);
+}
+function vote(blogid){
+		alert("必须登录后才能操作 :)");
+	}
+function toggle_recomm(blogid){
+	ajax_post("/action/blog/toggle_recomm","id="+blogid,function(html){
+		if(html == '-1')
+			alert("文章不存在");
+		else if(html == 0){
+			$('#lnk_recomm_'+blogid).removeClass('recommend');
+			$('#lnk_recomm_'+blogid).text("未推荐");
+		}
+		else if(html == 1){
+			$('#lnk_recomm_'+blogid).addClass('recommend');
+			$('#lnk_recomm_'+blogid).text("已推荐");
+		}
+	});
+}
+	var textbox = $("#wmd-input").textbox({
+		maxLength: 1000,
+    	onInput: function(event, status) {
+			var txt = jQuery.trim($("#wmd-input").val());
+    	}
+	});
+	function insert_projects() {
+		textbox.insertText('#此处输入软件名#');
+		$('#TweetEmotions').removeAttr('txt_id');
+	}
+	function insert_projects_c() {
+    	var combox = $("#ccom_content").textbox({
+    		maxLength: 1000,
+        	onInput: function(event, status) {
+    			var txt = jQuery.trim($("#ccom_content").val());
+        	}
+    	});
+		combox.insertText('#此处输入软件名#');
+		$('#TweetEmotions').removeAttr('txt_id');
+	}
+	function insert_emotions(id,obj) {
+		if(id) {
+			$('#TweetEmotions').attr('txt_id',id);
+			var thiz = $(obj);
+			var offset = thiz.offset();
+			var poffset = thiz.offsetParent().offset();
+        	var left = offset.left-poffset.left;
+        	var top = offset.top-poffset.top;
+			$('#TweetFormPopupWraper').css({'top':top+25 +'px','left':left+'px'});
+		}
+		else {
+			$('#TweetFormPopupWraper').css({'top':'','left':''});
+			$('#TweetEmotions').removeAttr('txt_id');
+		}
+		$('#TweetEmotions').show();
+		$('#TweetImages').hide();
+		$('#TweetFormPopupArrow').removeClass('projects');
+		$('#TweetFormPopupArrow').removeClass('images');
+		$('#TweetFormPopupArrow').addClass('emotions');
+		$('#TweetFormPopupWraper').slideDown('fast');
+	}
+	function ins_e(idx){
+		var txt_id = $('#TweetEmotions').attr('txt_id');
+		if(!txt_id)
+			textbox.insertText('['+idx+']');
+		else {
+			insertAtCursor(txt_id,'['+idx+']');
+		}
+		$('#TweetFormPopupWraper').hide();
+		return false;
+	}
+	function insertAtCursor(tbid,str) {
+		var tb = document.getElementById(tbid);
+        if (document.selection){
+			tb.focus();
+			var r = document.selection.createRange();
+            document.selection.empty();
+            r.text = str;
+            r.collapse();
+            r.select();
+        }
+        else{
+            var newstart = tb.selectionStart+str.length;
+            tb.value=tb.value.substr(0,tb.selectionStart)+str+tb.value.substring(tb.selectionEnd);
+            tb.selectionStart = newstart;
+            tb.selectionEnd = newstart;
+        }
+	}
+//-->
+</script>                </div>
+	<div class='clear'></div>
+	<div id="OSC_Footer"><style>
+.oscapp {text-align:left; width:220px;}
+.oscapp span {float:left;width:140px;}
+.oscapp a {float:left;text-indent:-9999em;width:16px;margin-left:8px;}
+.oscapp a.android {background:url('/img/android.gif') no-repeat left center;}
+.oscapp a.iphone {background:url('/img/iphone.gif') no-repeat left center;}
+.oscapp a.wp7 {background:url('/img/wp7.gif') no-repeat left center;}
+</style>
+<table width='100%'><tr>
+<td align='left'>&copy; 开源中国(OSChina.NET) | <a href="http://www.oschina.net/home/aboutosc">关于我们</a> | <a href="mailto:market@oschina.cn">广告联系</a> | <a href="http://weibo.com/oschina2010" target="_blank">@新浪微博</a> | <a href="http://m.oschina.net/">开源中国手机版</a> | <a href='http://www.miitbeian.gov.cn/' target='_blank' style='color:#737573;text-decoration:none;'>粤ICP备12009483号-3</a></td>
+<td class='oscapp'>
+	<span>开源中国手机客户端：</span>
+	<a href="http://www.oschina.net/app" class='android' title='Android客户端'>Android</a>
+	<a href="http://www.oschina.net/app" class='iphone' title='iPhone 客户端'>iPhone</a>
+	<a href="http://www.oschina.net/app" class='wp7' title='Windows Phone 客户端'>WP7</a>
+</td>
+</tr>
+<tr>
+<td colspan='2' align='left'>开源中国社区(OSChina.net)是工信部 <a href='http://www.copu.org.cn/' target='_blank'>开源软件推进联盟</a> 指定的官方社区</td>
+</tr>
+</table>
+<script type='text/javascript'>
+<!--
+if (top.location != self.location)top.location=self.location;
+//-->
+</script></div>
+</div>
+</body>
+<style>
+span.love{
+	position: relative;
+    min-width: 35px;
+    display: inline-block;
+    height: 12px;
+}
+span.love a{
+    position: absolute;
+    right: 0px;
+}
+</style>
+<script type="text/javascript" src="/action/visit/space?id=200838"></script>
+<script type="text/javascript" src="/js/2014/ImageTool.js?t=1451961936000?20140124"></script>
+<script type='text/javascript'>
+<!--
+$(document).ready(function() {
+
+	SelectStyle("#search-item",".search_list");
+	$('.Tweet .photo img').live("click",function(){
+		var T=$(this);
+		var t=this;
+		var bigImg = T.attr('bi');
+		var smallImg = T.attr('si');
+		var src = T.attr('src');
+		var newsrc = (bigImg == src)?smallImg:bigImg;
+		var imgId = T.attr('id');
+		if(T.parent().attr("id") == "img_container"){
+			T.parent().replaceWith(T);
+			T.removeAttr("style");
+			T.removeAttr("width");
+			T.removeAttr("height");
+		}
+		if(newsrc == bigImg){
+    		var loading=$('<img alt="loading" src="/img/loading.gif?t=1451961935000"/>');
+			var top = T.position().top+T.height()/2-8;
+			var left = T.position().left+T.width()/2-8;
+			loading.css({
+				'position':'absolute',
+				'z-index':999,
+				'top':top,
+				'left':left
+			});
+    		T.before(loading);
+			var tImg=new Image();
+			tImg.src=newsrc;
+			tImg.onload=function(){afterImgLoad(T,loading,imgId,newsrc,bigImg);};
+		}
+		else{
+			T.attr("src",newsrc);
+			$('#img_menu_'+imgId).remove();
+		}
+		return false;
+	});
+	
+	$(".tweet_thumb_wrapper").mouseenter(function(){
+		$(this).find(".tweet_play_video").css("opacity",1);
+	}).mouseleave(function(){
+		$(this).find(".tweet_play_video").css("opacity",0.7);
+	});
+
+    $("#TForm textarea").atWho("@", function(query, callback){
+        jQuery.ajax({
+            type:'POST',
+            url:"/action/tweet/at_suggest",
+            data:{'q':query},
+            dataType:'json',
+            success:function(json){
+                callback(json);
+            }
+        });
+    });
+	
+	toggle_tweet_video = function(id){
+		$("#tweet_video_thumb_"+id).toggle();
+		var video = $("#tweet_video_"+id).toggle();
+		video.siblings(".tweet_video_operation,.tweet_thumb_wrapper").toggle();
+	};
+	
+	function afterImgLoad(T,loading,imgId,url,bigImg){
+		var lnks = "<div id='img_menu_"+imgId+"' class='ImgMenu'>";
+		lnks += "<a href='#' onclick='$(\"#"+imgId+"\").click();return false;'>收起</a>";
+		lnks += "<a href='javascript:void(0);' onclick='rotate(this,\""+imgId+"\",0);' id='rotate_btn'>旋转</a>";
+		lnks += "<a href='"+bigImg+"' target='_blank'>查看原图</a></div>";			
+		loading.remove();
+		T.attr("src",url);
+		T.before(lnks);
+	}
+});
+
+function set_fellow_memo(fid,fname){
+	popup("/action/ajax/set_fellow_memo","friend="+fid+"&name="+fname);
+}
+
+function deleteMsgs(uid, fid, fname){
+	if(!confirm("你确认要清除与‘"+fname+"’的所有私信吗？"))
+		return ;
+	var args = "user="+uid+"&friend="+fid;
+	ajax_post("/action/msg/delete_user",args,function(html){
+		if(html.length > 0)
+			alert(html);
+		else{
+			$('#Msg_'+fid).fadeOut();
+		}
+	});
+}
+
+function follow_user(uid, uname){
+	just_follow(uid, uname,'${g_user.id}'); //oschina.js
+}
+
+function unfollow_user(uid, uname){
+	if(confirm("确定不再关注" + uname + "了吗？"))
+	just_unfollow(uid,'${g_user.id}',function(){
+		alert('已取消对 ' + uname + ' 的关注');
+	});
+}
+
+function tweet_reply(logid){
+	var r = $('#LogReply_'+logid);
+	if(!r.is(":hidden")){
+		close_tweet_reply(logid);
+		return ;
+	}
+	r.html("<div class='TweetRplsWrapper'><span class='loading'>正在加载评论，请稍候...</span></div>")
+	r.show();
+	r.load("http://my.oschina.net/winHerson/tweet-rpls?log="+logid,function(){
+		$('#edt_tweet_post_'+logid).focus();
+        var at_datas = [];
+        $(this).find("img.SmallPortrait").each(function(){
+            var name = $(this).attr('alt');
+            if(jQuery.inArray(name, at_datas) < 0 && name != '${g_user.name}')
+                at_datas.push(name);
+        });
+        $(this).find("input.TXT_TweetRpl_Text").atWho("@", {data: at_datas});
+        $('#TweetReplyForm_'+logid).ajaxForm({
+        	dataType: 'json',
+			beforeSubmit: function(arr, form, options){
+				$('#BTN_TweetReply_'+logid).attr('disabled','disabled');
+			},
+            success: function(json) {
+            	if(json.msg){
+        			alert(json.msg);
+            	}else if(json.log){
+					$('#log_reply_count_'+logid).text(json.reply_count);
+        			//插入新评论					
+					ajax_get("/action/ajax/get_tweet_reply?id=" + json.log,true,function(html){
+						$('#LogReply_'+logid+' ul').prepend(html);
+					});
+					$('#edt_tweet_post_'+logid).val('');
+            	}
+				$('#BTN_TweetReply_'+logid).removeAttr('disabled');
+            }
+        });
+	});
+}
+function close_tweet_reply(logid){
+	$('#LogReply_'+logid).empty();
+	$('#LogReply_'+logid).hide();
+	$('#Logs .userlogs li').removeClass('hover');
+}
+function reply_rtweet(logid, rid, toname){
+	var edtPost = $('#edt_tweet_post_' + logid);
+	var old_v = edtPost.val();
+	if(old_v.length > 0)
+		edtPost.val(old_v + ',@'+toname+' ');
+	else
+		edtPost.val('回复 @'+toname+' : ');
+	edtPost.focus();
+	edtPost.caretPos(edtPost.val().length); }
+function delete_tweet(logid){
+	if(confirm("确认要删除这条信息吗？"))
+	ajax_post("/action/tweet/delete?log="+logid+"&user=${g_user.id}","",function(html){
+		if(html.length==0){
+			var elem = $('#LI_'+logid);
+			if(elem.length > 0)
+				$('#LI_'+logid).fadeOut();
+			else
+				location.reload();
+		}
+	});
+}
+function delete_tweet_reply(logid){
+	if(confirm("确认要删除这条评论吗？"))
+	ajax_post("/action/tweet/delete_reply?id="+logid+"&user=${g_user.id}","",function(html){
+		if(html.length > 0)
+			$('#LI_'+logid).fadeOut();
+	});
+}
+
+function delete_blog(blog_id){
+    if(!confirm("文章删除后无法恢复，请确认是否删除此篇文章？")) return;
+    ajax_post("/action/blog/delete?id="+blog_id+"&user=${g_user.id}&user_code=${g_user.activate_code}","",function(html){
+    	location.href="http://my.oschina.net/winHerson/blog";
+    });
+}
+
+function SelectStyle(on,option){
+	var currentSort = $(on).attr('id');
+	var currentText = $(option+" li."+currentSort+" a").html();
+	$(on + " .text").html(currentText);
+	$(on + " .text").hover(function(){
+		$(this).addClass("hover")
+	},function(){
+		$(this).removeClass("hover")
+	});
+	$(option+" li a").each(function(index){
+		$(this).click(function(){
+			thishtml = $(this).html();
+			$(on + " .text").removeClass("on").html(thishtml);		
+			$(".selectbox select ").find("option").removeAttr('selected').eq(index).attr("selected","selected");	
+			$(option).hide()
+			return false;
+		});
+		
+	});		
+	
+	$(".selectbox").click(function(){		
+		$(option).toggle();
+		$(on + " .text").toggleClass("on");		
+		return false;
+	});
+	$(document).click(function(){
+		$(option).hide();	
+		$(on + " .text").removeClass("on");
+	});
+	$(document).trigger('click');
+
+}
+
+//-->
+//添加点赞脚本开始
+function makeAsLove(obj){
+
+	var _this = $(obj);
+	var _hc = _this.hasClass('fa-thumbs-o-up');
+	
+	var _enable = _this.attr('data-click');
+	if (_enable != undefined && 'dis' === _enable) {
+	    return;
+	}
+
+	var makeAsLoveId =$(obj).attr("id");
+	var temp = makeAsLoveId.split("_");
+	var logid = temp[1];
+	var ownerOfLog = temp[2];
+	var clickCount = $("#love_"+logid+"_hidden_clickCount").val();
+	var user_code = $("#love_"+logid+"_user_code").val();
+	var current_love_count = $("#love_"+logid+"_hidden").val();
+	$("#love_userlist_"+logid+"_hidden").val();
+	
+	_this.animate({
+            'font-size': '20px'
+        },300, function () {
+            _this.attr('data-click', 'dis');
+            setTimeout(function(){
+                _this.attr('data-click', 'enable');
+            },1000);
+            setTimeout(function () {
+                if (_hc) {
+                    _this.removeClass('fa-thumbs-o-up');
+                    _this.addClass('fa-thumbs-up');
+                } else {
+                    _this.removeClass('fa-thumbs-up');
+                    _this.addClass('fa-thumbs-o-up');
+                }
+                _this.css({
+                    'font-size': '14px'
+                });
+
+              $.ajax({
+		            url:"/action/tweet/makeAsLove",
+		            type:"POST",
+		            data:{
+		                logid:logid,
+		                user_code:user_code,
+		                current_love_count:current_love_count,
+		                ownerOfLog:ownerOfLog,
+		                clickCount:clickCount
+		            },
+		            success:function(result){
+		                var dataResult =  jQuery.parseJSON(result)
+		                var resultCode = dataResult.code;
+		                $("#love_"+logid+"_hidden_clickCount").val(parseInt(dataResult.clickCount));
+		                if(resultCode=="200"){
+		                    var love = dataResult.love_count;
+		                    var countOfLove = parseInt(love);
+		                    $("#love_"+logid).text(countOfLove);
+		                    $("#love_userlist_"+logid).text(countOfLove);
+		                    var imgEle = '<a href="$link.auto_user($g_user, false)" target="_blank" id="me_'+logid+'">';
+							var spanEle = '<span class="TweetUserPic"><img src="/img/portrait.gif?t=1451961935000" align="absmiddle" alt="非会员用户" title="非会员用户" class="SmallPortrait" user=""/></span></a>';
+		                    $("#user_pic_"+logid).prepend(imgEle+spanEle);
+		                    $("#love_"+logid).text(countOfLove);
+		                    $("#love_"+logid+"_hidden").val(countOfLove);
+		                    $("#love_userlist_"+logid+"hidden").val(countOfLove);
+		                    $("#love_userlist_"+logid).text(countOfLove+"个人觉得很赞");
+		                    //$("#"+makeAsLoveId).attr("class","loved");
+		                    return;
+		                }
+		                if(resultCode=="201"){
+		                	var love = dataResult.love_count;
+			                var countOfLove = parseInt(love);
+			                $("#love_userlist_"+logid).text(countOfLove);
+		                    $("#me_"+logid).empty();
+		                    $("#love_"+logid).text(countOfLove);
+		                    $("#love_"+logid+"_hidden").val(countOfLove);
+		                    if(countOfLove<=0){
+		                    	$("#love_userlist_"+logid).text("");
+		                    }else{
+		                    	$("#love_userlist_"+logid).text(countOfLove+"个人觉得很赞");
+		                    }
+		                    //$("#"+makeAsLoveId).removeClass("loved");
+		                    return;
+		                }
+		                $("#" + makeAsLoveId).attr("class", "fa fa-thumbs-o-up");
+		                $("#info_"+logid).text(dataResult.result);
+		                setTimeout(function(){
+		                	$("#info_"+logid).text("");
+		                },3000);
+		            }
+
+            }, 400);
+        });
+	
+        });
+}
+</script>
+
+<script>
+	function toggle(){
+		var flag= $("#hiddenflag").val();
+		if(flag=="true"){
+			$(".hiddenPic").hide();
+			$("#hiddenflag").val(false);
+		}else if(flag=="false"){
+			$(".hiddenPic").show();
+			$("#hiddenflag").val(true);
+		}
+	}
+</script>
+</html>
+
+<!-- Generated by OsChina.NET (init:1[ms],page:89[ms],ip:222.222.216.162) -->

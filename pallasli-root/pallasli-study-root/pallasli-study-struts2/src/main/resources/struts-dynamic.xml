@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE struts PUBLIC  
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+<!-- 使用通配符实现方法或类的动态配置 -->
+	<package name="dynamic" namespace="/dynamic" extends="struts-default">
+		<action name="do_*" class="com.pallasli.study.struts2.action.DynamicMethodAction" method="{1}">
+			<param name="message">hello world from message</param> 
+			<result name="toHello">/WEB-INF/pages/test/hello.jsp</result>
+			<result name="toHello2">/WEB-INF/pages/test/hello2.jsp</result>
+		</action> 
+	</package> 
+</struts>  

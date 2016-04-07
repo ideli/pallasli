@@ -25,5 +25,7 @@
       <module>pallasli-study-wx</module>
       <module>pallasli-study-zookeeper</module>
       <module>pallasli-study-ws-cxf</module>
+      <module>pallasli-study-struts2</module>
+      <module>pallasli-study-hibernate</module>
   </modules>
 </project>

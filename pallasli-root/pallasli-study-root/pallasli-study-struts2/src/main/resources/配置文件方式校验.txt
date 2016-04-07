@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0//EN"
+
+  "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<!--校验开始 --> 
+
+<validators>
+
+必填校验器
+<field name="requiredValidatorField">
+
+   <field-validator type="required">
+
+     <message >必填内容</message>
+
+   </field-validator>
+
+</field>
+必填字符串校验
+<field name="requiredStringValidatorField">
+
+   <field-validator type="requiredstring">
+
+     <param name="trim">true</param>
+
+     <message  >字符串必填校验</message>
+
+   </field-validator>
+
+</field>
+
+对int类型的校验
+<field name="integerValidatorField">
+
+   <field-validator type="int">
+
+      <param name="min">1</param>
+
+      <param name="max">10</param>
+
+      <message key="validate.integerValidatorField" />
+
+   </field-validator>
+
+</field>
+
+对日期的校验
+<field name="dateValidatorField">
+
+    <field-validator type="date">
+
+        <param name="min">01/01/1990</param>
+
+        <param name="max">01/01/2000</param>
+
+        <message key="validate.dateValidatorField" />
+
+    </field-validator>
+
+</field>
+
+对email的校验
+<field name="emailValidatorField">
+
+    <field-validator type="email">
+
+       <message key="validate.emailValidatorField" />
+
+    </field-validator>
+
+</field>
+
+对URL的校验
+<field name="urlValidatorField">
+
+     <field-validator type="url">
+
+         <message key="validate.urlValidatorField" />
+
+     </field-validator>
+
+</field>
+
+对字符串长度的校验
+<field name="stringLengthValidatorField">
+
+      <field-validator type="stringlength">
+
+         <param name="maxLength">4</param>
+
+         <param name="minLength">2</param>
+
+         <param name="trim">true</param>
+
+         <message key="validate.stringLengthValidatorField" />
+
+      </field-validator>
+
+</field>
+
+对正则表达式的校验
+<field name="regexValidatorField">
+
+        <field-validator type="regex">
+
+            <param name="expression">.*\.txt</param>
+
+            <message key="validate.regexValidatorField" />
+
+        </field-validator>
+
+</field>
+
+对字段表达式的校验
+<field name="fieldExpressionValidatorField">
+
+   <field-validator type="fieldexpression">
+
+   <param name="expression">(fieldExpressionValidatorField == requiredValidatorField)</param>
+
+  <message key="validate.fieldExpressionValidatorField" />
+
+  </field-validator>
+
+</field>
+
+</validators>
+
+----------------------------------------------------------------------------------------------
+
+以上均为字段校验器；对于非字段校验器：
+
+  如下：
+
+   <validator type="stringlength">
+
+      <param name="fieldName">password</param>
+
+      <param name="maxLength">14</param>
+
+      <param name="minLength">8</param>
+
+      <param name="trim">true</param>
+
+      <message>密码只能为8到14位</message>
+
+  </validator>
+
+--------------------------------------------------------------------------------------------------
+
+校验器短路：
+
+    <field-validator type="fieldexpression" short-circuit="true">
+
+ 校验器的执行顺序
+
+1. 所有非字段校验风格的校验器优先于字段校验风格的校验器；
+2. 所有非字段校验风格的校验器中，排在前面的会先执行；
+3. 所有字段校验风格的校验器，排在前面的会先执行；
+
+校验器的短路原则
+1. 所有非字段检验器时最优先执行的，如果某个非字段校验器校验失败了，则该字段上的所有字段校验器都不会获得校验机会；
+2. 非字段校验校验失败，不会阻止其他非字段校验执行；
+3. 如果一个字段校验器校验失败后，则该字段下且排在该校验失败后的检验器之后的其他字段校验器不会获得校验机会；
+4. 字段校验器永远不会阻止非字段校验器的执行！
+
+ 短路校验器
+短路校验器：只需在或元素中添加short-circuit=”true”属性。
+注：在struts2.1.6版本，已经支持客户端的短路校验。
+
+--------------------------------------------------------------------------------------------------
+
+示例代码：
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE validators PUBLIC
+  "-//OpenSymphony Group//XWork Validator 1.0//EN"
+  "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+<field name="username">
+    <field-validator type="requiredstring">
+      <param name="trim">true</param>
+      <message>用户名必须填写</message>
+    </field-validator>
+</field>
+
+<field name="password">
+    <field-validator type="requiredstring">
+       <param name="trim">true</param>
+       <message>密码必须填写</message>
+   </field-validator>
+   <field-validator type="stringlength">
+      <param name="trim">true</param>
+      <param name="maxLength">14</param>
+      <param name="minLength">8</param>
+      <message>密码只能为8到14位</message>
+   </field-validator>
+ </field>
+</validators>

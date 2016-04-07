@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE struts PUBLIC  
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="model1" namespace="/model1" extends="struts-default">
+		<action name="Hello" class="com.pallasli.study.struts2.action.HelloWorldAction" method="testActionMethod">
+			<!-- 参数注入 -->
+			<param name="message">hello world from message</param>
+			<!-- 可以使用相对namespace的路径或 绝对路径 -->
+			<result name="toHello">/WEB-INF/pages/test/hello.jsp</result>
+		</action> 
+	</package> 
+</struts>  

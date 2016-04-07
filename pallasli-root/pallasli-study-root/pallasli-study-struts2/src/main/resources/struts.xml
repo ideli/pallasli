@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE struts PUBLIC  
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"  
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.custom.i18n.resources" value="guojihua/resource"></constant>  
+	<constant name="struts.action.extension" value="do,action"></constant>
+	<!-- 先走转换器后走拦截器 -->
+	<package name="authority" namespace="/authority" extends="struts-default">
+
+		<!-- 定义一个拦截器 -->
+		<interceptors>
+			<interceptor name="authority"
+				class="com.pallasli.study.struts2.action.LoginInterceptor">
+			</interceptor>
+			<!-- 拦截器栈 -->
+			<interceptor-stack name="mydefault">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="authority" />
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 定义全局Result -->
+		<global-results>
+			<!-- 当返回login视图名时，转入/login.jsp页面 -->
+			<result name="login">/login.jsp</result>
+		</global-results>
+		<action name="convert" class="com.pallasli.study.struts2.action.ConvertAction"
+			method="testActionMethod">
+			<result name="toHello">/WEB-INF/pages/test/convert.jsp</result>
+			<!-- 使用此拦截器 -->
+			<interceptor-ref name="mydefault" />
+		</action>
+	</package>
+
+
+	<package name="" namespace="" extends="struts-default">
+		<action name="">
+			<result>index.jsp</result>
+		</action>
+	</package>
+	<package name="convert" namespace="/convert" extends="struts-default">
+		<action name="convert" class="com.pallasli.study.struts2.action.ConvertAction"
+			method="testActionMethod">
+			<result name="toHello">/WEB-INF/pages/test/convert.jsp</result>
+		</action>
+	</package>
+	<package name="test" namespace="/pages/test" extends="struts-default">
+		<action name="Hello"
+			class="com.pallasli.study.struts2.action.HelloWorldAction" method="testActionMethod">
+			<!-- 类属性注入(class的属性) 会被url参数覆盖 带对象参数传递方式http://localhost:8888/struts2/dynamic/do_testActionMethod.do?message=jjgagl&user.name=liyong&date.year=3&date=2001-02-09 -->
+			<param name="message">hello world from message</param>
+			<!-- 可以使用相对namespace的路径或 绝对路径 -->
+			<result name="toHello">/WEB-INF/pages/test/hello.jsp</result>
+		</action>
+	</package>
+	<package name="lang" namespace="/lang" extends="struts-default">
+		<action name="lang" class="com.pallasli.study.struts2.action.LangAction" method="run">
+			<result name="success">/WEB-INF/pages/test/guojihua.jsp</result>
+		</action>
+	</package>
+	<include file="struts-model1.xml"></include>
+	<include file="struts-dynamic.xml"></include>
+</struts>  

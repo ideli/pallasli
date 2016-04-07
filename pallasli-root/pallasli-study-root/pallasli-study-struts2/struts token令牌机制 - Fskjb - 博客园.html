@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>struts token令牌机制 - Fskjb - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=8F6jO9aWZhOryqKsIFGUkSbXpyPVKDwgWwvpie3eJis1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/newyear2009/bundle-newyear2009.css?v=h0kR74NknBiuP_WcZEhM_s2ggKDYne2nevFgAUohsYI1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/Fskjb/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/Fskjb/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/Fskjb/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'Fskjb', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=ceHMEpeJXcR_f7TCJnXeZQRG1UsC0_cpwDJRs_oVInY1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home" class="hui-d-custom"> 
+<div id="header"  class="hui-d3">
+	<div id="blogTitle">
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/Fskjb/">点滴在心头</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+
+	<div id="navigator">
+	<div class="hui-d2"> 
+		
+<!--done-->
+<ul id="navList">
+	<li><a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/Fskjb/">首页</a></li>
+	<li><a href="http://space.cnblogs.com/" cssclass="menu">社区</a></li>
+	<li><a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="MyLinks1_ContactLink" accesskey="9" class="menu" rel="nofollow" href="http://msg.cnblogs.com/send/Fskjb">联系</a></li>
+	<li><a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a></li>
+	<li><a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/Fskjb/rss">订阅</a>
+	<a id="MyLinks1_XMLLink" class="aHeaderXML" href="http://www.cnblogs.com/Fskjb/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a></li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			
+<!--done-->
+随笔- 154&nbsp;
+文章- 6&nbsp;
+评论- 90&nbsp;
+
+			
+		</div><!--end: blogStats -->
+	</div>
+</div><!--end: navigator 博客导航栏 -->
+
+</div><!--end: header -->
+
+
+<div class="hui-d3 hui-t5" id="body">
+	<div class="hui-main"> 
+		<div class="hui-b"> 
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "h1PostTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/Fskjb/archive/2010/05/27/1745709.html">struts token令牌机制</a>
+		</h1>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p><strong>利用Struts同步令牌（Token）机制来解决Web应用中的重复提交问题。该方法的基本原理是：服务器端在处理到达的request之前，会将request中的Token值与保存在当前用户session中的令牌值进行比较，看是否匹配。在处理完该request后，且在response发送给客户端之前，将会产生一个新的&nbsp;Token，该Token除传给客户端以外，也会将用户session中保存的旧的Token进行替换。这样，如果用户会退到刚才的提交页面并再次提交的话，客户端传过来的Token值和服务器端的不一致，从而有效地防止了重复提交地发生。</strong></p>
+<p>&nbsp;&nbsp;<font color="#333333">struts</font>的Token机制实际上就是通过用户提交表单时，比较request中的请求参数&#8220;org.apache.struts.taglib.html.TOKEN&#8221;的值与当前会话中的属"org.apache.struts.action.TOKEN"的值是否相等，相等则是正常提交，不等则为重复提交。 </p>
+<p>&nbsp;&nbsp; 下面我们看下一个完整的操作流程，这样便于理解:<br />&nbsp;&nbsp; 首先我们要明白，重复提交是发生在什么情况下的，什么情况下需要处理重复提交。我们所要解决的重复提交一般是考虑用户新插入一条记录的情形，对于修改记录的重复提交一般不考虑，因为修改记录本身记录就存在ID，重复提交也只不过是重复更新数据库同一记录而已，对数据的正确性不会有影响。如果新插入一条记录不对重复提交进行处理的话，那么就会在数据库中重复插入同一记录，这样会在数据库产生冗余的重复记录。当我们要插入一条记录时，会分二步走。第一步我们要打开新增记录的页面。第二步，我们会在打开的页面中填写相关信息，然后提交，这个时候提交才算完成。<br />第一步：假如我们打开新增记录这个操作由add方法完成，代码如下：<br />public ActionForward add(ActionMapping mapping, ActionForm form,<br />&nbsp;&nbsp;&nbsp;HttpServletRequest request, HttpServletResponse response) {&nbsp;<br />&nbsp;&nbsp;this.saveToken(request);//这个方法就是产生令牌值，struts已有的方法&nbsp;<br />&nbsp;&nbsp;return mapping.findForward("add");//返回新增页面</p>
+<p>}<br />通过调用saveToken(request)，产生一个token值。(注：每次调用saveToken方法产生的token值都不同)然后在记录新增页面中的&lt;html:form&gt;内部增加一个隐含表单字段，形式如下：<br />&lt;div&gt;</p>
+<p>&lt;input type="hidden" name="org.apache.struts.taglib.html.TOKEN"</p>
+<p>value="8b2d950f23b02c527988a14171254025"&gt;</p>
+<p>&lt;/div&gt;<br />然后再把token值"8b2d950f23b02c527988a14171254025"保存到当前会话中，也就是&nbsp;session.setAttribute( "org.apache.struts.action.TOKEN","8b2d950f23b02c527988a14171254025");</p>
+<p>第二步：假如我们提交这个页面数据由save方法完成，代码如下：<br />public ActionForward save(ActionMapping mapping, ActionForm form,<br />&nbsp;&nbsp;&nbsp;HttpServletRequest request, HttpServletResponse response) {&nbsp;<br />&nbsp;&nbsp;if (this.isTokenValid(request)) {//正常提交 &nbsp;&nbsp;&nbsp;this.resetToken(request);//清空当前会话中的token值<br />&nbsp;&nbsp;&nbsp;return mapping.findForward("success");//返回保存成功页面<br />&nbsp;&nbsp;} else {//重复提交&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;this.saveToken(request);//注：此方法在这里可要也可不要。&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;return mapping.findForward("fail");//返回重复提交提示信息页面<br />&nbsp;&nbsp;}</p>
+<p>}<br />判断是不是重复提交关键是isTokenValid(request)这个方法，这个方法由struts提供，如果返回结果为true则表示正常提交，false则为重复提交。isTokenValid(request)这个方法实际上主要做了三件事，<br />1.判断当前会话是否过期，如果过期，直接返回false<br />&nbsp; HttpSession session = request.getSession(false);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (session == null) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />2.然后再判断当前会话中是否存在令牌属性"org.apache.struts.action.TOKEN"，如果不存在，返回false<br />&nbsp; String saved =(String) session.getAttribute("org.apache.struts.action.TOKEN");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (saved == null) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false; 为什么令牌属性"org.apache.struts.action.TOKEN"会不存在呢，那是因为当用户正常提交后，会调用this.resetToken(request);//清空当前会话中的token值。也就是说resetToken(request)方法中调用了 session.removeAttribute("org.apache.struts.action.TOKEN");</p>
+<p>当用户重复提交时，我说了"this.saveToken(request);//此方法在这里可要也可不要。"，下面我们分</p>
+<p>析下，如果不调用这个方法，会话中就不会再重新保存token值，那么再刷新的时候，session中的token<br />值总是为null,isTokenValid(request)直接返回false,如果调用this.saveToken(request)的话，</p>
+<p>session中会重新添加token属性值。这个时候isTokenValid(request)会进行下面第三步的判断。<br />3.从当前会话中取得token的值与当前request中得到的token值比较，相同返回true,不同返回false<br />&nbsp; String token = request.getParameter("org.apache.struts.taglib.html.TOKEN");<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (token == null) {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return saved.equals(token);</p>
+<p>如果是重复刷新，那么每次request中的令牌值都是一样的，但每次刷新当前会话中的令牌值都被重新替换了，所以会返回false</p>
+<p>注：使用struts的表单提交Token机制时，提交的表单一定要写成&lt;html:form&gt;&lt;/html:form&gt;这种形式，如果写成&lt;form&gt;&lt;/form&gt;这种形式的话，尽管调用saveToken(request)方法也不会在当前的&lt;form&gt;&lt;/form&gt;里面生成隐含表单，最终的结果都是"重复提交".</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2010-05-27 19:59</span> <a href='http://www.cnblogs.com/Fskjb/'>Fskjb</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://i.cnblogs.com/EditPosts.aspx?postid=1745709" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(1745709);return false;">收藏</a> </div>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=58025,cb_entryId=1745709,cb_blogApp=currentBlogApp,cb_blogUserGuid='3ab86193-1965-de11-9510-001cf0cd104b',cb_entryCreatedDate='2010/5/27 19:59:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+$(function () {
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);    
+});
+</script>
+</div>
+
+
+		</div><!--end: hui-main hui-b -->
+	</div><!--end: hui-main -->
+	<div class="hui-b"> 
+	<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<DIV id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</DIV>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: hui-b -->
+	<div class="clear"></div>
+</div>
+
+<div id="footer" class="hui-d3">
+		
+<!--done-->
+Copyright &copy;2016 Fskjb
+</div><!--end: footer -->
+
+</div><!--end: home 自定义的最大容器 -->
+<!--PageEndHtml Block Begin-->
+<b>年年行好运</b>
+<!--PageEndHtml Block End-->
+</body>
+</html>

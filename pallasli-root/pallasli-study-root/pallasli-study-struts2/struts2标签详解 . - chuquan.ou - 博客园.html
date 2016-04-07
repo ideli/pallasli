@@ -1,0 +1,2734 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<title>struts2标签详解 . - chuquan.ou - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=8F6jO9aWZhOryqKsIFGUkSbXpyPVKDwgWwvpie3eJis1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/darkgreentrip/bundle-darkgreentrip.css?v=xPXJVC4GCITs1yYYgSeLkcicCxapqseaPVQLFGMO1wc1"/>
+<link type="text/css" rel="stylesheet" href="/blog/customcss/120219.css?v=fnuZpI0lMkvTIikcxZjzJ6ekmDE%3d"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/langtianya/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/langtianya/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/langtianya/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'langtianya', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=ceHMEpeJXcR_f7TCJnXeZQRG1UsC0_cpwDJRs_oVInY1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/langtianya/"><img id="blogLogo" src="/Skins/custom/images/logo.gif" alt="返回主页" /></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/langtianya/">chuquan.ou</a></h1>
+<h2>特长：java ssh项目、java群发（文章/邮件/投票等)系统架构。
+【github URL:https://github.com/langtianya】
+【Other Blog：
+my.csdn.net/ouchuquan 和
+my.oschina.net/u/187589 和
+blog.sina.com.cn/u/2430843520】</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/langtianya/">首页</a></li>
+<li><a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="MyLinks1_ContactLink" class="menu" rel="nofollow" href="http://msg.cnblogs.com/send/chuquan.ou">联系</a></li>
+<li><a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/langtianya/rss">订阅</a>
+<!--<a id="MyLinks1_XMLLink" class="aHeaderXML" href="http://www.cnblogs.com/langtianya/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			
+<span id="stats_post_count">随笔 - 917&nbsp; </span>
+<span id="stats_article_count">文章 - 2&nbsp; </span>
+<span id="stats-comment_count">评论 - 64</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/langtianya/archive/2013/03/18/2965878.html">struts2标签详解 .</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><div class="article_content">
+<p>要在jsp中使用Struts2的标志，先要指明标志的引入。通过jsp的代码的顶部加入以下的代码：</p>
+<p>&lt;%@taglib prefix="s" uri="/struts-tags" %&gt;</p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>If elseif&nbsp; else</strong></p>
+<p><strong>描述：</strong></p>
+<p><strong>执行基本的条件流转。</strong></p>
+<p><strong>参数：</strong></p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="95">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="45">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="84">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="72">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="178">
+<p><strong>描述</strong></p>
+</td>
+<td valign="top" width="95">
+<p><strong>备注</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="95">
+<p><strong>test</strong></p>
+</td>
+<td valign="top" width="45">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="84">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="72">
+<p><strong>boolean</strong></p>
+</td>
+<td valign="top" width="178">
+<p><strong>决定标志里的内容是否显示的表达式</strong></p>
+</td>
+<td valign="top" width="95">
+<p><strong>else</strong><strong>标志没有这个参数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="95">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="45">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="84">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="72">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="178">
+<p><strong>用来标识元素的id</strong><strong>。在UI</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+<td valign="top" width="95">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>&nbsp;</strong></p>
+<p><strong>例子：</strong></p>
+<p align="left">&lt;s:set name="age" value="61"/&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;s:if test="${age &gt; 60}"&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; 老年人</p>
+<p align="left">&lt;/s:if&gt;</p>
+<p align="left">&lt;s:elseif test="${age &gt; 35}"&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; 中年人</p>
+<p align="left">&lt;/s:elseif&gt;</p>
+<p align="left">&lt;s:elseif test="${age &gt; 15}" id="wawa"&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; 青年人</p>
+<p align="left">&lt;/s:elseif&gt;</p>
+<p align="left">&lt;s:else&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; 少年</p>
+<p align="left">&lt;/s:else&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;s:set name="name" value="&lt;%="'"+ request.getParameter("name")+"'" %&gt;"/&gt;</p>
+<p align="left">&lt;%</p>
+<p align="left">&nbsp; System.out.println(request.getParameter("name"));</p>
+<p align="left">&nbsp;%&gt;</p>
+<p align="left">&lt;s:if test="#name=='zhaosoft'"&gt;</p>
+<p align="left">&nbsp; zhaosoft here</p>
+<p align="left">&lt;/s:if&gt;</p>
+<p align="left">&lt;s:elseif test="#name=='zxl'"&gt;</p>
+<p align="left">&nbsp; zxl here</p>
+<p align="left">&lt;/s:elseif&gt;</p>
+<p align="left">&lt;s:else&gt;</p>
+<p align="left">&nbsp; other is here</p>
+<p>&lt;/s:else&gt;</p>
+<p><strong>&nbsp;</strong></p>
+<p>Iterator（迭代）</p>
+<p>描述：用于遍历集合（java.util.Collection）或枚举值(java.util.iterator)</p>
+<p>参数</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>status</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>如果设置此参数，一个IteratorStatus</strong><strong>的实例将会压入每一个遍历的堆栈</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>value</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要遍历的可枚举的(iteratable)</strong><strong>数据源，或者将放入的新列表(List)</strong><strong>的对想</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>I18n（国际化操作）</p>
+<p>描述：</p>
+<p>加载资源包到值堆栈。它可以允许text标志访问任何资源包的信息。而不只当前的action相关联的资源包。</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>name</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String </strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>资源包的类路径(</strong><strong>如com.xxxx.resources.AppMsg)</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Include</p>
+<p>描述：包含一个servlet的输出(servlet或jsp的页面)</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>value</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>时</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String </strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要包含的jsp</strong><strong>页面或servlet</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>param</p>
+<p>描述：属性是可选的，如果提供，会调用Component的方法，addParameter(String,Object),如果不提供，则外层嵌套标签必须实现UnnamedParametric接口。</p>
+<p>Value的提供有两种方式，通过value属性或者标签中间的text，不同之处：</p>
+<p>&lt;s:param name="name"&gt;zhaosoft&lt;/s:param&gt;</p>
+<p>参数会以String的格式放入statck</p>
+<p>&lt;s:param name="name" value="zhaosoft"/&gt;</p>
+<p>该值会以java.lang.Object的格式放入statck</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>name</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>参数名</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>value</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>时</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String </strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>value</strong><strong>表达式</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>set</p>
+<p>描述：set标签赋予变量一个特定范围内的值。当希望给一个变量赋一个复杂的表达式，每次访问该变量而不是复杂的表达式时用到。其在两种情况下非常有用：复杂的表达式很耗时（性能提升）或者很难理解（代码的可读性提高）</p>
+<p>参数：</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>name</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>变量名字</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>scope</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String </strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>变量作用域，可以为application,session,request,page,action</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>value</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>将会赋给变量的值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Text</p>
+<p>描述：支持国际化信息的标签。国际化信息必须放在一个和当前action同名的resource bundle中，如果没有找到相应message,tag body将被当作默认的message，如果没有tag body，message的name会被作为默认message.</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>name</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>资源属性的名字</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>url</p>
+<p>描述：该标签用于创建url，可以通过&rdquo;param&rdquo;标签提供request参数。</p>
+<p>当includeParams的值是all或get，param标签中定义的参数将有优先权，也就是说其会覆盖其他同名参数的值。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>UI</strong><strong>标志</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p>单行文本框</p>
+<p>Textfield标签输出一个HTML单行文本输入控件，等价于HTML代码&lt;input type=&rdquo;text&rdquo;&gt;</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>maxlength</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>文本输入控件可以输入字符的最大长度</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>readonly</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>当该属性为true</strong><strong>时，不能输入</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>size</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定可视尺寸</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>例子：</p>
+<p align="left">&lt;s:form action="register" method="post"&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="username" label="用户名"&gt;&lt;/s:textfield&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>文本框区</p>
+<p>Textarea标签输出一个HTML多行文本输入控件，等价于HTML代码：&lt;textarea /&gt;</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>cols</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>列数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>rows</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>行数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>readonly</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>当该属性为true</strong><strong>时，不能输入</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>wrap</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定多行文本输入控件是否应该换行</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>id</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Object/String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>用来标识元素的id</strong><strong>。在ui</strong><strong>和表单中为HTML</strong><strong>的id</strong><strong>属性</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>例子：</p>
+<p>&lt;s:textarea name="personal" cols="10" rows="5" label="个人简历"&gt;&lt;/s:textarea&gt;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>下拉列表</p>
+<p>s:select 标签输出一个下拉列表框，相当于HTML代码中的&lt;select/&gt;</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>list</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果list</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listKey</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>headerKey</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置当用户选择了header</strong><strong>选项时，提交的的value</strong><strong>，如果使用该属性，不能为该属性设置空值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>headerValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>显示在页面中header</strong><strong>选项内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>emptyOption</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>是否在header</strong><strong>选项后面添加一个空选项</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>multiple</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>是否多选</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>size</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>显示的选项个数</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>例子：</p>
+<p align="left">%@ page contentType="text/html;charset=GBK" %&gt;</p>
+<p align="left">&lt;%@ taglib prefix="s" uri="/struts-tags" %&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用name和list属性，list属性的值是一个列表&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="{'高中','大学','硕士','博士'}"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用name和list属性，list属性的值是一个Map&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="#{1:'高中',2:'大学',3:'硕士',4:'博士'}"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用headerKey和headerValue属性设置header选项&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="{'高中','大学','硕士','博士'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerKey="-1" headerValue="请选择您的学历"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用emptyOption属性在header选项后添加一个空的选项&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="{'高中','大学','硕士','博士'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerKey="-1" headerValue="请选择您的学历"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; emptyOption="true"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用multiple属性设置多选&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="{'高中','大学','硕士','博士'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerKey="-1" headerValue="请选择您的学历"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; emptyOption="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; multiple="true"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用size属性设置下拉框可显示的选项个数&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="{'高中','大学','硕士','博士'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerKey="-1" headerValue="请选择您的学历"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; emptyOption="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; multiple="true" size="8"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;h3&gt;使用listKey和listValue属性，利用Action实例的属性（property）来设置选项的值和选项的内容&lt;/h3&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:select label="最高学历" name="education" list="educations"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listKey="id" listValue="name"/&gt;</p>
+<p>&lt;/s:form</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>doubleselect</strong><strong>标签</strong></p>
+<p>doubleselect标签输出关联的两个HTML列表框，产生联动效果。</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="138">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>list</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果list</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>listKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong><strong>，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>listValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的内容，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>headerKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>设置当用户选择了header</strong><strong>选项时，提交的的value</strong><strong>，如果使用该属性，不能为该属性设置空值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>headerValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>显示在页面中header</strong><strong>选项内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>emptyOption</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>multiple</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>是否多选</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>size</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>显示的选项个数，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleId</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定第二个列表框的ID</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleList</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>要迭代的集合</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleListKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong><strong>，该选项只对第二个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleListValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的内容，该选项只对第二个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleSize</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>选项个数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleName</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定第二个列表框的name</strong><strong>映射</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Object</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>第二个列表框的初始选种项</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>实例：</p>
+<p align="left">&lt;s:form name="test"&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:doubleselect label="请选择所在省市"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="province" list="{'四川省','山东省'}" doubleName="city"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doubleList="top == '四川省' ? {'成都市', '绵阳市'} : {'济南市', '青岛市'}" /&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">&nbsp;</p>
+<p align="left">&lt;s:form action="doubleselectTag"&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:doubleselect</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; label="请选择所在省市"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name="province"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; list="provinces"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listKey="id"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; listValue="name"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doubleList="cities"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doubleListKey="id"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doubleListValue="name"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; doubleName="city"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerKey="-1"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headerValue="---------- 请选择 ----------"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; emptyOption="true" /&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p>&nbsp;</p>
+<p><strong>复选框</strong></p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>fieldValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>true</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定在复选框选中时，实际提交的值</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong>复选框组，对应Action</strong><strong>中的集合</strong></p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>list</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果list</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listKey</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的内容</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>例子：checkboxlistTag.jsp</strong></p>
+<p align="left">&lt;%@ page contentType="text/html;charset=GBK" %&gt;</p>
+<p align="left">&lt;%@ taglib prefix="s" uri="/struts-tags" %&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:checkboxlist name="interest" list="{'足球','篮球','排球','游泳'}" label="兴趣爱好"/&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p><strong>&nbsp;</strong></p>
+<p>单击复选框</p>
+<p>&nbsp;</p>
+<p>文件选择组建</p>
+<p>file标签输出一个HTML文件选择框。</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="46">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="80">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="324">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>accept</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="46">
+<p><strong>input</strong></p>
+</td>
+<td valign="top" width="80">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="324">
+<p><strong>HTML accept</strong><strong>属性，指出接受文件的MIME</strong><strong>类型</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong>按钮</strong></p>
+<p>Submit标签输出一个按钮，submit标签和form标签使用可以提供异步表单提交功能。Submit标签可以输出以下三种类型的提交按钮：</p>
+<p>Input： 等价于 HTML代码&lt;input type=&rdquo;submit&rdquo;&gt;</p>
+<p align="left">Image： 等价于 HTML代码 &lt;input type="image"&gt;</p>
+<p>Button：&lt;button type="submit"&gt;&lt;/button&gt;</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>type</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>input</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要使用的提交按钮的类型，有效值：input button image</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>src</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>为image</strong><strong>类型的提交按钮设置图片地址。该属性对input</strong><strong>和button</strong><strong>类型的提交按钮无效</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>action</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定处理提交请求的action</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>method</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定处理提交请求的action</strong><strong>的方法</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<p align="left">实例1.&lt;s:submit type="image" method="login" src="images/login.jpg"&gt;&lt;/s:submit&gt;</p>
+<p align="left">页面输出：</p>
+<pre>&lt;input type="image" alt="Submit" src="images/login.jpg" id="user__login" name="method:login" value="Submit"/&gt;</pre>
+<p align="left">&nbsp;</p>
+<p>实例2.&lt;s:submit type="button" action="selectTag" method="login" label="登陆"&gt;&lt;/s:submit&gt;</p>
+<p align="left">页面输出：</p>
+<pre>&lt;button type="submit" id="user_selectTag_login" name="action:selectTag!login" value="Submit"&gt;登陆&lt;/button&gt;</pre>
+<p>&nbsp;</p>
+<p>Struts2预定义的前缀：</p>
+<p>1。method&nbsp;&nbsp; method:login</p>
+<p>使用method前缀，来取代action默认的execute()方法的执行。</p>
+<p align="left">&lt;s:form action="user"&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.username" label="用户名"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.password" label="密码"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="登陆" name="method:login"&gt;&lt;/s:submit&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="注册" name="method:register"&gt;&lt;/s:submit&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p>&nbsp;</p>
+<p><strong>注意：</strong><strong>1</strong><strong>。</strong><strong>input</strong><strong>类型的按钮，不能用</strong><strong>label</strong><strong>设置按钮上的文本，只能用</strong><strong>value</strong></p>
+<p><strong>2</strong><strong>、</strong><strong>action</strong><strong>前缀</strong></p>
+<p>使用action前缀，取代form标签指定的action，导向到另一个action进行处理。</p>
+<p align="left">&lt;s:form action="login"&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.username" label="用户名"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.password" label="密码"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="登陆"&gt;&lt;/s:submit&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="注册" name="action:register"&gt;&lt;/s:submit&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p>&nbsp;</p>
+<p><strong>2</strong><strong>、</strong><strong>redirect</strong><strong>前缀</strong></p>
+<p>使用redirect前缀请求重定向到其他的url，甚至可以是web英语程序外部的url。</p>
+<p align="left">&lt;s:form action="login"&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.username" label="用户名"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.password" label="密码"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="登陆"&gt;&lt;/s:submit&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="搜索" name="redirect:www.google.com"&gt;&lt;/s:submit&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p><strong>2</strong><strong>、</strong><strong>redirect-action</strong><strong>前缀</strong></p>
+<p>使用redirect-action前缀请求重定向到其他的action.</p>
+<p align="left">&lt;s:form action="login"&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.username" label="用户名"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:textfield name="user.password" label="密码"&gt;&lt;/s:textfield&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="登陆"&gt;&lt;/s:submit&gt;</p>
+<p align="left">&nbsp;&nbsp; &lt;s:submit value="搜索" name="redirect-action:register"&gt;&lt;/s:submit&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p><strong>reset</strong><strong>标签</strong></p>
+<p>reset标签输出一个重置按钮</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>type</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>input</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要使用的重置按钮的内容，input</strong><strong>、button</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p align="left">&lt;s:reset value="重置"&gt;&lt;/s:reset&gt;</p>
+<p>&lt;s:reset type="button" label="重置"&gt;&lt;/s:reset&gt;</p>
+<p><strong>updownselect</strong><strong>标签</strong></p>
+<p>updownselect标签创建一个带有上下移动的按钮的列表框，可以通过上下移动按钮来调整列表框的选项的位置。</p>
+<p>&nbsp;</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="90">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>list</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果list</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listKey</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>listValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>指定集合对象中的哪个属性作为选项的内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>headerKey</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置当用户选择了header</strong><strong>选项时，提交的的value</strong><strong>，如果使用该属性，不能为该属性设置空值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>headerValue</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>显示在页面中header</strong><strong>选项内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>emptyOption</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>是否在header</strong><strong>选项后面添加一个空选项</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>multiple</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>是否多选</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>size</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>显示的选项个数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>moveUplabel</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置向上移动按钮上的文本</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>moveDownLabel</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置向下移动按钮上的文本</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>selectAllLabel</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置向全部选择按钮上的文本</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>allowMoveUp</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置是否使用向上移动按钮</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>allowMoveDown</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置是否使用向下移动按钮</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="90">
+<p><strong>allowSelectAll</strong></p>
+</td>
+<td valign="top" width="43">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="133">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="275">
+<p><strong>设置是否使用全部选择按钮</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>实例：</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&lt;!-- 使用简单集合来生成可上下移动选项的下拉选择框 --&gt;</p>
+<p align="left">&lt;s:updownselect name="a" label="请选择您喜欢的图书" labelposition="top"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; moveUpLabel="向上移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; list="{'Spring2.0宝典' , '轻量级J2EE企业应用实战' , 'JavaScript: The Definitive Guide'}"/&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp;</p>
+<p align="left">&nbsp;&nbsp;&nbsp;</p>
+<p align="left">&lt;!-- 使用简单Map对象来生成可上下移动选项的下拉选择框</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &nbsp;且使用emptyOption="true"增加一个空选项--&gt;</p>
+<p align="left">&lt;s:updownselect name="b" label="请选择您想选择出版日期" labelposition="top"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; moveDownLabel="向下移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; list="#{'Spring2.0宝典':'2006年10月' , '轻量级J2EE企业应用实战':'2007月4月' , '基于J2EE的Ajax宝典':'2007年6月'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; listKey="key"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; emptyOption="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; listValue="value"/&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp;</p>
+<p align="left">&lt;s:bean name="com.zhaosoft.ui.formtag.BookService" id="bs"/&gt;</p>
+<p align="left">&lt;!-- 使用集合里放多个JavaBean实例来可上下移动选项的生成下拉选择框 --&gt;</p>
+<p align="left">&lt;s:updownselect name="c" label="请选择您喜欢的图书的作者" labelposition="top"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; selectAllLabel="全部选择" multiple="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; list="#bs.books"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; listKey="author"</p>
+<p align="left">&nbsp;&nbsp;&nbsp; listValue="name"/&gt;</p>
+<p>&lt;/s:form&gt;</p>
+<p>&nbsp;</p>
+<p align="left"><strong>package</strong> com.zhaosoft.ui.formtag;</p>
+<p align="left"><strong>public</strong> <strong>class</strong> BookService</p>
+<p align="left">{</p>
+<p align="left">&nbsp;&nbsp;&nbsp; <strong>public</strong> Book[] getBooks()</p>
+<p align="left">&nbsp;&nbsp;&nbsp; {</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>return</strong> <strong>new</strong> Book[]</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>new</strong> Book("Spring2.0宝典","zhaosoft"),</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>new</strong> Book("轻量级J2EE企业应用实战","zhaosoft"),</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>new</strong> Book("基于J2EE的Ajax宝典","zhaosoft")</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };</p>
+<p align="left">&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>optiontransferselect</strong><strong>标签</strong></p>
+<p>optiontransferselect标签创建一个选项转移列表组建，它由两个&lt;select&gt;标签以及它们之间的用于将选项在两个&lt;select&gt;之间相互移动的按钮组成。表单提交时，将提交两个列表框中选中的选项。</p>
+<table style="width: 583px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="138">
+<p><strong>名称</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>必需</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>默认</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>类型</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>描述</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>list</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果list</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>listKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong><strong>，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>listValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的内容，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>headerKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>设置当用户选择了header</strong><strong>选项时，提交的的value</strong><strong>，如果使用该属性，不能为该属性设置空值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>headerValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>显示在页面中header</strong><strong>选项内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>multiple</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>false</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>是否多选</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>size</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>显示的选项个数，该选项只对第一个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleId</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定第二个列表框的ID</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleList</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>是</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Cellection Map Enumeration Iterator array</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>要迭代的集合，使用集合中的元素来设置各个选项，如果doubleList</strong><strong>的属性为Map</strong><strong>则Map</strong><strong>的key</strong><strong>成为选项的value</strong><strong>，Map</strong><strong>的value</strong><strong>会成为选项的内容，该选项只对第二个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleListKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的value</strong><strong>，该选项只对第二个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleListValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定集合对象中的哪个属性作为选项的内容，该选项只对第二个列表框起作用</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleHeaderKey</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>设置当用户选择了header</strong><strong>选项时，提交的的value</strong><strong>，如果使用该属性，不能为该属性设置空值</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleHeaderVale</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>显示在页面中header</strong><strong>选项内容</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleEmptyOption</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>是否在第二列表框的header</strong><strong>后面添加一个空选项</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleMultiple</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>true</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>是否多选</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleSize</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Integer</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>选项个数</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleName</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>指定第二个列表框的name</strong><strong>映射</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>doubleValue</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Object</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>第二个列表框的初始选种项</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>leftTitle</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>左边列表框的标题</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>rightTitle</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&lt;-</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>右边列表框的标题</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>addToLeftLable</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>String</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>addToRightLable</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>addAllToLeftLable</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>addAllToRightLable</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>leftUpLabel</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>leftDownLabel</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>rightUpLabel</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>rightDownLabel</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowAddToLeft</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowAddToright</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowAddAllToLeft</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowAddAllToRight</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowSelectAll</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>否</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>无</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>Boolean</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>设置是否使用全部选择按钮</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowUpdownOnLeft</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="138">
+<p><strong>allowUpDownOnRight</strong></p>
+</td>
+<td valign="top" width="40">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="42">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="125">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td valign="top" width="238">
+<p><strong>&nbsp;</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>例子：</p>
+<p align="left">&lt;s:head/&gt;</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:optiontransferselect</p>
+<p align="left">&nbsp;&nbsp;&nbsp; label="最喜爱的图书"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; name="javaBook"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; list="{'《Java Web开发详解》', '《Struts 2深入详解》', '《Java快速入门》'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleName="cBook"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleList="{'《VC++深入详解》', '《C++ Primer》', '《C++程序设计语言》'}"/&gt;</p>
+<p align="left">&lt;/s:form&gt;</p>
+<p align="left">---------------------------</p>
+<p align="left">&lt;s:form&gt;</p>
+<p align="left">&nbsp;&nbsp;&nbsp; &lt;s:optiontransferselect</p>
+<p align="left">&nbsp;&nbsp;&nbsp; label="最喜爱的图书"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; name="book1"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; leftTitle="Java图书"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; rightTitle="C/C++图书"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; list="{'《Java Web开发详解》', '《Struts 2深入详解》', '《Java快速入门》'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; headerKey="-1"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; headerValue="--- 请选择 ---"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; emptyOption="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleName="book2"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleList="{'《VC++深入详解》', '《C++ Primer》', '《C++程序设计语言》'}"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleHeaderKey="-1"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleHeaderValue="--- 请选择 ---"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doubleEmptyOption="true"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; addToLeftLabel="向左移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; addToRightLabel="向右移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; addAllToLeftLabel="全部左移"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; addAllToRightLabel="全部右移"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; selectAllLabel="全部选择"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; leftUpLabel="向上移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; leftDownLabel="向下移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; rightUpLabel="向上移动"</p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; rightDownLabel="向下移动"/&gt;</p>
+<p>&lt;/s:form&gt;</p>
+</div>
+<p>原文：<a href="http://blog.csdn.net/zxl315/article/details/2886456">http://blog.csdn.net/zxl315/article/details/2886456</a></p>
+<p>相关文章：</p>
+<p><a href="http://www.open-open.com/lib/view/open1331393920452.html">http://www.open-open.com/lib/view/open1331393920452.html</a></p>
+<p><a href="http://www.cnblogs.com/focusj/archive/2011/01/04/2057651.html">http://www.cnblogs.com/focusj/archive/2011/01/04/2057651.html</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2013-03-18 13:47</span> <a href='http://www.cnblogs.com/langtianya/'>chuquan.ou</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://i.cnblogs.com/EditPosts.aspx?postid=2965878" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(2965878);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=120219,cb_entryId=2965878,cb_blogApp=currentBlogApp,cb_blogUserGuid='913a06a6-f0b5-e111-aa3f-842b2b196315',cb_entryCreatedDate='2013/3/18 13:47:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+$(function () {
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);    
+});
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2016 chuquan.ou
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>
