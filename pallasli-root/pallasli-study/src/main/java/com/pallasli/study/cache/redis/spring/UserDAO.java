@@ -1,4 +1,4 @@
-package com.pallasli.study.redis.dao;
+package com.pallasli.study.cache.redis.spring;
 
 import com.pallasli.study.redis.bean.User;
 

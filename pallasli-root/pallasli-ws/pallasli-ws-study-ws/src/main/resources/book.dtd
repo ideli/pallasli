@@ -1,0 +1,4 @@
+<!ElEMENT 书架 (书?)>
+<!ElEMENT 书架 (书名,出版商)>
+<!ElEMENT 书名 (#PCDATA)>
+<!ElEMENT 出版商 (#PCDATA)>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<书架 xmlns="http://www.wstest.com/wsSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wstest.com/wsSchema wsSchema.xsd">
+	<!-- schemaLocation是http://www.w3.org/2001/XMLSchema-instance的一个属性 -->
+	<书>
+		<书名></书名>
+		<出版商></出版商>
+	</书>
+	<书>
+		<书名></书名>
+		<出版商></出版商>
+	</书>
+
+</书架> 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.wstest.com/wsSchema"
+	xmlns:tns="http://www.wstest.com/wsSchema" elementFormDefault="qualified">
+
+	<!-- xmlns 约束文件命名空间 xmlns:别名 约束文件别名 别名:schemaLocation 约束对应的命名空间及位置（w3c以外的文件应指定路径） 
+		targetNamespace 本文件命名空间 elementFormDefault 弱约束时不约束子标签 -->
+	<element name="书架">
+		<complexType >
+			<sequence maxOccurs="1" >
+				<element name="书" maxOccurs="1" minOccurs="1" >
+					<complexType>
+						<sequence>
+							<element name="书名" type="string"></element>
+							<element name="出版商" type="string"></element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+
+</schema> 

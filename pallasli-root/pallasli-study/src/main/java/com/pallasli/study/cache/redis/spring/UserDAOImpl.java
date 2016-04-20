@@ -1,4 +1,4 @@
-package com.pallasli.study.redis.dao.impl;
+package com.pallasli.study.cache.redis.spring;
 
 import java.io.Serializable;
 
