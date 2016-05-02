@@ -8,9 +8,6 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.pallasli.study.redis.bean.User;
-import com.pallasli.study.redis.dao.UserDAO;
-
 public class UserDAOImpl implements UserDAO {
 
 	@Autowired

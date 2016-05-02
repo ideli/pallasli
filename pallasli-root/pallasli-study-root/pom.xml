@@ -27,5 +27,10 @@
       <module>pallasli-study-struts2</module>
       <module>pallasli-study-hibernate</module>
       <module>pallasli-study-spring-mvc</module>
+      <module>pallasli-study-spider</module>
+      <module>pallasli-study-netty</module>
+      <module>pallasli-study-guava</module>
+      <module>pallasli-study-spring-security</module>
+      <module>pallasli-study-jce</module>
   </modules>
 </project>
