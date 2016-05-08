@@ -1,0 +1,23 @@
+       <zip destfile="${artifacts}/${version}_SRC.zip">
+            <fileset dir="${basedir}">
+                <exclude name="build/" />
+                <exclude name="project/package/" />
+                <exclude name="project/target/" />
+                <exclude name="project/*/target/" />
+                <exclude name="project/*/null/" />
+                <exclude name="**/.svn/" />
+                <exclude name="**/classes/" />
+                <exclude name="**/test-classes/" />
+                <exclude name="**/*.class" />
+            </fileset>
+        </zip>
+
+
+<zip basedir="${tool.dir}" destfile="release\CVPackage.rar" excludes=".svn/**" />
+
+<zip destfile="D:/fv_src/${build.date.week}/bus_fv_src_${build.date}.zip"
+           basedir="../../../Common"
+           excludes="**/target/**"
+      />
+
+tar²ÎÊý£ºdestfile="" compression="gzip" tarfile=""

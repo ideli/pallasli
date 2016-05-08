@@ -1,0 +1,69 @@
+1. 创建 keystore 文件
+
+执行 keytool -genkey -alias tomcat -keyalg RSA 结果如下
+loiane:bin loiane$ keytool -genkey -alias tomcat -keyalg RSA
+Enter keystore password:  password
+Re-enter new password: password
+What is your first and last name?
+  [Unknown]:  Loiane Groner
+What is the name of your organizational unit?
+  [Unknown]:  home
+What is the name of your organization?
+  [Unknown]:  home
+What is the name of your City or Locality?
+  [Unknown]:  Sao Paulo
+What is the name of your State or Province?
+  [Unknown]:  SP
+What is the two-letter country code for this unit?
+  [Unknown]:  BR
+Is CN=Loiane Groner, OU=home, O=home, L=Sao Paulo, ST=SP, C=BR correct?
+  [no]:  y
+ 
+Enter key password for
+    (RETURN if same as keystore password):  password
+Re-enter new password: password
+
+
+这样就在用户的主目录下创建了一个 .keystore 文件
+
+
+
+
+
+
+
+
+
+<build> 
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <httpsPort>8443</httpsPort>
+                    <keystorePass>password</keystorePass>
+                    <keystoreFile>C:\Users\lyt\.keystore</keystoreFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    
+    
+    
+    
+打开应用的 web.xml 文件，增加配置如下(禁用8080端口)：
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>securedapp</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+
+将 URL 映射设为 /* ，这样你的整个应用都要求是 HTTPS 访问，而 transport-guarantee 标签设置为 CONFIDENTIAL 以便使应用支持 SSL。
+
+
+    

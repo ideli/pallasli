@@ -1,0 +1,13 @@
+需要进行缓存的方法放在指定的cache包中
+
+
+将原方法进行一次封装。原control路径，修改为调用cache/control路径
+如果原程序解耦合适，直接增加新control替换旧control
+
+
+增加切面，before中从缓存中读取，读取成功的，返回结果，读取失败的继续执行方法并从数据库中读取
+
+
+
+
+eclipse mvn-build  common--控制台 使用 GBK 避免控制台乱码

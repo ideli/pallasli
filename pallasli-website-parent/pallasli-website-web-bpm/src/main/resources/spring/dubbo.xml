@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context 
+	   http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<dubbo:application name="consumer-dubbo" />
+
+	<dubbo:registry protocol="zookeeper" address="192.168.5.181:2181" />
+
+	<dubbo:reference id="userDao" interface="com.shineyue.wt.dao.auth.UserDao"
+		url="rmi://127.0.0.1:1099" />
+
+	<dubbo:reference id="resourceDao"
+		interface="com.shineyue.wt.dao.auth.ResourceDao" url="rmi://127.0.0.1:1099" />
+
+	<dubbo:reference id="roleDao" interface="com.shineyue.wt.dao.auth.RoleDao"
+		url="rmi://127.0.0.1:1099" />
+
+	<bean id="userService" class="com.shineyue.wt.service.auth.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+	</bean>
+	<bean id="resourceService" class="com.shineyue.wt.service.auth.impl.ResourceServiceImpl">
+		<property name="resourceDao" ref="resourceDao" />
+	</bean>
+	<bean id="roleService" class="com.shineyue.wt.service.auth.impl.RoleServiceImpl">
+		<property name="roleDao" ref="roleDao" />
+	</bean>
+	
+	
+	<dubbo:reference id="unitMxDao"
+		interface="com.shineyue.wt.dao.unitmxz.UnitMxDao" url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="grydcDao"
+		interface="com.shineyue.wt.dao.grydc.GrydcDao" url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="personalCxDao"
+		interface="com.shineyue.wt.dao.personal.PersonalCxDao" url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="grJbxxDao"
+		interface="com.shineyue.wt.dao.grjbxx.GrJbxxDao" url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="hkMxDao" interface="com.shineyue.wt.dao.hkmx.HkMxDao"
+		url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="unitXxbgDao" interface="com.shineyue.wt.dao.unit.UnitXxbgDao"
+		url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="personalSqslDao" interface="com.shineyue.wt.dao.sqsl.PersonalSqslDao"
+		url="rmi://127.0.0.1:1099" />
+	 <dubbo:reference id="grhkDao" interface="com.shineyue.wt.dao.grhk.GrhkDao"
+		url="rmi://127.0.0.1:1099" />
+	 
+	 <dubbo:reference id="unitHjHdDao" interface="com.shineyue.wt.dao.unitmxz.UnitHjHdDao" 
+	    url="rmi://127.0.0.1:1099"/>
+	    
+	 <dubbo:reference id="grChangeDao" interface="com.shineyue.wt.dao.personal.GrChangeDao"
+		url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="personalRegisterDao"
+		interface="com.shineyue.wt.dao.personal.PersonalRegisterDao" url="rmi://127.0.0.1:1099" />
+		
+	<dubbo:reference id="unitNdjsDao" interface="com.shineyue.wt.dao.unit.UnitNdjsDao"
+		url="rmi://127.0.0.1:1099" />
+	
+	<dubbo:reference id="personalTqDao"
+		interface="com.shineyue.wt.dao.personal.PersonalTqDao" url="rmi://127.0.0.1:1099" />
+	
+	<dubbo:reference id="developerSqslDao"
+		interface="com.shineyue.wt.dao.developer.DeveloperSqslDao" url="rmi://127.0.0.1:1099" />
+	<dubbo:reference id="tqhkjsqDao"
+		interface="com.shineyue.wt.dao.personal.TqhkjsqDao" url="rmi://127.0.0.1:1099" />
+		
+	<dubbo:reference id="unitydcDao"
+		interface="com.shineyue.wt.dao.unitydc.UnitydcDao" url="rmi://127.0.0.1:1099" />
+		
+			
+	<dubbo:reference id="personalDkjdDao"
+		interface="com.shineyue.wt.dao.personal.PersonalDkjdDao" url="rmi://127.0.0.1:1099" />	
+	<dubbo:reference id="unitHkDao" interface="com.shineyue.wt.dao.unit.UnitHkDao"
+		url="rmi://127.0.0.1:1099" />
+	
+	<dubbo:reference id="unitSqslDao" interface="com.shineyue.wt.dao.unit.UnitSqslDao"
+		url="rmi://127.0.0.1:1099" />
+	
+	<dubbo:reference id="unitTqhkjsqDao" interface="com.shineyue.wt.dao.unit.UnitTqhkjsqDao"
+		url="rmi://127.0.0.1:1099" />
+			
+	<dubbo:reference id="personalCxZHDao"
+		interface="com.shineyue.wt.dao.unit.PersonalCxZHDao" url="rmi://127.0.0.1:1099" />		
+		<dubbo:reference id="personalSqcxDao"
+		interface="com.shineyue.wt.dao.personal.PersonalSqcxDao" url="rmi://127.0.0.1:1099" />		
+    		
+</beans>

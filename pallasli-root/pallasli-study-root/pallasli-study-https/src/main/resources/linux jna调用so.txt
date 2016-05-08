@@ -1,0 +1,77 @@
+文中提到：为什么命名为libtest.so而不是test.so呢？因为jna在找so文件的时候，要匹配前缀为lib的so文件
+http://zhenaihua0213.blog.163.com/blog/static/50887766201129104611955/
+在linux下使用jna调用本地方法的时候，需要将C写成的程序编译为so文件
+1、写一个简单test.c文件：
+#include<stdio.h>
+int add(int a,int b);
+int add(int a,int b)
+{
+      int c = a + b ;
+      return c ;
+}   2、编译为so动态链接库：
+gcc的默认路径是在ROOT下，如果你是用ROOT权限登陆的话。
+ gcc -fpic -c test.c
+gcc -shared -o libtest.so test.o
+ls看一下生成的文件：
+libtest.so test.c test.o
+这样就会生成so文件了。 这里为什么要命名为libtest.so而不是test.so呢？因为jna在找so文件的时候，要匹配前缀为lib的so文件
+3、接下来开始写java文件（需要下载jna.jar），我们写一个TestSo.java：
+ import com.sun.jna.Library;
+import com.sun.jna.Native;
+public class TestSo {
+public interface LgetLib extends Library {
+// 调用linux下面的so文件,注意，这里只要写test就可以了，不要写libtest，也不要加后缀
+LgetLib INSTANCE = (LgetLib) Native.loadLibrary("test",LgetLib.class);
+int add(int a,int b);
+}
+public int add(int a,int b){
+return LgetLib.INSTANCE.add(a,b);
+}
+public static void main(String[] args) {
+TestSo ts = new TestSo();
+int c = ts.add(10,20);
+System.out.println("10+20="+c);
+}
+}
+  4、 接下来进行编译：
+export CLASSPATH=$CLASSPATP:./jna.jar                         //这里是设置环境变量
+javac TestSo.java
+这里直接运行TestSo的话：
+ java TestSo
+Exception in thread "main" java.lang.UnsatisfiedLinkError: Unable to load library 'test': libtest.so: cannot open shared object file: No such file or directory
+at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:163)
+at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:236)
+at com.sun.jna.Library$Handler.<init>(Library.java:140)
+at com.sun.jna.Native.loadLibrary(Native.java:379)
+at com.sun.jna.Native.loadLibrary(Native.java:364)
+at TestSo$LgetLib.<clinit>(TestSo.java:7)
+at TestSo.add(TestSo.java:11)
+  at TestSo.main(TestSo.java:15)
+这个错误是指找不到so文件。于是我们将so文件所在的目录设置到环境变量LD_LIBRARY_PATH中：
+vim /etc/profile
+在export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE INPUTRC下面加入
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${你的so目录}
+之后，你可以检查一下设置的起没起效果：echo $LD_LIBRARY_PATH，如果出现你设置的内容就对了，如果没有，你可以重新打开一个窗口再查一下
+设置好环境变量之后，你就可以运行java类了：
+java TestSo
+10+20=30
+到此运行成功。
+如果你遇到了紧急的情事，而这个地方又搞不定，你可以暂时交so文件放到/usr/lib这个目录下面，一般是可以使程序运行的。
+ 关于路径，这个确实头痛，在WINDOWS下还好办，Native.loadLibrary(String, class)第一个参数用绝对路径没有问题，如下：
+我项目位置：D:\workspace\test
+.java文件位置：D:\workspace\test\scr\com\sys\ang
+
+CLASSPATH=.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;%TOMCAT_HOME%\common\lib\servlet-api.jar;%JAVA_HOME%\jre\lib\rt.jar
+
+Java code
+API INSTANCE = (API)Native.loadLibrary("D:\\测试程序\\DLL\\API", API.class);
+相对路径的话，如下：
+放在工程的src下，发布后出现在WEB-INF\classes\下，然后在你要调用API INSTANCE = (API)Native.loadLibrary的类中（如类名为A），调用如下
+String path=A.class.getResource("/").getPath()+"API.dll";
+//如何tomcat路径中有空格，加上这句path=path.replaceAll(" ", " ");
+API INSTANCE = (API)Native.loadLibrary(path, API.class);
+
+
+对于jna来说，如果或直接在Eclipse里运行的话，那么
+Native.loadLibrary("hello",**.class)
+这儿第一个参数的当前目录就是Eclipse的目录。

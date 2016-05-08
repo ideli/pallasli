@@ -32,5 +32,8 @@
       <module>pallasli-study-guava</module>
       <module>pallasli-study-spring-security</module>
       <module>pallasli-study-jce</module>
+      <module>pallasli-study-dubbo-demo</module>
+      <module>pallasli-study-apacheftp</module>
+      <module>pallasli-study-https</module>
   </modules>
 </project>
