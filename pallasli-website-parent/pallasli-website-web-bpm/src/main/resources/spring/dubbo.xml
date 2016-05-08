@@ -8,7 +8,7 @@
 	   http://www.springframework.org/schema/context/spring-context-3.0.xsd 
        http://code.alibabatech.com/schema/dubbo
        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-
+<!-- 
 	<dubbo:application name="consumer-dubbo" />
 
 	<dubbo:registry protocol="zookeeper" address="192.168.5.181:2181" />
@@ -88,5 +88,5 @@
 		interface="com.shineyue.wt.dao.unit.PersonalCxZHDao" url="rmi://127.0.0.1:1099" />		
 		<dubbo:reference id="personalSqcxDao"
 		interface="com.shineyue.wt.dao.personal.PersonalSqcxDao" url="rmi://127.0.0.1:1099" />		
-    		
+    	 -->	
 </beans>

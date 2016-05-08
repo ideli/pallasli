@@ -15,7 +15,7 @@
            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
            http://code.alibabatech.com/schema/dubbo
            http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-	
+	<!-- 
 	<dubbo:application name="consumer-dubbo" />
 
 	<dubbo:registry protocol="zookeeper" address="192.168.5.181:2181" />
@@ -23,7 +23,7 @@
 	
 	<dubbo:reference id="shineyueCaDao" interface="com.shineyue.wt.dao.ca.ShineyueCaDao"
 		url="rmi://127.0.0.1:1099" />
-
+ -->
 	<bean id="sy-wt-CaConfigure" class="com.shineyue.ca.CaBean">
 		<property name="CaServiceIp">
 			<value>192.168.5.174</value>
