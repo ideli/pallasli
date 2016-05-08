@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-01T16:26:51 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="list" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1dbe580a-7722-459b-8ab7-60a970e4f6e6">
+	<style name="s_c" isDefault="true" fontName="宋体" pdfFontName="STFANGSO.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<style name="style_title" style="s_c" fontSize="16" isBold="true"/>
+	<style name="style_row" style="s_c" fontSize="12" isBold="false"/>
+	<style name="style_row_header" fontSize="12" isBold="true"/>
+	<style name="style_row_frame">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>	
+	<parameter name="pTitle" class="java.lang.String"/>
+	<parameter name="reportDir" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="93" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="20" uuid="401a3cc2-ab20-469e-a999-417789312d2b"/>
+				<text><![CDATA[shineyueSoft]]></text>
+			</staticText>
+			<textField>
+				<reportElement key="" style="style_title" x="140" y="18" width="230" height="52" uuid="39e7b606-ad47-4d65-9cd0-eddb2112c643"/>
+				<textFieldExpression><![CDATA[$P{pTitle}+"报表"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="20" width="50" height="50" uuid="2fd60d66-af49-4203-bd76-bb3fc4933ae3"/>
+				<imageExpression><![CDATA[new File($P{reportDir},"./images/jasperreports.png")]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement key="" x="420" y="18" width="132" height="30" uuid="35cf7757-0421-4253-9926-259ac2ddd03f"/>
+				<text><![CDATA[test中文]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="290" y="5" width="150" height="30" uuid="2c5dbdcd-c417-4dfe-b44c-f0d18a004fad"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="440" y="5" width="110" height="30" uuid="45f262ba-cadc-45c5-a72d-1d7db30af3c9"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="11" width="185" height="30" uuid="c48375f5-b83c-4448-bacd-6a9cfaf1aa7c"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="0" y="0" width="560" height="47" forecolor="#FFFFFF" backcolor="#FC7B79" uuid="78c2259a-67f6-4719-b88e-466ae42d31f9">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<staticText>
+					<reportElement style="style_row_header" x="107" y="10" width="100" height="30" uuid="912d7cfb-dc3e-4583-928c-db363084e764"/>
+					<text><![CDATA[name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="4" y="10" width="100" height="30" uuid="8ce2865f-6bd9-4170-962e-1c672de88813"/>
+					<text><![CDATA[id]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="48" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement style="style_row_frame" x="0" y="4" width="560" height="37" uuid="3cc61045-5d47-4ee1-90ca-fa074a433ad9"/>
+				<textField>
+					<reportElement style="style_row" x="107" y="10" width="100" height="24" uuid="43bfd21a-8e9b-4dcb-a4b9-48d260fdd4b9"/>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="0" y="10" width="100" height="24" uuid="7ae0f5ed-0511-4595-a1d9-0cf88d866808"/>
+					<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="71" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="46" splitType="Stretch"/>
+	</summary>
+</jasperReport>

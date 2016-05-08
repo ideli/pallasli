@@ -3,9 +3,7 @@ package com.pallasli.website.log.aop;
 import javax.annotation.Resource;
 
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.pallasli.website.logger.entity.LogInfo;
 
@@ -16,8 +14,8 @@ public class LogAdvice {
 	@Resource(name = "jmsTemplate")
 	private JmsTemplate jmsTemplate;
 
-	@Autowired
-	private ThreadPoolTaskExecutor poolTaskExecutor;
+	// @Autowired
+	// private ThreadPoolTaskExecutor poolTaskExecutor;
 
 	public LogInfo getLogObject() {
 		if (TH.get() == null) {

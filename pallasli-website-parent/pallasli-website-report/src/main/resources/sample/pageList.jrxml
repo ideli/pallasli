@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2016-01-07T10:08:30 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pageList" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="com.shineyue.report.sample.scriptlets.PageScriptlet" uuid="d55f9ce2-c47d-46af-8f81-89bb7b8d479a">
+	<style name="s_c" isDefault="true" fontName="宋体" pdfFontName="STFANGSO.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<style name="style_title" style="s_c" fontSize="16" isBold="true"/>
+	<style name="style_row" style="s_c" fontSize="12" isBold="false"/>
+	<style name="style_row_header" fontSize="12" isBold="true"/>
+	<style name="style_row_frame">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="reportDir" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement style="style_title" x="137" y="15" width="263" height="30" uuid="cb1b6657-24c3-4af6-964e-27842df27d5e"/>
+				<text><![CDATA[列表分页小计测试页面]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="361" y="0" width="100" height="30" uuid="10243435-a2fe-477a-b808-99b1d6fa32fe">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="461" y="0" width="100" height="30" uuid="52ae37b9-4196-44ab-afa3-10397ef90d8b"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="0" y="7" width="560" height="47" forecolor="#FFFFFF" backcolor="#FC7B79" uuid="4386477d-4c47-4ec6-8756-479d9a543a3e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<staticText>
+					<reportElement style="style_row_header" x="107" y="10" width="100" height="30" uuid="beb5c6e8-dfa9-430f-9a66-3af60db1aeb5"/>
+					<text><![CDATA[name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="4" y="10" width="100" height="30" uuid="acbb8ab6-0aef-48fe-a574-d129035fcf0a"/>
+					<text><![CDATA[id]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="46" splitType="Stretch">
+			<frame>
+				<reportElement style="style_row_frame" x="0" y="4" width="560" height="37" uuid="48e130b1-5858-456b-9234-97f65b2d62f3"/>
+				<textField>
+					<reportElement style="style_row" x="107" y="10" width="100" height="24" uuid="0f3d5499-dc15-4dac-b489-617ea331c2a6"/>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="0" y="10" width="100" height="24" uuid="ccf04003-ffe8-4758-9be8-a758d25a5b87"/>
+					<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement x="10" y="20" width="531" height="1" uuid="24f1f4e2-2044-4b72-82c8-8dc215f9500c"/>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="232" y="14" width="248" height="30" uuid="2abdfda1-634e-43ad-81db-f27fad63db08"/>
+				<textFieldExpression><![CDATA["此页id总和"+((com.shineyue.report.sample.scriptlets.PageScriptlet)$P{REPORT_SCRIPTLET}).getPageSumId()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

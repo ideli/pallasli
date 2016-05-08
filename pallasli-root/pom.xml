@@ -12,7 +12,6 @@
 		<module>pallasli-chat</module>
 		<module>pallasli-component</module>
 		<module>pallasli-context</module>
-		<module>pallasli-encrypt</module>
 		<module>pallasli-ftp</module>
 		<module>pallasli-jasperreport-font</module>
 		<module>pallasli-jdbc</module>

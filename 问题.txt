@@ -1,0 +1,11 @@
+
+
+解决iframe中jsessionid无法传递导致session丢失的问题：response.sendRedirect(”/iframe.jsp;jsessionid=lizongbo”);
+
+
+
+
+
+
+
+

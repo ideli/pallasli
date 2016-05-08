@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-15T17:38:18 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreport" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="87a7d46e-e3ad-411e-9e66-e7be8d5ca362">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="ds1" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="ds2" class="net.sf.jasperreports.engine.JRDataSource"/>
+	<parameter name="pTitle" class="java.lang.String"/>
+	<parameter name="reportDir" class="java.lang.String"/>
+	<parameter name="erweima" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="493" splitType="Stretch">
+			<subreport overflowType="Stretch">
+				<reportElement x="0" y="70" width="240" height="200" uuid="1af34fb2-065f-43a0-a140-cb7c37dd2fcd"/>
+				<subreportParameter name="reportDir">
+					<subreportParameterExpression><![CDATA[$P{reportDir}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="pTitle">
+					<subreportParameterExpression><![CDATA[$P{pTitle}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[$P{ds1}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["list.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport overflowType="Stretch">
+				<reportElement x="240" y="70" width="320" height="200" uuid="6b7f72d7-6d1a-4d38-8a03-878a5c39ec83"/>
+				<dataSourceExpression><![CDATA[$P{ds2}]]></dataSourceExpression>
+				<subreportExpression><![CDATA["zhutu.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

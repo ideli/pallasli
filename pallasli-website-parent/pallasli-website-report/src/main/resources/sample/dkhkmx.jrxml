@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-14T16:42:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dkhkmx" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ea78f613-2756-4a3d-b9b5-2944a28721fd">
+	<style name="s_c" isDefault="true" fontName="宋体" pdfFontName="STFANGSO.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+	<style name="style_title" style="s_c" hTextAlign="Center" fontSize="16" isBold="true"/>
+	<style name="style_row" style="s_c" fontSize="12" isBold="false"/>
+	<style name="style_row_header" style="s_c" fontSize="10" isBold="true"/>
+	<style name="style_row_frame">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<style name="style_row_header_frame" forecolor="#8EA9FA"/>
+	<parameter name="reportDir" class="java.lang.String"/>
+	<field name="f005" class="java.lang.String"/>
+	<field name="f002" class="java.lang.String"/>
+	<field name="f026" class="java.lang.String"/>
+	<field name="f006" class="java.lang.String"/>
+	<field name="f007" class="java.lang.String"/>
+	<field name="f011" class="java.lang.String"/>
+	<field name="f008" class="java.lang.String"/>
+	<field name="e023" class="java.lang.String"/>
+	<field name="e032" class="java.lang.String"/>
+	<field name="e033" class="java.lang.String"/>
+	<field name="e034" class="java.lang.String"/>
+	<field name="f041" class="java.lang.String"/>
+	<field name="f042" class="java.lang.String"/>
+	<field name="f043" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement style="style_title" x="176" y="19" width="204" height="40" uuid="a1832525-bb8c-40fd-8cff-9759d64ebb8d"/>
+				<text><![CDATA[合同还款明细表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement x="316" y="11" width="159" height="27" uuid="b2598051-2097-4920-80e1-65609c8c43bb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["第" + $V{PAGE_NUMBER} +"页"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="480" y="11" width="95" height="27" uuid="7f0827b9-389d-4ffb-bc6b-c2f0dac963ac"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["共" + $V{PAGE_NUMBER} + "页"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement style="style_row_header_frame" mode="Opaque" x="0" y="0" width="560" height="32" forecolor="#FFFFFF" backcolor="#FF66FF" uuid="fccbfdb8-ba56-4e2f-9228-3f2c5d1bf75f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<staticText>
+					<reportElement style="style_row_header" x="0" y="12" width="40" height="20" uuid="44326665-0d51-4892-a817-8634b0a1ff7f"/>
+					<text><![CDATA[还款日期]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="40" y="12" width="40" height="20" uuid="30b48f9f-4651-4d8b-8257-2f7c75ee141d"/>
+					<text><![CDATA[还款年月]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="80" y="12" width="40" height="20" uuid="cada086f-0b62-4d13-a05d-2976980c9d8e"/>
+					<text><![CDATA[业务摘要]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="120" y="12" width="40" height="20" uuid="4c8ab261-8ff0-452b-8ae0-5033fc6fa216"/>
+					<text><![CDATA[偿还本金]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="160" y="12" width="40" height="20" uuid="022984e1-44b6-47b6-bd01-a73c6fe5ccd6"/>
+					<text><![CDATA[偿还利息]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="200" y="12" width="40" height="20" uuid="8924565c-8dca-48bf-a617-481f33cc8424"/>
+					<text><![CDATA[偿还罚息]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="240" y="12" width="40" height="20" uuid="c317faab-a71e-48f7-9efc-b0457ecaa795"/>
+					<text><![CDATA[本息合计]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="280" y="12" width="40" height="20" uuid="029d0181-675e-4bcd-bffb-a21517454c3b"/>
+					<text><![CDATA[放款金额]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="320" y="12" width="40" height="20" uuid="44e64ffb-6983-44e2-89c5-f6aefb05590b"/>
+					<text><![CDATA[已还本金]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="360" y="12" width="40" height="20" uuid="ef2a5b54-2580-4ed9-ac5d-f9c8b3c1297b"/>
+					<text><![CDATA[已还利息]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="400" y="12" width="40" height="20" uuid="ad267686-00dc-49cc-a23e-5367799d2150"/>
+					<text><![CDATA[本金余额]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="440" y="12" width="40" height="20" uuid="6c7907e4-b1b7-4e52-bd03-f6016f316f7d"/>
+					<text><![CDATA[借款人对冲]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="480" y="12" width="40" height="20" uuid="4b011a57-f800-4225-8c59-e9528518d8a3"/>
+					<text><![CDATA[配偶对冲]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="style_row_header" x="520" y="12" width="40" height="20" uuid="18c5c61c-bfaa-496f-b239-925c42355347"/>
+					<text><![CDATA[银行扣款]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement style="style_row_frame" x="0" y="0" width="560" height="25" uuid="b5ae83a4-65bd-4180-87cf-9bcedd59e4be">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textField>
+					<reportElement style="style_row" x="480" y="5" width="40" height="20" uuid="92b12300-9dc3-4367-98fc-5b7f4c65f2fe">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f042}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="0" y="5" width="40" height="20" uuid="336da6b7-6041-4086-b9c8-b89447457649">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f005}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="40" y="5" width="40" height="20" uuid="999dfed5-c26f-4d0b-ad15-8f62ea7c2071">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f002}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="80" y="5" width="40" height="20" uuid="6cc73ebf-fb12-47b7-be2c-f812fa5e3c7a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f026}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="120" y="5" width="40" height="20" uuid="94bbf1d4-9123-4227-b675-f99e8bbbda68">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f006}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="160" y="5" width="40" height="20" uuid="ecb3a46a-1e5d-4dd5-b191-ccc11b1e733f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f007}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="200" y="5" width="40" height="20" uuid="897b7e0e-66e6-477d-920b-5ab0fffaaa5e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f011}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="240" y="5" width="40" height="20" uuid="18c23688-7925-4a93-b608-027eba1dc02f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f008}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="280" y="5" width="40" height="20" uuid="a62c98d1-be41-4cce-9bbf-d19586c51453">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{e023}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="320" y="5" width="40" height="20" uuid="4d39e07e-e8fe-4ddd-a998-85448cfd95fb">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{e032}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="360" y="5" width="40" height="20" uuid="d1b335b0-4cbd-4c1f-af69-1d8efe35e98e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{e033}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="400" y="5" width="40" height="20" uuid="432ac429-0c78-486d-b6bc-f2786dd4065e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{e034}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="440" y="5" width="40" height="20" uuid="27ec3f4d-4930-4605-9dc2-40edff799d09">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f041}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style_row" x="520" y="5" width="40" height="20" uuid="14acc1ac-ae56-4fe6-b601-fd5b0370998d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{f043}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="270" y="14" width="159" height="27" uuid="bb5d6df2-f200-4422-a853-d57044370027"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["第" + $V{PAGE_NUMBER} +"页"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="434" y="14" width="95" height="27" uuid="e26df875-4e01-4007-bd31-8bbdaf94b180"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["共" + $V{PAGE_NUMBER} + "页"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="7" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -11,6 +11,11 @@
 		<module>pallasli-website-log</module>
 		<module>pallasli-website-login</module>
 		<module>pallasli-website-redis</module>
+		<module>pallasli-website-report</module>
+		<module>pallasli-website-encryption</module>
+		<module>pallasli-website-jdbc</module>
+		<module>pallasli-website-protocol</module>
+		<module>pallasli-website-socket</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2015-12-07T17:32:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="zhutu" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="404ca48b-7f72-498b-a432-1a566b9f9835">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="wdisp" class="java.lang.String"/>
+	<field name="wgroup" class="java.lang.Integer"/>
+	<field name="wvalue" class="java.lang.Double"/>
+	<background>
+		<band height="450" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<barChart>
+				<chart isShowLegend="true" evaluationTime="Report">
+					<reportElement x="40" y="30" width="480" height="380" uuid="de6f1e29-7eb1-47ca-b8df-505dd74acf94"/>
+					<chartTitle>
+						<font size="18"/>
+						<titleExpression><![CDATA["abcdefgA"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle>
+						<subtitleExpression><![CDATA["cccC"]]></subtitleExpression>
+					</chartSubtitle>
+					<chartLegend position="Left"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{wdisp}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{wgroup}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{wvalue}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot isShowLabels="true" isShowTickLabels="true" isShowTickMarks="true">
+					<plot>
+						<seriesColor seriesOrder="0" color="#772805"/>
+						<seriesColor seriesOrder="1" color="#49FB1C"/>
+						<seriesColor seriesOrder="2" color="#F7469E"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat tickLabelMask="" verticalTickLabels="true"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat verticalTickLabels="true"/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
+		</band>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="16" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="12" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="16" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="14" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="15" splitType="Stretch"/>
+	</summary>
+</jasperReport>
