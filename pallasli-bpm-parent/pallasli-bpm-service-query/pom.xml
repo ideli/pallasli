@@ -12,5 +12,9 @@
 			<artifactId>pallasli-bpm-core-query</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
 	</dependencies>
 </project>

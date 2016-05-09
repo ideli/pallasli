@@ -14,8 +14,6 @@
 		<module>pallasli-ws-study-ws</module>
 		<module>pallasli-ws-study-client</module>
 		<module>pallasli-ws-study-security</module>
-		<module>pallasli-ws-bpm-api</module>
-		<module>pallasli-ws-bpm-activiti</module>
 		<module>pallasli-ws-study-api</module>
 	</modules>
 </project>
