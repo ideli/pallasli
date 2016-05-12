@@ -35,5 +35,6 @@
       <module>pallasli-study-dubbo-demo</module>
       <module>pallasli-study-apacheftp</module>
       <module>pallasli-study-https</module>
+      <module>pallasli-study-hadoop</module>
   </modules>
 </project>

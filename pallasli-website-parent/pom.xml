@@ -16,6 +16,10 @@
 		<module>pallasli-website-jdbc</module>
 		<module>pallasli-website-protocol</module>
 		<module>pallasli-website-socket</module>
+		<module>pallasli-website-web-report</module>
+		<module>pallasli-website-properties-des</module>
+		<module>pallasli-website-web-OA</module>
+		<module>pallasli-website-web-pm</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
