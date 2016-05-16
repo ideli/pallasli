@@ -36,5 +36,6 @@
       <module>pallasli-study-apacheftp</module>
       <module>pallasli-study-https</module>
       <module>pallasli-study-hadoop</module>
+      <module>pallasli-study-fastdfs</module>
   </modules>
 </project>
