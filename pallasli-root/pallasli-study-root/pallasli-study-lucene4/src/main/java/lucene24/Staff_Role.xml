@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="t_staff_role">
+    <typeAlias alias="staffRoleVO" type="com.ibeifeng.ibatis.manytomany.StaffRole" /> 
+	
+	<parameterMap class="staffRoleVO" id="srMp">
+		<parameter property="staffid" jdbcType="NUMBER"/>
+		<parameter property="roleid" jdbcType="NUMBER"/>
+	</parameterMap>
+	
+	<insert id="t_staff_role.createStaff" parameterMap="srMp">
+		
+		insert into t_staff_role (staff_id,role_id) values
+		(?,?)
+	</insert>
+	
+	
+	<resultMap class="staffVO" id="sr1Mp">
+	<result property="id" column="id"/>
+	<result property="tname" column="tname"/>
+	<result property="age" column="age"/>
+
+	</resultMap>
+	
+	<select id="t_staff_role.getStaffbyRoleid" parameterClass="int"
+		resultMap="sr1Mp">
+		select id,tname,age from t_staff s,t_staff_role sr   where sr.staff_id=s.id and sr.role_id=#value#
+	</select>
+
+      
+    <resultMap class="roleVO" id="sr2Mp">
+	<result property="id" column="id"/>
+	<result property="rname" column="rname"/>
+	</resultMap>
+	
+	<select id="t_staff_role.getRolebybyStaffid" parameterClass="int"
+		resultMap="sr2Mp">
+       select id,rname from t_role r,t_staff_role sr  where sr.staff_id=#value# and r.id=sr.role_id 
+	</select> 
+      
+      
+
+</sqlMap>

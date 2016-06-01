@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="orders">
+    <typeAlias alias="ordersVO" type="com.ibeifeng.ibatis.onetomany.Orders" /> 
+	
+	<parameterMap class="ordersVO" id="oparameterMp">
+		<parameter property="id" jdbcType="NUMBER"/>
+		<parameter property="code" jdbcType="VARCHAR2"/>
+		<parameter property="customerid" jdbcType="NUMBER"/>
+	</parameterMap>
+	
+	<insert id="orders.createOrders" parameterMap="oparameterMp">
+	
+	   <selectKey resultClass="int" type="pre" keyProperty="id" >   
+         select o_seq.nextval as value  from dual
+      </selectKey> 
+	
+		insert into orders (id,code,customerid) values
+		(?,?,?)
+	</insert>
+	
+	
+		<resultMap class="ordersVO" id="OrdersMp">
+	<result property="id" column="id"/>
+	<result property="code" column="code"/>
+	<result property="customerid" column="customerid"/>
+	<result property="customer" column="customerid" select="getCustomer"/>
+	
+	</resultMap>
+	
+	    <select id="getOrders" parameterClass="int"
+		resultMap="OrdersMp">
+		select * from orders   where id=#value#
+	</select>
+
+   	    <select id="getOrdersbyCustomerid" parameterClass="int"
+		resultMap="OrdersMp">
+		select * from orders   where customerid=#value#
+	</select>
+
+</sqlMap>

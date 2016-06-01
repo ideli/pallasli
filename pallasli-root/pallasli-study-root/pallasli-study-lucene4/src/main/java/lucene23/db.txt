@@ -1,0 +1,51 @@
+CREATE TABLE person (
+  id number(11) NOT NULL,
+  name varchar2(20) default NULL,
+  age number(11) default NULL,
+  PRIMARY KEY  (id)
+);
+
+CREATE TABLE passport (
+  id number(11)  default (0),
+  serial varchar2(20) default NULL,
+  expiry number(11) default NULL,
+  PRIMARY KEY  (id),
+  CONSTRAINT "passport_person_fk" FOREIGN KEY (id) REFERENCES person (id)
+);
+
+drop table passport;
+drop table person;
+
+create sequence p_seq;
+
+
+create table customer
+(
+   id                   number(10) not null,
+   address              varchar2(120),
+   postcode             varchar2(6),
+   sex                  varchar2(2),
+   cname                 varchar2(24),
+   primary key (id)
+);
+
+ 
+
+
+create table orders
+(
+   id                   number(10) not null,
+   code                 varchar2(24),
+   customerid           number(10) not null,
+   primary key (id)
+);
+
+
+alter table orders add CONSTRAINT "c_o_fk" FOREIGN KEY (customerid) REFERENCES customer (id)
+
+
+
+
+create sequence c_seq;
+create sequence o_seq;
+

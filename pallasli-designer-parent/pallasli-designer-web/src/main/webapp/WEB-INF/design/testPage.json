@@ -1,0 +1,30 @@
+{
+
+	f_key : "p1",
+	f_caption : "p1",
+	f_url : "urlp1",
+	f_type : "page",
+	f_layout : 1,
+	f_children : [ {
+		f_key : "pc1",
+		f_caption : "",
+		f_layout : 2,
+		f_type : 1,
+		f_children : [ {
+			f_key : "pcc1",
+			f_caption : "pcc1",
+			f_layout : 1,
+			f_type : 6
+		}, {
+			f_key : "pcc2",
+			f_caption : "pcc2",
+			f_type : 0,
+			f_layout : 1,
+			f_children : [ {
+				f_key : "pcc1",
+				f_caption : "pcc1",
+				f_type : 7 
+			} ]
+		} ]
+	} ]
+}

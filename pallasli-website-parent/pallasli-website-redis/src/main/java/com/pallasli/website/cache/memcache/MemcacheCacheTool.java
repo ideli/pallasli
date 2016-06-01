@@ -4,23 +4,23 @@ import com.pallasli.website.cache.CacheTool;
 
 public class MemcacheCacheTool implements CacheTool {
 
+	@Override
 	public void saveCache(String name, String value) {
-		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void getCache() {
-		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void updateCache() {
-		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void deleteCache() {
-		// TODO Auto-generated method stub
 
 	}
 

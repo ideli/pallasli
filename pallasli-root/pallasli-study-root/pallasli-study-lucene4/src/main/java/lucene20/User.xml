@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="t_user">
+
+	<!-- <typeAlias alias="userVO" type="com.ibeifeng.ibatis.hello.User" /> -->
+	<insert id="createUser" parameterClass="com.ibeifeng.ibatis.hello.User">
+		<selectKey resultClass="int" type="pre" keyProperty="id">
+			select tu_seq.nextval from dual
+		</selectKey>
+		insert into t_user (t_id,t_name, t_birthday,t_email) values
+		(#id#,#name#,to_date(#birthday#,'MM/DD/YYYY HH24:MI'),#email# )
+	</insert>
+
+	<resultMap class="com.ibeifeng.ibatis.hello.User" id="GetUser">
+   	<result property="id" column="t_id"/>
+    <result property="name" column="t_name"/>
+    <result property="email" column="t_email"/>
+    <result property="birthday" column="t_birthday"/>
+    <result property="age" column="t_age"/>
+   </resultMap>
+	
+	
+	<sql id="select_user">
+	     select *   from t_user
+	</sql>
+	
+	<sql id="where_for_name">
+	     where t_name=#value#
+	</sql>
+	
+	<sql id="where_for_id">
+	    <![CDATA[ where t_id<=#value# ]]>
+	</sql>
+	
+    <select id="getUser" parameterClass="java.lang.String"
+		resultMap="GetUser">
+		 <include refid="select_user"/>
+		  <include refid="where_for_name"/>
+	</select>
+	
+	    <select id="getUserbyId" parameterClass="int"
+		resultMap="GetUser">
+				 <include refid="select_user"/>
+		       <include refid="where_for_id"/>
+	</select>
+
+	
+    <update id="updateUser" parameterClass="com.ibeifeng.ibatis.hello.User">
+    	UPDATE T_USER SET t_name= #name# WHERE t_id = #id#
+    </update>
+
+
+
+    <delete id="deleteUser" parameterClass="int">
+    	DELETE FROM T_USER WHERE t_id=#value#
+    </delete>
+ 
+ 
+    
+   	    <select id="getUserList" parameterClass="java.util.Map"
+	 	resultMap="GetUser">
+			select * from T_USER where t_name=#name# and t_email=#email#
+
+	    </select>
+      
+        
+        <resultMap class="com.ibeifeng.ibatis.hello.UserCount" id="UserCount1">
+        	<result property="countnum" column="count_num"/>
+        </resultMap>
+         
+       <select id="getUserCount" resultMap="UserCount1"
+	 	>
+			select count(*) as count_num from T_USER
+
+	    </select>
+	    
+	  <select id="getUserForDyn" resultMap="GetUser"
+	 	>
+			select *  from T_USER
+			<dynamic prepend="where">
+			   
+				<isNotEmpty  property="name"  prepend="and">
+				    t_name=#name#
+				</isNotEmpty>
+				
+				<isEqual compareValue="22" property="age" prepend="and">
+				   t_age in 
+                   <iterate property="ages" open="(" close=")" conjunction=",">
+                   	#ages[]#
+                   </iterate>
+				</isEqual>
+				
+				
+			</dynamic>
+
+	    </select>
+
+</sqlMap>

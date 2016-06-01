@@ -1,0 +1,67 @@
+CREATE TABLE t_staff (
+  id number(11) NOT NULL ,
+  tname varchar2(20) default NULL,
+  age number(11) default NULL,
+  PRIMARY KEY  (id)
+)
+
+
+CREATE TABLE t_role (
+  id number(11) NOT NULL ,
+  rname varchar2(20) default NULL,
+  PRIMARY KEY  (id)
+);
+
+CREATE TABLE t_staff_role (
+  staff_id number(11) default (0) ,
+  role_id number(11) default (0) ,
+  PRIMARY KEY  (staff_id,role_id),
+
+  CONSTRAINT "role_fk" FOREIGN KEY (role_id) REFERENCES t_role (id),
+  CONSTRAINT "staff_fk" FOREIGN KEY (staff_id) REFERENCES t_staff (id)
+);
+
+
+create sequence staff_seq;
+create sequence role_seq;
+
+
+MySql
+
+
+CREATE TABLE `t_staff` (
+  `id` int(11) NOT NULL auto_increment,
+  `tname` varchar(20) default NULL,
+  `age` int(11) default NULL,
+  PRIMARY KEY  (`id`)
+)
+
+
+CREATE TABLE `t_role` (
+  `id` int(11) NOT NULL auto_increment,
+  `rname` varchar(20) default NULL,
+  PRIMARY KEY  (`id`)
+)
+
+
+
+
+
+
+CREATE TABLE `t_staff_role` (
+  `staff_id` int(11) NOT NULL default '0',
+  `role_id` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`staff_id`,`role_id`)
+)
+
+
+
+ALTER TABLE `t_staff_role`
+ADD FOREIGN KEY (`role_id`) REFERENCES `t_role` (`id`),
+  ADD FOREIGN KEY (`staff_id`) REFERENCES `t_staff` (`id`);
+
+
+select @@IDENTITY as value 
+
+
+ <![CDATA[SELECT LAST_INSERT_ID() AS ID ]]>   //推荐安全的方式

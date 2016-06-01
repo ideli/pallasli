@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">  
+    <bean id="helloWorld" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">  
+        <property name="serviceUrl" value="rmi://127.0.0.1:8088/hello" />  
+        <property name="serviceInterface" value="com.pallasli.study.spring.rmi.RMIService" />  
+    </bean>  
+</beans>  

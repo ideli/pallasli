@@ -1,0 +1,135 @@
+1)、 配置Maven 从私服上下载构件
+a、在POM.xml文件中配置
+[html] view plain copy
+<repositories>  
+    <repository>  
+        <id>central.maven.com</id>  
+        <name>mapbar central mirror.</name>  
+        <url>http://192.168.1.252:8081/nexus/content/repositories/central/</url>  
+    </repository>  
+    <repository>  
+        <id>3rd.mapbar.com</id>  
+        <name>mapbar thirdparty central mirror.</name>  
+        <url>http://192.168.1.252:8081/nexus/content/repositories/thirdparty/</url>  
+    </repository>  
+    <repository>  
+        <id>public.mapbar.com</id>  
+        <name>mapbar tech API maven mirror.</name>  
+        <url>http://192.168.1.252:8081/nexus/content/groups/public/</url>  
+    </repository>  
+    <repository>  
+        <id>releases.mapbar.com</id>  
+        <name>mapbar thirdparty central mirror.</name>  
+        <url>http://192.168.1.252:8081/nexus/content/repositories/releases/</url>  
+    </repository>  
+</repositories>  
+这样的配置只对Maven项目有效，在实际引用中，我们想通过一次配置就能让本机所有的Maven项目都能使用自己的Maven私服。这个时候就要用settings.xml 文件。改文件对本机所有的Maven项目有效。配置如下:
+[html] view plain copy
+<profiles>  
+    <profile>  
+        <id>nexus</id>  
+        <repositories>  
+            <repository>  
+                <id>nexus</id>  
+                <name>Nexus</name>  
+                <url>http://192.168.53.55:8081/nexus/content/groups/public/</url>  
+                <releases>  
+                    <enabled>true</enabled>  
+                </releases>  
+                <snapshots>  
+                    <enabled>true</enabled>  
+                </snapshots>  
+            </repository>  
+        </repositories>  
+        <pluginRepositories>  
+            <pluginRepository>  
+                <id>nexus</id>  
+                <name>Nexus</name>  
+                <url>http://192.168.53.55:8081/nexus/content/groups/public/</url>  
+                <releases>  
+                    <enabled>true</enabled>  
+                </releases>  
+                <snapshots>  
+                    <enabled>true</enabled>  
+                </snapshots>  
+            </pluginRepository>  
+        </pluginRepositories>  
+    </profile>  
+</profiles>  
+<activeProfiles>  
+    <activeProfile>nexus</activeProfile>  
+</activeProfiles>  
+
+2)、配置自动发布构件到私服
+POM.XML 配置：
+[html] view plain copy
+<distributionManagement>  
+      <repository>  
+        <id>releases</id>  
+        <url>http://localhost:8081/nexus/content/repositories/thirdparty/</url>  
+      </repository>  
+</distributionManagement>  
+在命令行键入：mavn  deploy 则构件自动发布到本地和上传到私服 http://localhost:8081/nexus/content/repositories/thirdparty 这个目录下
+
+需要注意2点：
+1、发布的版本类型必须和nexus里的Policy类型一致。
+2、setting.xml 文件必须配置servers，其中id必须和repository下的id一致。
+[html] view plain copy
+<servers>  
+        <server>  
+            <id>releases</id>  
+            <username>admin</username>  
+            <password>admin123</password>  
+        </server>  
+        <server>  
+            <id>snapshots</id>  
+            <username>admin</username>  
+            <password>admin123</password>  
+        </server>  
+        <server>  
+            <id>deploymentRepo</id>  
+            <username>admin</username>  
+            <password>admin123</password>  
+        </server>  
+    </servers>  
+
+
+3)、在<build> 中配置项目构建信息，生成doc,source  
+[html] view plain copy
+<!-- 项目的构建信息 -->  
+    <build>  
+            <plugins>  
+            <!-- generate a javasource -->  
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-source-plugin</artifactId>  
+                <executions>  
+                    <execution>  
+                        <id>attach-sources</id>  
+                        <goals>  
+                            <goal>jar</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+            <!-- generate a javadoc -->  
+            <plugin>  
+                <groupId>org.apache.maven.plugins</groupId>  
+                <artifactId>maven-javadoc-plugin</artifactId>  
+                <executions>  
+                    <execution>  
+                        <id>attach-javadocs</id>  
+                        <goals>  
+                            <goal>jar</goal>  
+                        </goals>  
+                    </execution>  
+                </executions>  
+            </plugin>  
+        </plugins>  
+    </build>  
+
+输入命令：mvn install
+ 在target目录下生成了
+MavenTest-0.0.1-release.jar           --.class文件
+MavenTest-0.0.1-release-sources.jar    --.Java 文件
+MavenTest-0.0.1-release-javadoc.jar   --doc 文件

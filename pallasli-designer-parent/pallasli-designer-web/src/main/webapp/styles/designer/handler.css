@@ -1,0 +1,11 @@
+.show {
+	display: block;
+	
+}
+.hidden{
+	display: none;
+}
+
+input[disabled]{
+	
+}

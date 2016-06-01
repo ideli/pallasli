@@ -1,0 +1,86 @@
+body{height: 100%;  }
+
+.table-header {
+	 background-color: silver;
+}
+.navbar-default{
+	height: 25px;
+	min-height: 25px;
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
+.navbar-nav >li >a{
+	height: 25px;
+	min-height: 25px;
+	margin-bottom: 2px;
+	margin-top: 2px;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+
+}
+ 
+ 
+
+.body-footer{
+	position:fixed;
+	bottom:0px;
+	height:20px;
+	left:0px;
+	float:top;
+}
+
+.design-container { 
+	height: 90%;
+	
+}
+
+.design-menu {
+	background-color: silver;
+}
+
+.design-function { 
+	background-color: lightgray;
+	width: 15%;
+	float: right;
+}
+
+.design-design { 
+	width: 30%;
+	height:100%;
+	float: left;
+}
+.design-component-type-area{
+	width: 50%;
+	height:100%;
+	overflow:scroll;
+	float: left;
+}
+.design-component-area{
+	width: 50%;
+	height:100%;
+	overflow:scroll;
+	float: left;
+} 
+
+.design-layout { 
+	background-color: lightgray;
+}
+
+.design-view {
+	height:100%;
+	overflow: scroll;
+}
+
+.form-group {
+	position: relative;
+	margin: 10px;
+}
+
+.form-group label {
+	float: left;
+}
+
+.form-group div {
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="person">
+    <typeAlias alias="personVO" type="com.ibeifeng.ibatis.onetoone.Person" /> 
+	
+	<parameterMap class="personVO" id="personparameterMp">
+		<parameter property="id" jdbcType="NUMBER"/>
+		<parameter property="pname" jdbcType="VARCHAR2"/>
+		<parameter property="age" jdbcType="NUMBER"/>
+	</parameterMap>
+	
+	<insert id="person.createPerson" parameterMap="personparameterMp">
+	
+	   <selectKey resultClass="int" type="pre" keyProperty="id" >   
+         select p_seq.nextval as value  from dual
+      </selectKey> 
+	
+		insert into person (id,pname,age) values
+		(?,?,?)
+	</insert>
+	
+	
+		<resultMap class="personVO" id="PersonMp">
+	<result property="id" column="id"/>
+	<result property="pname" column="pname"/>
+	<result property="age" column="age"/>
+	<result property="passport" column="id" select="getPassport"/>
+	
+	</resultMap>
+	
+	    <select id="getperson" parameterClass="int"
+		resultMap="PersonMp">
+		select * from PERSON   where id=#value#
+	</select>
+
+
+</sqlMap>

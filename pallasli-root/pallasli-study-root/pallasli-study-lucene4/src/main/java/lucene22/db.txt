@@ -1,0 +1,19 @@
+CREATE TABLE person (
+  id number(11) NOT NULL,
+  name varchar2(20) default NULL,
+  age number(11) default NULL,
+  PRIMARY KEY  (id)
+);
+
+CREATE TABLE passport (
+  id number(11)  default (0),
+  serial varchar2(20) default NULL,
+  expiry number(11) default NULL,
+  PRIMARY KEY  (id),
+  CONSTRAINT "passport_person_fk" FOREIGN KEY (id) REFERENCES person (id)
+);
+
+drop table passport;
+drop table person;
+
+create sequence p_seq;

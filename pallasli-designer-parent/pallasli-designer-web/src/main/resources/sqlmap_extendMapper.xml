@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shineyue.htmldesign.extendmapper.SqlmapExtendMapper"> 
+	<insert id="saveOrUpdatePageComponentConfig" parameterType="com.shineyue.htmldesign.model.PageComponentConfig">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(*) from T_PAGE_COMPONENT_CONFIG where PAGE_COMPONENT_ID =
+			#{pageComponentId,jdbcType=INTEGER}
+			and  CONFIG_KEY =
+			#{configKey,jdbcType=INTEGER}
+		</selectKey>
+		<if test="count > 0">
+			update T_PAGE_COMPONENT_CONFIG
+			set ID = #{id,jdbcType=INTEGER},
+			CONFIG_KEY = #{configKey,jdbcType=VARCHAR},
+			CONFIG_VALUE = #{configValue,jdbcType=VARCHAR},
+			PAGE_COMPONENT_ID = #{pageComponentId,jdbcType=INTEGER}
+			where id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="count==0">
+			insert into T_PAGE_COMPONENT_CONFIG (ID, CONFIG_KEY, CONFIG_VALUE,
+			PAGE_COMPONENT_ID)
+			values (#{id,jdbcType=INTEGER}, #{configKey,jdbcType=VARCHAR},
+			#{configValue,jdbcType=VARCHAR},
+			#{pageComponentId,jdbcType=INTEGER})
+		</if>
+	</insert>
+</mapper>

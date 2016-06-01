@@ -1,0 +1,1458 @@
+shineyue.fieldConfigs.button = [ {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} ];
+shineyue.fieldConfigs.fieldset = [ {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} ];
+shineyue.fieldConfigs.panel = [ {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} ];
+shineyue.fieldConfigs.tab = [ {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} ];
+shineyue.fieldConfigs.checkbox = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.date = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.datetime = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.email = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.file = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.range = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.label = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.list = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.number = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.radio = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.image = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.select = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.text = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式", 
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.time = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.url = [ {
+	name : "name",
+	caption : "name",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "caption",
+	caption : "显示名",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "size",
+	caption : "size",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "width",
+	caption : "宽度",
+	orderNum : "2",
+	dataType : "string"
+} ,{
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "maxlength",
+	caption : "输入最大长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "minlength",
+	caption : "输入最小长度",
+	orderNum : "2",
+	dataType : "boolean"
+} , {
+	name : "value",
+	caption : "默认值",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "readonly",
+	caption : "只读",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "allowblank",
+	caption : "允许为空",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "regex",
+	caption : "正则表达式",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "validateType",
+	caption : "验证类型",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.cell = [  {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.header = [  {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.row = [  {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+}  ];
+shineyue.fieldConfigs.table = [  {
+	name : "width",
+	caption : "宽度",
+	orderNum : "1",
+	dataType : "string"
+}, {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+} , {
+	name : "height",
+	caption : "高度",
+	orderNum : "2",
+	dataType : "string"
+}  ];

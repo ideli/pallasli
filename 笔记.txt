@@ -1,0 +1,29 @@
+
+
+解决iframe中jsessionid无法传递导致session丢失的问题：response.sendRedirect(”/iframe.jsp;jsessionid=lizongbo”);
+
+
+要监视Activiti的数据，打开“显示”窗口 （如果找不到，打开“窗口”->“显示视图”->“其他”，选择显示。） 并点击（代码已完
+成）org.h2.tools.Server.createWebServer("-web").start()
+
+现在打开一个浏览器，打开http://localhost:8082， 输入内存数据库的JDBC URL（默认为jdbc:h2:mem:activiti）， 点击
+连接按钮。
+
+
+尽量减少与数据库的交互
+
+
+存盘时，不重要的信息先存在缓存服务其中，定时或定量批处理存储，减少交互请求
+查询时，不变的数据存在缓存服务中，变化小且不重要的数据存在缓存服务中并定时刷新，减少交互
+
+web服务器处理高并发请求，减少应用服务器的压力
+
+
+
+局部内部类使用方法中的变量必须加final修饰
+jdk8中不再需要加final修饰，但默认在局部内部类中是final的
+
+
+
+
+

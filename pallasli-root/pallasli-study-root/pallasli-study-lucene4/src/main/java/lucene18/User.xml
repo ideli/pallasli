@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="t_user">
+
+	<typeAlias alias="userVO" type="com.ibeifeng.ibatis.hello.User" />
+	<insert id="createUser" parameterClass="userVO">
+		insert into t_user (t_name, t_birthday,t_email) values ( #name#,
+		#birthday#,#email# )
+	</insert>
+
+
+	<resultMap id="GetUser" class="com.ibeifeng.ibatis.hello.User">
+		<result property="id" column="t_id" />
+		<result property="name" column="t_name" />
+		<result property="email" column="t_email" />
+	</resultMap>
+	
+    <select id="getUser" parameterClass="java.lang.String"
+		resultMap="GetUser">
+		select * from t_user where t_name=#value#
+	</select>
+	
+	
+    <update id="updateUser" parameterClass="userVO">
+    	UPDATE T_USER SET t_name= #name# WHERE t_id = #id#
+    </update>
+
+
+
+    <delete id="deleteUser" parameterClass="int">
+    	DELETE FROM T_USER WHERE t_id=#value#
+    </delete>
+
+
+
+
+</sqlMap>

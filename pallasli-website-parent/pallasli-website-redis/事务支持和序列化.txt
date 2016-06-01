@@ -1,0 +1,72 @@
+1. RedisTemplate的事务
+
+    private boolean enableTransactionSupport = false;
+    private boolean exposeConnection = false;
+    private boolean initialized = false;
+    private boolean enableDefaultSerializer = true;
+    private RedisSerializer<?> defaultSerializer = new JdkSerializationRedisSerializer();
+
+    private RedisSerializer keySerializer = null;
+    private RedisSerializer valueSerializer = null;
+    private RedisSerializer hashKeySerializer = null;
+    private RedisSerializer hashValueSerializer = null;
+    private RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+
+    private ScriptExecutor<K> scriptExecutor;
+
+    // cache singleton objects (where possible)
+    private ValueOperations<K, V> valueOps;
+    private ListOperations<K, V> listOps;
+    private SetOperations<K, V> setOps;
+    private ZSetOperations<K, V> zSetOps;
+enableTransactionSupport：是否启用事务支持。我们在代码中搜索下用到这个变量的地方，会看到，在调用RedisCallback之前，有一行代码是如果启用事务支持，那么conn = RedisConnectionUtils.bindConnection(factory, enableTransactionSupport)，也就是说，系统自动帮我们拿到了事务中绑定的连接。可以在一个方法的多次对Redis增删该查中，始终使用同一个连接。但是，即使使用了同样的连接，没有进行connection.multi()和connection.exec()，依然是无法启用事务的。
+
+我没有仔细的查阅代码，但是可以知道的是，Spring已经对这个，给了我们一个更好的支持：@Transactional 
+
+在调用RedisTempalte中的execute()方法的地方，加入这个注解(是spring包下面提供的，不要引用成rt包下的注解)，能让这个方法中的所有execute，自动加入multi()以及异常的回滚或者是正常运行时候的提交！
+
+ 
+
+2. RedisTempalte的Serializer
+
+用过jedis操作的都知道，所有connection的操作方法，都是传入字节数组。那么，将一个对象和字节相互转换，就需要通过序列化和反序列化。
+
+模版方法中，Spring提供了默认的StringSerializer和JdkSerializer，第一个很简单，就是通过String.getBytes()来实现的。而且在Redis中，所有存储的值都是字符串类型的。所以这种方法保存后，通过Redis-cli控制台，是可以清楚的查看到我们保存了什么key,value是什么。但是对于JdkSerializationRedisSerializer来说，这个序列化方法就是Jdk提供的了。首先要求我们要被序列化的类继承自Serializeable接口，然后通过，然后通过Jdk对象序列化的方法保存。（注：这个序列化保存的对象，即使是个String类型的，在redis控制台，也是看不出来的，因为它保存了一些对象的类型什么的额外信息，）
+
+ 
+
+这么一长串，其实就是一个int类型的123。
+
+ 
+
+keySerializer:这个是对key的默认序列化器。默认值是StringSerializer。
+
+valueSerializer:这个是对value的默认序列化器，默认值是取自DefaultSerializer的JdkSerializationRedisSerializer。
+
+hashKeySerializer:对hash结构数据的hashkey序列化器，默认值是取自DefaultSerializer的JdkSerializationRedisSerializer。
+
+hashValueSerializer：对hash结构数据的hashvalue序列化器，默认值是取自DefaultSerializer的JdkSerializationRedisSerializer。
+
+ 
+
+除此之外，我们在该类中，还发现了valueOps和hashOps等操作类，这是spring给我们提供的可以直接使用来操作Redis的类，非常方便。下一篇我们将讲解这些类。
+
+
+1.序列化器。
+
+由于我是配置了全局唯一一个RedisTemplate，所以所有的dao都共用RedisTemplate，难免会出现有的无法使用公共的序列化器的。
+
+比如一个统计数量的incr函数，这个调用的时候，Redis服务器存储了一个字符串，通过valueoperaion进行get的时候，反序列化异常。这个因为默认的valueserializer是jdk序列化。但是服务器存储了字符串。对于这种情况，我就重写该Dao的get方法，自己使用RedisCallback调用。里面用StringSerializer反序列化，问题解决。
+
+除此之外，还会存在一些别的问题。所以，对于一些基本类型来说，建议大家直接定义一个objectSerializer，里面先进行转String,然后调用String.getbytes解决。反序列化这个问题我也没到怎么处理。但是一般也很少getKey。如果有好的办法请私信我。
+
+ 
+
+2.脚本的事务问题
+
+因为我的所有操作都是通过@transactional，让spring来管理事务的，后来发现执行脚本的时候报错。看异常才知道脚本不支持事务，但是进入方法前，spring已经把当前的connection进行了multi操作。去掉该注解，独立出来这个方法解决。这个是要注意的地方。
+
+
+
+
+

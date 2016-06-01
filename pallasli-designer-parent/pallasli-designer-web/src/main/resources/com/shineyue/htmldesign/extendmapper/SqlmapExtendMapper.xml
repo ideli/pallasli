@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shineyue.htmldesign.extendmapper.SqlmapExtendMapper"> 
+	<insert id="saveOrUpdatePageComponentConfig">
+		<selectKey keyProperty="count" resultType="int" order="BEFORE">
+			select count(*) from T_PAGE_COMPONENT_CONFIG where id =
+			#{id,jdbcType=INTEGER}
+		</selectKey>
+		<if test="count > 0">
+			update T_PAGE_COMPONENT_CONFIG
+			set CONFIG_KEY = #{record.configKey,jdbcType=VARCHAR},
+			CONFIG_VALUE = #{record.configValue,jdbcType=VARCHAR}
+			where PAGE_COMPONENT_ID = #{record.pageComponentId,jdbcType=INTEGER}
+		</if>
+		<if test="count==0"> 
+			insert into T_PAGE_COMPONENT_CONFIG (ID, CONFIG_KEY, CONFIG_VALUE,
+			PAGE_COMPONENT_ID)
+			values (#{id,jdbcType=INTEGER}, #{configKey,jdbcType=VARCHAR},
+			#{configValue,jdbcType=VARCHAR},
+			#{pageComponentId,jdbcType=INTEGER})
+		</if>
+	</insert>
+	<select id="getMaxId" parameterType="java.util.Map" statementType="STATEMENT" resultType="java.lang.Integer">
+    	select max(id) from ${tableName}
+  </select>
+</mapper>

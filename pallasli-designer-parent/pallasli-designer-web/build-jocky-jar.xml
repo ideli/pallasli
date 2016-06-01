@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="jocky" default="build" >
+
+	<!-- 引入Jocky Ant Task，要确保jocky-ant.jar位于ANT_HOME\lib目录下 -->
+	<taskdef resource="jockytasks" classpath="G:\new_frame\htmldesign\jocky-ant.jar" >
+	</taskdef>
+	<path id="lib_classpath">
+		<!--pathelement location="bin"/>
+		<pathelement location="${Androidjar}"/>
+		<pathelement location="${basedir}\jar\httpmime-4.1.1.jar"/>
+		<pathelement location="${basedir}\jar\signpost-commonshttp4-1.2.1.1.jar"/>
+		<pathelement location="${basedir}\jar\signpost-core-1.2.1.1.jar"/>
+		<pathelement location="G:\new_frame\htmldesign\jocky-ant.jar"/>
+        <fileset dir="${basedir}\jar">
+            <include name="*.jar"/>
+        </fileset>  -->
+		<pathelement location="G:/new_frame/htmldesign/jocky-ant.jar"/>
+ 
+	</path>
+	<target name="build" >
+		<!-- 设置jocky.jar的位置以及混淆级别，当enable为true时，javac task将被自动替换成Jocky混淆编译器 -->
+		<jocky jar="G:\new_frame\htmldesign\jocky.jar" enable="true"
+			level="private">
+		</jocky>
+		<!-- 下面的编译，将使用Jocky混淆编译器 -->
+		<javac   destdir="bin2" debug="on" source="1.7" target="1.6">
+			<src path="src/main/java"></src>
+			<classpath refid="lib_classpath"/> 
+		</javac>
+		<!-- 当enable为false时，javac task将被恢复成正常设置, Jocky编译器不再起作用 -->
+		<jocky enable="false"></jocky>
+		<!-- 下面的编译，将使用正常的Javac编译器 -->
+		<javac destdir="bin3" debug="on" target="1.6">
+			<src path="src/main/java"></src>
+		</javac>
+	</target>
+</project>

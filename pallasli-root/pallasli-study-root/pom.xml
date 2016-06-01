@@ -37,5 +37,9 @@
       <module>pallasli-study-https</module>
       <module>pallasli-study-hadoop</module>
       <module>pallasli-study-fastdfs</module>
+      <module>pallasli-study-lucene4</module>
+      <module>pallasli-study-lucene5</module>
+      <module>pallasli-study-lucene</module>
+      <module>pallasli-study-lucene3</module>
   </modules>
 </project>
