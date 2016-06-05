@@ -1,0 +1,1740 @@
+
+java核心技术学习
+strut2基础
+
+实验软件下载
+1.         下载struts2.1.6 http://struts.apache.org/download.cgi#struts217 
+(选择下载full distribution)
+2.         下载myeclipse，http://www.myeclipseide.com
+3.         下载tomcat，http://tomcat.apache.org
+4.         下载xwork，http://www.opensymphony.com/xwork (要注意的是下载与struts2.1.6的对应版本，即2.1.2)
+安装与设置
+1.         解压struts2.1.6，假设解压后位于d:\struts2目录
+2.         安装MyEclipse，任何版本都可以
+3.         假设你已经安装好jdk和tomcat了，如d:\tomcat
+HelloWorld
+1.         建立项目
+a)         打开eclipse
+b)         新建项目
+c)         选择myeclipse-java enterprise projects-web project
+d)         项目名称：struts2_0100_introduction
+e)         选择java ee 5.0
+2.         设定server
+a)         window – preferences – myeclipse – servers – tomcat – 6.x
+b)         选择tomcat home directory
+c)         选择enable
+d)         finish
+3.         设定jdk环境
+a)         window – preferences – java – installed jres
+b)         如果没有对应的JDK（不是JRE），选择add
+c)         选择standard VM -> next
+d)         选择JDK对应的Directory
+e)         将刚刚设定的JDK设为默认
+4.         建立第一个struts2.1的程序
+a)         找到struts目录下对应的apps目录
+b)         解压struts2-blank-2.1.6.war
+c)         Copy对应的lib的jar文件，需要除junit和spring-test之外的所有文件，其中commons-io的jar包会在文件上传和下载时需要，其他为必须
+d)         Copy对应的struts.xml到src目录，在package explorer视图进行操作
+e)         注释掉struts.xml的多余内容
+f)          建立HelloStruts2_1.jsp文件
+g)         *修改jsp文件的默认编码属性window-preferences-web-jspfiles-设为Chinese,National Standard
+h)         在struts.xml中照原配置进行对应的配置
+i)           修改对应的web.xml，建立struts2的filter（参考struts自带的项目）
+5.         运行项目
+a)         可以首先部署到tomcat上项目
+b)         也可以项目右键debug as – myeclipse server app，选择刚刚建立好的server
+6.         其他
+a)         学习建立struts的dev-mode，好处在于我们修改了配置文件的时候能够自动热替换
+b)         建立jar文件对应的源码D:/share/tools/struts-2.1.6/src/core/src/main/java，以及xwork对应的源码，以及对应的javadoc location，（更好的方式是建立自己的user-library）
+c)         浏览struts的目录
+d)         认识eclipse jee的项目部署目录，认识如何修改webapp的context-root，项目copy改名后可能会出现的问题
+e)         package explorer – 建立jar的源文件和目标关联，navigator – 观察所有的内容
+f)          认识Action的后缀名，在struts2默认中，带不带action都可以
+ 
+常见问题：
+1.         struts.xml不自动提示
+a)         window – preferences – 搜索 catalog – add
+b)         选择key type为URI
+c)         key: http://struts.apache.org/dtds/struts-2.0.dtd
+d)         location: 对应的dtd文件，位于struts-core包中，解压开，指定相应位置，如：D:\share\0750_Struts2.1.6\soft\struts-2.1.6\lib\struts2-core-2.1.6\struts-2.0.dtd
+2.         导入示例项目
+a)         注意JDK的版本，应该是JDK6，否则会出class version的问题
+b)         如果总是项目出问题，可以重建项目，单独拷文件
+c)         还有一种情况是项目右键，properties – java – compiler 选择6.0
+d)         另外，在tomcat配置中也要使用jdk6
+3.         devMode设为true就会出问题空指针问题
+a)         tomcat路径带了空格
+4.         在使用ActionContext.getContext().get(“request”)取不到对象，为null值
+a)         web.xml不要使用2.0的filter，用新的
+5.         在action的试验中，遇到一个奇怪的bug
+a)         用default-action-ref指定一个action
+b)         用*_*映射
+c)         在地址栏中访问一个不存在的action，如adfsdfsfs
+d)         结果居然会映射到*_*上
+e)         如果换成*__*就没问题了
+f)          靠，只能认为是bug
+g)         下次用*-*，不用*_*
+学习方法说明
+1.         先阅读老师的代码
+2.         再建立自己的项目进行动手学习
+Action
+1.         实现一个Action的最常用方式：从ActionSupport继承
+2.         DMI动态方法调用 ！
+3.         通配符配置 * {1} {2} …
+a)         *_*
+4.         接收参数的方法（一般用属性或者DomainModel来接收）
+5.         简单参数验证addFieldError
+a)         一般不使用Struts2的UI标签
+6.         访问Web元素
+a)         Map类型
+                         i.              IoC
+                       ii.              依赖Struts2
+b)         原始类型
+                         i.              IoC
+                       ii.              依赖Struts2
+7.         包含文件配置
+8.         默认action处理
+Result
+1.         常用四种类型：
+a)         dispatcher（默认）
+b)         redirect
+c)         chain
+d)         redirectAction
+2.         全局结果集
+a)         global-results | extends
+3.         动态结果（了解）
+a)         在action中保存一个属性，存储具体的结果location
+4.         传递参数
+a)         客户端跳转才需要传递
+b)         ${}表达式（不是EL）
+OGNL
+1.         Object Graph Navigation Language
+2.         想初始化domain model，可以自己new，也可以传参数值，但这时候需要保持参数为空的构造方法
+3.         其他参考ognl.jsp
+4.         什么时候在stack中会有两个Action？chain
+Struts-Tags
+1.         通用标签：
+a)         property
+b)         set
+                         i.              默认为action scope，会将值放入request和ActionContext中
+                       ii.              page、request、session、application
+c)         bean
+d)         include(对中文文件支持有问题，不建议使用，如需包含，改用jsp包含)
+e)         param
+f)          debug
+2.         控制标签
+a)         if elseif else
+b)         iterator
+                         i.              collections map enumeration iterator array
+c)         subset
+3.         UI标签
+a)         theme
+                         i.              simple xhtml(默认) css_xhtml ajax
+4.         AJAX标签
+a)         补充
+5.         $ # %的区别
+a)         $用于i18n和struts配置文件
+b)         #取得ActionContext的值
+c)         %将原本的文本属性解析为ognl，对于本来就是ognl的属性不起作用
+                         i.              参考<s:property 和 <s:include
+定义自己的theme
+1.         css（覆盖struts2原来的css）
+2.         覆盖单个文件
+3.         定义自己的theme
+4.         实战：
+a)         把所有主题定义为simple
+b)         fielderror特殊处理
+c)         自己控制其他标签的展现
+作业
+1.         读doc文档：struts-tags
+2.         设计约定（编码规定）
+a)         原则：简单就是美
+b)         库名：项目名
+c)         表的命名：_Model名
+d)         字段：保持和属性名一致（尽量不要起名和数据库命名冲突）
+e)         用层来划分包com.bjsxt.bbs.action model(bean) service dto(vo)
+f)          Action XXXXAction
+g)         *-*
+h)         /
+i)           /admin
+j)           package “action” adminAction
+项目开发顺序-以BBS2009的名义
+1.         建立界面原型
+2.         建立Struts.xml
+a)         确定namespace
+b)         确定package
+c)         确定Action的名称，空的方法
+d)         确定Result
+e)         将界面原型页面进行修改，匹配现有设置
+f)          测试
+g)         做好规划！！！！！
+3.         建立数据库（或者实体类）
+4.         建立Model层
+5.         建立Service层（后面讲了Hibernate后再完善）
+a)         此时可以使用JUnit进行单元测试了
+6.         着手开发
+声明式异常处理
+1.         在Actoin中进行异常映射
+2.         在package中进行全局异常映射
+3.         使用继承共用异常映射
+4.         Struts2中异常处理由拦截器实现（观察struts-default.xml）
+a)         实际上Struts2的大多数功能都由拦截器实现
+I18N
+1.         I18N原理
+a)         ResourceBundle和Locale的概念
+b)         资源文件
+c)         native2ascii
+2.         Struts的资源文件
+a)         Action – Package – App级
+b)         一般只用APP
+                         i.              struts.xml custom.i18n
+c)         PropertiesEditor插件
+                         i.              解压
+                       ii.              features plugin 覆盖到myeclipse中的eclipse目录里
+d)         动态语言切换
+                         i.              request_locale=en_US
+Struts拦截器以及源码解析
+1.         Struts架构图
+a)         见文档
+2.         Struts执行过程分析
+3.         Interceptor拦截器过程模拟
+4.         定义自己的拦截器
+a)         acegi – spring security
+5.         使用token拦截器控制重复提交（很少用）
+6.         类型转换
+a)         默认转换
+                         i.              日期处理
+b)         写自己的转换器：
+public class MyPointConverter extends DefaultTypeConverter{ 
+    @Override
+    public Object convertValue(Object value, Class toType) {
+       if(toType == Point.class) {
+           Point p = new Point();
+           String[] strs = (String[])value;
+           String[] xy = strs[0].split(",");
+           p.x = Integer.parseInt(xy[0]);
+           p.y = Integer.parseInt(xy[1]);
+           return p;
+       }
+       if(toType == String.class) {
+           return value.toString();
+       }
+       return super.convertValue(value, toType);
+    } 
+}
+public class MyPointConverter extends StrutsTypeConverter{
+   @Override
+    public Object convertFromString(Map context, String[] values, Class toClass) {
+              Point p = new Point();
+           String[] strs = (String[])values;
+           String[] xy = strs[0].split(",");
+           p.x = Integer.parseInt(xy[0]);
+           p.y = Integer.parseInt(xy[1]);
+           return p;    
+    }
+   @Override
+    public String convertToString(Map context, Object o) {
+       // TODO Auto-generated method stub
+       return o.toString();
+    }
+} 
+c)   三种注册方式：
+        i.      局部：XXXAction-conversion.properties
+1.   p（属性名称） =  converter
+       ii.      全局：xwork-conversion.properties
+1.   com.xxx.XXX（类名）= converter
+     iii.      Annotation
+d)   如果遇到非常麻烦的映射转换
+        i.      request.setAttribute();
+       ii.      session
+补充视频中讲解的内容
+1.         Lambda表达式
+2.         验证框架
+3.         UI标签
+4.         类型转换中的异常处理
+5.         上传与下载文件
+6.         Struts2注解
+Struts2总结
+1.         Action
+a)         namespace（掌握）
+b)         path（掌握）
+c)         DMI（掌握）
+d)         wildcard（掌握）
+e)         接收参数（掌握前两种）
+f)          访问request等（掌握Map IOC方式）
+g)         简单数据验证（掌握addFieldError和<s:fieldError）
+2.         Result
+a)         结果类型（掌握四种，重点两种）
+b)         全局结果（掌握）
+c)         动态结果（了解）
+3.         OGNL表达式（精通）
+a)         # % $
+4.         Struts标签
+a)         掌握常用的
+5.         声明式异常处理（了解）
+6.         I18N（了解）
+7.         CRUD的过程（最重要是设计与规划）（精通）
+8.         Interceptor的原理（掌握）
+9.         类型转换（掌握默认，了解自定义）
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+strut2编程步骤
+
+1.导入5个jar包
+2.添加struts.xml配置文件（在src下面）
+3.在web.xml中配置过滤器，如下：
+  <filter>
+  <filter-name>login</filter-name>
+  <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  <filter-name>login</filter-name>
+  <url-pattern>/*</url-pattern>
+  </filter-mapping>
+ 
+4.页面form中action必须加上  .action
+5.添加Action类
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+Action类3种写法
+
+方法1：直接在Action类中写属性，添加set和get方法，另外还必须有的exectue()方法。
+package com.handson.action;
+public class LoginAction {
+ private String username;
+ private String password;
+ 
+ public String execute(){
+  System.out.println(this.username);
+  System.out.println(this.password);
+  return null;
+ }
+ public String getUsername() {
+  return username;
+ }
+ public void setUsername(String username) {
+  this.username = username;
+ }
+ public String getPassword() {
+  return password;
+ }
+ public void setPassword(String password) {
+  this.password = password;
+ }
+}
+方法2：做一个pojo类，在Action类中声明这个pojo类，添加get and set方法。关键的是：：：在页面中属性添加对象名字.
+Action类为：（没有写上pojo类，最简单的pojo类，省略了）
+package com.handson.action;
+import com.handson.pojo.User;
+public class LoginAction {
+ User user;
+ public User getUser() {
+  return user;
+ }
+ public void setUser(User user) {
+  this.user = user;
+ }
+ public String execute() {
+  System.out.println(user.getUsername());
+  System.out.println(user.getPassword());
+  return null;
+ }
+}
+页面为：（注意属性中添加的对象名称user.）
+        <form action="login.action">
+   <input type="text" name="user.username" /><br>
+   <input type="text" name="user.password" /><br>
+   <input type="submit" value="tijiao" />
+  </form>
+
+方法3：为了解决方法2中页面中含有对象的不足。
+ 1.继承接口 com.opensymphony.xwork2.ModelDriven
+ 2.实例化类User
+ 3.实现接口方法getModel()
+
+代码如下：
+ 
+package com.handson.action;
+import com.handson.pojo.User;
+import com.opensymphony.xwork2.ModelDriven;
+public class LoginAction implements ModelDriven{
+ User user = new User();
+ public User getUser() {
+  return user;
+ }
+ public void setUser(User user) {
+  this.user = user;
+ }
+ public String execute() {
+  System.out.println(user.getUsername());
+  System.out.println(user.getPassword());
+  return null;
+ }
+ public User getModel() {
+  // TODO Auto-generated method stub
+  return user;
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+跳转
+
+
+1.首先在struts.xml中的action中添加result
+
+ <package name="default" extends="struts-default">
+  <action name="login" class="com.handson.action.LoginAction">
+  <result name="success" type="dispatcher">/success.jsp</result>
+  </action>
+ </package>
+ 
+ 其中name相当于原来forword里面的path,不过这里的name中绝对不能加"/"  
+ type属性标明跳转类型，dispatcher表示服务器跳转，
+         redirect客户端跳转，
+         plainText表示显示页面源代码，
+ 跳转方式struts2中有12种方式。
+ 详见5个包中的struts-core-2.0.11.jar中的struts-default.xml
+
+2.Action类中execute()方法返回改成    return "success";
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+一个Action中多个方法
+
+
+一个Action中有多个方法
+ public String execute() {
+  System.out.println(user.getUsername());
+  System.out.println(user.getPassword());
+  return "success";
+ }
+ 
+ public String add() {
+  System.out.println(user.getUsername());
+  
+  return "add";
+ }
+ 
+ public String update() {
+  System.out.println("update");
+  return null;
+ }
+页面上提交写成
+ action="login!add.action"
+另一种方式是在struts.xml中写多个action
+  <action name="login" class="com.handson.action.LoginAction">
+  <result name="success" >/success.jsp</result>
+  <result name="add">/add.jsp</result>
+  </action>
+  <action name="add" method="add" class="com.handson.action.LoginAction">
+  <result name="add">/add.jsp</result>
+  </action>
+ name,method属性与方法名字相同。
+页面上提交写成
+ action="add.action"
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+多模块编程
+
+在struts.xml中添加
+  <package name="zhangsan" extends="struts-default"  namespace="/zhangsan">
+   <action name="delete" class="com.action.HelloAction"  method="delete">
+   </action>
+  </package>
+
+在页面上加上模块名字
+ <form action="zhangsan/delete.action">
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+获得Request和Response对象
+
+ 获得对象，使用的webwork原来的方法 
+需要导入的包
+import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ServletActionContext;
+import java.util.Map;
+ 
+  ActionContext context = ActionContext.getContext();
+  Map request = (Map) context.get("request");
+  Map session = context.getSession();
+  Map application = context.getApplication();
+向对象赋值，相当于setAttribute方法
+  request.put("request", "requset1");
+  session.put("session", "session1");
+  application.put("application", "application1");
+-----------------------------------------------------------------------------
+获得对象，使用的是struts2中补充的方法
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+  HttpServletRequest request1 = ServletActionContext.getRequest();
+  HttpServletResponse response = ServletActionContext.getResponse();
+  System.out.println(request1.getRemoteAddr());
+  request1.setAttribute("request1", "hello");
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+struts2学习
+
+一．             环境说明
+1． Struts版本：2.0.8
+下载地址：http://struts.apache.org/download.cgi
+笔者下载的是struts-2.0.8-all
+2． JDK版本：JDK1.5
+3． Tomat版本：5.5.28
+4． MySql版本：5.0
+5． Eclipse版本：3.2
+6． MyEclipse版本：5.1.1
+除无特别说明，笔者的程序都基于以上环境。
+                其它说明
+1． 在建立Struts2的Web工程中，需将struts-2.0.8\lib下的各包放入web工程的lib目录下；
+2． 该学习进阶文档为作者自学时学习记录，与大家共享之，也愿各位同仁提出宝贵意见；
+3． 有疑问可留言或发Email至：xiexingxing1121@126.com。
+二。
+当你提交一个HTML表单到这个框架中的时候，输入并不是被发送到服务页，而是被发送到你提供的Java类，这些类被称为Action。在这些Action执行完后，选择某一个资源来呈现返回结果，这个资源一般是页面，但也可以是PDF文件，或者是Excel文件，亦或是Java applet窗口。
+ 假设你想要创建一个“Hello World”的例子来呈现欢迎信息，在你准备好开发环境后，为了创建一个“Hello World”的例子，你需要做如下三件事情：
+1.       创建一个jsp页面来呈现欢迎信息；
+2.       创建一个Action类来创建信息；
+3.       在配置文件中配置action和页面的映射关系。
+注意：为了创建这个组件，我们将工作流分成几乎无人不晓的三部分：视图、模型和控制器。分离这三部分的原因是当系统变得越来月复杂的时候，我们能够更好的管理。
+              准备工作
+ 建立web工程，其中工程名为tutorial，在WebRoot下引入struts2的lib下的如下4个包：
+ commons-logging-1.1.jar
+ freemarker-2.3.8.jar
+ ognl-2.6.11.jar
+ struts2-core-2.0.8.jar
+ xwork-2.0.3.jar
+在web.xml文件中增加struts2的FilterDispatcher，修改后的web.xml如下：
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app id="WebApp_9" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>tutorial</display-name>
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>
+
+            代码
+ 首先，我们需要一个jsp页面来呈现信息，HelloWorld.jsp页面代码如下所示：
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+    <head>
+        <title>Hello World!</title>
+    </head>
+    <body>
+        <h2><s:property value="message" /></h2>
+    </body>
+</html>
+接着，我们需要一个Action类来创建信息，代码如下：
+package tutorial;
+import com.opensymphony.xwork2.ActionSupport;
+public class HelloWorld extends ActionSupport {
+    public static final String MESSAGE = "Struts is up and running  ";
+    public String execute() throws Exception {
+        setMessage(MESSAGE);
+        return SUCCESS;
+    }
+    private String message;
+    public void setMessage(String message){
+        this.message = message;
+    }
+    public String getMessage() {
+        return message;
+    }
+}
+第三步，我们需要在配置文件中进行相应配置来将两者联系起来。让我们编辑src下的struts.xml文件，该文件内容如下：
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="tutorial" extends="struts-default">
+        <action name="HelloWorld" class="tutorial.HelloWorld">
+            <result>/HelloWorld.jsp</result>
+        </action>
+        <!-- Add your actions here -->
+    </package>
+</struts>
+代码已经完成，让我们来尝试运行它。部署该应用程序并打开http://localhost:8080/tutorial/HelloWorld.action，我们可以看到标题栏为：Hello World，并且显示“Struts is up and running!”的页面呈现在我们面前。
+              代码是如何工作的？
+ 你的浏览器向Web服务器发送了的http://localhost:8080/tutorial/HelloWorld.action（注：tutorial为部署在Tomcat中的的项目名称）的URL请求后，服务器做了如下工作：
+1.       容器接收到了Web服务器对资源HelloWorld.action的请求，根据web.xml中的配置，服务器将包含有.action后缀的请求转到org.apache.struts2.dispatcher.FilterDispatcher类进行处理。这个FilterDispatcher是框架的一个进入点；
+2.       框架在struts.xml配置文件中找到名为HelloWorld的action对应的类。框架初始化该Action并且执行该Action类的execute方法；
+3.       execute方法将信息放入message变量中，并返回成功。框架检查配置以查看当返回成功时对应的页面。框架告诉容器来获得请求返回的结果页面HelloWorld.jsp;
+4.       在HelloWorld.jsp执行完后，<s:property value="message" />标签调用HelloWorld的Action类中的getMessage方法来获得message的值，并将合并了值的页面呈现给用户；
+5.       一个纯粹的HTML页面显示在用户的浏览器上。
+           测试Action
+ 测试Action很简单，以下是上述HelloWorld的Action类的测试类的代码：
+package tutorial;
+import junit.framework.TestCase;
+import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
+public class HelloWorldTest extends TestCase {
+ public void testHelloWorld() throws Exception {
+    HelloWorld hello_world = new HelloWorld();
+    String result = hello_world.execute();
+    assertTrue("Expected a success result!",
+      ActionSupport.SUCCESS.equals(result));
+    assertTrue("Expected the default message!",
+      HelloWorld.MESSAGE.equals(hello_world.getMessage()));
+    }
+}
+             需要记住的东西
+ 本框架利用Action来处理HTML的表单以及其余请求。Action返回一个结果的名字字符串，例如SUCCESS、ERROR以及INPUT等，从struts.xml中获取映射信息。一个给定的结果字符串将选择一个页面或其他资源（图片或PDF）来返回给用户。
+ 当一个jsp被载入的时候，通常有一些动态变化的元素需要Action来载入。为了更加容易的显示动态数据，本框架提供了一些可以跟HTML配合使用的标签。
+           问题汇总
+ 对于出现启动失败，例如Cannot locate the chosen ObjectFactory implementation: spring等错误的朋友，请仔细检查你引入的包。关于需引入的包，请参见第一节（准备工作）。也希望遇到其余问题的朋友留言或发Email给我，在此进行汇总。
+三。
+说明：本文大部分内容翻译自struts-2.0.8-all\struts-2.0.8\docs\docs\using-tags.html，并将struts2的标签作为附录补充，标签尚有部分未补充完。
+ 在上篇（Hello World篇）中，我们呈现了一个简单的欢迎界面。在本篇中，我们将创建链接到应用其他Action的链接。
+ Web应用程序与传统的Web站点有所不同，在Web应用程序中我们可以创建动态的返回。为了更容易的在页面上获得动态数据，本框架提供了一些标签集。其中有些标签模拟了标准的HTML标签，但是提供了一些额外功能。还有一些框架提供了非标准的、但非常有用的控制功能。
+ Struts标签的一个使用是创建一个到另外的Web资源的访问链接，特别是到本地的其他资源的链接。
+说明：虽然HTML为创建超链接提供了简单的标签，HTML标签常常需要我们包括一些冗余的信息。并且HTML标签不能很容易的得到本框架的动态数据。
+              链接标签
+ 在Web应用程序中的一个常用的功能是链接到其他页面，现在让我们为前面章节的欢迎界面添加到其他Action的链接。
+              代码
+  
+显示注册与登录的jsp的代码如下：
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head>
+    <title>Welcome</title>
+    <link href="<s:url value="/css/tutorial.css"/>" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<h3>Commands</h3>
+<ul>
+    <li><a href="<s:url action="Register"/>">Register</a></li>
+    <li><a href="<s:url action="Logon"/>">Sign On</a></li>
+</ul>
+</body>
+</html>
+ 运行效果如下：
+ 
+ 另一个常用的功能是使用链接来改变语言，在前章的HelloWorld页面中，让我们改变用户的语言，并根据对应的应用程序资源来呈现信息。代码如下：
+<body>
+<h2><s:property value="message"/></h2>
+<h3>Languages</h3>
+<ul>
+    <li>
+        <s:url id="url" action="HelloWorld">
+            <s:param name="request_locale">en</s:param>
+        </s:url>
+        <s:a href="%{url}">English</s:a>
+    </li>
+    <li>
+        <s:url id="url" action="HelloWorld">
+            <s:param name="request_locale">es</s:param>
+        </s:url>
+        <s:a href="%{url}">Espanol</s:a>
+    </li>
+</ul>
+</body>
+ 运行效果如下：
+ 
+             代码是如何工作的？
+ 上述例子中的“%{url}”将会被s:url标签来求得对应的值。在Welcome和HelloWorld页中，我们使用了两种不同的链接标签。我们可以创建如下标签：
+l         资源链接
+l         直接的链接
+l         带参数的链接
+ 下面让我们分别看一下它们的使用：
+1.       资源链接
+首先在jsp的HEAD元素中，我们使用url标签来将资源引入到页面中，代码如下：
+<link href="<s:url value="/css/tutorial.css"/>"
+  rel="stylesheet" type="text/css"/>
+注意：引用时绝对的。我们可以移动该页面到其他路经而不用担心相对路径。
+2．直接链接
+ 我们可以使用链接标签来定向到Action，实例代码如下：
+<li><a href="<s:url action="Register"/>">Register</a></li>
+ 当链接运作的时候，链接标签能够自动追加正确的扩展，因此我们不需要在应用程序中嵌入。这个标签也将会用会话id来编码链接的URL，因此Java的会话在请求之间能够保持。
+3．带有参数的链接
+ 在上述的有关改变语言的HelloWorld页中，我们可以使用带有参数信息的url标签来创建带有参数的链接，该段代码如下：
+ <s:url id="url" action="Welcome">
+ <s:param name="request_locale">en</s:param>
+</s:url>
+<s:a href="%{url}">English</s:a>
+ param标签将会在Welcome的Action的url后增加信息：“?request_locale=en”。这个标签接着将“url”引用注入到超链接中。
+ 说明：通过增加param标签能够增加任意数量的标签。
+             通配符映射
+ 在上述例子的Welcome页面中，除了链接之外尚未添加任何内容，我们不需要添加Action类。但是，我们仍然需要添加一个映射，以便我们可以使用action URI（如果我们向映射到action，而不是页面，我们在后面也可以很容易的添加Action类），映射代码如下：
+<action name="Welcome" >
+ <result>/tutorial/Welcome.jsp</result>
+</action>
+ 当我们创建应用程序的时候，我们常常需要直接链接到页页面，为了使原型更加容易，我们可以将Welcome的进入改为通配符，修改后的映射如下：
+ <action name="*" >
+ <result>/tutorial/{1}.jsp</result>
+</action>
+ 这是代码是如何工作的呢？
+ 如果找不到映射，本框架将会做如下工作：
+l         将“Welcome”映射为星号
+l         将“Welcome”代替result中对应的“{1}”
+ 同样的，如果在映射文件中找不到“Login”的映射，将会映射到“/tutorial /Login.jsp”页面。
+ 说明：通配符映射能够使得你能够创建你自己的规约，以便你能够避免冗余的配置。
+              数据输入表单
+ 大多数应用程序都使用一些数据进入表单。Struts标签使得输入表单更加容易，代码如下：
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head>
+ <title>Login</title>
+</head>
+<body>
+<s:form action="Logon">
+  <s:textfield label="User Name" name="username"/>
+ <s:password label="Password" name="password" />
+ <s:submit/>
+</s:form>
+</body>
+</html>
+ 执行效果如下：
+ 
+ 代码是如何工作的呢？
+l         JSP标签在页面顶部引入了Struts的标签库
+l         Struts标签：textfield、password和submit，每一个都写出了正确的Lable和控制类型
+             需要记住的东西
+ 编写web应用程序的最难的一部分是编写页面。本框架通过提供一系列的Struts标签使得编写页面更加容易。Struts标签能够获得框架提供的动态数据。标签减少了用来创建页面所需做的工作。
+                                                                                               附录一
+——标签使用指南
+              通用标签
+ 通用标签被用来在页面执行的时候，来控制执行流。这些标签同样允许数据不是从Action或者值栈中提取，例如本地化、JavaBeans、包括额外的URL或action执行。
+l         控制类标签提供了控制流，例如if，else和iterator
+l         数据类标签允许数据操作或创建，例如bean、push和i18n
+ 控制类标签有if、elseIf、 else、append、generator、iterator、merge、sort、subset。
+ 数据类标签有a、action、bean、date、debug、i18n、include、param、push、set、text、url、property。
+ 分别介绍如下：
+1.       控制类标签
+1）if、elseif和else
+描述：执行基本的控制流，if能单独使用，也可与else、elseif标签搭配使用。
+参数：
+名称
+
+必选
+
+默认值
+
+求值
+
+类型
+
+描述
+
+id
+
+否
+
+ 
+
+是
+
+String
+
+id用来引用元素。对于UI或者form标签，它的意义等同于HTML的id属性
+
+test
+
+是
+
+ 
+
+是
+
+Boolean
+
+用来决定标签体师是否显示的表达式
+
+使用举例：
+<s:if test="%{false}">
+    <div>Will Not Be Executed</div>
+</s:if>
+<s:elseif test="%{true}">
+    <div>Will Be Executed</div>
+</s:elseif>
+<s:else>
+    <div>Will Not Be Executed</div>
+</s:else>
+2）append
+该标签的工作是追加迭代器来，
+例如，如果有三个迭代器（每个迭代器有三个元素）需要追加，下面展示了这个追加迭代器是如何排列的。
+   首先是进入第一个迭代器的第一个元素；
+   第二步是进入第一个迭代器的第二个元素；
+   第三步是进入第一个迭代器的第三个元素；
+   第四步是进入第二个迭代器的第一个元素；
+   第五步是进入第二个迭代器的第二个元素；
+   第六步是进入第二个迭代器的第三个元素；
+   第七步是进入第三个迭代器的第一个元素；
+   第八步是进入第三个迭代器的第二个元素；
+   第九步是进入第三个迭代器的第三个元素。
+参数：
+名称
+
+必选
+
+默认值
+
+求值
+
+类型
+
+描述
+
+id
+
+否
+
+ 
+
+是
+
+String
+
+如果提供了该id的值，将会具有追加迭代器存储到堆栈上下文中的合成结果
+
+使用举例：
+Action类的代码：
+
+ 
+public class AppendIteratorTagAction extends ActionSupport {
+ private List myList1;
+ private List myList2;
+ private List myList3;
+ 
+ 
+ public String execute() throws Exception {
+     myList1 = new ArrayList();
+     myList1.add("1");
+     myList1.add("2");
+     myList1.add("3");
+ 
+     myList2 = new ArrayList();
+     myList2.add("a");
+     myList2.add("b");
+     myList2.add("c");
+ 
+     myList3 = new ArrayList();
+     myList3.add("A");
+     myList3.add("B");
+     myList3.add("C");
+ 
+     return "done";
+ }
+ 
+ public List getMyList1() { return myList1; }
+ public List getMyList2() { return myList2; }
+ public List getMyList3() { return myList3; }
+ jsp页面的代码：
+ <s:append id="myAppendIterator">
+     <s:param value="%{myList1}" />
+     <s:param value="%{myList2}" />
+     <s:param value="%{myList3}" />
+</s:append>
+<s:iterator value="%{#myAppendIterator}">
+     <s:property />
+</s:iterator>
+ 3）generator
+ 描述：创建一个基于提供的值的迭代器。
+   注意：产生的迭代器将常常被推入堆栈顶部，而在标签结束的时候被推出。
+ 参数：
+名称
+
+必选
+
+默认值
+
+求值
+
+类型
+
+描述
+
+converter
+
+否
+
+ 
+
+是
+
+org.apache.struts2.util.IteratorGenerator.Converter
+
+将从值中分析的字符串转换为一个对象的转换器
+
+count
+
+否
+
+ 
+
+是
+
+Integer
+
+在迭代器中的最大值
+
+id
+
+否
+
+ 
+
+是
+
+String
+
+如果提供了id，它将会用来存储产生的迭代器到页面上下文
+
+separator
+
+是
+
+ 
+
+是
+
+String
+
+分隔符用来将迭代器中的值分开
+
+val
+
+是
+
+ 
+
+是
+
+String
+
+用来解析成迭代器的源
+
+ 举例：
+ 例1:
+<pre>
+例一：
+产生一个简单的迭代器
+<s:generator val="%{'aaa,bbb,ccc,ddd,eee'}">
+ <s:iterator>
+     <s:property /><br/>
+ </s:iterator>
+</s:generator>
+</pre>
+这里产生了一个迭代器，并且使用iterator标签将它打印出来
+例二:
+<pre>
+产生一个带有count属性的迭代器
+<s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="3">
+ <s:iterator>
+     <s:property /><br/>
+ </s:iterator>
+</s:generator>
+</pre>
+这里产生了一个迭代器，但是只有其中的三个元素是可用的，这三个分别是aaa、bbb和ccc
+例三:
+<pre>
+产生一个带有id属性的迭代器
+<s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" count="4" separator="," id="myAtt" />
+<%
+ Iterator i = (Iterator) pageContext.getAttribute("myAtt");
+ while(i.hasNext()) {
+     String s = (String) i.next(); %>
+     <%=s%> <br/>
+<%    }
+%>
+</pre>
+产生了一个迭代器，并且将它存入页面上下文的指定的id（myAtt）属性中。
+例四:
+<pre>
+带有converter属性的generator标签
+<s:generator val="%{'aaa,bbb,ccc,ddd,eee'}" converter="%{myConverter}">
+ <s:iterator>
+     <s:property /><br/>
+ </s:iterator>
+</s:generator>
+public class GeneratorTagAction extends ActionSupport {
+ ....
+ public Converter getMyConverter() {
+     return new Converter() {
+         public Object convert(String value) throws Exception {
+             return "converter-"+value;
+         }
+     };
+ }
+ ...
+}
+</pre>
+产生的这个迭代器，它的每个元素由提供的转换器获得。在这个转换器中，只是为每个元素增加了“converter-”。
+this converter, it simply add "converter-" to each entries.
+ 4）iterator
+ 描述：迭代器将会迭代值。一个可迭代的值可以是java.util.Collection，也可以是java.util.Iterator。
+ 参数：
+名称
+
+必选
+
+默认值
+
+求值
+
+类型
+
+描述
+
+id
+
+否
+
+ 
+
+是
+
+String
+
+id用来引用元素。对于UI和表单标签，它与HTML的id标签相当
+
+status
+
+否
+
+否
+
+是
+
+Boolean
+
+如果该值被指定，一个迭代状态的实例将会在每一个迭代中被推入堆栈中
+
+value
+
+否
+
+ 
+
+是
+
+String
+
+用来进行迭代的迭代源，否则对象本身将会被放入新的产生的列表中
+
+ 举例：
+ 下面的例子取回在值栈中的当前对象的getDays()所返回的值，<s:property/>标签打印出当前迭代器的值，代码如下：
+<s:iterator value="days">
+ <p>day is: <s:property/></p>
+</s:iterator>
+   在下面的例子中使用Bean标签并且将它存入ActionContext中。iterator标签将会从ActionContext中取回对象而后调用它的getDays()方法。状态属性常常用来创建IteratorStatus对象，在这个例子中，它的odd()方法用来改变行的颜色。
+<s:bean name="org.apache.struts2.example.IteratorExample" id="it">
+ <s:param name="day" value="'foo'"/>
+ <s:param name="day" value="'bar'"/>
+</s:bean>
+<p/>
+<table border="0" cellspacing="0" cellpadding="1">
+<tr>
+ <th>Days of the week</th>
+</tr>
+<p/>
+<s:iterator value="#it.days" status="rowstatus">
+ <tr>
+    <s:if test="#rowstatus.odd == true">
+      <td style="background: grey"><s:property/></td>
+    </s:if>
+    <s:else>
+      <td><s:property/></td>
+    </s:else>
+ </tr>
+</s:iterator>
+</table>
+ 下个例子将进一步展示status属性的使用，使用通过OGNL从action类取得的DAO，成员的迭代以及它们的使用（在安全的上下文中），last()方法中指明了当当前的对象是迭代器的最后一个可用的对象，如果不是，我们需要使用逗号来分隔用户，代码如下：
+<s:iterator value="groupDao.groups" status="groupStatus">
+     <tr class="<s:if test="#groupStatus.odd == true ">odd</s:if><s:else>even</s:else>">
+         <td><s:property value="name" /></td>
+         <td><s:property value="description" /></td>
+         <td>
+             <s:iterator value="users" status="userStatus">
+                 <s:property value="fullName" /><s:if test="!#userStatus.last">,</s:if>
+             </s:iterator>
+         </td>
+     </tr>
+ </s:iterator>
+ 下一个例子在一个action collection上迭代，并且将每一个迭代的值传给另一个action。这里的诀窍在于使用”[0]”。它获得当前的值并且将值传入edit action。使用”[0]”与使用<s:property/>具有相同的效果（但是，后者，在param标签内部不起作用）。代码如下所示：
+<s:action name="entries" id="entries"/>
+     <s:iterator value="#entries.entries" >
+         <s:property value="name" />
+         <s:property />
+         <s:push value="...">
+             <s:action name="edit" id="edit" >
+                 <s:param name="entry" value="[0]" />
+             </s:action>
+         </push>
+     </s:iterator>
+  下例使用iterator标签来模拟一个简单的循环，循环了5次，代码如下：
+<s:iterator status="stat" value="{1,2,3,4,5}" >
+   <!—获得当前的index（从0开始） -->
+   <s:property value="#stat.index" /> 
+   <!— 获得当前堆栈的值 -->
+   <!—当前的迭代值(0, 1, ... 5) -->
+   <s:property value="top" />
+</s:iterator>
+5）merge
+  描述：它是MergeIterator标签的组件，它的工作是合并迭代器和对合并后的迭代器的后续调用，它将使得每一个合并的迭代器有机会展示它的元素，接着下一个调用将会允许下一个迭代器来展示它的元素。一旦最后一个迭代器已展示完它的所有元素，第一个迭代器又能够开始展示它的元素（除非元素已经用尽）。
+ 从内部来说，任务将委托给MergeIteratorFilter去做。
+ 下面展示了3个列表的合并，其中每个列表有3个元素，步骤如下：
+1． 展示第一个列表的第一个元素；
+2． 展示第二个列表的第一个元素；
+3． 展示第三个列表的第一个元素；
+4． 展示第一个列表的第二个元素；
+5． 展示第二个列表的第二个元素；
+6． 展示第三个列表的第二个元素；
+7． 展示第一个列表的第三个元素；
+8． 展示第二个列表的第三个元素；
+9． 展示第三个列表的第三个元素；
+ 参数：
+名称
+
+必选
+
+默认值
+
+求值
+
+类型
+
+描述
+
+id
+
+否
+
+ 
+
+是
+
+String
+
+合并后的迭代器的值将会存储在堆栈上下文的id
+
+ 举例：
+ Action类代码：
+public class MergeIteratorTagAction extends ActionSupport {
+ 
+ private List myList1;
+ private List myList2;
+ private List myList3;
+ 
+ public List getMyList1() {
+     return myList1;
+ }
+ 
+ public List getMyList2() {
+     return myList2;
+ }
+ 
+ public List getMyList3() {
+     return myList3;
+ }
+ 
+  public String execute() throws Exception {
+      myList1 = new ArrayList();
+     myList1.add("1");
+     myList1.add("2");
+     myList1.add("3");
+     myList2 = new ArrayList();
+     myList2.add("a");
+     myList2.add("b");
+     myList2.add("c");
+     myList3 = new ArrayList();
+     myList3.add("A");
+     myList3.add("B");
+     myList3.add("C");
+     return "done";
+ }
+}
+ jsp页代码：
+<s:merge id="myMergedIterator1">
+     <s:param value="%{myList1}" />
+     <s:param value="%{myList2}" />
+     <s:param value="%{myList3}" />
+</s:merge>
+<s:iterator value="%{#myMergedIterator1}">
+     <s:property />
+</s:iterator>
+              UI标签
+              主题与模板标签
+              标签引用
+              Ajax标签
+              标签语法
+  标签被设计用来显示动态的数据。为了创建输入域来显示属性“postalCode”，我们需要将“postalCode”传给textfield标签。
+  下面创建了一个动态的输入域：
+ <s:textfield name="postalCode"/>
+   如果在值栈中存在“postalCode”属性，它的值将会被放入该输入域中。当输入被提交到框架之后，它的值将会被放置到“postalCode”属性中。
+   有时候，我们想要传动态的数据到标签中。例如，我们可能需要用输入域来显示一个label，我们可能想要从应用程序的message资源中。相应地，框架将会解析在标签属性中的表达式。因此在运行时我们能够合并动态的数据到标签的属性中。表达式是像“%{…}”这样的。任何一个在其中嵌入的文本被作为表达式来计算。
+   使用一个表达式来设置label的例子：
+<s:textfield key="postalCode.label" name="postalCode"/>
+   表达式语言（OGNL）使得我们能够调用方法和计算属性。getText()方法由ActionSupport（大多数Action的基类）提供。我们可以调用任何一个表达式提供的方法，包括getText方法。
+ 非String型的属性
+   HTTP协议是基于文本的，但是有一些标签时非String类型的，例如bool和int。为了能够直接使用非String型的属性，本框架将所有的非String类型的属性作为一个表达式处理，在这种情况下，你不需要使用任何转义符（但是，如果你使用了转义符，框架也会将其跳过）。
+   计算boolean型的例子：
+<s:select key="state.label" name="state" multiple="true"/>
+   一旦multiple属性跟一个boolean属性对应起来，框架不会将它作为一个String来解释，这个值将会被作为一个表达式来计算并且自动地将其转换为boolean值。
+   因为很容易忘记哪个属性是String，哪个属性是非String型的，你仍然可以使用转义符。
+   计算boolean值（带有转义符的）：
+ <s:select key="state.label" name="state" multiple="%{true}"/>
+  带有属性的：
+ <s:select key="state.label" name="state" multiple="allowMultiple"/>
+ 既带有转义符又带有属性的：
+ <s:select key="state.label" name="state" multiple="%{allowMultiple}"/>
+ 
+  值是一个对象
+   更通常的情况是，属性值是自动放入的，因为name属性通常告诉框架哪个属性来调用方法来set值。但是，如果需要直接设置值，建议那个值是Object型而不是String型。
+   注意：因为值是非String型的，无论传入什么，都是将他作为表达式来处理——而不是一个字面的String。
+   可能导致错误的例子：
+ <s:textfield key="state.label" name="state" value="CA"/>
+   如果textfield被传入 “CA”，本框架将会名字为getCa的属性。通常情况下，这不是我们的本意，我们想要做的是传送一个字符串。在表达式语言中，文字需要被置为单引号之间。
+   以正确的方式传入一个文字值：
+<s:textfield key="state.label" name="state" value="%{'CA'}" />
+   另一种方法是使用value=”’CA’”，但是在这种情况下，推荐使用表达式符号。
+   标签属性使用如下三种规则计算：
+  1．    所有的String属性都被解析成“%{…}”符号；
+  2．    所有的非String属性没有被解析，而是直接按照表达式来算；
+  3．    规则2的异常情况是非String型的属性使用转义符号“{%{}”，符号被作为多余的符号被忽略，而只是计算内容。
+表示式语言符号
+  1．在Freemarker、Velocity或者JSTL的表达式语言的JavaBean对象的标准文本
+ <p>Username: ${user.username}</p>
+  2．在值栈中的一个username属性
+ <s:textfield name="username"/>
+  3． 引用值栈中的属性的另一种方式
+ <s:url id="es" action="Hello">
+ <s:param name="request_locale">
+    es
+ </s:param>
+</s:url>
+<s:a href="%{es}">Espanol</s:a>
+  4． 在Session Context中获得user对象的userName属性
+ <s:property name="#session.user.username" />
+  5． 在一个静态map中，像("username","trillian")一样
+  <s:select label="FooBar" name="foo" list="#{'username':'trillian', 'username':'zaphod'}" />
+四.
+在使用Struts2标签这一章节中，我们实现了登录表单，在编写Action章节中，我们解释登录表单，并且根据不同的情况返回不同的结果码。
+ 如果你已经编码完成，你可以用如下链接打开登录的Action：
+http://localhost:8080/tutorial/Logon.action
+ 并且输入一个合适的用户名和密码。因为你没有给这个Action任何的行为，映射重新显示了默认的Logon.jsp页面。
+ 让我们新增一个Action类来使得登录表单更加有意思。
+      代码
+像例子中所示的，我们能够检查用户名和密码的值。如果其中一者或两者都为空，返回输入页面，否则，返回SUCCESS对应的页面，Logon.java对应的代码如下：
+package tutorial;
+import com.opensymphony.xwork2.ActionSupport;
+public class Logon extends ActionSupport {
+
+    public String execute() throws Exception {
+
+        if (isInvalid(getUsername())) return INPUT;
+        if (isInvalid(getPassword())) return INPUT;
+        return SUCCESS;
+    }
+
+    private boolean isInvalid(String value) {
+        return (value == null || value.length() == 0);
+    }
+
+    private String username;
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private String password;
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}
+   代码是如何工作的？
+ 框架自动为我们的username和password属性完成组装功能。我们所需要做的就是核对是否其中有属性为空。
+
+    需要记住的东西
+ 在web应用程序中，Action做了重量级的工作。Action与数据库系统和业务规则引擎相互作用，以便我们能够把一些简单的HTML变成复杂的、动态的web体验。
+ 在做了这些工作之后，Action返回了一个结果码来指明框架下一步应该做什么工作。通常，下一步是跳转到成功结果页面，但在某些情况下，我们需要跳转到错误结果页。还在某一些情况下，Action不用担心产生的回应，仅仅决定哪些逻辑结果需要在下一步呈现
+五.
+在编写Action这一章节中，我们创建了一个Logon类来测试输入。在本章中，我们将使这个测试的结果起作用。
+            选择一个“Input”结果
+     在一个Action执行一个请求后，一个提供用来作为这个请求回应的结果被选择。这个结果可以简单的定向到一个HTML页面、一个JSP页面、一个FreeMaker或一个Velocity模板、或者这个结果可能构造一个PDF或某些更加复杂的输出（例如JasperReports）。在一个action映射中可能有多个可选的结果。为了指明那一个被选择，Action类返回一个与正确结果相对应的名字。
+              代码
+struts.xml的代码如下所示：
+<action name="Logon" class="tutorial.Logon">
+ <result type="redirect-action">Menu</result>
+ <result name="input">/tutorial/Logon.jsp</result>
+</action>
+              代码是如何工作的？
+   1. 如果你在表单中输入username和password属性，Logon Action将会返回“success”；
+   2. 如果你其中一者或两者都没有输入值，Logon Action将返回“input”，框架将会使用Logon.jsp作为回应。
+    在Hello World章节中，我们的结果使用了默认的类型：Dispatcher。Dispatcher定向到另外的web资源。其它种类的视图能够被用来指明不同的结果类型。
+     Logon映射为success（默认的返回值）使用了一种不同的返回类型。“redirect-action”使用Action的名字作为参数，接着使客户端定向到一个新的action。
+              使用一个Stub页
+     当我们开发web应用程序的时候，我们常常需要进行forward引用——我们需要引用到一个我们还没有开始写的action。例如，在文章的第一部分中，下一步是跳转到“Menu”页面。如果我们成功登录，我们就没有地方去了，因为“Menu”尚不存在。
+     解决这种问题的方法是创建一个Stub“Menu”页。
+     Menu.jsp的代码如下：
+<html>
+<head><title>Missing Feature</title></head>
+<body>
+<p>
+    This feature is under construction.
+    Please try again in the next interation.
+</p>
+</body>
+</html>
+    这段代码是如何工作的呢？
+    1. 当登录class返回“Menu”时，框架将会将其与通配符映射对应起来；
+    2. 框架现在将会返回一个stub的“Menu.jsp”。
+    说明：如果你没有使用通配符，另一种注入一个丢失页面的方法就是指定一个<action-default-ref>元素。
+              包括一个缺失页面
+     如果你页到页的建造一个应用程序，建立一个标准的缺失页面时对应的标准页面是非常必要的。Menu.jsp的代码如下：
+  <%@ taglib prefix="s" uri="/struts-tags" %>
+  <s:include value="Missing.jsp" />
+     这段代码是如何工作的呢？
+    当需要展现Menu.jsp的时候，它将会包括标准的Missing.jsp的内容。
+             需要记住的东西
+     本框架提供多种返回类型。一个Action能够通过名字选择正确的返回结果，而不用知道到底是哪一种返回类型。
+六.
+   在编写Action这一章节中，我们通过几行java代码来验证username和password。当然，在大型的应用程序中，这将是个很耗时的工作，即使这几行java代码也可能变成维护的重大负担。
+     令人高兴的是，本框架提供了一个验证框架，这个验证框架能够对输入数据进行后台验证。
+             代码
+     验证能够通过XML文档来描述，或者使用注解（annotations）。XML文档的名称以Action的名字为开头，以“-validation”作为文件名后缀。当我们想要验证Logon Action的时候，我们文件名可以命名为Logon-validation.xml。Logon-validation.xml的代码如下：
+<!DOCTYPE validators PUBLIC
+"-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<validators>
+    <field name="username">
+        <field-validator type="requiredstring">
+            <message>Username is required</message>
+        </field-validator>
+    </field>
+    <field name="password">
+        <field-validator type="requiredstring">
+            <message>Password is required</message>
+        </field-validator>
+    </field>
+</validators>
+     在Logon.java后我们创建一个Logon-validation.xml文件。并将上述粘贴到该文件中。
+     页面第一次显示的时候，我们不想引发验证。我们需要在被告诉有输入不正确前有机会输入数据。通过验证的一种方式是找到一个ActionSupport基类提供的特定的“input”方法。为了这样做，我们需要编辑Welcome页面和Logon的映射。
+     Welcome.jsp的修改代码如下：
+    <li><a href="<s:url action="Logon"/>">Sign On</a></li>
+    <li><a href="<s:url action="Logon_input"/>">Sign On</a></li>
+    struts.xml的修改代码如下：
+    <action name="Logon" class="tutorial.Logon">
+    <action name="Logon_*" method="{1}" class="tutorial.Logon">
+           代码是如何工作的？
+    为了打开Logon表单，Welcome页面涉及了Logon_input。
+     1. 框架将这个引用于Logon_*映射相匹配起来；
+     2. “method={1}”属性被“method=input”替换；
+     3. 框架调用了Logon Action类的input方法；
+     4. 因为“input”在一个特殊的方法的列表中，所以验证框架将不会调用；
+     5.  默认的input方法返回一个“input”作为返回结果；
+     6. 框架展现“Logon.jsp”来作为回应结果，没有带有任何的验证信息。
+     为了提交Logon表单，Login页面引用了Logon。
+     1. 框架为目标Action——Logon提供验证；
+     2. 找到Logon-validation.xml文件，框架为该类创建了一个验证对象，这个验证对象基于XML文件；
+     3. 验证器对输入的数据产生作用；
+     4. 如果验证失败，错误信息被添加到内部序列中；
+     5. 当所有的验证器都已经执行后，如果框架发现有错误信息产生，它寻找“input”结果对应的页面，而不调用Action类；
+     6. 如果通过验证，调用Action的方法，返回“success”对应的结果。
+             需要记住的东西
+     框架提供了一个验证框架。一个输入域可以绑定一个验证器集合。如果验证失败，框架将会返回输入信息页，并显示错误信息。为了通过验证，一个特殊的“input”方法将被调用，来代替默认的“execute”方法。
+七.
+在验证输入这一小节中，我们使用验证框架来验证提交到表单的数据。在“本地化输出”这一节中，我们将验证信息移到消息资源文件中。
+     当创建web应用程序的时候，我们发现我们在多个页面中常常使用一些相同的消息或字段标签。如果我们的系统由不同语言的用户使用时，我们也想要本地化消息。
+              本地化验证信息和属性值
+     让我们增加一个消息资源文件，并且在其中加入验证信息和字段标签。
+1．代码
+     本框架将消息资源与类联系起来。为了为Logon action增加一个消息资源，我们需要将消息资源文件命名为Logon.properties，并且在Logon Action后设置它的classpath。但是，大多数人发现为某一个类使用一个单独的资源文件时间和低效率的工作。很多人更喜欢为一整个类包增加一个消息资源文件。为了做到这样，我们可以简单的为某个包增加一个paacage.properties文件。例如。我们为tutorial包增加一个资源文件tutorial/package.properties。该文件内容如下：
+requiredstring = $\{getText(fieldName)} is required.
+password = Password
+username = User Name
+     我们还需要改变一下验证器和Logon页面。
+     Logon-validation.xml修改的地方：
+ <message>Username is required</message>
+<message key="requiredstring"/>
+<message>Password is required</message>
+<message key="requiredstring"/>
+     Logon,jsp修改的地方如下：
+<s:textfield label="User Name" name="username"/>
+<s:textfield label="%{getText('username')}" name="username"/>
+<s:password label="Password" name="password" />
+<s:password label="%{getText('password')}" name="password" />
+2． 代码是如何工作的？
+   1）“key”属性告诉验证器为一个消息资源捆绑验证；
+    2） 在资源捆绑中，表达式：${getText(fieldName)}告诉框架在资源文件中查找字段名。这种方式下我们能够为所有的非空验证使用相同的默认信息；
+     3）相似地，在文本域中，表达式：%{getText(‘password’)}告诉框架在资源文件中寻找“password”。
+              本地化其余的信息
+    其余的页面元素也能够被本地化。例如，我们需要在资源文件中增加“Hello World”和“Missing page”这两个消息。
+1． 代码
+tutorial/package.properties：
+# ...
+HelloWorld.message = Struts is up and running ...
+Missing.message = This feature is under construction. Please try again in the next interation.
+    这对HelloWorld是可运行的，因为Hello World已经存在于包中。但是它对于默认的Missing action是不可用的，除非你将我们的基类加入到tutorial包中。
+    TutorialSupport.java的代码如下：
+package tutorial;
+import com.opensymphony.xwork2.ActionSupport;
+public class TutorialSupport extends ActionSupport {}
+    并且还需要更新一下struts.xml默认的通配符映射，如下：
+<action name="*" class="tutorial.TutorialSupport">
+ <result>/{1}.jsp</result>
+</action>
+    现在，我们可以更新HelloWorld.jsp和Missing.jsp来查找信息。
+    Missing.jsp的代码如下：
+This feature is under construction. Please try again in the next interation. 
+<s:text name="Missing.message"/>
+    在HelloWorld的情况下，我们从Action类设置消息。让我们更新一下class，使用资源文件来代替它。HelloWorld的代码如下：
+package tutorial;
+public class HelloWorld extends ExampleSupport {
+    public static final String MESSAGE = "HelloWorld.message";
+    public String execute() throws Exception {
+        setMessage(getText(MESSAGE));
+        return SUCCESS;
+    }
+ 
+ //   
+}
+
+2． 代码是如何工作的？
+   1）对于Missing.jsp，我们使用text标签来查找资源文件中的消息；
+   2） 在HelloWorld中，我们在Action类中使用getText()方法来获得消息；
+   3）  在HelloWorld.jsp中，只是显示由Action类设置的消息，所以不要做任何改变。
+          需要记住的东西
+    框架支持国际化。为了本地化应用，我们增加了资源文件，并且更新某些元素或标签来应用资源文件中的资源而不是静态的文本。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+学习实例
+
+一．             实例说明
+ 本例是Struts2的简单实例，通过本工程的学习，我们将会对struts2的表单以及表单验证有一个初步的认识、了解struts2的配置以及初探Struts2的本地化输出。
+二．             编码准备
+1． 包的引入
+在MyEclipse或NetBeans中建立web工程，将所需的包放入WebRoot/lib目录中，本实例所需的包有：
+ commons-logging-1.1.jar
+ freemarker-2.3.8.jar
+ ognl-2.6.11.jar
+ struts2-core-2.0.8.jar
+ xwork-2.0.3.jar
+ 这些包在struts-2.0.8-all\struts-2.0.8\lib目录下都可以找到，请读者自行下载。
+2． web.xml的配置
+要使struts能正常工作，需修改web.xml的内容，为其增加struts2的FilterDispatcher，修改后的web.xml的内容如下：
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_9" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>Struts Blank</display-name>
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
+ 
+3. 建立源码目录和jsp存放目录
+ 在src目录下建立example文件夹，用于存放本实例的java文件等。在WebRoot文件夹下建立子文件夹example，用于存放本工程的jsp文件。
+三．             编码
+1.       Welcome.jsp和Login.jsp的编写
+首先我们建立Welcome.jsp，该文件包含两个链接，点击“登录”链接后跳转到登录信息输入页面，点击“注册”按钮跳转到注册页，为了学习struts2配置中的通配符使用，我们暂不实现注册功能。Welcome.jsp的代码如下：
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head>
+    <title>欢迎界面</title>
+    <link href="<s:url value="/css/examplecss"/>" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+    <h3>导航</h3>
+    <ul>
+        <li><a href="<s:url value="/example/Login.jsp"/>">登录</a></li>
+        <li><a href="<s:url action="Register"/>">注册</a></li>
+    </ul>
+</body>
+</html>
+ 
+在该页面的顶部，我们需要将struts2的标签库引入，语句为：<%@ taglib prefix="s" uri="/struts-tags" %>
+在该页面，主要用到struts2的<s:url>标签，该页面主要用到该标签的两个属性，分别为value和action，其中action属性表示用action来产生url，而value表示使用的目标值。在页面上点击“查看源文件”按钮，可看到生成的语句分别变为：
+<link href="/struts2-blank-2.0.8/css/examplecss" rel="stylesheet" type="text/css"/>
+<a href="/struts2-blank-2.0.8/example/Login.jsp ">
+<a href="/struts2-blank-2.0.8/example/Register.action">
+由此可知使用该标签时，struts2会自动为我们带上下文路径，对于加了属性action的<s:url>标签，后面会自动带上“.action”作为后缀。
+ 点击“登录”链接后，跳转到Login.jsp页面，该页包含一个登录表单，让用户输入用户名和密码信息，用户点击提交按钮，跳转到指定的Action——Login进行处理。Login.jsp的内容如下：
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head>
+    <title>登录</title>
+</head>
+<body>
+<s:form action="Login">
+    <s:textfield name="username" label="用户名"/>
+    <s:password name="password"  label="密码"/>
+    <s:submit/>
+</s:form>
+</body>
+</html>
+ 
+该页用到Struts2的表单标签<s:form>、<s:textfield>和<s:password>。
+ <s:form>的action属性表示表单提交后跳转的action的名称，此处为Login，该标签最终将生成HTML的form；
+ <s:textfield>标签类同于HTML的<input type=”text” …>,其中name表示属性域的名称，label表示其前的提示名；
+ <s:password>标签类同于HTML的<input type=”password” …>，其name和label类同于<s:textfield>，在此略。
+2.       配置文件struts.xml和example.xml
+在上述jsp页面，我们需跳转到两个Action地址，需在struts2的配置文件中配置，因当工程变大时，一个庞大的struts2的配置极难维护，建议按包路径分开配置文件，所以本实例除了struts.xml配置文件外，还新增了一个额外的配置文件example.xml。该文件在struts.xml中引用。struts.xml放在src目录下，该文件的内容如下：
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />
+    <include file="example.xml"/>
+    <!-- Add packages here -->
+</struts>
+ 
+可看到该文件通过<include file="example.xml"/>将example.xml也作为struts2的配置文件。
+接下来，让我们看看example.xml的配置：
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<package name="example" namespace="/example" extends="struts-default">
+        <action name="Login_input" method="{1}" class="example.Login">
+            <result name="input">/example/Login.jsp</result>
+            <result type="redirect-action">Menu</result>
+        </action>
+        <!-- 为学习struts2配置文件中通配符的使用，我们将未定义的action的引用都定向到example.ExampleSupport这个Action中, -->
+        <!-- 需定向的Action的名字传到{1}中，eg.若请求Register这个action，当ExampleSupport返回success时，跳转到/example/Register.jsp -->
+        <action name="*" class="example.ExampleSupport">
+            <result>/example/{1}.jsp</result>
+        </action>
+    </package>
+</struts>
+ 
+3.       Login和ExampleSupport类以及验证配置类Login-validation.xml的编写
+在配置文件example.xml中，定义了两个Action，下面我们用代码来实现这两个Action
+首先让我们来看看ExampleSupport这个Action，这个Action不做任何操作，集成自ActionSupport，是本工程的各Action类的基类，该类的代码如下：
+package example;
+import com.opensymphony.xwork2.ActionSupport;
+public class ExampleSupport extends ActionSupport {
+}
+ 
+接着让我们来看看Login这个Action，该类继承自ExampleSupport类，该Action需实现的业务逻辑如下：
+1）       当用户名（username）或密码（password）有一者或两者为空时，登录不成功，跳转到登录信息输入页面；
+2）       当用户名（username）和密码（password）都不为空时，登录成功，跳转到主菜单页。
+ 对于用户名和密码的验证，我们可以先考虑在Login类中用代码实现的方式，此时该类的代码如下：
+package example;
+
+public class Login extends ExampleSupport {
+    public String execute() throws Exception {
+        if (isInvalid(getUsername())) 
+            return INPUT;
+        if (isInvalid(getPassword())) 
+            return INPUT;
+        return SUCCESS;
+    }
+
+    private boolean isInvalid(String value) {
+        return (value == null || value.length() == 0);
+    }
+
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}
+ 
+当工程变得愈发复杂时，这一小段一小段验证代码将会变得难以维护，出于此原因，我们可以考虑采用struts2提供的验证机制来实现。在src目录下建立实现验证的xml文件Login-validation.xml，为Login Action中的username和password属性增加非空验证，验证配置如下：
+<!DOCTYPE validators PUBLIC
+        "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+        "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+    <field name="username">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+    <field name="password">
+        <field-validator type="requiredstring">
+            <message key="requiredstring"/>
+        </field-validator>
+    </field>
+</validators>
+ 
+当验证未通过时，将不会进入Login Action中的execute方法，此时可删除掉Login这个Action中的验证内容，该类的execute方法直接跳转到SUCCESS即可，修改后的代码略。
+4． 本地化输出——资源文件package.properties
+为了本地化的输出验证错误信息，我们可以将参数信息和错误信息放入资源文件中，资源文件package.properties位于src/example目录下，内容如下：
+requiredstring = ${getText(fieldName)}不能为空.
+password = 密码
+username = 用户名
+Missing.message = 该部分尚未构建，请稍候访问...
+在src/example目下下建立对应的中文资源文件package_zh_CN.properties，为了避免中文乱码问题，我们编写一个批处理文件code.bat来对package.properties进行编码处理，主要用到native2ascii命令，其内容如下：
+del package_zh_CN.properties
+copy package.properties package_zh_CN.properties.gbk
+native2ascii -encoding GBK package_zh_CN.properties.gbk package_zh_CN.properties
+del package_zh_CN.properties.gbk
+del *.bak
+运行该批处理文件，可在package_zh_CN.properties中可看到编码后的资源文件信息，如下：
+requiredstring = ${getText(fieldName)}\u4e0d\u80fd\u4e3a\u7a7a.
+password = \u5bc6\u7801
+username = \u7528\u6237\u540d
+Missing.message = \u8be5\u90e8\u5206\u5c1a\u672a\u6784\u5efa\uff0c\u8bf7\u7a0d\u5019\u8bbf\u95ee...
+5． Register.jsp和Missing.jsp的编写
+在2中的example.xml中，我们配置了通配符映射，在Welcome.jsp中，我们使用
+<a href="<s:url action="Register"/>">注册</a>
+其中的Register在example中找不到相关映射，于是在用户点击“注册”按钮时，将映射到通配符所映射的Action：example. ExampleSupport.而后跳转到Register.jsp页面，其代码如下：
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<s:include value="Missing.jsp"/>
+ 
+该页面包含Missing.jsp页面，其代码如下：
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<html>
+<head><title>未构建页面</title></head>
+
+<body>
+<p>
+    <!-- 读取配置文件中的对应信息. -->
+    <s:text name="Missing.message"/>
+</p>
+</body>
+</html>
+ 
+四．总结
+ 到此为止，我们的实例已构建完，可通过浏览器访问：http://localhost:8080/struts2-blank-2.0.8/example/Welcome.jsp看到我们的劳动成果。下面总结一下我们在该实例中学到的东西。
+1． 常用的一些标签的使用
+在本实例中，我们学习了<s:textfield>、<s:password>、<s:form>以及<s:url>的使用。
+2． 表单数据的验证
+本文描述了一个简单的表单的数据非空验证。
+3. 本地化输出错误提示信息
+在验证失败时，用资源文件来输出错误提示信息。
+4．Strut2配置文件中通配符的使用
+对于某些地址，我们可以使用在struts2的配置通配符来使其映射到某个Action中去。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+struts.xml
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+ <package name="default" extends="struts-default">
+  <action name="hello" class="com.action.HelloAction">
+   <result name="success" type="dispatcher">
+    /success.jsp
+   </result>
+  </action>
+  <action name="add" class="com.action.HelloAction"
+   method="add">
+  </action>
+ </package>
+
+ <package name="zhangsan" extends="struts-default"
+  namespace="/zhangsan">
+  <action name="delete" class="com.action.HelloAction"
+   method="delete">
+  </action>
+ </package>
+</struts>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+
+java核心技术学习
+web.xml
+
+ <?xml version="1.0" encoding="UTF-8" ?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<filter>
+  <filter-name>struts2</filter-name>
+  <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+</filter>
+<filter-mapping>
+  <filter-name>struts2</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+<welcome-file-list>
+  <welcome-file>index.jsp</welcome-file>
+</welcome-file-list>
+</web-app>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+

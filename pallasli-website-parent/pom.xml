@@ -20,6 +20,7 @@
 		<module>pallasli-website-properties-des</module>
 		<module>pallasli-website-web-OA</module>
 		<module>pallasli-website-web-pm</module>
+		<module>pallasli-website-kafka-storm</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

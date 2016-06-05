@@ -1,0 +1,582 @@
+
+java核心技术学习
+w3c处理xml
+
+package com.mylog.common.xmlaccessframework.util;
+import java.io.File;
+import java.io.IOException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+public class DocumentTool {
+ /**
+  * 根据指定存储路径读取或创建文件并获取文档
+  * @param xPath指定存储路径
+  * @throws ParserConfigurationException 
+  * @return文档
+  */
+ public static Document createDoc(String path) {
+  DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+  DocumentBuilder builder =null;
+  Document document=null;
+  
+  try { 
+   builder= factory.newDocumentBuilder();
+   document=builder.parse(new File(path));
+  } catch (IOException e) {
+   String tablename=path.substring(path.lastIndexOf("/")+1);
+   String tbname=tablename.substring(0,tablename.lastIndexOf("."));
+   document=builder.newDocument();
+   Element table=document.createElement(tbname);
+   Element pk=document.createElement("primarykey");
+   Element pkname=document.createElement("primarykey-name");
+   Element pkinit=document.createElement("primarykey-init");
+   Element pkincrement=document.createElement("primarykey-increment");
+   Element pkcount=document.createElement("primarykey-count");
+   document.appendChild(table);
+   table.appendChild(pk);
+   pk.appendChild(pkname);
+   pk.appendChild(pkinit);
+   pk.appendChild(pkincrement);
+   pk.appendChild(pkcount);
+   pkname.setTextContent(tbname.substring(2).concat("_id"));
+   pkinit.setTextContent("1");
+   pkincrement.setTextContent("1");
+   pkcount.setTextContent("1");
+  } catch (SAXException e) {
+   e.printStackTrace();
+  } catch (ParserConfigurationException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } 
+  return document;
+ }
+ /**
+  * 将指定的文档存储到指定文件
+  * @param path指定存储路径
+  * @param doc指定的存储文档
+  * @throws TransformerException 
+  */
+ public static void saveDoc(String path, Document doc) throws TransformerException {
+  TransformerFactory factory = TransformerFactory.newInstance();
+  Transformer transformer =null;
+   transformer = factory.newTransformer();
+   transformer.transform(new DOMSource(doc),new StreamResult(new File(path)));  
+ }
+}
+ Document doc = (Document) Class.forName( "org.apache.xerces.dom.DocumentImpl").newInstance();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+自定义打印
+
+ public void printDOMTree(Node node) {
+  int type = node.getNodeType();
+  switch (type) {
+  // print the document element
+  case Node.DOCUMENT_NODE: {
+   System.out.println("<?xml version=\"1.0\" ?>");
+   printDOMTree(((Document) node).getDocumentElement());
+   break;
+  }
+   // print element with attributes
+  case Node.ELEMENT_NODE: {
+   System.out.print("<");
+   System.out.print(node.getNodeName());
+   NamedNodeMap attrs = node.getAttributes();
+   for (int i = 0; i < attrs.getLength(); i++) {
+   Node attr = attrs.item(i);
+   System.out.print(" " + attr.getNodeName() + "=\"" + attr.getNodeValue()
+      + "\"");
+   }
+   System.out.println(">");
+   NodeList children = node.getChildNodes();
+   if (children != null) {
+    int len = children.getLength();
+    for (int i = 0; i < len; i++) {
+     printDOMTree(children.item(i));
+    }
+   }
+   break;
+  }
+   // handle entity reference nodes
+  case Node.ENTITY_REFERENCE_NODE: {
+   System.out.print("&");
+   System.out.print(node.getNodeName());
+   System.out.print(";");
+   break;
+  }
+   // print cdata sections
+  case Node.CDATA_SECTION_NODE: {
+   System.out.print("<![CDATA[");
+   System.out.print(node.getNodeValue());
+   System.out.print("]]>");
+   break;
+  }
+   // print text
+  case Node.TEXT_NODE: {
+   System.out.print(node.getNodeValue());
+   break;
+  }
+   // print processing instruction
+  case Node.PROCESSING_INSTRUCTION_NODE: {
+   System.out.print("<?");
+   System.out.print(node.getNodeName());
+   String data = node.getNodeValue();
+   {
+    System.out.print(" ");
+    System.out.print(data);
+   }
+   System.out.print("?>");
+   break;
+  }
+  }
+  if (type == Node.ELEMENT_NODE) {
+   System.out.println();
+   System.out.print("</");
+   System.out.print(node.getNodeName());
+   System.out.print('>');
+  }
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+自定义节点计数
+
+ int documentNodes = 0;
+ int elementNodes = 0;
+ int entityReferenceNodes = 0;
+ int cdataSections = 0;
+ int textNodes = 0;
+ int processingInstructions = 0;
+ public void parseAndCount(String uri) {
+  Document doc = null;
+  try {
+   DOMParser parser = new DOMParser();
+   parser.parse(uri);
+   doc = parser.getDocument();
+  } catch (Exception e) {
+   System.err.println("Sorry， an error occurred: " + e);
+  }
+  // We've parsed the document now， so let's scan the DOM tree and
+  // print the statistics.
+  if (doc != null) {
+   scanDOMTree(doc);
+   System.out.println("Document Statistics for " + uri + ":");
+   System.out.println("====================================");
+   System.out.println("Document Nodes: " + documentNodes);
+   System.out.println("Element Nodes: " + elementNodes);
+   System.out.println("Entity Reference Nodes: "
+     + entityReferenceNodes);
+   System.out.println("CDATA Sections: " + cdataSections);
+   System.out.println("Text Nodes: " + textNodes);
+   System.out.println("Processing Instructions: "
+     + processingInstructions);
+   System.out.println(" ----------");
+   int totalNodes = documentNodes + elementNodes
+     + entityReferenceNodes + cdataSections + textNodes
+     + processingInstructions;
+   System.out.println("Total: " + totalNodes + " Nodes");
+  }
+ }
+ /** Scans the DOM tree and counts the different types of nodes. */
+ public void scanDOMTree(Node node) {
+  int type = node.getNodeType();
+  switch (type) {
+  case Node.DOCUMENT_NODE:
+   documentNodes++;
+   scanDOMTree(((Document) node).getDocumentElement());
+   break;
+  case Node.ELEMENT_NODE:
+   elementNodes++;
+   NodeList children = node.getChildNodes();
+   if (children != null) {
+    int len = children.getLength();
+    for (int i = 0; i < len; i++) {
+     scanDOMTree(children.item(i));
+    }
+   }
+   break;
+  case Node.ENTITY_REFERENCE_NODE:
+   entityReferenceNodes++;
+   break;
+  case Node.CDATA_SECTION_NODE:
+   cdataSections++;
+   break;
+  case Node.TEXT_NODE:
+   textNodes++;
+   break;
+  case Node.PROCESSING_INSTRUCTION_NODE:
+   processingInstructions++;
+   break;
+  }
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+路径处理
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mylog.common.xmlaccessframework.core;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+/**
+ *
+ * @author Administrator
+ */
+public class XMLSetting {
+    private String settingfilepath;
+    private static XMLSetting dbsetting;
+    public static XMLSetting getXMLSetting()
+    {
+       if(dbsetting==null)
+       {
+         dbsetting=new XMLSetting();
+       }else{
+          return dbsetting;
+       }
+       return dbsetting;
+    }
+    public String readXMLPath(){
+        Properties p = new Properties();
+        try {
+            p.load(new FileInputStream(this.getSettingFilePath()));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("属性文件不存在：" + this.getSettingFilePath());
+        } catch (IOException e) {
+            throw new RuntimeException("读取属性文件时出错:" + this.getSettingFilePath());
+        } 
+      return p.getProperty("dbpath");
+    }
+    //得到属性文件的物理路径
+    private String getSettingFilePath() {
+        if (settingfilepath != null) {
+            return settingfilepath;
+        }
+        settingfilepath = this.getClass().getResource("/").getPath() + "db-config.properties";
+        settingfilepath = settingfilepath.substring(1).replace("%20", " ");
+        //%20代表空格,需要将其替换
+        return settingfilepath;
+    }
+ 
+    
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+模仿表结构
+
+package com.mylog.common.xmlaccessframework.core;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import com.mylog.common.xmlaccessframework.util.DocumentTool; 
+import com.mylog.common.xmlaccessframework.util.ElementTool;
+import com.mylog.common.xmlaccessframework.util.StringTool;
+public class XMLAccess {
+ String tablename;//xml文件名
+ String pkName;//主键名
+ int pkValue;//主键当前值
+ int pkCount;//主键最大值
+ int pkInit;//主键初始值
+ int pkIncrement;//主键增量
+ 
+ Object bean;//OXM映射的实体类
+ Document doc;//
+ 
+ public XMLAccess(String tablename,Object bean) throws ParserConfigurationException, XPathExpressionException, TransformerException{
+  this.tablename=tablename;
+  this.bean=bean;
+  this.readXML();
+  this.initPk();
+  this.writeXML();
+ }
+ 
+ /**
+  * 将读取到的文档赋给类变量
+  * @throws ParserConfigurationException 
+  *
+  */
+ public void readXML(){
+   String Path = XMLSetting.getXMLSetting().readXMLPath()+tablename + ".xml";
+  doc = DocumentTool.createDoc(Path);
+ }
+ 
+ /**
+  * 将文档存入文件
+  * @throws TransformerException 
+  *
+  */
+ public void writeXML() throws TransformerException{
+   String path = XMLSetting.getXMLSetting().readXMLPath()+tablename + ".xml";
+   TransformerFactory tfactory=TransformerFactory.newInstance();
+   Transformer tf=null;
+    tf=tfactory.newTransformer();
+  
+    tf.transform(new DOMSource(doc),  new StreamResult(new File(path)));
+  
+ }
+ 
+ /**
+  * 查询所有信息
+  * @throws XPathExpressionException 
+  * @throws IllegalAccessException 
+  * @throws InstantiationException 
+  * @throws InvocationTargetException 
+  * @throws DOMException 
+  * @throws IllegalArgumentException 
+  * @throws NoSuchMethodException 
+  * @throws SecurityException 
+  * @return一个javabean序列
+  */
+ @SuppressWarnings("unchecked")
+ public List selectAll() throws XPathExpressionException, InstantiationException, IllegalAccessException, IllegalArgumentException, DOMException, InvocationTargetException, SecurityException, NoSuchMethodException{
+  List list =new ArrayList();
+  NodeList selElements= ElementTool.findAll("//rowdata/descendant-or-self::*", doc);
+  for(int i=0;i<selElements.getLength();i++){
+   Element selElement = (Element) selElements.item(i);
+   if(selElement.getNodeType()==Element.ELEMENT_NODE){
+    if(!selElement.getNodeName().equals("rowdata")){
+     String beanVarName = selElement.getNodeName();
+     String methodname = StringTool.parseToSetField(beanVarName);
+     Method method=null;
+     method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{new String().getClass()}); 
+      method.invoke(bean, new Object[]{selElement.getTextContent()});
+     
+    }else{
+      bean = bean.getClass().newInstance();
+      list.add(bean);
+     
+    }
+   }
+  }
+  return list;
+ }
+ 
+ /**
+  * 根据id查询
+  * @param id
+  * @throws XPathExpressionException 
+  * @throws NoSuchMethodException 
+  * @throws SecurityException 
+  * @throws InvocationTargetException 
+  * @throws IllegalAccessException 
+  * @throws DOMException 
+  * @throws IllegalArgumentException 
+  * @return一个Javabean
+  */
+ public Object selectById(int id) throws XPathExpressionException, SecurityException, NoSuchMethodException, IllegalArgumentException, DOMException, IllegalAccessException, InvocationTargetException{
+  NodeList selElements= ElementTool.findAll("//rowdata["+pkName+"="+id+"]/*",doc);
+  for(int i=0;i<selElements.getLength();i++){
+   Element selElement = (Element) selElements.item(i);
+   if(selElement.getNodeType()==Element.ELEMENT_NODE){
+    String beanVarName = selElement.getNodeName();
+    String methodname = StringTool.parseToSetField(beanVarName);
+    Method method;
+     method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{new String().getClass()});
+     method.invoke(bean, selElement.getTextContent());
+    
+   }
+  }
+  return bean;
+ }
+ 
+ 
+ @SuppressWarnings({ "unchecked", "unchecked", "unchecked" })
+ public List selectByWhere(String where) throws XPathExpressionException, SecurityException, NoSuchMethodException, IllegalArgumentException, DOMException, IllegalAccessException, InvocationTargetException, InstantiationException{
+  List list =new ArrayList();
+  NodeList selElements= ElementTool.findAll("//rowdata["+where+"]/descendant-or-self::*", doc);
+  for(int i=0;i<selElements.getLength();i++){
+   Element selElement = (Element) selElements.item(i);
+   if(selElement.getNodeType()==Element.ELEMENT_NODE){
+    if(!selElement.getNodeName().equals("rowdata")){
+     String beanVarName = selElement.getNodeName();
+     String methodname = StringTool.parseToSetField(beanVarName);
+     Method method=null;
+      method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{new String().getClass()});
+      method.invoke(bean, selElement.getTextContent());
+    }else{
+      bean = bean.getClass().newInstance();
+      list.add(bean);
+    }
+   }
+  }
+  return list;
+ }
+ public void save() throws DOMException, XPathExpressionException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, TransformerException {
+   Element xmlroot = doc.getDocumentElement();
+         Element rowroot = doc.createElement("rowdata");
+         Field[] fieldarray = bean.getClass().getDeclaredFields();
+         int fieldcount = fieldarray.length;
+         for (int i = 0; i < fieldcount; i++) {
+              String elementname = fieldarray[i].getName();
+              Element childelement = doc.createElement(elementname);
+              if (elementname.equals(this.pkName)) {
+       childelement.setTextContent(this.createPK());
+              } else {
+                  childelement.setTextContent(this.getBeanValue(elementname));
+              }
+              rowroot.appendChild(childelement);
+         }
+         xmlroot.appendChild(rowroot);
+         this.writeXML();
+ }
+ 
+ private String getBeanValue(String elementname) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+  String methodname=StringTool.parseToGetField(elementname);
+  Method method;
+  String result=null;
+  method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{});
+   result=(String) method.invoke(bean, new Object[]{});
+  
+  return result;
+  
+ }
+ /**
+  * 更新一条信息
+  * @param bean 要更新的类对象
+  * @throws XPathExpressionException 
+  * @throws NoSuchMethodException 
+  * @throws SecurityException 
+  * @throws InvocationTargetException 
+  * @throws IllegalAccessException 
+  * @throws IllegalArgumentException 
+  * @throws DOMException 
+  * @throws TransformerException 
+  */
+ public void update(Object bean) throws XPathExpressionException, SecurityException, NoSuchMethodException, DOMException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, TransformerException{
+  String id = this.getId();
+  Element updateElement= ElementTool.find("//rowdata["+pkName+"="+id+"]", doc);
+  Field[] field = bean.getClass().getDeclaredFields();
+  for(Field f:field){
+   String childElement = f.getName();
+   Element child=(Element)updateElement.getElementsByTagName(childElement).item(0);
+   if(childElement.equals(pkName)){
+   }else{
+    String methodname=StringTool.parseToGetField(childElement);
+    Method method;
+    method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{});
+    child.setTextContent( (String)method.invoke(bean, new Object[]{}));   
+   }
+  }
+  writeXML();
+ }
+ 
+ 
+ private String createPK() throws XPathExpressionException{
+  Element element = ElementTool.find("//primarykey/primarykey-count", doc);
+         int pkvalue=this.pkCount+this.pkIncrement;    
+         if(pkvalue<this.pkInit)
+         {
+            pkvalue=this.pkInit;
+         }
+         element.setTextContent(new Integer(pkvalue).toString());
+         return new Integer(pkvalue).toString();
+ }
+ /**
+  * 删除一条信息
+  * @param bean
+  * @throws XPathExpressionException 
+  * @throws InvocationTargetException 
+  * @throws IllegalAccessException 
+  * @throws NoSuchMethodException 
+  * @throws IllegalArgumentException 
+  * @throws SecurityException 
+  * @throws TransformerException 
+  */
+ public void delete() throws XPathExpressionException, SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, TransformerException{
+  String id = getId();
+  Element delElement= ElementTool.find("//rowdata["+pkName+"="+id+"]", doc);
+  delElement.getParentNode().removeChild(delElement);
+  writeXML();
+ }
+ 
+ /**
+  * 获取所给javabean的主键值
+  * @return
+  * @throws NoSuchMethodException 
+  * @throws SecurityException 
+  * @throws InvocationTargetException 
+  * @throws IllegalAccessException 
+  * @throws IllegalArgumentException 
+  */
+ public String getId() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
+  String methodname = StringTool.parseToGetField(pkName);
+  Method method=null;
+  String id = null;
+  method = bean.getClass().getDeclaredMethod(methodname, new Class<?>[]{});
+  id = (String) method.invoke(bean, new Object[]{});
+  return id;
+ }
+ 
+ public void initPk() throws XPathExpressionException{
+  NodeList nodelist= (NodeList) ElementTool.findAll("//primarykey/*", doc);
+  for (int i = 0; i < nodelist.getLength(); i++) {
+                 Element element = (Element) nodelist.item(i);
+                 if (element.getTagName().equals("primarykey-name")) {
+                     this.pkName = element.getTextContent();
+                  }
+                 if (element.getTagName().equals("primarykey-init")) {
+                     pkInit= Integer.parseInt(element.getTextContent());
+                  }
+                if (element.getTagName().equals("primarykey-increment")) {
+                      this.pkIncrement=Integer.parseInt(element.getTextContent());
+                  }
+                 if (element.getTagName().equals("primarykey-count")) {
+                     this.pkCount=Integer.parseInt(element.getTextContent());
+                  }
+            }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 

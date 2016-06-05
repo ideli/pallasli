@@ -1,0 +1,660 @@
+
+java核心技术学习
+ireport
+
+说到iReport不得不先介绍Jasperreport，Jasperreport是一个报表制作程序，用户需要按照它制定的规则编写 一个XML文件，然后得到用户需要输出的格式文件。它支持输出的文件格式包括PDF,HTML,XML,XLS,CVS等等。而iReport就是一个制 作Jasperreport的XML文件的可视化开发工具。只是一个UI。
+下载地址
+iReport的官方网站:http://ireport.sourceforge.net/
+jasperreports的官方网站:http://jasperreports.sourceforge.net/
+tTextAsian的官方下载地址:http://itextdocs.lowagie.com/downloads/iTextAsian.jar
+jfreechart的官方下载地址:http://www.jfree.org/jfreechart/
+jcommon的官方下载地址:http://www.jfree.org/jcommon/
+poi的官方下载地址:http://www.apache.org/dyn/closer.cgi/jakarta/poi/
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+使用说明
+
+1 基本安装
+现在最新的版本是iReport 0.5.1 (Aug 27, 2005). 
+下载后解压然后在根目录双击iReport.bat就可以用了,但是为了可以使用external ttf font还必须要把 iReport-0.5.1/fonts 加到环境变量里面去。
+2 了解制作报表用的包
+下载后到到 iReport-0.5.1/lib 里看看,你就可以发现iReport的真面目了。
+(1) jasperreports-1.0.1.jar
+jasperreports 是iReport的核心内容。它是一个强力的报表产生工具，他有能力描述丰富内容到屏幕上、到打印机或到PDF, HTML, XLS, CSV和XML文件。它完全用Java编写的，并可在各种Java应用（包括J2EE或WEB应用）中用来产生动态内容。它的主要目的是以一种简单而灵活 的方式来帮助创建导向的页面。
+JasperReports组织根据在一个XML文件中定义的报表设计通过JDBC来接受来自一个关系数据库中的数据. 为了以数据来填充报表，报表设计必须首先被编译。
+jasperreports的官方网站:http://jasperreports.sourceforge.net/
+(2) itext-1.3.1.jar
+iText是一个开放源码的Java类库，是用来生成PDF文件的。
+iText的官方网站:http://itext.sourceforge.net
+如果要在生成的pdf文件显示中文等亚洲字符，还必须下载itext的亚洲字符包。
+tTextAsian的官方下载地址:http://itextdocs.lowagie.com/downloads/iTextAsian.jar
+(3) jfreechart-1.0.0-rc1.jar
+jfreechart是一款免费的、功能强大的统计图生成工具，可以直接生成PNG,JPG等各式的文件。
+这些图表包括：饼图、柱状图(普通柱状图以及堆栈柱状图)、线图、区域图、分布图、混合图、甘特图以及一些仪表盘等等。
+jfreechart的官方下载地址:http://www.jfree.org/jfreechart/
+   
+(4) jcommon-1.0.0-rc1.jar
+JCommon 是一组有用的classes集合.它已经用在JFreeChart,JFreeReport与其它项目上. 这个类库包含了以下功能: 文本工具类(text utilities), 用来显示关于应用程序信息的用户界面类,布局定制管理器,一个日期选择面板,序列化工具类,XML解析器支持类.
+jcommon的官方下载地址:http://www.jfree.org/jcommon/
+(5) poi-2.0-final-20040126.jar
+Apache 的Jakata项目的POI子项目，目标是处理ole2对象。目前比较成熟的是HSSF接口，处理MS Excel（97-2002）对象。它不象我们仅仅是用csv生成的没有格式的可以由Excel转换的东西，而是真正的Excel对象，你可以控制一些属 性如sheet,cell等等。
+直接调用poi包的不是ireport，而是jasperreport。
+poi的官方下载地址:http://www.apache.org/dyn/closer.cgi/jakarta/poi/
+这些是用来制作报表用的包，所以可以用最新的版本来代替原有包。但是务必保持与项目中的包一致，因为很多开源的项目都不向下兼容。(例如jasperreport)
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+java核心技术学习
+制作jrxml、jasper
+
+1 选择语言
+Tools->Option->General->Language
+2 连接数据库
+资料来源->连结/资料来源
+如果要使用mysql以外的数据库,要保证jdbc包在环境变量里。放到iReport-0.5.1/lib 下也可以。name相当于一个JNDI。添好后点击test按钮如果显示成功就可以执行下一步了。
+3 新建一个Report 
+定位可以控制报表是横向的还是纵向的。Portrait是纵向,Landscape是横向。
+边距是可以调整的。4 基本域
+title域用来放报表的总标题
+pageHeaher域顾名思义页头
+columnHeader域是用来放static text的，也就是不循环的部分。
+detail域是用来放text field的，也就是循环部分。
+pageFooter域是用来放本页的统计参数的。
+summary域是用来放整个表的统计参数的。可以直接调整每个域的长度，也可以通过Band properties来调整。当然总长度是不会超过页面的原长。
+5 报表查询
+5.1 为报表添加SQL查询语句
+资料来源->报表查询
+在Report SQL query里填写SQl语句。如果语句正确,在下面的field里就会显示正常的表字段。
+5.2 为报表添加动态字段
+预览->报表字段
+把fields里的字段直接拖到报表上就行了。
+5.3 为SQL语句添加参数
+预览->报表参数
+在parameters里新增一个参数
+paratemeter name 是参数名，在SQL语句里写成"$P{参数名}"
+paratemeter class type里选择参数类型。
+注意:如果是int型的数据，最好在报表字段里将该字段的Class type改成java.lang.String型的。
+另外一种办法,不管该字段原来是什么数据类型,直接在paratemeter class type里选择java.lang.String类型，然后在Default value expression 填写"Integer.toString(整数)"。
+5.4 添加报表变量
+预览->报表变量 $V{变量名}
+5.5 处理字体
+5.5.1 基本设置
+选中字段->右键->properties->font(双击也可以)
+Report font 选择全局的字体(仅限于该报表)
+Font name 选择在ireport里面显示的字体
+Pdf font name 选择在pdf里面显示的字体
+Rotation 选择内容是否旋转(很有用的选项)
+PDF Encoding 中文要用UniGB-UCS2-H,外部字体要选Identity-H
+5.5.2 选择外部字体
+第一步 先在Pdf font name里选择External TTF font，然后在下面的Ture Type font里选择外部字体，当然要用的外部字体放在iReport-0.5.1/fonts目录下面。
+第二步 在web项目的WEB-INF/classes/下面放要用到的外部字体，才能在程序里正常显示。
+5.5.3 设定该报表的全局字体
+预览->报表字型
+ 6 编译jrxml
+建立->编译
+编译后生成一个后缀名为jasper的binary文件,可以直接给程序调用。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+web项目应用
+
+ jsp输出PDF报表
+需要放到项目里的包
+itext-1.3.1.jar
+iTextAsian.jar
+jasperreports-1.0.1.jar
+输出PDF注意事项:
+jsp输出PDF的例子
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.io.*" %>
+<%@ page import="net.sf.jasperreports.engine.JasperFillManager" %>
+<%@ page import="net.sf.jasperreports.engine.JasperPrint"%>
+<%@ page import="net.sf.jasperreports.engine.JRException"%>
+<%@ page import="net.sf.jasperreports.engine.JasperRunManager"%>//pdf
+<%
+   String rowid = "1";//初始化变量
+   Connection conn= DriverManager.getConnection("proxool.test");//从数据源连接数据库
+   //装载jasper文件application
+   File exe_rpt = new File(application.getRealPath("/reports/test.jasper"));
+   //rowid就是iReport的变量$P{rowid}的名称
+   Map parameters = new HashMap();
+   parameters.put("rowid",rowid);
+   try{
+    // fill
+    JasperPrint jasperPrint = JasperFillManager.fillReport(exe_rpt.getPath(),parameters,conn);
+   
+    // 生成pdf
+    byte[] bytes = JasperRunManager.runReportToPdf(exe_rpt.getPath(),parameters,conn);
+    response.setContentType("application/pdf"); 
+    response.setContentLength(bytes.length); 
+    ServletOutputStream ouputStream = response.getOutputStream(); 
+    ouputStream.write(bytes,0,bytes.length); 
+    ouputStream.flush(); 
+    ouputStream.close();
+   
+    conn.close();
+}catch(JRException ex){
+    out.print("Jasper Output Error:"+ex.getMessage());
+   }
+%>
+ jsp输出EXCEL报表
+需要放到项目里的包
+jasperreports-1.0.1.jar
+poi-2.0-final-20040126.jar
+输出excel要注意的:
+(1) 输出excel报表必须fields的边界刚好填充满整个页面,不然会有大量的空白出现。
+(2) 删除记录最下面的空行需要加上参数
+exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,Boolean.TRUE);
+(3) 删除多余的ColumnHeader需要加上参数
+exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,Boolean.FALSE);
+(4) 在ireport里给fields加上border,那输出的excel就会有很黑的边框，跟excel默认的灰度边框就会很不协调。但是如果不加border,在输出的excel里就不会显示每个表格的边框。
+解决方法是:
+第一步 在选中字段->右键->properties->Common->Transparent 打上勾。
+第二步 在输出的jsp页面加上参数
+exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,Boolean.FALSE);
+jsp输出EXCEL的例子
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.io.*" %>
+<%@ page import="net.sf.jasperreports.engine.JasperFillManager" %>
+<%@ page import="net.sf.jasperreports.engine.JasperPrint"%>
+<%@ page import="net.sf.jasperreports.engine.JRException"%>
+<%@ page import="net.sf.jasperreports.engine.JRExporterParameter"%>//excel
+<%@ page import="net.sf.jasperreports.engine.export.JRXlsExporterParameter"%>//excel
+<%@ page import="net.sf.jasperreports.engine.export.JRXlsExporter"%>//excel
+<%
+   String rowid = "1";
+   Connection conn= DriverManager.getConnection("proxool.test");
+   //装载jasper文件application
+   File exe_rpt = new File(application.getRealPath("/excel/test_excel.jasper"));
+   //rowid就是iReport的变量$P{rowid}的名称
+   Map parameters = new HashMap();
+   parameters.put("rowid",rowid);
+   try{
+    // fill
+    JasperPrint jasperPrint = JasperFillManager.fillReport(exe_rpt.getPath(),parameters,conn);
+   
+    // excel输出
+    ByteArrayOutputStream oStream = new ByteArrayOutputStream();
+    JRXlsExporter exporter = new JRXlsExporter(); 
+    
+    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, oStream);
+    exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,Boolean.TRUE); // 删除记录最下面的空行
+    exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,Boolean.FALSE);// 删除多余的ColumnHeader
+   exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,Boolean.FALSE);// 显示边框
+    exporter.exportReport();
+    
+    byte[] bytes = oStream.toByteArray();
+   
+    if(bytes != null && bytes.length > 0) {
+     response.reset();
+     response.setContentType("application/vnd.ms-excel");
+     response.setContentLength(bytes.length); 
+     ServletOutputStream ouputStream = response.getOutputStream(); 
+     ouputStream.write(bytes,0,bytes.length); 
+     ouputStream.flush(); 
+     ouputStream.close();
+    }else{
+     out.print("bytes were null!");
+    }
+   
+    conn.close();
+   }catch(JRException ex){
+    out.print("Jasper Output Error:"+ex.getMessage());
+   }
+%>
+jsp输出html报表
+没有意义,不写。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+java核心技术学习
+iReport展现
+
+当我们把报表设计好保存后，我们就获得了一个xml文件，然后编译成jasper文件（以.jasper结尾）,我们真正要使用的是编译以后的.jasper文件，这很像我们熟悉的.jsp文件，其实我们调用的是其编译以后的servlet。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+iReport整合
+
+导出PDF形式：
+//报表编译之后生成的.jasper 文件的存放位置
+File reportFile= new File(application.getRealPath("/report/test.jasper"));
+//这个是用来联接我的SQL Server 的JDBC URL
+String url="jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=Pubs";
+Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
+//传递报表中用到的参数值
+Map parameters = new HashMap();
+//"Name"是报表中定义过的一个参数名称,其类型为String 型
+parameters.put("Name", new String(" name"));
+System.out.println("---------conn-------------");
+//连接到数据库
+Connection conn= DriverManager.getConnection(url,"sa", "");
+System.out.println("---------Jasper begin-------------");
+//在控制台显示一下报表文件的物理路径
+System.out.println(reportFile.getPath());
+byte[] bytes=JasperRunManager.runReportToPdf(reportFile.getPath(),parameters,conn);
+System.out.println("---------Jasper end-------------");
+response.setContentType("application/pdf");
+response.setContentLength(bytes.length);
+ServletOutputStreamouputStream= response.getOutputStream();
+ouputStream.write(bytes, 0, bytes.length);
+ouputStream.flush();
+ouputStream.close();
+导出HTML形式：
+DataSourceds= null;
+try{
+InitialContextctx=new InitialContext();
+ds=(DataSource)ctx.lookup("java:comp/env/jdbc/mysql");
+Connection conn= ds.getConnection();
+//装载jasper 文件
+File business_rpt= new
+File(application.getRealPath("/reports/BusinessRpt.jasper"));
+//配置参数
+Map parameters = new HashMap();
+parameters.put("ProjectName", proname);
+// JasperRunManager是一个输出控制管理类
+JasperRunManager.runReportToHtmlFile(business_rpt.getPath(),parameters,conn);
+//如果创建报表成功，则转向该报表，其实可以把报表套在框架内，这样实现比较有意
+义的报表格式。
+response.sendRedirect("/reports/BusinessRpt.html");
+}catch(Exceptionex){
+out.print("出现例外，信息是:"+ex.getMessage());
+ex.printStackTrace();
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+ireport使用
+
+一、iReport与JasperReport简介
+1.1   简介
+JasperReport是报表的引擎部分，界面设计是用iReport。为什么选择这两个软件呢？因为这两个软件都是开源的，即免费的(虽然某些文档收费，但是磨灭不了我们使用它的理由)。
+JasperReport是一个报表制作程序，用户按照它制定的规则编写一个XML文件，然后得到用户需要输出的格式文件。它支持输出的文件格式包括PDF，HTML，XML，XLS，CSV等等。
+用JasperReport做报表，可以分为两种方式：
+1、  直接利用程序定义一个报表
+2、  写一个xml文件来描述这个报表，通常需要借助于iReport
+JasperReport做报表时用的都是底层的东西，如线条、静态文本等，底层的好处就是强大、容易控制报表，但缺点就是编写很麻烦。庆幸的是，我们有iReport这个软件，这个软件完全是弥补JasperReport的不足，将底层编写推向可视化，大大的方便了我们。
+
+1.2   工作流程简介
+JasperReport的工作流程：首先有个xml文件，从xml文件编译出.jasper类型的文件，而以后我们真正要使用的就是编译后的jasper文件。
+上图为JasperReport的API示意图，可作为学习的参考。由iReport输出的文件中，对WEB应用可能有用的是jasper文件，当JAVA程序进行调用的时候，将把jasper文件转换成print类型，从而进一步到达其他格式的输出(如上图)。
+
+二、安装与配置
+2.1下载相关软件
+对于较古老的版本，这里不做过多介绍，请参考本目录下其他文献。这里提一下，古老版本需要额外下载ANT(JAVA的build工具)以及iTextAsian.jar(用以支持中文的jar包)等。
+iReport http://www.jasperforge.org/jaspersoft/opensource/business_intelligence/ireport/ 下载
+JasperReport http://www.jasperforge.org/jaspersoft/opensource/business_intelligence/jasperreports/ 下载
+JDK http://java.sun.com/ 下载
+本人用的产品版本：iReport 2.0.5-windows版本；JasperReport 2.0.5版本；JDK 1.5.0_4版本。
+注：在新的iReport版本中，已经包含了JasperReport的jar包，不需要下载JasperReport包了，但是，要更多的了解JasperReport，还是推荐下载完整的软件包，以学习它的源代码和例子。还有，新版本的iReport带有字体包，不需另下。
+
+2.2 安装软件
+首先安装JDK，一路NEXT即可。
+其次，安装iReport，由于新版本对windows支持较好，所以和JDK一样，一路NEXT即可。
+注：旧版本需要对环境变量进行配置，此篇文章介绍的版本以及更新的版本均不需要手动配置环境变量。
+
+2.3 其他相关
+您还需要准备一个数据源(如果需要做动态报表的话)，大部分情况是一个数据库。笔者使用的是Oracle 9i的数据库。
+
+
+三、iReport的基本使用
+先看使用界面：
+下面开始初步尝试。
+
+1.      新建报表
+弹出对话框如下：
+ 
+还有许多其他的选项，中文可以理解。有个XML编码，可以手动输入，也可保持默认，点击”OK”创建新表完成。
+注：iReport不会自动保存，需要手动保存，建议多保存。
+
+2.      报表的结构
+新建的报表如下：
+一个报表的结构大致是几个部分：title、pageHeader、columnHeader、detail、columnFooter、pageFooter、lastPageFooter、summary以及groupHeader、groupfooter。
+·Title：每个报表一般会有一个名字，比如×××销售报表，title就是搁置这个名称的最好地方了，当然你也可以根据需要搁置在合适的地方。Title只在第一页出现。
+·pageHeader：报表的一些公共要素，比如页码、创建时间、创建人等信息放置在这里是比较好的选择。
+·columnHeader：无可非议的这里是放置列的名称，记住不是列数据。
+·detial：放置需要循环输出的数据，比如销售记录数据。
+·columnFooter：放置列级别的统计计算值或是列的说明。
+·pageFooter：放置页级别的统计值或是页的说明。
+·lastPageFooter：最后一页特殊的格式，可以放置总结等。
+·Summary：可能需要对几页（你的报表可能有几个页组成）的统计值。比如50个销售记录共占用了3页，那么放置这些统计记录的统计值最好的地方就是summary。Summary只在最后一页出现。
+·groupHeader：每个表的内容可能需要根据某个属性进行划分显示内容和计算内容，比如希望以月份为单位每组分开显示销售记录，那么就可以定义一个组（组的定义参考后文），groupHeader就是放置组说明或是组标志最好的地方。
+·Groupfooter：放置组的统计或是说明
+
+3.      添加对象
+可以通过工具栏的工具添加静态对象与动态对象。点击 可以创建静态对象，点击 可以创建动态对象。之后在报表的空白处单击，如此即可把对象添加到报表，然后拖动对象的边框，使它的大小合适，双击即可对对象中的文本进行快速编辑。
+仔细观察，会发现对象的边框有两种颜色，一为蓝色，二为红色，蓝色为符合布局要求，红色反之。
+注：一个对象不能横跨两个区域，即不能既在columnHeader里又在detail里。
+鼠标右击对象，弹出如下菜单：
+点击”属性”，编辑对象的属性。
+这里面有很多属性，可以依据要求来更改其中的部分或所有。其中，重要的可能是关于PDF的，如下图。
+红框框起来的部分要注意，当要输出中文的时候，需要类似设置。新版本对边框的更新，使我们操作起来更为方便。注意下面红框里的部分，这可以对每一个边进行分开的设置，人性化的为我们解决了大量问题。
+注：JasperReport没有现成的表格，最好的方法就是用一个一个对象的边框堆积起来，组成一个表格。但是，对象的边框不能覆盖，否则HTML、EXCEL等不能正常输出。
+对于动态对象，属性如下。
+主要属性如图所示。在Pattern里，可以定义输出的格式，在输出时间和日期或者货币时尤为有用。上图中的”stretch with overflow”表示当填充值超出定义的大小时，自动换行；”blank when null”表示当数据为null时不显示数据，这两个在某些时候很有用处。
+而在表达式一栏中，如果字体为蓝色，则表示不正确，当输入正确的时候，会呈现绿色，如图。
+
+4.      设置数据来源
+首先，需要添加一个数据源，此处选用Oracle数据库，步骤如下。
+如下图，点击”连结/资料来源”。
+弹出下面对话框，点击”New”。(图中已有数据源乃是笔者添加)
+选择一个数据来源，这里选择第一个JDBC连接数据库的方式，点击”下一步”。
+按照图中的介绍填写相关信息，并测试信息是否正确，然后保存。iReport可以添加保存多个数据源连接信息。
+注：如提示找不到相关驱动，则需要将驱动的JAR包复制到iReport的lib文件夹下。
+
+5.      变量、参数及字段
+在使用iReport 的过程中会碰到很多与变量（Variables）、参数（Parameters）、字段（Fields）这些有关的内容，我们要介绍这些对象的使用和意义：
+·字段（Fields）：是数据源抽取出来的，希望在报表中出现的数据库内容。比如一个ID的所有值，$F{ filedsName }。
+·参数（Parameters）：这是你的应用需要提供给报表的入口，比如你希望在报表被解释的时候提供Where语句的条件值，那么就可以使用参数（Parameters），$P{ parameterName }。
+·变量（Variables）：这是报表中一些逻辑运算的表现，比如统计值，$V{ variablesName }。
+
+            变量
+可以通过以下方式添加、修改和删除。
+弹出如下对话框：
+红框里的是iReport自带的供用户使用的变量，用于计算数量和总值等。点击”新增”，可以增加用户自己的变量，如图。
+各个部分功能如标注所示。
+
+            参数
+定义参数的按钮就在定义变量的旁边，如上节，不赘述。
+上图中，红框里的是系统内置的参数，供用户调用，其中包括一些常用的参数，如连接、最大值等等。点击”新增”按钮后，出现如下页面。
+在新增参数对话框中输入参数的名称、数据类型、缺省值以及参数的描述信息等。需要注意的是，根据不同的参数类型，在设置参数的缺省值时要使值能与参数类型匹配，即字符型的参数在设置缺省值时要用””把值括起来，如果是数据值型的则不能加””。
+参数的引用方式有两种，，一种是$P{}，另一种是$P!{}，前者可以出现在任意的表达式位置，而后者则只能出现在SQL脚本里，用来替换查询语句，用以按照不同的需求替换查询语句。同时，在脚本里，也有些许区别：前者只能替换语句的部分字段，如SELECT * FROM bugs where name=$P{Name} order by proname, modulename，而对于$P!{}，则可以直接在SQL脚本框里输入$P!{SQL}。
+
+            字段
+编辑字段的方式与变量、参数类似，打开”字段”界面。
+在点击”新增”后，出现如上页面，根据情况填写字段名称、字段类型(一般与数据来源类型相匹配)和字段的描述等。这种是手动添加字段，另一种更为方便的方法是从数据源直接读出，将在后面介绍。
+字段用于动态对象里，即 。它的主要功用在于动态连接数据源，完成数据源的读出显示，所以在有动态对象的报表里，执行的时候一般采用”执行报表(使用动态连接)”，如图。
+
+6.      动态数据源
+从上图中，选择默认的动态连接。
+弹出如下界面，各部分功能介绍如图。
+这便是上面所说的另一种更为方便的添加字段的方法，从数据源直接复制到字段里，方便、快捷。
+如上图所示，还有三种连接数据源的方式：JavaBean、DataSource、CSV。多种不同的方式给我们添加了很多便利。
+
+7.      组
+组是一个很重要的概念，一个报表可以多个组，每个组以一个关键字为标记，比如希望统计是根据项目（或是产品）进行统计的。那么可以设立一个项目标记的组。如图。
+组的参数设定可以看界面即可理解部分，其中最主要的是“Group expression”，这里必须输入格式正确的并且存在的字段名称，本文的“Name”是【字段】中的一个元素。依此类推，建立其他的组对象。每建立一个组，在报表的界面上都会出现该组对应的段，组的Header与Footer是对应出现的。如图。
+
+8.      风格化
+如图。
+点击”Styles”，弹出如下界面。
+在这里，我们可以定义许多个常用的格式，按照个人喜好进行定义，定义后，在对象属性的页面上可以选择使用哪种风格，所设置的属性会自动继承。如图：
+
+9.      界面介绍
+在iReport的界面上，处于人性化的考虑，设置了很多快捷按钮供用户使用，如图。
+上图包括文档的基本操作，线条与图形的绘画，静态与动态对象的添加，图表图像报表的插入，报表、栏等的属性，也包括编译、执行等按钮。
+上图包括字体字号，一些对象内部的基本排列操作和数据源设置等。
+上图包括对象的对齐、排列、规格化等操作。
+所有这些快捷按钮给用户提供了很大的便利，熟悉之后，用起来会更加顺手。
+
+10. 预览
+iReport支持多种输出格式，其中包括PDF,HTML,XML,XLS,CSV等等。介绍一下如何进行预览和输出。
+iReport默认是JRViewer输出预览，用户可以在上述菜单中进行调整和选择。
+在这里，但是只在此设置输出格式了，还没有完成设置，还有一个必需的设置就是，为每一种设置选择执行“环境”，例如，如果你选择以PDF 输出，那么你需要为其指明Adobe Reader 的路径，如图选择菜单Options/选项，则会弹出如下属性页：
+选择之后，保存即可，iReport会自动调用相关程序来完成输出和预览。
+
+四、报表的输出
+正如前面所说，报表有很多种输出方式，这里挑选一些常用的进行介绍。
+在iReport中，我们可以对报表进行预览，而此时，是iReport帮助我们完成了绝大部分的工作，我们并不需要输入代码来完成输出，而这里我们所说的输出是输出到文件或者输出到WEB页面等。
+我们将以输出html格式为例子讲述。有人会问：这html不是静态页面吗？我说，的确是这样的。不过，html有普遍适用性，我们可以把它插入到动态页面里面去，比如说JSP或者ASP等。
+动态页面的技术细节不在这里赘述，这里我们只介绍jasperReport相关，下面我们以JSP相关技术为基底来叙述。
+1)        读取.jasper文件
+通过iReport软件，我们可以把已经定义好的XML编译成.jasper文件，供以后使用。本人把.jasper文件放置在站点根目录下的reports文件夹内，读取文件的代码如下：
+ServletContext servletContext = this.getServletContext();
+        String realPath = servletContext.getRealPath("/report/done.jasper");
+2)        转换成JasperReport类型
+查找到.jasper文件的绝对路径后，可以对其进行读取，有很多种方式可以读取，不过笔者推荐如下方式(这也是官方例子中推荐并使用的)：
+JasperReport jasperReport = (JasperReport)JRLoader.loadObject(realPath);
+3)        建立数据源
+前面介绍过，jasperReport支持多种数据来源，比如说：数据库连接Connection、JavaBean、CVS数据源等等。不过jasperReport提供一种通用数据源类型JRDataSource，它很多子类实现，即为多种数据来源类型。
+这里，我们介绍两种普遍数据源：数据库Connection和JavaBean。
+首先是Connection。通过数据库的URL、用户名、密码和驱动类来进行数据库的连接，返回Connection即可，当然，此种情况需要在iReport中定义SQL查询语句。另一种方法是，直接从Connection中完成数据库的查询，返回结果集ResultSet，继而把ResultSet封装成JRDataSource的子类JRResultSetDataSource。两种方式没有孰优孰劣，凭喜好使用即可。两种方式代码如下：
+一、
+Class.forName("******Driver");
+        conn = DriverManager. getConnection ("***Driver:// localhost:***; DatabaseName =***; user=***; password=***");
+二、
+ResultSet set = statement.executeQuery();//=new ResultSet();
+        JRResultSetDataSource source = new JRResultSetDataSource(set);
+对于JavaBean来说。需要定义标准的JavaBean格式，即它的每一个属性都要有对应的getter/setter方法，而且，需要定义一个Factory类，其中包含一个静态的方法，返回Collection类型或者Array类型的JavaBean结果集。相比较Connection来说，JavaBean要麻烦许多，不过也要灵活许多，这才是灵活性的体现(因为有时候，查询语句会很复杂，数据来源一样会很复杂，而JavaBean无视这一切)。JavaBean代码如下：
+JRBeanCollectionDataSource dataSource;
+        Collection rows = NumFactory.generateCollection();
+        dataSource = new JRBeanCollectionDataSource(rows);
+上面语句的功能应该很明显了，不赘述。
+4)        生成JasperPrint对象
+当数据来源确定后，下一步是生成JasperPrint对象。简单的说，JasperPrint对象就是jasperReport对象的动态填充，即把相关数据插入到报表当中。
+JasperPrint rptPnt = JasperFillManager.fillReport(jasperReport, params, dataSource);
+JasperFillManager类有许多的填充方法，基本囊括了各种参数的填充，包括Connection、DataSource等的填充。
+5)        输出
+动态填充数据完成后，就可以进行输出了。输出时，有几种方式：输出到流，输出到文件，也可以直接生成视图等。
+对于每种输出格式，JasperReport都提供一个特定的Exporter，比如JRXlsExporter、JRHtmlExporter等等。这些Exporter中，可以定义相关的输出格式，有一些是必须要定义的，比如：
+exporter.setParameter(JRExporterParameter.JASPER_PRINT, rptPnt);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, httpOut);
+当然，这是流输出的例子。JRExporterParameter中有所有格式的通用属性，而对于每种格式，有不同的ExporterParameter对象，对应着不同的参数。用户所需要的参数定义完毕后，调用exportReport()方法输出即可。
+
+五、例子
+下面是一个格式化的报表：
+然后是运行之后的截图：
+
+六、独立性与易集成性
+前面可能把整个过程讲述的很复杂，其实，在整个建立与输出报表过程中，是一气呵成的。iReport与JasperReport是紧密相关的，而除此之外，它们的独立性非常好。
+利用jasperReport+iReport生成并输出报表，可以方便的嵌入“胖客户端”以及WEB工程，以公安项目为例。
+此项目是基于Struts结构的，浏览器端的请求是通过ActionServlet来传递的，依照项目要求，我们只要把已经做好的jasperReport实例导入到项目里即可。导入方法可参考如下：
+首先，把相关jar包导入到工程的lib文件夹下，搭建必需的环境；
+其次，新建Action类，并将其对应的路径等相关信息加入xml配置文件中；
+然后，如同输出html文件一样，将输出代码拷贝到Action类中，实现流的输出即可；
+最后，将原实例中的相关处理类拷贝到项目中，调整包的路径，使之正常运作即可。
+这时，只要修改某些页面的链接即可完成报表的输出。
+
+七、其他相关问题
+如何使用图片？
+很容易,用Image控件就可以了. 在Image Express 里面可以用String来表示图片的路径, 或者用InputStream, File 对象.不过不管用File 还是String 对象, 都不得不用绝对路径, 这显然很不灵活.解决办法是,穿入一个$P 的参数,表示图片所在的目录,然后用$P 和文件名拼接出完整的绝对路径. 或者通过代码来控制， 比如System.getProperty("user.dir")+"\\report.jpg"就表示图片的绝对路径。更好的方法是用InputStream, 例如his.getClass().getResourceAsStream ("report.jpg") ,这时只要把图片放在当前.jasper所在的 目录就可以了,不必考虑什么参数,什么路径。
+动态控制某些Field 是否显示
+每个Static Text, Text Field 甚至整个Band 的属性里面都有Print When Expression, 比如设成new boolean(!$P{isDisplay}.equalsIgnoreCase("yes")), 那么只有当参数display的值为yes 的时候才显示。
+使用Sub Report, 如何使用相对路径
+和使用图片类似,最好使用InputStream 或者传入参数。
+Query里面如何使用参数
+$P!{xxx} 或者 $P{xxx} 后者只能用于类似PreparedStatement参数绑定, 而前者可替换Sql 的任意部分. 在需要动态排序的时候, 前者特别有用. 比如select a,b,c from t order by $P!{orderClause} 不管用$P 还是$P!, SQL最终是以PreparedStatement 方式执行的, 不必太担心性能问题 注意:参数是不能嵌套的,比如$P{a} =''$P{b}'' , $P{b}=''value'', 不要指望$P{a}能被替换成''value''
+如何使用图表(Graph)
+JasperReport 本身没有图表功能, 只有显示Image 的功能，iReport 里有个Graph 向导, 其实质是通过jFreeChart 生成Image. 另外, 更直接的做法是放一个Image控件, Image Express Class 设置成java.awt.Image, 在Image Expression 里通过自定义的类返回java.awt.Image对象.
+例如GraphProvider.getImage($P{REPORT_DATASOURCE},title, subtitle.....);GraphProvider是自己的类, public static Image getImage(JRDataSource, ....)
+如果显示多个图表
+在一张报表上显示一个图表和显示多个图表是不同的. 假设Query 是selectname,price,qty from xxx, 第一张图显示name-price, 第二张图显示name-qty, 如果还是按上面的方法, 第二张图根本显示不出来! 为什么 因为传入的是JRDataSource, 而JRDataSource仅仅是对ResultSet的简单封装, 在第一张图处理完后, 游标已经到了eof 位置了, 在开始处理第二张图的时候,就必然抛出游标耗尽的异常! 怎么办?自己写个JRDataSourceAdapter,把JRDataSource对象里面的值预先保存到一个Collection (相当于一个Offline的数据集), 然后把这个Collection传个getImage方法. 具体是, 建一个Variable mydate, 类型是java.util.Map, Calculation Type- System,Initial Value Expression 是JRDataSourceAdapter.JRDataSource2Map($P{REPORT_DATA_SOURCE}, new String[]{"NAME","PRICE","QTY"},
+new Class[]{java.lang.String.class,java.lang.Double.class,java.lang.Double.class}); JRDataSource2Map 是自己写的一个Adapter. 然后在Image 的Expression 里面换成如GraphProvider.getImage(mydata,title, other params...), 当然得修改getImage方法
+Export到Excel的问题
+如何去掉报表头
+直接把不需要的Band 删除(把其高度设为0). 如果仅仅是export 到Excel 的时候不需要报表头, 而输出到PDF 等仍然需要保留, 那么使用print when expression, 见前面
+如何让Excel 看起来整齐
+不要有空白地方，首先把所有的Field 设成一样高, 对齐! 把所在Band 的高度也设成和Field 一样高, 让Field 正好放入Band. 然后调整Field 的宽度, 让每个Field 都相邻,没有空隙.(如果设置正确，所有的Field 边框在鼠标点中的时候显示蓝色，否则是绿色) 最后,记得设置参数：
+exporter.setParameter(JRXlsExporterParameter. IS_REMOVE_EMPTY_SPACE_BETWEEN _ROWS , Boolean.TRUE);
+如何保留GridLine
+首先, 设置参数exporter.setParameter (JRXlsExporterParameter. IS_WHITE_PAGE_BACKGROUND , Boolean.FALSE);然后,把每个Field 或者Static Text 框的''Transparent''属性都勾上
+如何使字段名只显示一次
+如果把字段名放在ColumnHead 区域, 那么输出到Excel, 会每个Page 都显示一遍. 在设计Report 时候, 一般会设定Page 大小. 然而对于Excel, 这个Page设定仍然存在,而且往往很讨厌, 因为在Excel 里, 通常希望得到连续的数据, 然而Jasper 仍然会''自作多情''进行分页. 比如说, 设计JasperReport 的时候, 设定page size为Letter, Portrait, 那么输出到Excel 的时候每隔大约30 行(具体取决于Field 的高度), page header, column header, column foot, page foot 会被重复一次,而且还附带一个高度为0 的Excel Row, 表示Page Break 的地方. 把字段名放在title band 里, 可以解决字段名重复的问题, 当然page header也不要显示了. 如果需要, 可以把title band的print when expression设成只有输出Excel的时候才显示为什么Excel 里面的数据是从第二行,第B列开始显示的。
+因为第一行和第A列分别是用来表示page top margin 和 page left margin的.对于Excel 来说, 纯粹多余. 解决方法是把page margin 设成0. 不过如果这个report 还需要以PDF 等显示, 那么设成0 就不好看了. 最好能动态的改变pagemargin. 当然,这个改变只能在外部(调用eport 的地方) 进行, 在设计Report 的时候是无能为力的. 不幸的是, JasperReport 类居然没有setMargin 的方法,只有getter.折中的方法只能是reflect 了. 代码示意如下:
+//use reflect to set the private field of JRBaseReport
+java.lang.reflect.Field margin =
+JRBaseReport.class.getDeclaredField("leftMargin");
+margin.setAccessible(true);
+margin.setInt(jasperReport,0);
+margin =
+JRBaseReport.class.getDeclaredField("topMargin");
+margin.setAccessible(true);
+margin.setInt(jasperReport,0);
+margin =
+JRBaseReport.class.getDeclaredField("bottomMargin");
+margin.setAccessible(true);
+margin.setInt(jasperReport, 0);
+如何去掉Excel 中隐藏的行
+如前说述, 由于page break 的关系, Excel 中每隔几十行,就有一个高度为0 的row, 即使把page botom margin设为0, 把page footer去掉都没有办法. 唯一的解决办法是把page height 设为很大. 同上面一样, 不得不使用reflect:
+java.lang.reflect.Field pageHeight=
+JRBaseReport.class.getDeclaredField("pageHeight");
+pageHeight.setAccessible(true);
+pageHeight.setInt(myRpt, Integer.MAX_VALUE);
+
+八、HTML的Bar3D图表输出心得
+图表在ireport中是利用其他开源包生成的图片插入而生成，本人使用的版本是使用jfreechart1.0.0开源包实现。Ireport对jfreechart的支持不算完美，只是实现了部分的图表生成，但对于一般项目，也是足够用的。
+对于图表的数据来源，和报表一样，也有多种来源，并不局限于数据库，而本人推荐的依然是javabean。用户只要在定义好图表的各项数据(比如：横坐标数据，纵坐标数据，横坐标标签，纵坐标标签，分类标准等等)，jasperreport+jfreechart会自动进行数据的分类统计输出，这点是很人性化的。
+看过jasperreport的源代码，发现，图表在HTML格式输出的时候，首先是输出一张图片，或者放在具体目录下，或者放在临时的response里，然后进行调用、输出展示。(如果选用后者的输出方式，需要注意：1.x版本后的输出需要对web.xml进行配置，配置一个servlet进行输出。)这样就造成了一个问题，就是当多用户同时访问页面的时候，用户看到的数据是正确的，但是图片却可能是别人产生的图片！
+这可能是由于HTML浏览器对图片的引用时机不对，解决的方案是这样的：由于HTML格式的输出是字符形式的(PDF是二进制流形式的)，所以我们选择首先把整个图表输出到字符缓冲区中，然后进行一次性输出，这样，我们辅助浏览器完成对图片引用时机的修正。当然，也可以这样做：通过修改源代码，把图片输出到不同的临时目录，这样的话，想引用错基本都不可能了J
+在HTML输出的时候，一定要记得设置编码格式，通过exporter的CHARACTER_ENCODING属性来设置。而且，在HTML中输出的时候，可以不对报表进行分页操作，即取消分页。
+还有，jfreechart默认输出的图片是进行抗锯齿处理过的。对于图形来说，这样会让图像显示的更圆润，而对于文字来说，可能就会显示变得模糊。解决方案：修改源代码。可以修改jasperreport的源代码，也可以修改jfreechart的源代码，只需按照如下代码进行改进即可：
+jfreechart.getRenderingHints().put(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+上面的代码将图片输出的文本抗锯齿关闭，而图像依然有抗锯齿处理，所以图片相对好看。不过，有一点需要注意：字体尽量是宋体，字号最好在12到14之间，这样能达到最好的显示效果。
+使用JSP与ireport制作报表
+JasperReports是一个开源的java报表制作引擎，iReport是JasperReports的一个GUI工具，用来生成JasperReports的jrxml文件。
+JAVA调用jasperReport须导入的JAR包有:jasperreports-x.x.jar,commons-logging-x.x.jar,itext-x.x.jar,iTextAsian.jar.
+ 
+在jsp中使用ireport步骤
+1.　在database中设置ireport中数据库连接参数
+　　在parameters中设置报表的条件参数，以供database内sql语句使用
+　　编写sql语句，根据条件参数从数据库中获取待展示字段，并填至database内
+　　在ireport主界面中设计报表的格式，设置显示的字段参数
+　　编译生成.jasper文件
+2.在jsp中适当位置传入参数，加载调用.jasper文件并打印
+ 
+需要注意的一些问题：
+1.设置数据库连接
+　　在datasource/connection中设置数据库连接参数
+2.多页报表的制作：
+　　新建group，在内add若干group，添加subreport tool至group上，并在subreport内制定子报表的路径
+3.电子印章
+　　制作好印章图片，存至数据库，在主界面中添加image tool，image expression class设为java.io.inputstream，图片勾选transparent属性，设置image expression为对应的sql字段。在sql语句中将图片从数据库取出，并设置此字段的field class type为java.io.inputstream。
+ 
+(1)JasperReports是一个开源的java报表制作引擎
+     iReport是JasperReports的一个GUI工具，用来生成JasperReports的jrxml文件。
+(2)JAVA调用jasperReport:
+2.1
+须导入的JAR包有:
+jasperreports-0.6.8.jar
+commons-logging-1.0.2.jar
+itext-1.02b.jar
+iTextAsian.jar
+输出pdf中文乱码问题：
+1.确保将iTextAsian.jar ，iText 1.3.1 ，JasperReport 1.2.8加到应用程序的构建路径中或加到CLASSPATH，若是Web应用放入相应的WEB-INF\lib\中。
+2 设置中文支持 
+设置报表上各显示对象的相关属性如下: 
+Font name: 宋体 (中文字体) 
+PDF font name: STSong-Light 
+PDF Encoding: UniGB-UCS2-H(Chinese Siplified) 
+PDF Embeded: √ 
+也可通过iReport的view-report fonts-new字体来实现统一设置。
+
+输出pdf中文乱码问题：
+1.确保将iTextAsian.jar ，iText 1.3.1 ，JasperReport 1.2.8加到应用程序的构建路径中或加到CLASSPATH，若是Web应用放入相应的WEB-INF\lib\中。2 设置中文支持 设置报表上各显示对象的相关属性如下: Font name: 宋体 (中文字体) PDF font name: STSong-Light PDF Encoding: UniGB-UCS2-H(Chinese Siplified) PDF Embeded: √ 也可通过iReport的view-report fonts-new字体来实现统一设置。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+ireport 报表类处理
+
+
+以pdf格式输出到了客户浏览器
+Connection con = null;
+     try{
+   Class.forName("oracle.jdbc.driver.OracleDriver");
+   con = java.sql.DriverManager.getConnection("jdbc:oracle:thin:@20.22.123.160:1521:orcl","hp","hp");
+  }
+  catch( SQLException e){
+   e.printStackTrace();  
+  }
+  catch(ClassNotFoundException e){
+   e.printStackTrace(); 
+  }
+   try{
+            byte[] bytes=JasperRunManager.runReportToPdf("report5.jasper",null,con);
+           response.setContentType("application/pdf");
+         response.setContentLength(bytes.length);
+         ServletOutputStream outStream = response.getOutputStream();
+         outStream.write(bytes,0,bytes.length);
+         outStream.flush();
+         outStream.close();
+         con.close();        
+        }catch(JRException e){
+         e.printStackTrace();         
+        }catch(Exception e){
+         e.printStackTrace();
+        }
+如果本地的话，参考下面的
+byte[] bytes=JasperRunManager.runReportToPdf("report5.jasper",null,con);          
+            
+            //写入到本地文件，，测试
+            FileOutputStream fos=null;    
+            try{    
+             fos=new FileOutputStream("test.pdf",true);    
+             fos.write(bytes);    
+             fos.flush();      
+            }      
+         catch(Exception e){    
+             e.printStackTrace();    
+             System.out.println("写byte数组出错:"+e.getMessage());    
+         }    
+         finally{    
+             try{    
+                 fos.close();    
+             }    
+             catch(IOException iex){}  
+        }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+ireport 和jasperreport
+
+一、使用ireport 和jasperreport 生成和显示PDF 文件
+1） 使用ireprot3.6 工具按照文件标准格式【\\10.24.78.40\doc\PDF 文书修改标准.doc 】， 绘制文书的模板， 已制作完成的文件请参照【\10.24.78.40\doc 文书做成一览表.xlsx】
+2） 调用/bizfuse-pss/src/main/java/cn/lds/pss/util/CreatePdfUtil.java 类的方法生成PDF 文书。CreatePdfUtil 类实例图如下：
+ createPdfUtil 类的外部方法
+ getJasperPrint(…) /*返回JasperPrint 打印对象*/
+ createPdf (…) /* 生成PDF 文件*/
+ createPdfBytes (…) /* 生成PDF 文件的字节数组*/
+ createPdfPreviewData(…) /* 生成PDF 文件并在页面显示*/
+ printEArchiveData(…) /* 生成PDF 字节数组并在页面显示*/
+ getXmlImage(…) /* 从验证信息XMl 文件中得到签字/签章图片*/
+ getRemoteXmlImage(…) /* 从服务器中得到签字/签章图片*/
+ 3） 在显示电子卷时，后台service 调用printEArchiveData 方法输出PDF 字节数组，前台页面显示PDF 文件。
+4） 在各个页面的预览按钮，包括文书打印预览，调用createPdfPreviewData生成临时文件，前台页面显示PDF 的临时文件内容。
+二、PDF 的客户端打印
+5） PDF 客户端打印的原理为：客户端请求打印服务，服务器将打印对象发送到前台页面，前台页面的JavaApplet 小应用程序执行打印操作，发送打印数据到客户打印机。示例图如下：
+  appletPrint.java 打印数据<---------打印------------printPdf.jsp<-----------请求打印服务/返回JasperPrint 对象-------------->AppletServlet.java
+ 三、统计报表
+目前系统缺少部分统计报表的数据项，主要缺少部分为破案后的统计项，具体的缺少的统计数据项请参照文件【\\10.24.78.40\doc\统计报表数据整理.xlsx】。
+四、电子印章
+电子印章由安证通公司提供客户端的应用插件和服务器的签字、签章图片。客户端的通用签章方法文件为commonESign.js 详细内容请参照【bizfuse-webapp\WebRoot\components\pss\common\commonESign.js】
+commonESign.js的外部方法
+ESAGetData (…) /* 取得签章数据(安证通接口) */
+doResizeControl (…) /*重新设置控件大小(安证通接口) */
+moveControl (…) /* 移动控件位置(安证通接口) */
+doMove (…) /* 移动控件到指定位置(安证通接口)*/
+GetAbsoluteLocation (…) /* 取得控件绝对位置(安证通接口) */
+addSign (…) /* 生成签章信息*/
+resizeControl (…) /* 设置控件大小(安证通接口) */
+commitSignCheck (…) /* 检查签章信息的有效性*/
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+
+
+
+

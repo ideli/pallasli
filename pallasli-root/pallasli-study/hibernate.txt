@@ -1,0 +1,1789 @@
+
+java核心技术学习
+hibernate基础
+
+Hiberante 的运行原理
+ 
+以下5个核心接口几乎在任何实际开发中都会用到。通过这些接口，你不仅可以存储和获得持久对象，并且能够进行事务控制。
+Session接口
+Session接口对于Hibernate 开发人员来说是一个最重要的接口。然而在Hibernate中，实例化的Session是一个轻量级的类，创建和销毁它都不会占用很多资源。这在实际项目 中确实很重要，因为在客户程序中，可能会不断地创建以及销毁Session对象，如果Session的开销太大，会给系统带来不良影响。但值得注意的是 Session对象是非线程安全的，因此在设计中，最好是一个线程只创建一个Session对象。
+　　在Hibernate的设计者的头脑中，他们将session看作介于数据连接与事务管理一种中间接口。我们可以将session想象成一 个持久对象的缓冲区，Hibernate能检测到这些持久对象的改变，并及时刷新数据库。我们有时也称Session是一个持久层管理器，因为它包含这一 些持久层相关的操作，诸如存储持久对象至数据库，以及从数据库从获得它们。请注意，Hibernate 的session不同于JSP应用中的HttpSession。
+ 
+SessionFactory 接口
+这里用到了一个设计模式――工厂模式，用户程序从工厂类SessionFactory中取得Session的实例。
+SessionFactory不是轻量级的！它的设计者的意图是让它能在整个应用中共享。典型地来说，一个项目通常只需要一个SessionFactory就够了，但是当你的项目要操作多个数据库时，那你必须为每个数据库指定一个SessionFactory。
+SessionFactory在Hibernate中实际起到了一个缓冲区的作用，它缓冲了Hibernate自动生成的SQL语句和一些其它的映射数据，还缓冲了一些将来有可能重复利用的数据。
+ 
+Configuration 接口
+Configuration接口的作用是对Hibernate进行配置，以及对它进行启动。在Hibernate的启动过程中，Configuration类的实例首先定位映射文档的位置，读取这些配置，然后创建一个SessionFactory对象。
+虽然Configuration接口在整个Hibernate项目中只扮演着一个很小的角色，但它是启动hibernate时你所遇到的每一个对象。
+ 
+Transaction 接口
+Transaction接口是一个可选的API，你可以选择不使用这个接口，取而代之的是Hibernate的设计者自己写的底层事务处理代 码。 Transaction接口是对实际事务实现的一个抽象，这些实现包括JDBC的事务、JTA中的UserTransaction、甚至可以是CORBA 事务。之所以这样设计是能让开发者能够使用一个统一事务的操作界面，使得自己的项目可以在不同的环境和容器之间方便地移值。
+ 
+Query和Criteria接口
+Query接口让你方便地对数据库及持久对象进行查询，它可以有两种表达方式：HQL语言或本地数据库的SQL语句。Query经常被用来绑定查询参数、限制查询记录数量，并最终执行查询操作。
+Criteria接口与Query接口非常类似，它允许你创建并执行面向对象的标准化查询。
+值得注意的是Query接口也是轻量级的，它不能在Session之外使用。
+ 
+祥见：
+ 
+ 
+<?xml version='1.0' encoding='GBK'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+    <property name="connection.username">root</property>
+    <property name="connection.url">
+        jdbc:mysql://localhost:3306/study
+    </property>
+    <property name="dialect">
+        org.hibernate.dialect.MySQLDialect<!-- 这里是MySQL的Dialect -->
+    </property>
+    <property name="myeclipse.connection.profile">MySQL5.0</property>
+    <property name="connection.password">root</property>
+    <property name="connection.driver_class">
+        org.gjt.mm.mysql.Driver<!-- 这里是MySQL的JDBC driver class名 -->
+    </property>
+    <property name="show_sql">true</property><!-- 向控制台输出SQL语句 -->
+    
+    
+    <mapping resource="hibernate/PO/TRegister.hbm.xml" /><!-- 指定要用到的映射文件 -->
+
+</session-factory>
+
+</hibernate-configuration>
+另外它的持久化类其实就是一个普通的JavaBean，只不过一个持久化类对应 一个数据表。另外定义的时候 要遵循一定的规则！
+映射文件是把一个持久化类与一张表映射起来。
+例：
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    映射文件
+-->
+<hibernate-mapping>
+    <class name="hibernate.PO.TRegister" table="t_register">
+        <id name="id" type="java.lang.Integer">
+        <column name="id" />
+            <!-- 我在MYSQL中并没有设置该字段递增，但在Hibernate中依然可以设置为递增 -->
+        <generator class="increment" />
+        </id>
+        <property name="userName" type="java.lang.String">
+            <column name="userName" length="30" />
+        </property>
+        <property name="userPwd" type="java.lang.String">
+            <column name="userPwd" length="30" />
+        </property>
+        <property name="sex" type="java.lang.String">
+            <column name="sex" length="10" />
+        </property>
+        <property name="age" type="java.lang.Integer">
+            <column name="age" />
+        </property>
+    </class>
+</hibernate-mapping>
+说明：
+class元素：
+ 用来定义一个持久化类，它的属性name和table分别为持久化的类名及对应到DB中的表名。
+ id元素：
+   是class的子元素。被映射的类必须声明对应数据表主键字段。大多数据有一个JavaBean 风格的属性，为一个实例包含惟一的标识。id元素定义了该属性到数据表主键字段的映射。它有name,type和column三个属性和一个
+
+generator子元素：
+ generator元素 用来指定id标识的生成类的名字。它有一个属性class，用来指定一个Java类名。 该类用来为持久化类的实例生成惟一的标识。所以也叫生成器(generator)。如 果这个生成器实例需要某些配置值或者初始化参数，可用<param>元素来传递。
+
+
+ 所有生成器都实现org.hibernate.id.IdentifierGenerator接口。
+Hibernate提供了很多内置的生成器。下面是Hibernate内置生成器的快捷名字：
+   1:increment(递增)。其为org.hibernate.id.IncrementGenerator类快 捷名字，用于为long,short或者int类型生成惟一标记。只有在没有其他进程往 同一张表中插入数据时才能使用。在集群下不要使用。
+   2：identity(标识)。其为org.hibernate.id.IdentityGenerator类快捷 名字，对DB2,MySQL,SQL Server和Sybase等数据库的内置标识字段提供支持。 返回的标识符是long,short或者int类型的。
+   3：sequence(序列)。其为org.hibernate.id.SequenceGenerator类的快 捷名字，为DB2,Oracle和SAP DB等数据闸的内置序列提供支持。返回类型是long, short或者int类型的。
+   4:seqhilo(序列高/低位)。org.hibernate.id.SequenceHiLoGenerator 类的快捷名字，使用一个高/低位算法来高效地生成long,short或者int类型的标识符， 需要指定一个数据库sequence的名字。
+   5：uuid.hex。其为org.hibernate.id.UUIDHexGenerator类的快捷名字，使用 一个128位的UUID算法生成字符串类型的标识符，在一个网络中是惟一的（使用了IP地 址）。UUID被编码为一个32位16进制的字符串，包含IP地址，JVM的启动时间（精确到 14s），系统时间和一个计算器值（在JVM中是惟一的）。
+   6：assigned。其为org.hibernate.id.Assigned类的快捷名字，可让应用程序在
+   执行save()方法之前为对象分配一个标识符。如果需要 为应用程序分配一个标识符（而 非由Hibernate来生成它们），可以用assigned生成器。
+   7：foreign。其为org.hibernate.id.ForeignGenerator类的快捷名字。它使用了另外一个相关的对象标识符，和<one-to-one>元素一起使用。
+ property元素：
+是class元素的一个子元素。它为类声明一个持久化的，JavaBean网络的属性。它有 name,colum,type和length等属性。
+
+Configuration类：
+它负责管理Hiberante的配置信息，它主要用来加载这些配置文件。如上术的hibernate.cfg.xml文件！
+例：
+
+//加载Hibernate的配置文件
+            Configuration config = new Configuration().configure("/hibernate/hibernate.cfg.xml");
+            //还可以加载映射文件
+            Configuration config = new Configuration().addFile("TRegister.hbm.xml");//方法一
+            Configuration config = new Configuration().addClass(hibernate.PO.TRegister.class);//方法二
+            Configuration config = new Configuration().addURL(Configuration.class.getResource("TRegister.hbm.xml"));//方法三
+            
+SessionFactory接口：
+SessionFactory负责Session实例的创建。可以通过Configuration实例创建
+例：
+
+Configuration config = new Configuration().configure("/hibernate/hibernate.cfg.xml");
+    
+SessionFactory    sessionFactory = config.buildSessionFactory();
+
+Congifuration对象会根据当前的配置信息，生成SessionFactory对象。SessionFactory对象一旦构造完毕，即被赋予特定的配置信息，即以后配置改变不会影响到创建的SessionFactory对象。如果要把屐后的配置信息赋给SessionFactory对象，需要从新的Configuration对象生成拳的SessionFactory对象。
+SessionFactory是纯种安全的，可以被多线程调用以取得Session，而且构造SessionFactory很消耗资源，所以多数 情况下一个应用中只初始化一个SessionFactory，为不同的线程提供Session。
+当客户端发送一个请求线程时，SessionFactory生成一个Session对象来处理客户请求，如下：
+    public static final ThreadLocal session = new ThreadLocal();
+    
+    public static Session currentSession() throws HibernateException
+    {
+        Session s = (Session)session.get();
+        //Open a new Session,if this Thread has none yet
+        //如果此线程还没有打开一个Session,则新建一个
+        if(s == null || !s.isOpen())
+        {
+            s = sessionFactory.openSession();
+            session.set(s);
+        }
+        return s;
+    }
+
+Session接口：
+Session是应用程序与数据库之间的一个会话，是Hibernate运作的中心，持久层操作的基础，相当于JDBC中的Connection。Session对象是通过SessionFactory创建的：
+         Session      session = SessionFactory.openSession();
+一个持久化类与普通的JavaBean没有任何区别，但是它与Session关联后，就具有了持久化能力。当然，这种持久化操作是受Session控制的，即通过Session对象的装载，保存，创建或查询持久化对象。Session类的save(),delete()和load()等方法，来分别完成对持久化对象的保存，删除，修改加载等操作！Session类方法的用途可以分以下五类：
+1：取得持久化对象：get()和load()等方法。
+2：持久化对象的保存，更新和删除：save(),update()saveOrUpdate()和delete()等方法。
+3：createQuery()方法：用来从Session生成的Query对象。
+4：beginTransaction()方法：从Session对象生成一个Transaction对象。
+5：管理Session的方法：isOpen(),flush(),clear(),evict()和close()等方法，其中isOpen()方法用来检查Session是否仍然打开;flush()用来清理Session缓存，并把缓存中的SQL语句发送出去，clear()用来清除Session中的所有缓存对象evict()方法来清楚Session缓存中的某个对象;close()关闭Session。
+取得持久化对象的方法：
+取得持久化对象的方法主要有get()和load()，它们通过主键id来取得PO。
+get()方法示例
+
+public void getDemo()
+    {
+        Session session = HibernateUtil.currentSession();//生成Session实例
+        TRegister tr = (TRegister)session.get(TRegister.class, new Integer(1));
+        
+        System.out.print(tr.getUserName());
+     /**
+         * get()方法的执行顺序如下：
+         * a)：首先通过id在session缓存中查找对象，如果存在此id的对象，直接将其返回
+         * b)：在二级缓存中查找，找到后将 其返回。
+         * c)：如果在session缓存和二级缓存中都找不到此对象，则从数据库中加载有此ID的对象  }
+
+load()方法示例：
+public void loadDemo()
+    {
+        Session session = HibernateUtil.currentSession();
+        TRegister tr = (TRegister)session.load(TRegister.class, new Integer(1));
+       System.out.println(tr.getUserName());
+        /**
+         * 与get()的区别：
+         * 1：在立即加载对象（当hibernate在从数据库中取得数据组装好一个对象后
+         * 会立即再从数据库取得数据此对象所关联的对象）时，如果对象存在，
+         * load()和get()方法没有区别，都可以取得已初始化的对象;但如果当对
+         * 象不存在且是立即加载时，使用get()方法则返回null,而使用load()则
+         * 抛出一个异常。因此使用load()方法时，要确认查询的主键ID一定是存在
+         * 的，从这一点讲它没有get方便！
+         * 2：在延迟加载对象(Hibernate从数据库中取得数据组装好一个对象后，
+         * 不会立即再从数据库取得数据组装此对象所关联的对象，而是等到需要时，
+         * 都会从数据库取得数据组装此对象关联的对象)时，get()方法仍然使用
+         * 立即加载的方式发送SQL语句，并得到已初始化的对象，而load()方法则
+         * 根本不发送SQL语句，它返回一个代理对象，直到这个对象被访问时才被
+         * 初始化。
+         */
+    }
+持久化对象的保存，更新和删除方法
+save()方法：
+session的save()方法将 一个PO的属性取出放入PreparedStatement语句中，然后向数据库中插入一条记录(或多条记录，如果有级联)。
+session保存一个对象时，按如下步骤进行：
+1：根本配置文件为主键id设置的生成算法 ，为PO指定 一个ID。
+2：将 PO对象纳入session内部缓存(一个Map)内。
+3：事务提交时，清理缓存，将 新对象通过insert语句持久化到数据库中。
+如果要为新的PO强制指定一个ID，可以调用Session的重载方法save(Object obj,Serializable id)
+例：
+       session.save(tRegister, new Integer(123));
+在调用save()方法时，并不立即执行SQL语句，而是等到清理完毕缓存时才执行。如果在调用save()方法后又修改了PO的属性，则Hibernate将 会发送一条insert语句和一条update语句来完成持久化操作，如下：
+
+    public void saveDemo()
+    {
+        TRegister tr = new TRegister();
+        tr.setId(1111);//为对象设定一个ID，但注意此ID是无效的，因为我们在配置文件中ID设置为Increment,这样将被Hibernate的increment算法生成的值覆盖
+        tr.setAge(23);
+        tr.setSex("男");
+        tr.setUserName("evoll");
+        tr.setUserPwd("efly");
+        
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        session.save(tr);
+        tr.setUserName("xuanflt");//在save后又修改了PO名字
+        tx.commit();
+    }
+监视上述程序运行会产生二条SQL：
+Hibernate: select max(id) from t_register
+Hibernate: insert into t_register (userName, userPwd, sex, age, id) values (?, ?, ?, ?, ?)
+Hibernate: update t_register set userName=?, userPwd=?, sex=?, age=? where id=?
+因此，最好是在对象状态稳定时再调用 save()方法，可以少执行一条update语句。
+调用save()方法将临时对象保存到数据库中，对象的临时状态将 变为持久化状态。当对象在持久化状态时，它一直位于Session缓存中，对它的任何操作在事物提交时都将同步保存到数据库中，因此，对一个已经持久化的对象调用save()或update()方法是没有意义的，如下：
+
+    public void saveDemo()
+    {
+        TRegister tr = new TRegister();
+        tr.setId(1111);//为对象设定一个ID，但注意此ID是无效的，因为我们在配置文件中ID设置为Increment,这样将被Hibernate的increment算法生成的值覆盖
+        tr.setAge(23);
+        tr.setSex("男");
+        tr.setUserName("evoll");
+        tr.setUserPwd("efly");
+        
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        session.save(tr);
+        tr.setUserName("xuanflt");//在save后又修改了PO名字
+        session.save(tr);    //无效
+        session.update(tr);    //无效
+        tx.commit();    //提交事物
+    }
+程序运行效果还是和上面的一样！
+update()方法：
+Session的update()方法是用来更新脱管对象的。它的用法如下：
+
+public void updateDemo()
+    {
+        TRegister tr = new TRegister();
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        tr = (TRegister)session.get(TRegister.class, new Integer(1));
+        tr.setUserName("updated");//更新脱管对象
+        tx.commit();
+    }
+调用update()方法时，并不是立即发送SQL语句，对对象的更新操作将积累起来，在事物提交时由flush()清理缓存，然后发送一条SQL语句完成全部的更新操作！ 
+saveOrUpdate()方法：
+在实际应用中WEB程序员自言自语不会注意一个对象是脱管对象还是临时对象，而对脱管对象使用save()方法是不对的，对临时对象使用update()方法也是不对的。为了解决这个问题，便产生saveOrUpdate()方法。
+saveOrUpdate()方法首先会判断该PO是脱管对象还是临时对象，然后会调用合适的方法。
+那么saveOrUpdate()方法如何判断PO是临时对象还是 脱管对象呢？当满足下载情况之一时，Hibernate就认定它是临时对象。
+1：在映射表中为<id>设元素设置了unsaved-valu属性，并且实体对象的ID取值和unsaved-value匹配（默认为null）(注意：int和long型的ID的unsaved-value默认值为0)。
+2：在映射文件中为<version>元素设置了unsaved-value属性，并且实体对象的version取值和unsaved-value匹配(默认为null)。
+delete()方法：
+session类的delete()方法负责删除一个对象(包括持久对象和脱管对象)，以下为删除一个持久对象的示例！
+   public void deleteDemo()
+    {
+        TRegister tr = new TRegister();
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        tr = (TRegister)session.get(TRegister.class, new Integer(3));
+        session.delete(tr);//删除持久对象
+        tx.commit();
+    }
+监视运行：
+Hibernate: select tregister0_.id as id0_0_, tregister0_.userName as userName0_0_, tregister0_.userPwd as userPwd0_0_, tregister0_.sex as sex0_0_, tregister0_.age as age0_0_ from t_register tregister0_ where tregister0_.id=?
+Hibernate: delete from t_register where id=?
+    public void deleteDemo2()
+    {    //演示删除脱管对象
+        TRegister tr = new TRegister();
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        tr = (TRegister)session.get(TRegister.class, new Integer(2));
+        tx.commit();
+        session.close();
+        Session session2 = HibernateUtil.currentSession();
+        tx = session2.beginTransaction();
+        session2.delete(tr);
+        tx.commit();
+        session2.close();
+    }
+监视运行：
+Hibernate: select tregister0_.id as id0_0_, tregister0_.userName as userName0_0_, tregister0_.userPwd as userPwd0_0_, tregister0_.sex as sex0_0_, tregister0_.age as age0_0_ from t_register tregister0_ where tregister0_.id=?
+Hibernate: delete from t_register where id=?
+在上述代码中session2先把tr对象进行关联，纳入Session缓存中，然后删除。需要注意的是，在调用delete()方法时并不是发送SQL语句，而是在提交事务时，清理了缓存才发送SQL。
+使用delete()删除对象时，会有一些性能上的问题，例如从上面的监视中可以看到，当删除一个对象时，会先调用get()加载这个对象，然后调用delete()方法删除对象，所以发送了一个多余的selete SQL，所以当删除大量数据时对性能影响就比较大了。为了解决批量删除的性能问题，常用的办法是使用批量删除操作，如下：
+
+    public void betchDeleteDemo()
+    {
+        Session session = HibernateUtil.currentSession();
+        Transaction tx = session.beginTransaction();
+        Query q = session.createQuery("delete from TRegister");
+        q.executeUpdate();//删除对象
+        tx.commit();
+        session.close();
+    }
+监视运行：
+Hibernate: delete from t_register
+只用了一条语句就完成了比量删除的操作。但它也有问题，批量删除后的数据还会存在缓存中，因此程序查询时可能得到脏数据(得到数据库中已不存在的数据)，因此在使用批量删除时，也要经窒处世数据一致的问题。
+
+Query接口：
+在Hibernate3.x中不再使用2.x中的find方法，而是引入了Query接口，用来执行HQL。其实在上面的例子中已经看出，Query接口可以从session对象生成;
+Query接口主要方法有三个
+setXXX()方法：用于设置HQL中问题或变量的值。
+list()方法：返回查询结果，并把结果转换成List对象。
+executeUpdate()方法：执行更新或删除名。
+
+setXXX()方法都有二种重载方法：
+1：setString(int position,String value):用于设置HQL中“？”的值：其中position表示？位置，而value自然就是值。如下：
+
+Query query = session.createQuery("from TRegister tr where tr.age>? and tr.userName like ?");//生成一个Query实例
+        query.setInteger(0, 18);//设置第一个问号的值为18
+        query.setString(1, "%yan%");//设置第二个问题的值为%yan%
+2：setString(String paraName,String value);用于设置HQL中“:”后跟变量的值;其中paraName代表HQL中“：”后跟变量，value为该变量设置的值。如下：
+
+Query query = session.createQuery("from TRegister tr where tr.age>:minAge and tr.userName like :userName");//生成一个Query实例
+        query.setInteger("minAge", 18);//设置变量minAge值为18
+        query.setString("userName", "%yan%");//设置变量userName值为%yan%
+在HQL中使用变量代替问号，然后在setXXX()方法中为该变量设值。在HQL中使用变量相比问号有以下好处：
+1：变量不依赖于它们在查询字符串中出现 的顺序。
+2：在同一个查询中可以多次使用。
+3：可读性好。
+list()方法：
+Query的list()方法用于取得查询结果，并将结果转变成一个List接口的实例。如下：
+
+public void queryDemo()
+    {
+        TRegister tr = new TRegister();
+        Session session = HibernateUtil.currentSession();
+        Query query = session.createQuery("from TRegister");
+        java.util.List list = query.list();
+        for(int i = 0 ; i <list.size(); i++)
+        {
+            tr = (TRegister)list.get(i);
+            System.out.println(tr.getId());
+        }
+    }
+executeUpdate()方法：
+Query的executeUpdate()方法用于更新或删除语句。它常用于批量删除或批量更新操作，如下：
+Query q = session.createQuery("delete from TRegister");
+             q.executeUpdate();//删除对象
+
+使用命名查询(namedQuery):
+其实我们还可以不将 HQL写在程序中，而是写入映射文件中，这样在需要的时候很方便！在映射文件中使用<query>标记，把HQL语句放入<![CDATA[]]>之中，如下：
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    映射文件
+-->
+<hibernate-mapping>
+    <class name="hibernate.PO.TRegister" table="t_register">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <!-- 我在MYSQL中并没有设置该字段递增，但在Hibernate中依然可以设置为递增 -->
+            <generator class="increment" />
+        </id>
+        <property name="userName" type="java.lang.String">
+            <column name="userName" length="30" />
+        </property>
+        <property name="userPwd" type="java.lang.String">
+            <column name="userPwd" length="30" />
+        </property>
+        <property name="sex" type="java.lang.String">
+            <column name="sex" length="10" />
+        </property>
+        <property name="age" type="java.lang.Integer">
+            <column name="age" />
+        </property>
+    </class>    
+    <query name = "queryUser_byAgeAndName"><!--此查询被调用的名字-->
+    <![CDATA[from TRegister user where user.age >:minAge and user.userName like:userName]]>    
+    </query>
+</hibernate-mapping>
+public void namedQueryDemo()
+    {
+        TRegister user = new TRegister();
+        Session session = HibernateUtil.currentSession();
+        Query query = session.getNamedQuery("queryUser_byAgeAndName");
+        query.setInteger("minAge", 18);
+        query.setString("userName", "%x%");
+        List list = query.list();
+        for(int i = 0 ; i < list.size(); i++)
+        {
+           user = (TRegister)list.get(i);
+            System.out.println(user.getUserName());
+        }
+    }
+Trancation接口
+该接口允许应用等量齐观定义工作单元，同时又可调用JTA或JDBC执行事物管理。它的运行与Session接口相关，可调用Session的beginTransaction()方法生成一个Transaction实例。
+一个Session实例可以与多个Transaction实例相关联，但是一个特定的Session实例在任何时候必须与至少一个未提交的Transaction实例相关联。
+Transaction接口常用如下方法：
+1：commit();提交相关联的Session实例。
+2：rollback();撤销事物操作。
+3：wasCommitted();事物是否提交
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+hibernate核心包
+
+包
+作用
+说明
+jta.jar
+标准的JTA API
+必要
+commons-logging.jar
+日志功能
+必要
+commons-collections.jar
+集合类
+必要
+antlr.jar
+ANother Tool for Language Recognition(antlr)
+必要
+dom4j.jar
+XML配置和映射解释器
+必要　
+Hibernate3.jar
+核心库
+必要
+asm.jar
+ASM字节码库
+如果使用“cglib”则必要
+asm-attrs.jar
+ASM字节码库
+如果使用“cglib”则必要
+ehcache.jar
+EHCache缓存
+如果没有其它的缓存，则它是必要的
+cglib.jar
+CGLIB 字节码解释器
+如果使用“cglib”则必要
+      以下包可选
+versioncheck.jar
+版本检查
+ 
+swarmcache.jar
+ 
+ 
+jboss-cache.jar
+TreeCache
+ 
+jgroups.jar
+ 
+ 
+xml-apis.jar
+JAXP API
+ 
+c3p0-0.9.1.jar
+C3PO JDBC链接池
+ 
+connector.jar
+JCA API
+ 
+jboss-system.jar
+ 
+使用TreeCache时必要
+jacc-1_0-fr.jar
+JACC 库
+ 
+checkstyle-all.jar
+ 
+ 
+junit.jar
+ 
+ 
+javassist.jar
+Javassist 字节码解释器
+ 
+ant-lanuncher.jar
+ 
+ 
+jaas.jar
+JAAS API
+ 
+jdbc2_0-stdext.jar
+JDBC扩展API
+ 
+ant-antlr.jar
+Ant antlr支持
+ 
+jboss-jmx.jar
+ 
+ 
+cleanimports.jar
+cleanimports
+ 
+xerces.jar
+SAX parser
+JDK版本低于1.4时必要
+jaxen-1.1-beta-7.jar
+Jaxen
+如果想提高启动性能则去使用
+ant-junit.jar
+Ant junit support
+ 
+ant-swing.jar
+ant swing support
+ 
+ant.jar
+ 
+ 
+proxool.jar
+Proxool JDBC连接池
+ 
+concurrent.jar
+ 
+使用TreeCache需要
+syndiag2.jar
+ 
+ 
+ 总结：
+最小必要包为antlr.jar,cglib.jar,asm.jar, asm-attrs.jar,  commons-collections.jar, commons-loggins.jar ,encache.jar, dom4j.jar,log4j.jar,jta.jar
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+对象的三大状态
+
+自由(transient)：与session无关
+持久(persistent)：由session来管理，在持久状态中通过get方法取出对方
+游离(detached)：被session抛弃
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+action类
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+ 
+import org.apache.commons.beanutils.DynaBean;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+ 
+import com.medicom.core.web.StrutsEntityAction;
+import com.medicom.login.manager.UserManager;
+import com.medicom.login.model.User;
+ 
+public class UserAction extends StrutsEntityAction<User, UserManager> {
+    private final static String HQL = "from User where userName = ? and passWord = ? ";
+    private UserManager userManager;
+   
+    public void setUserManager(UserManager userManager) {
+       this.userManager = userManager;
+    }
+ 
+    public ActionForward login(ActionMapping mapping, ActionForm form,
+           HttpServletRequest request, HttpServletResponse response) {
+       DynaBean formBean =  (DynaBean) form;
+       String username = (String) formBean.get("j_username");
+       String password = (String) formBean.get("j_password");
+       boolean loginCheck = userManager.loginCheck(HQL, username, password);
+       if(loginCheck){
+           return mapping.findForward("success");
+       }
+       return null;
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+manager类
+
+
+import java.util.List;
+ 
+import org.hibernate.Query;
+ 
+import com.medicom.core.dao.HibernateEntityDao;
+import com.medicom.login.model.User;
+ 
+public class UserManager extends HibernateEntityDao<User> {
+ 
+    @SuppressWarnings("unchecked")
+    public boolean loginCheck(String hql,String username,String password){
+       Query q = getSession().createQuery(hql);
+       q.setString(0, username);
+       q.setString(1, password);
+       List list = q.list();
+       if(list.size() != 0 && list != null){
+           return true;
+       }else{
+           return false;
+       }
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+java核心技术学习
+model类
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+ 
+@Entity
+@Table(name = "ES_USER_WEB")
+public class User {
+    @Id
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int   id;
+   
+    @Column(name = "USERNAME")
+    private String userName;//用户名
+   
+    @Column(name = "PASSWORD")
+    private String passWord;//密码
+ 
+    public int getId() {
+       return id;
+    }
+ 
+    public void setId(int id) {
+       this.id = id;
+    }
+ 
+    public String getUserName() {
+       return userName;
+    }
+ 
+    public void setUserName(String userName) {
+       this.userName = userName;
+    }
+ 
+    public String getPassWord() {
+       return passWord;
+    }
+ 
+    public void setPassWord(String passWord) {
+       this.passWord = passWord;
+    }
+   
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+hibernate数据库处理操作步骤
+
+准备一、导入Hibernate库
+准备二、添加配置文件hibernate.cfg.xml
+准备三、添加映射文件UserInfo.hbm.xml
+步骤一、创建Configuration
+步骤二、创建SessionFactory
+步骤三、打开Session
+步骤四、开始一个事务
+步骤五、持久化操作
+步骤六、提交事务
+步骤七、关闭session
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+根据javaBean生成数据库创建语句
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class ExportUtil {
+ public static void main(String[] args) {
+  Configuration cfg = new Configuration().configure();
+  SchemaExport export = new SchemaExport(cfg);
+  export.create(true, true);
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+hibernate数据库查询方式
+
+查询共有5种查询
+1.oid
+2.导航对象图
+3.HQL Query
+4.QBC Criteria
+5.本地SQL
+
+1.oid  session的get()和load()方法提供了这种功能，如果在程序中事先知道了OID，就可以使用这种检索对象的方式。
+get:实时读取 ，找不到时返回null;
+load:延时读取，找不到报错
+com.pojo.Person person = (com.pojo.Person) session.get(com.pojo.Person.class, 52);
+
+2.导航对象图 item subitem item.getSubItem();
+
+3.HQL  Query是Hibernate提供的专门的HQL查询接口
+ public void HQLTest(){
+  Configuration cfg = new Configuration();
+  cfg.configure();
+  SessionFactory sf = cfg.buildSessionFactory();
+  Session session = sf.openSession();
+  session.beginTransaction();
+  Query query = session.createQuery("select name,password from Person");
+  List list = query.list();
+  Iterator it = list.iterator();
+  while(it.hasNext()){
+   Object[] person =(Object[])it.next();
+   System.out.println(person[1]);
+  }
+  session.getTransaction().commit();
+  session.close();
+ }
+=======================
+当查询的不是全部，而是部分字段，而且还想要返回的是对象
+
+   org.hibernate.Query query = session
+     .createQuery("select new Person(name,password) from Person");
+   java.util.List list = query.list();
+   java.util.Iterator it = list.iterator();
+   while (it.hasNext()) {
+    com.pojo.Person person = (com.pojo.Person) it.next();
+    System.out.println(person.getId() + ":" + person.getName());
+   }
+
+并且自Person类中必须有相关的构造方法
+
+ public Person(String name, String password) {
+  this.name = name;
+  this.password = password;
+ }
+
+4.QBC  Criteria
+指定要查询的类
+org.hibernate.Criteria cri = session.createCriteria(com.pojo.Person.class);  
+接收查询结果用  cri.list(); 方法
+指定查询条件
+(1)and
+Criterion cin = Expression.eq("name", "hang");
+Criterion cin2 = Expression.eq("password", "31222");
+cri.add(cin);
+cri.add(cin2);
+(2)or
+Criterion cin = Expression.eq("name", "hang");
+Criterion cin2 = Expression.eq("password", "1111");
+Criterion cin3 = Expression.or(cin, cin2);
+cri.add(cin3);
+(3)in
+Criterion cin = Expression.in("id",new Object[]{1,2,3,4,7});
+cri.add(cin);
+new Object[]{1,2,3,4,7} 也可以用一个集合替换，要么是数组，要么是集合
+(4)order by
+import org.hibernate.criterion.Order;
+cri.addOrder(Order.desc("id"));
+或者cri.addOrder(Order.asc("id"));
+(5)between
+Criterion cin =Expression.between("id", 1, 5);
+cri.add(cin);
+
+5.本地SQL 
+SQLQuery query = session.createSQLQuery("select * from person");
+query.addEntity(com.pojo.Person.class);//告诉java程序用的是哪个类
+
+6.heibernate支持分页查询
+如下
+Object[] per = (Object[]) session.createQuery("select name,password from Person").setFirstResult(6).setMaxResults(1).uniqueResult();
+System.out.println(per[0]+"  "+per[1]);
+
+setFirstResult(6)设定开始的索引
+setMaxResults(1)设定查询的记录数量
+uniqueResult()当知道返回的是一条记录时，可以使用它，接收时用相应的类型接收
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+关联保存
+
+ManyToOne 
+org.hibernate.cfg.Configuration cfg = new org.hibernate.cfg.Configuration();
+  cfg.configure();
+  org.hibernate.SessionFactory sessionFactory = cfg.buildSessionFactory();
+  org.hibernate.Session session = null;
+  org.hibernate.Transaction tra = null;
+  try {
+   session = sessionFactory.openSession();
+   tra = session.beginTransaction();
+   com.pojo.Item item = new com.pojo.Item();
+   item.setItemname("JAVA");
+   com.pojo.SubItem subitem = new com.pojo.SubItem();
+   subitem.setSubName("hibernate");
+   // subitem.setItem(item);
+   session.save(subitem);
+   // session.save(item);
+   tra.commit();
+  } catch (Exception ex) {
+   ex.printStackTrace();
+   tra.rollback();
+  } finally {
+   if (session != null) {
+    session.close();
+   }
+  } 
+ManyToOne
+org.hibernate.cfg.Configuration cfg = new org.hibernate.cfg.Configuration();
+  cfg.configure();
+  org.hibernate.SessionFactory sessionFactory = cfg.buildSessionFactory();
+  org.hibernate.Session session = null;
+  org.hibernate.Transaction tra = null;
+  try {
+   session = sessionFactory.openSession();
+   tra = session.beginTransaction();
+   com.pojo.Item item = new com.pojo.Item();
+   item.setItemname("JAVA");
+   com.pojo.SubItem subitem = new com.pojo.SubItem();
+   subitem.setSubName("hibernate");
+   subitem.setItem(item);
+   item.getSubSet().add(subitem);
+   session.save(item);
+   session.save(subitem);
+   tra.commit();
+  } catch (Exception ex) {
+   ex.printStackTrace();
+   tra.rollback();
+  } finally {
+   if (session != null) {
+    session.close();
+   }
+  }
+ OneToMany
+ org.hibernate.cfg.Configuration cfg = new org.hibernate.cfg.Configuration();
+  cfg.configure();
+  org.hibernate.SessionFactory sessionFactory = cfg.buildSessionFactory();
+  org.hibernate.Session session = null;
+  org.hibernate.Transaction tra = null;
+  try {
+   session = sessionFactory.openSession();
+   tra = session.beginTransaction();
+   com.pojo.Item item = new com.pojo.Item();
+   item.setItemname("JAVA");
+   com.pojo.SubItem subitem = new com.pojo.SubItem();
+   subitem.setSubName("hibernate");
+   item.getSubSet().add(subitem);
+   session.save(item);
+   session.save(subitem);
+   tra.commit();
+  } catch (Exception ex) {
+   ex.printStackTrace();
+   tra.rollback();
+  } finally {
+   if (session != null) {
+    session.close();
+   }
+  }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+数据状态
+
+org.hibernate.cfg.Configuration cfg = new org.hibernate.cfg.Configuration();
+  cfg.configure();
+  org.hibernate.SessionFactory sessionFactory = cfg.buildSessionFactory();
+  org.hibernate.Session session = null;
+  org.hibernate.Transaction tra = null;
+  com.pojo.Person person = null;
+  try {
+   session = sessionFactory.openSession();
+   // 临时状态
+   person = (com.pojo.Person) session.get(com.pojo.Person.class, 1);
+   tra = session.beginTransaction();
+   session.update(person);
+   System.out.println(person.getId());
+   // 持久化状态
+   tra.commit();
+  } catch (Exception ex) {
+   ex.printStackTrace();
+   tra.rollback();
+  } finally {
+   if (session != null) {
+    session.close();
+   }
+  }
+  // 脱管游离
+  System.out.println(person.getId());
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+多对多
+
+<set name="studentmanytomanies_1" inverse="true" table="join_nn"
+ catalog="hibernatedb">
+            <key>
+                <column name="classid" not-null="true" />
+            </key>
+            <many-to-many entity-name="ch12.hibernate.Studentmanytomany">
+                <column name="studentid" not-null="true" />
+            </many-to-many>
+        </set>
+  SessionFactory sessionFactory = new Configuration().configure() .buildSessionFactory();
+  Classmanytomany classm1 = new Classmanytomany();
+  Classmanytomany classm2 = new Classmanytomany();
+  Studentmanytomany student1 = new Studentmanytomany();
+  Studentmanytomany student2 = new Studentmanytomany();
+  student1.getClassmanytomanies().add(classm1);
+  student1.getClassmanytomanies().add(classm2);
+  student2.getClassmanytomanies().add(classm1);
+  student2.getClassmanytomanies().add(classm2);
+  Session session = sessionFactory.openSession();
+  Transaction trans = session.beginTransaction();
+  session.save(classm1);
+  session.save(classm2);
+  session.save(student1);
+  session.save(student2);
+  trans.commit();
+  session.close();
+  sessionFactory.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+多对一
+
+<hibernate-mapping package="com.handson.pojo">
+<class name="Student">
+ <id name="stuId">
+  <generator class="native"></generator>
+ </id>
+ <property name="stuName"></property>
+ <many-to-one name="tea" class="Teacher" column="tea_id" cascade="save-update"></many-to-one>
+</class>
+</hibernate-mapping>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+一对多
+
+<hibernate-mapping package="com.handson.pojo">
+<class name="Teacher">
+ <id name="teaId">
+  <generator class="native"></generator>
+ </id>
+ <property name="teaName"></property>
+ <set name="student">
+ <key column="tea_id"></key>
+ <one-to-many class="Student"/>
+ </set>
+</class>
+</hibernate-mapping>
+ <set name="classonetomany2s" inverse="true">
+   <key>
+    <column name="studentid" />
+   </key>
+   <one-to-many class="ch12.hibernate.Classonetomany2" />
+  </set>
+  SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+  Classonetomany2 classm1 = new Classonetomany2();
+  Classonetomany2 classm2 = new Classonetomany2();
+  Studentonetomany2 student = new Studentonetomany2();
+  student.getClassonetomany2s().add(classm1);
+  student.getClassonetomany2s().add(classm2);
+  classm1.setStudentonetomany2(student);
+  classm2.setStudentonetomany2(student);
+  Session session = sessionFactory.openSession();
+  Transaction trans = session.beginTransaction();
+  session.save(student);
+  session.saveOrUpdate(classm1);
+  session.saveOrUpdate(classm2);
+  trans.commit();
+  session.close();
+  sessionFactory.close();
+<!--映射集合属性，关联到持久化类，inverse="false"表示主控端在studentidfk端，lazy="false"表示不采用延迟加载--> 
+  <set name="classonetomanies" table="classonetomany"
+   cascade="all" lazy="false" inverse="false">
+   <key>  <!--确定关联的外键列--> 
+    <column name="studentid"/>
+   </key> <!--用以映射到关联类属性--> 
+   <one-to-many class="ch12.hibernate.Classonetomany" />
+  </set>
+  SessionFactory sessionFactory = new Configuration().configure(） .buildSessionFactory();
+  Classonetomany classm1 = new Classonetomany();
+  Classonetomany classm2 = new Classonetomany();
+  Stuentonetomany student = new Stuentonetomany();
+  student.getClassonetomanies().add(classm1);
+  student.getClassonetomanies().add(classm2);
+  Session session = sessionFactory.openSession();
+  Transaction trans = session.beginTransaction();
+  session.save(classm1);
+  session.save(classm2);
+  session.save(student);
+  trans.commit();
+  session.close();
+  sessionFactory.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+一对多和多对一双向关联
+
+通过前面的一对多的单向关联的测试，可以看出一对多的单向关联操作存在着很大的问题，包括性能和安全等。
+双向关联就是有“一对多”和“多对一”两个关联组合而成德，在双向关联的两端都知道对方是谁。
+下面就开始演示这种关联。
+首先定义我们需要使用的POJO对象。
+public class Member {
+    private String id; 
+    private String name; 
+    private Integer age; 
+    private Set<Order> orders = new HashSet<Order>();
+    ……
+}
+public class Order {
+    private Integer id; 
+    private String name; 
+    private String num; 
+    private Member member;
+……
+}
+两个POJO对应的映射文件分别为Member.hbm.xml和Order.hbm.xml。
+Member.hbm.xml
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Member" table="TEST_MEMBER"> 
+        <id name="id" column="ID"> 
+            <generator class="uuid.hex"></generator> 
+        </id> 
+        <property name="age" column="AGE"></property> 
+        <property name="name" column="NAME"></property> 
+        <set name="orders" cascade="all" inverse="true">
+<!--设置inverse=”true”表示Member不在作为主控方，就是说不再由Member来维持关联关系，而有Order方来维持关联关系，这样Order在持久化的时候会主动去获取Member的主键值来作为自己的外键值。 在one-to-manay关联关系中，一般将manay端设置为主控方（inverse=”false”），这样将有助于改善性能。默认情况下inverse=”false” --> 
+            <key column="MEMBER_ID"></key> 
+            <one-to-many class="Order"/> 
+        </set> 
+    </class> 
+</hibernate-mapping>
+Order.hbm.xml
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Order" table="TEST_ORDER"> 
+        <id name="id" column="ID"> 
+            <generator class="native"></generator> 
+        </id> 
+        <property name="name" column="NAME"></property> 
+        <property name="num" column="NUM"></property> 
+        <many-to-one name="member" class="Member" column="MEMBER_ID"></many-to-one>
+</hibernate-mapping>
+下面我们来进行测试。
+a、插入数据
+public void insert() { 
+        Session session = HibernateSessionFactory.getSessionFactory() 
+                .getCurrentSession(); 
+        session.beginTransaction(); 
+        Member m = new Member(); 
+        m.setAge(24); 
+        m.setName("Louis");
+        Order order = new Order(); 
+        order.setName("order 1"); 
+        order.setNum("order num 1"); 
+        order.setMember(m); 
+        m.getOrders().add(order);
+        session.save(m); 
+        session.getTransaction().commit(); 
+    }
+查看Hibernate在后台使用的SQL语句如下：
+Hibernate: 
+    insert 
+    into 
+        TEST_MEMBER 
+        (AGE, NAME, ID) 
+    values 
+        (?, ?, ?) 
+Hibernate: 
+    insert 
+    into 
+        TEST_ORDER 
+        (NAME, NUM, MEMBER_ID) 
+    values 
+        (?, ?, ?)
+仅仅就两条语句，明显比单向关联的时候少了一条更新语句（把Order的外键进行更新为Menber的主键值）。
+b、加载数据
+和单向关联的区别在于，如果加载的是Order对象，那么它也知道和它关联的对象。
+c、删除数据
+删除数据和单向关联时的删除数据的区别在于，对Member及它的关联对象Order加载后，不需要在更新Order的外键为NULL，而是紧跟着逐条删除Order，最后删除Member。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+一对多和多对一单项关联
+一对多关联和多对一关联在实际应用中式非常普遍的。例如一个会员（Member）可以有多个订单（Order)，而每个订单只能属于某个特定的会员，这便是一个典型的一对多关联。
+本示例要用到的两个POJO类如下：
+public class Member {
+    private String id;
+    private String name;
+    private Integer age;
+    private Set<Order> orders = new HashSet<Order>();
+    ......
+}
+public class Order {
+    private Integer id;
+    private String name;
+    private String num;
+    private String memberId;
+    ......
+}
+会员（Member）拥有多个订单（Order），而每个订单只能属于某个特定的会员。
+首先来演示和学习一对多的单向关联。
+两个人POJO的映射文件如下：
+Member.hbm.xml：
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Member" table="TEST_MEMBER">
+        <id name="id" column="ID">
+            <generator class="uuid.hex"></generator>
+        </id>
+        <property name="age" column="AGE"></property>
+        <property name="name" column="NAME"></property>
+        <!--set元素，就是定义一个集合，它的name属性值是对应的POJO中的相关属性名称-->
+        <set name="orders" cascade="all">
+            <key column="MEMBER_ID"></key><!--指定“ 多” 的一段的外键，与“一”端得主键相关联-->
+            <one-to-many class="Order"/><!--指定了“多”端对应的类-->
+        </set>
+    </class>
+</hibernate-mapping>
+Order.hbm.xml：
+<hibernate-mapping package="org.louis.domain">
+    <class name="Order" table="TEST_ORDER">
+        <id name="id" column="ID">
+            <generator class="native"></generator>
+        </id>
+        
+        <property name="name" column="NAME"></property>
+        <property name="num" column="NUM"></property>
+        <!--外键-->
+        <property name="memberId" column="MEMBER_ID"></property>
+
+</hibernate-mapping>
+在Member.hbm.xml中主要的是它的<set>元素，它定义了Order作为它的一个集合属性。而Order.hbm.xml则和普通的映射文件没有什么不同。
+下面进行测试：
+a、插入数据
+    public void insert() {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = new Member();
+        m.setAge(24);
+        m.setName("Louis");
+
+        Order order = new Order();
+        order.setName("order 1");
+        order.setNum("order num 1");
+        
+        m.getOrders().add(order);
+        
+        session.save(m);
+        session.getTransaction().commit();
+    }
+查看Hibernate在后台执行的SQL语句如下：
+Hibernate: 
+    insert ......
+总共执行了3条Sql语句，前两条是进行数据的插入，第三条将Order的外键更新为Member的主键值。因为关联关系时单向的，关联关联关系由Member来维护，而“多”的一方并不知道它自己和Member有任何关系。在这个例子中，Hibernate首先向数据库插入Member的数据，然后插入Order的数据（这时候Order的外键为NULL，如果设置其外键不允许为NULL的话就会报错），最后Hibernate会发送一条更新Order外键的Sql语句，其值由Member的主键值而来。由此看出采用这种单向关联存在着很大的问题，包括性能、是否为空等问题。
+b、加载数据
+public void getMemberById(String id) {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = (Member)session.load(Member.class, id);
+        System.out.println(m+"\n"+m.getOrders().size());
+        session.getTransaction().commit();
+    } 
+查看后台的SQL语句：
+Hibernate: 
+    select.....
+这里有点要注意：m.getOrders()在这里必须要在加载Member对象的Session范围内，否则得话就会出错，因为Session已经关闭。
+c、删除数据
+public void delete(String id) {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = (Member) session.load(Member.class, id);
+        session.delete(m);
+        session.getTransaction().commit();
+    }
+查看Hibernate后台SQL语句如下：
+Hibernate: 
+    select.....
+因为我根据一个Member的主键来加载到它的一个对象实例，然后将其删除，所以Hibernate首先加载Member对象及其Order集合；因为要删除Order，所以又更新了Order的外键为NULL，最后删除Order和Member。可见删除一个会员会执行大量的SQL语句，对性能的影响可想而知，并且如果Order的外键不允许为NULL，那么在更新Order时就会报错，这些都是要考虑的。而理想的情况应该是这样的：首先取出Member和其相关的集合，让后逐个删除与Member关联的对象，最后删除Member，比起上面的少了大量的更新语句，显然性能上要有所提高。
+为了能够达到上述理想情况，使用这种单向关联是不行的，那就要通过双向关联来实现。
+注：如果Member有上千个订单的话就要一条一条的删除订单，性能上也会受影响，幸好，Hibernate提高了一个系统属性可以设置成用来进行批量更新。hibernate.jdbc.batch_size，Hibernate官方建议取值在5和30之间。只有当要执行的SQL语句到指定的数目后，Hibernate才将其提交执行，这样减少了与数据交互的次数，从而提高性能。
+关与双向关联请看下章的介绍。
+一对多关联和多对一关联在实际应用中式非常普遍的。例如一个会员（Member）可以有多个订单（Order)，而每个订单只能属于某个特定的会员，这便是一个典型的一对多关联。
+本示例要用到的两个POJO类如下：
+public class Member {
+    private String id;
+    private String name;
+    private Integer age;
+    private Set<Order> orders = new HashSet<Order>();
+    ......
+}
+public class Order {
+    private Integer id;
+    private String name;
+    private String num;
+    private String memberId;
+    ......
+}
+会员（Member）拥有多个订单（Order），而每个订单只能属于某个特定的会员。
+首先来演示和学习一对多的单向关联。
+两个人POJO的映射文件如下：
+Member.hbm.xml：
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Member" table="TEST_MEMBER">
+        <id name="id" column="ID">
+            <generator class="uuid.hex"></generator>
+        </id>
+        <property name="age" column="AGE"></property>
+        <property name="name" column="NAME"></property>
+        <!--set元素，就是定义一个集合，它的name属性值是对应的POJO中的相关属性名称-->
+        <set name="orders" cascade="all">
+            <key column="MEMBER_ID"></key><!--指定“ 多” 的一段的外键，与“一”端得主键相关联-->
+            <one-to-many class="Order"/><!--指定了“多”端对应的类-->
+        </set>
+    </class>
+</hibernate-mapping>
+Order.hbm.xml：
+<hibernate-mapping package="org.louis.domain">
+    <class name="Order" table="TEST_ORDER">
+        <id name="id" column="ID">
+            <generator class="native"></generator>
+        </id>
+        
+        <property name="name" column="NAME"></property>
+        <property name="num" column="NUM"></property>
+        <!--外键-->
+        <property name="memberId" column="MEMBER_ID"></property>
+
+</hibernate-mapping>
+在Member.hbm.xml中主要的是它的<set>元素，它定义了Order作为它的一个集合属性。而Order.hbm.xml则和普通的映射文件没有什么不同。
+下面进行测试：
+a、插入数据
+    public void insert() {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = new Member();
+        m.setAge(24);
+        m.setName("Louis");
+
+        Order order = new Order();
+        order.setName("order 1");
+        order.setNum("order num 1");
+        
+        m.getOrders().add(order);
+        
+        session.save(m);
+        session.getTransaction().commit();
+    }
+查看Hibernate在后台执行的SQL语句如下：
+Hibernate: 
+    insert .....
+总共执行了3条Sql语句，前两条是进行数据的插入，第三条将Order的外键更新为Member的主键值。因为关联关系时单向的，关联关联关系由Member来维护，而“多”的一方并不知道它自己和Member有任何关系。在这个例子中，Hibernate首先向数据库插入Member的数据，然后插入Order的数据（这时候Order的外键为NULL，如果设置其外键不允许为NULL的话就会报错），最后Hibernate会发送一条更新Order外键的Sql语句，其值由Member的主键值而来。由此看出采用这种单向关联存在着很大的问题，包括性能、是否为空等问题。
+b、加载数据
+public void getMemberById(String id) {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = (Member)session.load(Member.class, id);
+        System.out.println(m+"\n"+m.getOrders().size());
+        session.getTransaction().commit();
+    } 
+查看后台的SQL语句：
+Hibernate: 
+    select .....
+这里有点要注意：m.getOrders()在这里必须要在加载Member对象的Session范围内，否则得话就会出错，因为Session已经关闭。
+c、删除数据
+public void delete(String id) {
+        Session session = HibernateSessionFactory.getSessionFactory()
+                .getCurrentSession();
+        session.beginTransaction();
+        Member m = (Member) session.load(Member.class, id);
+        session.delete(m);
+        session.getTransaction().commit();
+    }
+查看Hibernate后台SQL语句如下：
+Hibernate: 
+    select ........
+因为我根据一个Member的主键来加载到它的一个对象实例，然后将其删除，所以Hibernate首先加载Member对象及其Order集合；因为要删除Order，所以又更新了Order的外键为NULL，最后删除Order和Member。可见删除一个会员会执行大量的SQL语句，对性能的影响可想而知，并且如果Order的外键不允许为NULL，那么在更新Order时就会报错，这些都是要考虑的。而理想的情况应该是这样的：首先取出Member和其相关的集合，让后逐个删除与Member关联的对象，最后删除Member，比起上面的少了大量的更新语句，显然性能上要有所提高。
+为了能够达到上述理想情况，使用这种单向关联是不行的，那就要通过双向关联来实现。
+注：如果Member有上千个订单的话就要一条一条的删除订单，性能上也会受影响，幸好，Hibernate提高了一个系统属性可以设置成用来进行批量更新。hibernate.jdbc.batch_size，Hibernate官方建议取值在5和30之间。只有当要执行的SQL语句到指定的数目后，Hibernate才将其提交执行，这样减少了与数据交互的次数，从而提高性能。
+关与双向关联请看下章的介绍。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+
+java核心技术学习
+一对一关联
+
+
+一对一关联有两种关联方式，即：主键关联和外键关联。
+下面将分别对这两种情况进行演示和讨论。在讨论前，首先给出这次用到得POJO，和相应的映射文件的主要片段。
+Member类：
+public class Member {
+    private String id;
+    private String name;
+    private Integer age;
+    private IdCard card;
+.......
+}
+IdCard类：
+public class IdCard {
+    private String id;
+    private String num;
+    private Member member;
+........
+}
+先对这两个类解释一下，Member类代表人员，IdCard类代表了身份证，这在现实中也是一对一的关系。
+1、主键关联
+Member. hbm.xml的主要片段如下：
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Member" table="TEST_MEMBER">
+        <id name="id" column="ID">
+            <generator class="uuid.hex"></generator>
+        </id>
+        <property name="age" column="AGE"></property>
+        <property name="name" column="NAME"></property>
+        
+       <one-to-one name="card" class="IdCard" cascade="all"></one-to-one>
+
+.........
+</hibernate-mapping>  
+IdCard.hbm.xml的配置如下：
+<hibernate-mapping package="org.louis.domain">
+    <class name="Order" table="TEST_ORDER">
+        <id name="id" column="ID">
+            <generator class="foreign"><!--使用主键关联，引用Member对应表的主键作为自己的主键--> 
+                <param name="property">member</param><!--此处的member必须和下面配置的one-to-one的name 属性一样 --> 
+            </generator>
+        </id>
+        <property name="num" column="NUM"></property>
+        
+        <one-to-one name="member" class="Member" constrained="true"></one-to-one>
+    </class>
+</hibernate-mapping>          
+至此，所有的配置工作已经完成。
+测试进行测试：
+a、新增数据
+public void insert(){
+        Session session = HibernateSessionFactory.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Member m = new Member();
+        m.setAge(24);
+        m.setName("Louis");
+    
+        IdCard card = new IdCard();
+        card.setNum("123456789");
+        card.setMember(m);//设置Member和IdCard关系，以便IdCard可以从Member取得主键值
+        
+        m.setCard(card);//设置Member和IdCard关系
+        
+        session.save(m);
+        session.getTransaction().commit();
+    }
+后台Hibernate执行的SqlServer语句是：
+Hibernate: insert into TEST_MEMBER (AGE, NAME, ID) values (?, ?, ?)
+Hibernate: insert into TEST_IDCARD (NUM, ID) values (?, ?)
+保存IdCard时使用IdCard对象中member对象的Id来为自己的Id赋值的。你现在可以查看数据库，里面两个表的主键值相同。
+b、加载数据
+public void getMemberById(String id){
+        Session session = HibernateSessionFactory.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Member m = (Member)session.load(Member.class, id);
+        System.out.println(m);
+        session.getTransaction().commit();
+    }
+后台Hibernate执行的Sql语句是：
+    select
+        member0_.ID as ID5_1_,
+        member0_.AGE as AGE5_1_,
+        member0_.NAME as NAME5_1_,
+        idcard1_.ID as ID4_0_,
+        idcard1_.NUM as NUM4_0_ 
+    from
+        TEST_MEMBER member0_ 
+    left outer join
+        TEST_IDCARD idcard1_ 
+            on member0_.ID=idcard1_.ID 
+    where
+        member0_.ID=?
+可以看出默认采用的左外连接 的查询。
+如果把Member.hbm.xml中做些改动如：
+<one-to-one name="card" class="IdCard" fetch="select" cascade="all"></one-to-one>
+再次执行查询Sql语句如下：
+Hibernate: 
+    select.........
+可以看出生成了两条SQL语句，明显要比一条的性能低一些。
+c、删除操作
+Hibernate: 
+    select.........
+前两条Sql语句是加载Member和关联的IdCard对象。由于在测试加载数据时改变了抓取数据方式为fetch="select"所以生成了两条，如果改为默认（fetch="join"）则只生成一条，并且采用的是左外连接方式。在删除代码中，我只是删除了Member，但是查看数据库和后台的SQL语句看出也把IdCard数据删除了，这是因为我在Member.hbm.xml中的<one-to-one>设置了cascade="all"。如果不设置（默认为“none”），则只会删除Member对象，而不会级联删除IdCard对象。
+注意：在这个例子中，一定要注意添加数据、删除数据的先后顺序。添加数据必须先添加Member（因为IdCard的主键由Member而来），删除数据必须先删除IdCard（因为在IdCard.hbm.xml中设置了constrained="true"而使得两个表之间有了约束）。
+2、外键关联
+使用外键关联，我们还是使用这两个POJO类，只是其映射文件有所调整。调整后的映射文件如下：
+Member.hbm.xml ：
+<hibernate-mapping package="org.louis.domain"> 
+    <class name="Member" table="TEST_MEMBER">
+        <id name="id" column="ID">
+            <generator class="uuid.hex"></generator>
+        </id>
+        <property name="age" column="AGE"></property>
+        <property name="name" column="NAME"></property>
+        
+        <one-to-one name="card" class="IdCard" fetch="join" cascade="all" property-ref="member"></one-to-one> 
+        ......
+</hibernate-mapping>
+IdCard.hbm.xml ：
+<hibernate-mapping package="org.louis.domain">
+    <class name="IdCard" table="TEST_IDCARD">
+        <id name="id" column="ID">
+            <generator class="uuid.hex">
+            </generator>
+        </id>
+        <property name="num" column="NUM"></property>
+        
+        <many-to-one name="member" class="Member" unique="true" column="MEMBER_ID"></many-to-one>
+    </class>
+</hibernate-mapping>    
+依然采用上面的测试代码进行测试：
+a、插入数据
+后台Hibernate执行的SQL语句
+Hibernate: 
+    insert .......
+IdCard的外键来自Member的主键。
+b、加载数据
+同上
+c、删除数据
+同上
+至此，一对一的关联关系基本上说的差不多了，下一章将讨论一对多的关联关系。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+数据库关联inverse和Cascade
+
+ 1.如果两个都没有inverse="true"，那么他们都想对relation进行操作，最后就肯定报错
+谁里面有inverse="true"，谁就放弃了对relation操作的权利。那么，当另一方执行保存（save）时，除了保存自己的东西外，还会同时对relation表进行写入。
+2. cascade="all"  谁有这个，谁就拥有了控制对方的权力，除非他不想控制。  teacher.getStuSet().add(stu); 这句话，就是表明，持有 cascade="all" 的这个对象要行使自己的权力。  当这个对象在保存时，就会同时将  stu  这个对象保存到Student表中。
+==================
+Cascade代表是否执行级联操作，Inverse代表是否由己方维护关系。Inverse=“false”是自己的义务（义务必须执行）Cascade是自己的权力（权力可以行使）
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+hibernate.xml
+
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!-- Generated by MyEclipse Hibernate Tools.                   -->
+<hibernate-configuration>
+ <session-factory>
+  <property name="hbm2ddl.auto">update</property>
+  <!-- 显示实际操作数据库时的SQL -->
+  <property name="show_sql">true</property>
+  <property name="format_sql">false</property>
+  <property name="cache.use_query_cache">false</property>
+  <!-- SQL方言，这边设定的是MySQL -->
+  <property name="dialect">
+   org.hibernate.dialect.MySQLDialect
+  </property>
+  <property name="connection.driver_class">
+   com.mysql.jdbc.Driver
+  </property>
+  <property name="connection.url">
+   jdbc:mysql://localhost/hibernatedb
+  </property>
+  <property name="connection.username">root</property>
+  <property name="connection.password">12345</property>
+  <!--SQLServer2000数据库配置-->
+  <!--
+   <property name="dialect">org.hibernate.dialect.SQLServerDialect</property>
+   <property name="connection.driver_class">
+   com.microsoft.jdbc.sqlserver.SQLServerDriver</property>
+   <property name="connection.url">
+   jdbc:microsoft:sqlserver://zhangf.:1433;databasename=Hibernate</property>
+   <property name="connection.username">sa</property>
+   <property name="connection.password">sa</property>-->
+  <!--ORACLE数据库配置-->
+  <!--<propertyname="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+   <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+   <property name="connection.url">jdbc:oracle:thin:@newidea:1521:ec120</property>
+   <property name="connection.username">xdoc</property>
+   <property name="connection.password">xdoc</property>-->
+  <!-- 对象与数据库表格映像文件 -->
+  <mapping resource="ch12/hibernate/xml/Userinfo.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/Classonetoone.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/Stuentonetoone hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/StuentOnetoMany.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/ClassOnetoMany.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/ClassManytoMany.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/StuentManytoMany.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/ClassOnetoMany2.hbm.xml" />
+  <mapping resource="ch12/hibernate/xml/StuentOnetoMany2.hbm.xml" />
+  
+ </session-factory>
+</hibernate-configuration>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+级联异常
+
+项目中做修改操作时，我的思路是先将多的一方删除，然后在将从前台的数据重新set进一的一方。以前项目中也没有问题。 
+现在项目中做修改更新操作时出异常了：org.hibernate.ObjectDeletedException: deleted object would be re-saved by
+cascade (remove deleted object from associations):
+[net.yidong.ibs.base.model.MSearchparamvalue#402882c9203c473a01203c483fa 50002] 
+我自己到网上找了下相关解决方法： 
+方法1 删除Set方的cascade： 
+方法2 解决关联关系后，再删除 
+    onside.getManys().remove(thisMany);  //在所关联的一方的set中移走当前要删除的对象 
+    thisMany.setOne(null);                          //设置所对应的一方为空，解除它们之间的关系 
+    manyDao.delete(thisMany); 
+方法3 在many-to-one方增加cascade 但值不能是none
+按照上面的设置后，还是出现这个异常。又找自己以前做的项目的中的配置。稍微改了下，还是报这个Bug。
+今天自己在 <ont-to-many>的 <set 的一方，将cascade改成 cascade="all-delete-orphan", 
+<many-to-one> 的cascade改成 cascade="save-update" 
+这时，奇怪的事情出现了，虽然还是报这个异常，但数据库中的记录已经删除掉了，新增的记录也保存上去了，前台也正确显
+示了， 
+请问是什么情况呢？？？
+方法1 删除Set方的cascade 
+方法2 解决关联关系后，再删除 
+方法3 在many-to-one方增加cascade 但值不能是none 
+最后一招： 
+检查一下hashCode equals是否使用了id作为唯一标示的选项了；我用uuid.hex时是没有问题的；但是用了native，就不行了，
+怎么办？删除啊！
+关系数据库系统本身就比较复杂，加上Hibernate的O/R映射层，复杂度加重了，很容易出现问题，本人将最近遇到的问题和解
+决方法做一个总结，整理在下面的一系列文章中
+正确理解Hibernate的聚合类型（collection）的使用 
+在Hibernate中正确实现关联关系中的级联操作（cascading） 
+在Hibernate框架中编写持久对象类实现外键关联的几点注意事项 
+使用Hibernate框架实现复杂的关联关系时容易出现的异常 
+本文是第二篇，讲解在one-to-many(一对多)和many-to-one（多对一）关联关系中的cascade特性的声明方法。在使用过程中最
+关键点是：脑子中要有一张持久对象关系树及其状态图（状态分别是：Transient, Persistent, Detached），存在对象间关联
+关系时，如果使用了级联操作特性，要找到树的根对象（所以要用树，而不是图），从根往下级联操作，只做单方向的级联。
+我们再次使用第一篇的例子，为了反映两者的关联关系，为User类我们声明如下一对多关系
+<class name="User" table="USER">
+...
+<set name="preferences"
+cascade="all,delete-orphan"
+inverse="true">
+<key column="USER_ID" not-null="true"/>
+<one-to-many class="Preference"/>
+</set>
+...
+</class>
+而为Preference类声明如下多对一关系 
+<class name="Preference" table="PREFERENCE">
+...
+<many-to-one name="user" column="USER_ID" not-null="true" 
+foreign-key="ALLPREFERENCES" class="User"/>
+...
+</class>
+由上可见，在User和Preference的关系树中，User是根（root），另外还可以看到为Preference声明了一个not-null的外键。
+在理清了级联的顺序关系后，后续的持久化操作可以只对User进行即可，Preference的持久化由级联操作完成。
+根据Hibernate的原理和官方建议，应该采用以下持久化方法：
+session.save()：用于将Transient状态的对象及其级联对象持久化（即在该session中，处于persistent状态），例如，创建
+新对象及其关联。 
+session.flush()或者事务提交（commit）操作：用于将处于presistent状态的对象修改的持久化，例如，从数据库将一个关联
+树调到Hibernate中，修改后再次入库。 
+session.update(), session.saveOrUpdate(), session.merge()：一般只用于处于detached状态的对象修改后进行的持久化操
+作（这是Hibernate的一个重要特色，可以很好的处理业务层面的事务（transaction）跟数据库层面的事务的配合问题），当
+然，这些方法用于上一种情况也没有错 
+session.delete()：删除对象 
+做了上述实现后并不能保证关联关系的级联操作的正确执行，进一步分析参见后续文章。
+在实践中很容易触发以下异常: 
+org.hibernate.ObjectDeletedException: deleted object would be re-saved by cascade (remove deleted object from
+associations): xxx
+这主要是理不清级联关系造成的，按照本文和下一文介绍的方法可以排除。
+还有一个异常： 
+Cannot delete or update a parent row: a foreign key constraint fails ([外键的定义])
+其解决方法也是一样的。
+
+关系数据库系统本身就比较复杂，加上Hibernate的O/R映射层，复杂度加重了，很容易出现问题，本人将最近遇到的问题和解
+决方法做一个总结，整理在下面的一系列文章中
+正确理解Hibernate的聚合类型（collection）的使用 
+在Hibernate中正确实现关联关系中的级联操作（cascading） 
+在Hibernate框架中编写持久对象类实现外键关联的几点注意事项 
+使用Hibernate框架实现复杂的关联关系时容易出现的异常 
+本文是第三篇，讲解在one-to-many(一对多)关联关系中的对象类的几个关键方法的实现。主要是equals()，hashCode()和实例
+化方法。
+在在Hibernate中正确实现关联关系中的级联操作（cascading）中，我们讲了怎样正确声明关联关系和使用持久化方法，我们
+紧接上一篇的例子，要能够保证从User到Preference的级联的正确运行，必须要正确实现equals()，hashCode()和没有参数的
+实例化方法。
+在equals()和hashCode()的计算中，一定要注意：要使用能够排他性区别对象的对象属性成员计算hash code和相等运算。最合
+适的对象属性是业务层面的关键字（business key或者称为natural key），而不能使用Hibernate自动计算赋值的primary
+key(主键)，当然，以上结论是在一定环境下的，即：我们假设数据库中的表的主键使用某种唯一性id，而不是其natural key
+。例如，User表中name就是natural key，Hibernate给出了很多理由说明使用natural key作为主键的不方便性。
+主键本来就是唯一的，为什么不能参与equals()和hashCode()的运算，如果能的话，计算方法大大简化了：只使用主键判断相
+等和直接使用主键的hash code。实际上，主键不是不能这样用，而是要分场合，如果，主键是应用程序赋予的，例如uuid，完
+全可以使用。但是，如果主键是让Hibernate在持久化时产生的，就不能使用了，例如，一个对象刚创建，还没有持久化，就没
+有分配一个主键，会出现一下异常
+java.lang.NullPointerException
+以上两个方法必须实现，否则，在级联关系中Preference对象的持久化操作将受影响。
+如果空实例化操作不实现会怎样呢？如果Preference的空实例化方法不实现，将出现以下异常
+org.hibernate.InstantiationException: No default constructor for entity: xxx
+
+本文是第四篇，总结一下在复杂的关联关系环境中，容易出现的异常和解决方法。
+Hibernate将表进行对象封装，在其帮助下，在面向对象编程环境中，程序员会逐渐忘掉数据库的存在。但是，如果数据库结构
+比较复杂，忘记数据库的存在经常引起很多异常。此文，我们对下面几个异常的处理方法进行总结：
+异常1：
+
+object references an unsaved transient instance - 
+save the transient instance before flushing: xxx类
+异常2：
+not-null property references a null or transient value:: xxx类引用xxx属性
+这两个异常最容易出现在多个表之间有外键约束的情况下。例如，表A, B, C之间，C有外键分别引用A和B。A到C是1:n关系，在
+A的hbm文件中，用一个Set存储所有相关的C；B到C也是1:n关系，在B中也有一个Set存储相关的C。如果程序中产生了这三个类
+的对象，而且在内存中对象的关联关系已经成功建立了，假设C的对象先进行持久化，必然引起上述异常。
+读者也许会说：这个问题太显而易见了，自然会避免的。事实上，当长时间忘记数据库的存在的时候，这个问题会时不时的出
+现，尤其是使用了Hibernate级联持久化技术后，很容易犯错误。我们在在Hibernate中正确实现关联关系中的级联操作
+（cascading）一文中描写了一种理想场景，在理想情况下，我们确定了级联树的根，只对其进行存储操作，Hibernate完成级
+联操作。在复杂的现实面前，我们需要区别对待
+针对上述情形，我更喜欢下面的编程模式
+A和B的对象创建后即进行持久化操作 
+创建C对象后，设定了C到A和B的引用关系后，将其持久化 
+编写各种复杂的业务逻辑，期间可能对A, B, C的对象的内容和关系进行了修改 
+执行Hibernate session.flush()操作，将内存中的修改同步到数据库 
+上述模式也许增加了对数据库的操作，导致性能的下降，但是，至少可以避免上述异常的发生。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+
+
+java核心技术学习
+迭代式获取结果
+
+迭代式获取结果(Iterating results)
+某些情况下，你可以使用iterate()方法得到更好的性能。 这通常是你预期返回的结果在session，或二级缓存(second-level cache)中已经存在时的情况。 如若不然，iterate()会比list()慢，而且可能简单查询也需要进行多次数据库访问： iterate()会首先使用1条语句得到所有对象的持久化标识(identifiers)，再根据持久化标识执行n条附加的select语句实例化实际的对象。
+// fetch ids
+Iterator iter = sess.createQuery("from eg.Qux q order by q.likeliness").iterate();
+while ( iter.hasNext() ) {
+    Qux qux = (Qux) iter.next();  // fetch the object
+    // something we couldnt express in the query
+    if ( qux.calculateComplicatedAlgorithm() ) {
+        // delete the current instance
+        iter.remove();
+        // dont need to process the rest
+        break;
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+测试和编译
+
+
+编译是使用ant来进行编译打包的。需要创建build.xml文件。文件如下：
+<project basedir="." default="complay-copt">
+     <property file="build.properties"/>
+    
+     <!--
+      | 编译需要的支持jar包
+     -->
+     <path id="classpath-id">
+         <fileset dir="${j2ee-lib}">
+              <include name="*.jar"/>
+         </fileset>
+         <fileset dir="${web-lib}">
+              <include name="*.jar"/>
+         </fileset>
+     </path>
+    
+     <!--
+      | 清理工作
+     -->
+     <target name="clean">
+         <delete dir="${build-dir}"/>
+         <mkdir dir="${build-dir}"/>
+     </target>
+    
+     <!--
+      | 编译java文件
+     -->
+     <target name="comple" depends="clean">
+         <javac srcdir="${src-dir}" destdir="${build-dir}"
+              classpathref="classpath-id"  encoding="UTF-8">
+        
+         </javac>
+     </target>
+    
+     <!--
+      | 编译properties文件
+     -->
+     <target name="native">
+         <native2ascii
+              src="${i18n.cn}"
+              dest="${i18n-lib}" ext=".properties"
+              encoding="UTF-8" includes="*.*"
+         />
+        
+     </target>
+    
+     <!--
+      | 将编译的文件拷贝到web-inf下的classes下
+     --> 
+     <target name="copy" >
+         <!-- 拷贝class文件 -->
+         <copy todir="${class-path}" overwrite="true">
+              <fileset dir="${build-dir}">
+                   <include name="**/*.class"/>
+              </fileset>
+         </copy>
+        
+         <!-- 拷贝配置文件 -->
+         <copy todir="${class-path}">
+              <fileset dir="${resources-lib}">
+                   <!-- 资源文件 -->
+                   <include name="i18n/*.properties"/>
+                   <include name="config/*.properties"/>
+                   <!-- spring 配置文件 -->
+                   <include name="spring/*.xml"/>
+                   <!-- 数据库 -->
+                   <include name="hsqldb/*.*"/>
+                   <include name="log4j.properties"/>
+                   <include name="**/*.tld"/>
+              </fileset>
+              <fileset dir="${src-dir}">
+                   <include name="**/*.xml"/>
+              </fileset>
+         </copy>
+     </target>
+    
+     <target name="complay-copt" depends="comple,native,copy">
+         <war destfile="${war-name}" basedir="${war-basic-dir}"
+              webxml="${webxml-file}"></war>
+     </target>
+    
+     <target name="ear">
+          <ear destfile="${ear-name}"
+              basedir="${ear-basic-dir}"
+              appxml="${ear-appxml-file}"
+         >
+        
+         </ear>
+     </target>
+</project>
+可使用Outline来运行:
+直接run complay-copt[default]来进行编译，如需打包成ear可以再继续运行ear即可。
+然后就可行进测试。整个登录模块就是这个样子，其它模块的创建类似这些步骤。
+
+ Copyright ©2011 lyt. All Rights Reserved.

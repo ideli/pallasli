@@ -1,0 +1,1070 @@
+
+java核心技术学习
+Webservice
+
+webService 简介
+定义
+一个应用程序
+一个服务，能通过网络特别是互联网来描述、发布、定位及调用的服务
+解决方案
+sun microsystem:sun one
+bea weblogic
+ibm weblogic
+jboss application server
+microsoft:.net
+axis
+cxf
+数据传输标准
+xml
+通信协议
+soap:simple object access protocol
+体系结构
+服务提供商—发布—》服务代理商（服务注册表）—查找—》服务请求者—绑定—》服务提供商
+工作原理
+存放web服务的web服务器《—基于http的soap协议xml 参数—客户端应用程序《—一次性获取类型信息（XML模式）—》服务描述文件《——》存放web服务的web服务器—基于http的soap协议xml 返回值—》客户端应用程序
+面向服务的体系架构
+一个组件模型
+将应用程序的不同功能单元（服务）通过这些服务之间定义良好的接口和契约联系起来
+接口是采用中立的方式进行定义的，他应独立于实行服务的硬件平台、操作系统和编程语言
+构建在各种这样的系统中的服务可以以一种统一和通用的方式进行交互
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+webService资料
+
+一．什么是WebService
+从表面上看，WebService就是一个应用程序，它向外界提供了一个能够通过Web进行调用的API。这就是说，你能够用编程的方法通过Web调用来实现某个功能的应用程序。如图：
+外部接口 调用webService
+例如，笔者创建一个Web Service，它的作用是查询某公司某员工的基本信息。它接受该员工的编号作为查询字符串，返回该员工的具体信息。你可以在浏览器的地址栏中直接输入HTTP GET请求来调用罗列该员工基本信息的JSP页面，这就可以算作是体验Web Service了。如图： Http发送请求 查询数据
+返 回 调 用 XML 形成XML API
+从深层次上看，Web Service是一种新的Web应用程序分支，它们是自包含、自描述、模块化的应用，可以在网络(通常为Web)中被描述、发布、查找以及通过Web来调用。
+Web Service便是基于网络的、分布式的模块化组件，它执行特定的任务，遵守具体的技术规范，这些规范使得Web Service能与其他兼容的组件进行互操作。它可以使用标准的互联网协议，像超文本传输协议HTTP和XML，将功能体现在互联网和企业内部网上。Web Service平台是一套标准，主要目标是跨平台的可互操作性。为了达到这一目标，WebService完全基于XML（可扩展标记语言）、XSD（XMLSchema）等独立于平台、独立于软件供应商的标准，是创建可互操作的、分布式应用程序的新平台。你可以用你喜欢的任何语言，在你喜欢的任何平台上写Web Service。
+二． WebService的技术支持
+WebService平台需要一套协议来实现分布式应用程序的创建。任何平台都有它的数据表示方法和类型系统。要实现互操作性，平台无关性，Web Service平台必须提供一套标准的类型系统，用于沟通不同平台、编程语言和组件模型中的不同类型系统。目前这些协议有：
+2.1.XML和XSD
+可扩展的标记语言XML 是Web Service平台中表示数据的基本格式。除了易于建立和易于分析外，XML主要的优点在于它既与平台无关，又与厂商无关。XML是由万维网协会(W3C)创建，W3C制定的XML SchemaXSD 定义了一套标准的数据类型，并给出了一种语言来扩展这套数据类型。
+Web Service平台是用XSD来作为数据类型系统的。当你用某种语言如VB.NET或C# 来构造一个Web Service时，为了符合Web Service标准，所有你使用的数据类型都必须被转换为XSD类型。如想让它使用在不同平台和不同软件的不同组织间传递，还需要用某种东西将它包装起来。这种东西就是一种协议，如 SOAP。
+2.2.SOAP
+SOAP即简单对象访问协议(Simple Object Access Protocol)，它是用于交换XML编码信息的轻量级协议。它有三个主要方面：XML-envelope为描述信息内容和如何处理内容定义了框架，将程序对象编码成为XML对象的规则，执行远程过程调用(RPC)的约定。SOAP可以运行在任何其他传输协议上。例如，你可以使用 SMTP，即因特网电子邮件协议来传递SOAP消息，这可是很有诱惑力的。在传输层之间的头是不同的，但XML有效负载保持相同。
+Web Service 希望实现不同的系统之间能够用“软件-软件对话”的方式相互调用，打破了软件应用、网站和各种设备之间的格格不入的状态，实现“基于Web无缝集成”的目标。
+2. 3.WSDL
+Web Service描述语言WSDL 就是用机器能阅读的方式提供的一个正式描述文档而基于XML的语言，用于描述Web Service及其函数、参数和返回值。因为是基于XML的，所以WSDL既是机器可阅读的，又是人可阅读的。
+2. 4.UDDI
+UDDI 的目的是为电子商务建立标准；UDDI是一套基于Web的、分布式的、为Web Service提供的、信息注册中心的实现标准规范，同时也包含一组使企业能将自身提供的Web Service注册，以使别的企业能够发现的访问协议的实现标准。
+2. 5.远程过程调用RPC与消息传递
+Web Service本身其实是在实现应用程序间的通信。我们现在有两种应用程序通信的方法：RPC远程过程调用和消息传递。使用RPC的时候，客户端的概念是调用服务器上的远程过程，通常方式为实例化一个远程对象并调用其方法和属性。RPC系统试图达到一种位置上的透明性：服务器暴露出远程对象的接口，而客户端就好像在本地使用的这些对象的接口一样，这样就隐藏了底层的信息，客户端也就根本不需要知道对象是在哪台机器上。三． WebService优缺点
+3.1.WebService优点
+3.1.1. Webservice的互操作性，平台无关性。
+3.1.2. Webservice并且SOAP协议是基于XML和HTTP这些业界的标准的，得到了所有的重要公司的支持。
+3.1.3. 由于使用了SOAP，数据是以ASCII文本的方式而非二进制传输，调试很方便；并且由于这样，它的数据容易通过防火墙，不需要防火墙为了程序而单独开一个“漏洞”。
+3.1.4. 此外，WebService实现的技术难度要比CORBA和DCOM小得多。
+3.1.5. 要实现B2B集成，EDI比较完善与比较复杂；而用WebService则可以低成本的实现，小公司也可以用上。
+3.1.6. 在C/S的程序中，WebService可以实现网页无整体刷新的与服务器打交道并取数。
+3.2.WebService缺点
+3.2.1. WebService使用了XML对数据封装，会造成大量的数据要在网络中传输。
+3.2.2. WebService规范没有规定任何与实现相关的细节，包括对象模型、编程语言，这一点，它不如CORBA。
+四． WebService用途
+4.1什么时候用WebService
+4.1.1跨越防火墙的通信
+如果你的应用程序有成千上万的用户，而且他们都分布在世界各地，那么客户端和服务器之间的通信将是一个棘手的问题。那是因为客户端和服务器之间通常都会有防火墙或者代理服务器。在这种情况下，你想使用DCOM就不是那么简单了，而且，通常你也不愿意把你的客户端程序发布到如此庞大数量的每一个用户手中。于是，你最终选择了用浏览器作为客户端，写下一堆ASP页面，把应用程序的中间层暴露给最终用户。结果呢？运气好的话，只是开发难度大了一些，运气不好的话，就会得到一个根本无法维护的应用程序。
+想象一下你应该怎么在你的应用程序里面加入一个新的页面：你必须先建立好用户界面(Web页面)，以及在这个页面后面，包含相应商业逻辑的中间层组件。这还不够，你还要再建立至少一个JSP页面，用来接受用户输入的信息，调用中间层组件，把结果格式化为HTML形式，最后还要把"结果页"送回浏览器。要是客户端代码不再如此依赖于HTML表单，客户端的编程不就简单多了吗？还有，建立JSP页面的那一步可以省略掉吗？当然。如果你的中间层组件是Web service的话，你完全可以从用户界面直接调用中间层组件，从而省掉建立JSP页面的那一步。要调用Web service，你可以直接使用Microsoft SOAP Toolkit或.NET这样的SOAP客户端，也可以使用你自己开发的SOAP客户端，然后把它和你的应用程序连接起来。这样做，不仅可以缩短开发周期，还可以减少代码的复杂度，并增强整个应用程序的可维护性。同时，你的应用程序也不再需要在每次调用中间层组件时，都跳转到相应的"结果页"了。
+以我的经验来看，在一个用户界面和中间层有较多交互的应用程序中，使用Web service这种结构，可以轻松的节省花在用户界面编程上的20%的开发时间。这样做还有另一个好处，就是你将得到一个由Web service组成的中间层，这一层是完全可以在应用程序集成或其他场合下被重用的。最后，通过Web service把你的应用程序的逻辑和数据暴露出来，还可以让其它平台上的客户重用你的应用程序。
+4.1.2应用程序集成
+企业级的应用程序开发者都知道，企业里经常都要把用不同语言写成的在不同平台上运行的各种程序集成起来，而这种集成将花费很大的开发的力量。你的应用程序经常都需要从运行在古老的IBM主机上的程序中获取数据；或者再把数据发送到主机或UNIX应用程序中去。即使是在同一个平台上，不同的软件厂商生产的各种软件也常常需要集成起来。通过Web service，应用程序可以用标准的方法把功能和数据暴露出来，供其它的应用程序使用。
+例如，你有一个订单登录程序，用于登录从客户来的新订单，包括客户信息、发货地址、数量、价格和付款方式等信息。同时，你还有一个订单执行程序，用于实际货物发送的管理。这两个程序是来自不同软件厂商的。一份新订单进来之后，订单登录程序需要通知订单执行程序发送货物。通过在订单执行程序上面增加一层Web service，订单执行程序可以把"AddOrder"函数暴露出来。这样，每当有新订单到来时，订单登录程序就可以调用这个函数来发送货物了。进而通过Web service集成应用程序.
+4.1.3 B2B的集成
+用Web service集成应用程序，可以使你公司内部的商务处理更加自动化。但当交易跨越了你的供应商和客户，突破了公司的界线时又会怎么样呢？跨公司的商务交易集成通常叫做B2B集成。
+Web service是B2B集成成功的关键。通过Web service，你的公司可以把关键的商务应用暴露给指定的供应商和客户。例如，把你的电子下单系统和电子发票系统暴露出来，你的客户就可以以电子的方式向你发送购货订单，而你的供应商则可以以电子的方式把原料采购的发票发送给你。当然，这并不是一个新的概念：电子文档交换(EDI)早就是这样了。Web service和EDI之间的主要区别在于，Web service的实现要比EDI简单得多，而且Web service是运行在Internet上的，在世界任何地方都可轻易实现，这样其运行成本就相对较低。不过，Web service并不像EDI那样，是文档交换或B2B集成的一套完整的解决方案。Web service只是B2B集成的一个关键部分，还需要许多其它的部分才能完成这个集成。用Web service来实现B2B集成的最大好处在于可以轻易实现互操作性。只要把你的商务逻辑暴露出来，成为Web service，你就可以让任何指定的合作伙伴轻松的调用你的商务逻辑，而不管他们的系统在什么平台上运行，使用的是什么开发语言。这样就大大减少了花在B2B集成的上的时间和成本。这样的低成本让许多原本无法承受EDI的投资成本的中小企业也能实现B2B集成。
+4.1.4 软件重用
+软件重用是一个很大的主题，它有很多的形式和程度。最基本的形式是源代码模块或者类一级的重用。另一种形式是二进制形式的组件重用。当前，像表格控件或用户界面控件这样的可重用软件组件在市场上都占有很大的份额。但这类软件的重用都有一个很严重的限制：重用仅限于代码，而数据不能被重用。原因在于你可以很轻易的发布组件甚至源代码，但要发布数据就没那么容易了，除非那些数据都是不会经常变化的静态数据。
+而Web service允许你在重用代码的同时，重用代码后面的数据。使用Web service，你不再像以前那样，要先从第三方购买、安装软件组件，再从你的应用程序中调用这些组件。你只需要直接调用远端的Web service就可以了。举个例子，你想在你的应用程序中确认用户输入的邮件地址，那么，你只需把这个地址直接发送给相应的Web service，这个Web service 就会帮你查阅街道地址、城市、省区和邮政编码等信息，确认这个地址的确在相应的邮政编码区域。Web service 的提供商可以按时间或使用次数来对这项服务进行收费。这样的服务要通过组件重用来实现是不现实的，因为那样的话你必须下载并安装好包含街道地址、城市、省区和邮政编码等信息的数据库，而且这个数据库还是不能实时更新的。
+另一种软件重用的情况是把好几个应用程序的功能集成起来。例如，你想要建立一个局域网上的门户站点应用，让用户既可以查询他们的联邦快递包裹，察看股市行情，又可以管理他们的日程安排，还可以在线购买电影票。现在Web上有很多应用程序供应商，都在其应用中实现了上面的这些功能。一旦他们把这些功能都通过Web service 暴露出来，你就可以非常轻易地把所有这些功能都集成到你的门户站点中，为用户提供一个统一的、友好的界面。
+Web service来集成各种应用中的功能，为用户提供一个统一的界面许多应用程序都会利用Web service，把当前基于组件的应用程序结构扩展为组件和Web service 的混合结构。你也可以在应用程序中使用第三方的Web service 提供的功能。你还可以把你自己的应用程序的功能通过Web service 提供给别人。所有这些情况下，你都可以重用代码和代码后面的数据。总之，Web service 将是软件重用的一种非常有力的形式。
+4.2 什么时候不用WebService
+4.2.1单机应用程序
+目前，我们还有很多桌面应用程序是供商用和个人使用的。其中一些只需要与运行在本机上的其他程序通信。在这种情况下，我们最好就不要再用Web service ，只要用本地的API就可以了。COM非常适合于在这种情况下工作，因为它既小又快。运行在一台服务器上的服务器软件也是这样：最好直接用COM或其他本地的API来进行应用程序间的调用。当然Web service 也能用在这些情况下，但那样不仅消耗太大，而且不会给你带来任何好处。
+4.2.2局域网上的同构应用程序
+在许多应用中，你所有的程序都是用VB或VC开发的，都在Windows平台下使用COM，都运行在同一个局域网上。例如，你有两个服务器应用程序需要相互通信，或者你有一个Win32或WinForm的客户程序要连接到局域网上的另一个服务器程序。在这些程序里使用DCOM会比SOAP/HTTP有效的多。类似的，如果你的一个.NET程序要连接到LAN上的另一个.NET程序，那么你应该使用.NET remoting。有趣的是，在.NET remoting中，你也可以指定使用SOAP/HTTP来进行Web service 调用。不过最好还是直接通过TCP进行RPC调用，那样会有效得多。总之，只要你从应用程序结构的角度看来，有别的方法比Web service 更有效，更可行，那就不要再用Web service。
+五．WebService大体流程图
+在这里大概用图的形式描述了一下从客户端到服务端，服务端到客户端中使用webservice的时机，并且在使用webservice时用到哪些支持。注，不同工具开发webservice都对webservice有不同对支持，在下面会介绍到。
+六．WebService软件支持
+操作系统离不开丰富的应用软件的支持。同样，Web Service这项技术只有通过日益广泛的应用才能体现出其价值，目前比较流行的实现方法是使用.NET 和 Java两种技术，并且两种实现方法可以互相操作；如今我们已经可以看到使用微软、IBM、SUN、Borland等不同厂商的Web Service构建工具建立的Web Service应用。
+6.1微软.NET
+微软的.NET技术应该算是时下最为流行的Web Service 开发技术。首先因为其公司在以前相应的产品就占有相当大的市场份额，以至使新推出的.NET得以有比较稳定的用户群；其次也是更重要的是 .NET平台不仅延续了微软一贯的编程风格，而且还增加了许多支持Web 服务的关键性技术，使得.NET在操作的简单性和执行的稳定性，高效性上达到了一个非常好的结合。
+微软的Visual Studio.NET便是一个便于 Web 服务的开发工具。微软的目标是，将其新编程语言——C#作为Web Service的首选语言。虽然C#看起来与Java类似，但是还有一些Java中没有的独特的功能。.NET技术中用于Web Service 开发的主要工具是ASP.NET 　从技术上说，ASPasp.net 提供了一些超出ASP以前版本的优点(例如：代码和HTML的分离，与脚本语言相比较，对“真正”的编程语言如 C# 的支持)。
+6.2 Sun的Java WSDP
+针对开发Web Services程序的需求，Sun推出了Java Web Services Developer Pack，简称Java WSDP。随着1.2版本的发布，Java开发人员现在可以拥有一个方便的、集所有功能于一身的开发包，用来帮助在Java平台上开发Web服务。Java WSDP包含Java XML Pack中的所有用于XML的Java API（Java APIs for XML（JAX）），还包含有Apache Tomcat服务器以及为开发与测试Web服务提供一个功能完备的环境所需的其他组件。 Java WSDP Registry Server (UDDI Server).
+6.3 IBM的WebSphere
+IBM公司是业界第一家能够提供全面支持Web服务的电子商务基础设施中间件的公司。通过多年来与W3C(The World Wide Web Consortium)的共同努力，包括DB2、Lotus、Tivoli 和WebSphere在内的所有IBM软件都实现了对SOAP、WSDL、UDDI、Linux、XML、J2EE等开放技术和标准的全面支持。 IBM公司的WebSphere也是比较好的基础架构软件开发平台。WebSphere软件平台及开发工具包括WebSphere Studio Application Developer -WSAD 基于J2EE、XML 和Web服务等开放标准，并具备 IBM 在可靠性、扩展性和安全性上的主要优势。WebSphere 是 IBM 在 Web Services策略中的核心平台，它支持所有开发、发布、部署 Web Services应用所必需的开放标准和技术，包括 UDDI，SOAP，J2EE，WSDL，和对 XML 技术集成的增强，这特使得它在全球有很多用户。
+6.4 Borland的JBuilder
+Borland公司在 JBuilder7中，用户可以用其Borland Web Services Kit for Java和Borland JBuilder MobileSet 3进行更快捷地开发Web Service和无线应用。这样将使开发者能够在同一个开发环境中轻松地创建和集成Web Service。今年新推出的JBuidler8更是针对Web Service开发更提供了方便和高效的方法。
+6.5 BEA的WorkShop
+BEA Workshop产品系列为目前面向服务、企业应用的混合开发提供专业的工具。无论在表示层、中间层还是后端创建服务，BEA Workshop系列的产品都能提供开放技术，帮助用户简化Java、SOA、J2EE和Web应用的开发。通过在我们的工具中混合开放源代码、标准和商用软件，BEA利用业界最佳的创新技术，采用成熟的可视化工具，帮助用户开发源代码或进行可视设计。
+WebLogic服务器。
+6.6 ApAche的Axis
+Axis本质上就是一个SOAP引擎，提供创建服务器端、客户端和网关SOAP操作的基本框架。Axis目前版本是为Java编写的，不过为C++的版本正在开发中。
+Eclipse下的Lomboz插件。
+总之，在Web Service开发上，.NET 和Java都是很好的选择，尽管两者现在都有一些需要完善的地方，但是就目前来说，它们还是最好的开发手段和技术。具体选择哪种开发工具，也是仁者见仁，智者见智的问题。从根本上说，这两种方法没有孰优孰劣的问题，只是根据使用者对这两种方法的掌握程度和对具体语言的偏爱程度来决定。
+七.WebService语言支持
+八.术语解释
+8.1 XML
+XML是eXtensible Markup Language的缩写。扩展标记语言XML是一种简单的数据存储语言，使用一系列简单的标记描述数据，而这些标记可以用方便的方式建立，虽然XML占用的空间比二进制数据要占用更多的空间，但XML极其简单易于掌握和使用。
+参阅网址：
+http://baike.baidu.com/view/63.htm
+8.2 XSD
+XSD是 XML结构定义 ( XML Schemas Definition )。 XML Schema 是DTD的替代品。XML Schema语言也就是XSD。XML Schema描述了XML文档的结构。可以用一个指定的XML Schema来验证某个XML文档，以检查该XML文档是否符合其要求。文档设计者可以通过XML Schema指定一个XML文档所允许的结构和内容，并可据此检查一个XML文档是否是有效的。XML Schema本身是一个XML文档，它符合XML语法结构。可以用通用的XML解析器解析它。
+一个XML Schema会定义：文档中出现的元素、文档中出现的属性、子元素、子元素的数量、子元素的顺序、元素是否为空、元素和属性的数据类型、元素或属性的默认和固定值。
+XSD是DTD替代者的原因，一是据将来的条件可扩展，二是比DTD丰富和有用，三是用XML书写，四是支持数据类型，五是支持命名空间。
+XSD文件的后缀名为.xsd。
+参阅网址：
+http://baike.baidu.com/view/712698.htm
+8.3 SOAP
+SOAP：是Simple Object Access Protocol缩写，直译过来则是简单对象访问协议。
+简单对象访问协议(SOAP)是一种轻量的、简单的、基于XML 的协议，它被设计成在Web 上交换结构化的和固化的信息。 SOAP 可以和现存的许多因特网协议和格式结合使用，包括超文本传输协议( HTTP)，简单邮件传输协议(SMTP)，多用途网际邮件扩充协议(MIME)。它还支持从消息系统到远程过程调用(RPC)等大量的应用程序。
+SOAP 包括三个部分：
+SOAP 封装：它定义了一个框架 , 该框架描述了消息中的内容是什么，谁应当处理它以及它是可选的还是必须的。
+SOAP 编码规则：它定义了一种序列化的机制，用于交换应用程序所定义的数据类型的实例。
+SOAP RPC 表示：它定义了用于表示远程过程调用和应答的协定。SOAP 消息基本上是从发送端到接收端的单向传输，但它们常常结合起来执行类似于请求 / 应答的模式。所有的 SOAP 消息都使用 XML 编码。一条 SOAP 消息就是一个包含有一个必需的 SOAP 的封装包，一个可选的 SOAP 标头和一个必需的 SOAP 体块的XML 文档。
+把 SOAP 绑定到 HTTP 提供了同时利用 SOAP 的样式和分散的灵活性的特点以及HTTP 的丰富的特征库的优点。在 HTTP 上传送 SOAP 并不是说 SOAP 会覆盖现有的HTTP 语义，而是 HTTP 上的 SOAP 语义会自然的映射到 HTTP 语义。在使用 HTTP 作为协议绑定的场合中， RPC 请求映射到 HTTP 请求上，而 RPC 应答映射到 HTTP 应答。然而，在 RPC 上使用 SOAP 并不仅限于 HTTP 协议绑定。
+参阅网址：
+http://www.qqread.com/xml-soap/u348414.html
+8.4 WSDL
+WSDL就是描述XML Web服务的标准XML格式，WSDL由Ariba、Intel、IBM和微软等开发商提出。它用一种和具体语言无关的抽象方式定义了给定Web服务收发的有关操作和消息。就其定义来说，你还不能把WSDL当作一种对象接口定义语言，例如，CORBA或COM等应用程序体系结构就会用到对象接口定义语言。 WSDL保持协议中立，但它确实内建了绑定SOAP的支持，从而同SOAP建立了不可分割的联系。
+参阅网址：
+http://zhidao.baidu.com/question/7415705.html
+8.5 UDDI
+UDDI（Universal Description, Discovery and Integration）统一描述、发现和集成协议，是为解决Web服务的发布和发现问题而制订的新一代基于Internet的电子商务技术标准。它包含一组基于Web的、分布式的Web服务信息注册中心的实现标准，以及一组使企业能将自己提供的Web服务注册到该中心的实现标准。
+参阅网址：
+http://www.uddi.org/
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+Eclipse下WebService学习
+
+
+1．       准备工作
+收集相关资料，下载并安装必备的工具。由于以前对WebService学习不是很重视，因此对WebService还不是很熟悉，不过我还是对它有些印象的，因为以前我曾经使用Delphi和ASP.NET做过相关的例子。阅读几遍的相关资料后对有些抽象的概念还是有些模糊，但总体上认清了WebService的本质或者是用途吧。WebService其实就是向外部（跨语言甚至平台）公开一些函数方法等等内容，使外部能访问到所要发布的“服务”。几经周折终于完成了WebSerrvice环境的配置工作。
+ 
+相关资料有：
+l          《Tomcat5.0.28下AXIS完全安装手册》
+l          《详解怎样使用Axis开发Web Service的实例.》
+l          《SOAP 是如何工作的》
+l          《SOAP的协议规范》
+l          《SOAP净化有线协议》
+l          〈Web Services技術介紹〉
+ 
+相关工具：
+l          Sun java JDK1.5
+l          Apache Tomcat5.0/5.5
+l          SUN JWSDP开发包
+l          Axis开发包
+l          Eeclipse集成开发环境
+l          Eclipse插件—Workshop Studio
+l          Netbeans5.0
+安装环境步骤省略。(其实直接下载JDK5。0+Tomcat5.0(最好是SUN公司的jwsdp-1_4-windows-i586.exe) + Workshop Studio就可以了)
+2．       初探Java中的WebService
+首先按着资料上的例子做，利用JWS方法，建立一个温度转换的Java函数，然后发布出来，并最终调用它。步骤如下：
+（1）         打开Eclipse配置好相关的环境，新建立一个”动态Web应用程序”—>新建立一个类à在该类中写入温度转换函数。如下列图：
+在其左方的树状选择菜单的MagicThermometer.java选项上，按鼠标右鍵选择Refactor-Rename选项，将MagicThermometer.java重新命名为MagicThermometer.jws.保存。启动服务器，在浏览器中输入http://localhost:8080/axisdemo/MagicThermometer.jws，可看到下图：
+ 
+3．       利用插件快速开发
+使用Eclipse+插件 可以省去很多配置麻烦，因为插件已经很好的把WebService各种工具和库集成好了，只要建立好服务器和相关的类文件，即可将类中的函数方法发布！
+ 
+重新建立一个Web应用程序，取名Test,并新建立一个类Mean,如下图：
+在左方菜单中用鼠标右键Mean.java文件，选择WebServices—>create web service.—>next—>next—>配置javabean 选择RPC/Encoded，选择Next—>finish
+这样很轻松的完成了对add函数方法的向外发布。在左边菜单的WebContend/wsdl目录下将会生成Test.wsdl。不过还没有对该发布的方法进行测试。下面将进行测试。
+鼠标右键Test.wsdl文件，选择WebService-àTest with WebService Excplor。出现WebService测试页面:
+选择Operations下面的mean方法即可进行测试
+测试结果，符合正确的结果，注意中下方的
+meanReturn (int):
+190
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+java核心技术学习
+数据接口方面的应用
+
+一，项目的需求和背景：
+1.具备客户资料管理系统的省公司，原有客户资料管理系统能够提供满足客户及业务查询需求的系统接口。
+2.根据本规范中关于客户资料查询接口的要求，改造本省客户资料管理系统，提供符合规范要求的WebService接口，供集团故障单管理系统访问。
+3.各省公司需使本省客户资料管理系统（或数据库服务器）提供通过DCN的访问方式。
+二，为何使用webservice技术：
+1.全国集中的信息化建设项目具备的一个最主要的特点是各个省市地区技术力量，数据库环境不尽相同，在这种分散的异构数据环境下实施数据集成项目的开发，如果采用数据库直联dblink等方式取得数据困难相对较大。
+2.对于业务密集型的项目和集团方提供的相对明确和稳定的数据需求，由于webservice技术有很好的封装性，集成性，数据传输透明性，框架稳定性，而且技术发展也比较成熟，适合使用webservice技术来规避在实施项目过程中由于各个省业务模型的异构造成的项目间复杂性和依赖性。
+综上，并根据项目的需求结合我们黑龙江省的实际情况适合采用webservice技术。
+三，入门背景知识：
+一.Web Service简介
+1.定义
+由两部分组成
+·SOAP--Web Service之间的基本通信协议。
+·WSDL--Web Service描述语言，它定义了Web Service做什么，怎么做和查询的信息。
+2.简单的Web Service实现
+包含四个基本步骤
+·创建Web Service的商业逻辑（通常是一些Java类）
+·将这些Java类部署到一个SOAP服务器上
+·生成客户访问代码
+·部署客户应用
+注意：WSDL等文件的生成通常是利用厂商提供的工具来完成
+3.WSDL解析
+WSDL描述语言一般包含三部分
+·What部分--包括了type、message和portType元素
+Type：定义了Web Service使用的数据结构（使用XML Schema定义）
+Message：一个Message是SOAP的基本通信元素。每个Message可以有一个或多个Part，每个Part代表一个参数。
+PortType：消息汇总为不同的操作并归入到一个被称为portType的实体中。一个portType代表一个接口（Web Service支 持的操作集合），每个Web Service可以有多个接口，它们都使用portType表示。每个操作又包含了input和 output部分。
+·How部分--包含binding元素
+binding元素将portType绑定到特定的通信协议上（如HTTP上的SOAP协议）
+·Where部分--由service元素组成
+它将portType,binding以及Web Service实际的位置（URI）放在一起描述
+4.客户端
+通常Web Service可以有三种类型的客户
+·商业伙伴（Business Partner）--包括分发商，零售商以及大型消费者）
+此类客户通过SOAP、WSDL、ebXML、UDDI等XML技术与Web Service连接
+·瘦客户--包括Web浏览器、PDA以及无线设备
+该类客户通常经由轻量协议(如HTTP)与Web Service连接
+·肥客户--包括Applet、各类应用以及现存系统
+通常使用重量级协议（如IIOP）连接Web Service
+二，JDOM 简介
+JDOM是一个开源项目，它基于树型结构，利用纯JAVA的技术对XML文档实现解析、生成、序列化以及多种操作。JDOM 直接为JAVA编程服务。它利用更为强有力的JAVA语言的诸多特性（方法重载、集合概念以及映射），把SAX和DOM的功能有效地结合起来。在使用设计上尽可能地隐藏原来使用XML过程中的复杂性。利用JDOM处理XML文档将是一件轻松、简单的事。
+DOM的缺点主要是来自于由于Dom是一个接口定义语言（IDL）,它的任务是在不同语言实现中的一个最低的通用标准，并不是为JAVA特别设计的。这标志着JDOM成为了JAVA平台组成的一部分。
+四，接口的实现：
+Webservice开发环境的配置和准备：
+配置webservice的java开发环境我们只需要安装jdk,开发工具就可以了。当前的流行开发工具基本都支持针对于webservice的IDE。本次项目我选用了jbuilder。
+要获得运行的Web service，必须有一个能驻留该服务的应用服务器。Web service可以选择在任何公共的UDDI（Universal Description, Discovery and Integration，统一描述、发现和集成协议）注册库注册，或在驻留在应用服务器上的本地UDDI注册库注册。UDDI向潜在的业务客户机提供地址薄功能；它允许客户机定位特定服务，并描述了哪种API可用。如果没有UDDI注册库，业务客户机可以（并且常常会）直接转向一个Web service URL并请求WSDL（Web Service Definition Language，Web service描述语言）文档，文档中同样包含有关提供了哪些API的详细描述。WSDL是驻留在应用服务器中的XML文档。
+Web service以Web应用程序的形式驻留在应用服务器上的Web service容器中。任何感兴趣的客户机都可以启动常规HTTP会话与其交互。我们将使用BEA WebLogic应用服务器来建立Web service，它是业内的主流平台之一。若用于开发，BEA WebLogic应用服务器可以免费使用，用于生产则需要许可证。作为替代方案，也可以使用免费的Tomcat应用服务器和Axis工具箱，或者使用Jetty应用服务器和Axis工具箱。当然还有其他应用服务器，典型的应用服务器如JBoss、Sun Microsystems的SunOne、IBM的WebSphere。
+配置第一步：配置应用服务器
+配置第二步：创建项目
+配置第三步：创建Web服务
+配置第四步：将代码公开为Web service
+开发过程一共分为三步：
+第一步，分解需求，梳理需求规格说明书里面的处理流程和数据项。并构造用例文档和ER模型。
+第二步，构造框架，根据用例模型和ER模型，构造出程序处理流程，生成各个实体和用例类的基本框架结构属性和方法。框架分为三部分：业务处理层次，接口封装实现层次，元数据流模型构造层次。
+第三步，逐步实现求精。对于经过构造框架分解后得到的三个处理层次逐步求精。并拼装各个层次的实现。这样就完成了webservice的构建过程。
+五，技术难点：
+1.如何解析<cData>数据并对数据加<CData>封装并越过解析器的过滤问题：
+对于数据加密和传输过程中携带数据的封装问题经过研究把这个难题顺利的攻关。
+如下的代码就是解决这个问题的关键所在：
+             DocumentBuilderFactory   dbf   =   DocumentBuilderFactory.newInstance();   
+                  DocumentBuilder   db   =   dbf.newDocumentBuilder();   
+                  Document   doc   =   db.parse(new   FileInputStream("test.xml"));   
+                  Element   e   =   doc.getDocumentElement();   
+                  NodeList   nl   =   e.getChildNodes();   
+                  for   (int   i   =   0;   i   <   nl.getLength();   i++)   {   
+                          Node   n   =   nl.item(i);   
+                          if   (n.getNodeType()   ==   Node.CDATA_SECTION_NODE)   {   
+                                  System.out.println(n.getNodeValue());   
+                          }   
+                  }
+2.如何利用好JDOM做数据流分析：
+在实施过程中遇到如何用java语言实现这项技术。在经过一番甄选之后我们得出结论适合于本项目开发的java分布式对象模型技术实现方案，那就是JDOM。
+它有如下好处可以被我们利用：
+1.JDOM是一个开源项目，它基于树型结构，利用纯JAVA的技术对XML文档实现解析、生成、序列化以及多种操作。
+2.JDOM 直接为JAVA编程服务。它利用更为强有力的JAVA语言的诸多特性（方法重载、集合概念以及映射），把SAX和DOM的功能有效地结合起来。
+3.在使用设计上尽可能地隐藏原来使用XML过程中的复杂性。利用JDOM处理XML文档将是一件轻松、简单的事。
+如果你想对这个开发工具了解更多我们可以参照 http://www.xml.org
+3.如何降低数据接口业务逻辑的变更对服务器端程序耦合性和依赖：
+我对项目的分析过程：根据对项目业务逻辑我们分析出了一个简化的用例模型，就是要充分的封装实现的技术细节，并保持接口框架的稳定性，根据接口数据格式我们抽象出了一个概化的动态模型，就是每次服务器发出http请求，我们在服务器程序中的监听器取得这个http请求和请求和所带参数（已经过加密的密文需要在服务器处理程序中使用公用的密匙解析出明文的格式），利用取得的http请求和解析明文来分析和构造查询我们的服务器程序处理业务逻辑，最后我们返回给客户端程序一个标准的xml数据流。
+从上面分析我们不难看出需要经常变动的频率最高的是由于业务逻辑变动引起的接口数据格式和业务逻辑的实现细节。如果能做到把业务逻辑按照层次很好的封装起来将对于将来的维护工作造成正面的影响。另外从长远的角度考虑到将来接口格式可能有变化，所以我决定把接口格式拼装和业务逻辑实现分离开。这样因业务逻辑变动引起的程序修改我们只需要改动实现业务逻辑的这部分代码，从一定程度上降低了耦合度。
+4.如何更有效的利用开发工具对开发的支持来确保项目在规定时间内完成：
+根据项目的工期和紧迫性，我们势必采用一种行之有效的开发工具来辅助我们用更少的时间更高的效率完成大部分的重复性劳动，而把有限的精力集中在对于业务逻辑的封装上。所以我们选择了易于使用和测试部署的开发工具jbuilder来做这项工作。从一定程度上节省了开发的周期。
+5.对于service类型的选择：
+虽然遵循相同的http协议标准，不同的中间件服务器处理web的方式是不同的。根据与集团方协商我们发现对方的web环境是tomcat，而我们的web程序是部署在weblogic上面。这样我们势必会考虑部署在weblogic上面的应用是否会影响到对方的基于tomcat的应用对我们的访问呢？或者是再装一个tomcat？但是我们仔细的考虑无论是tomcat还是weblogic都已经实现了http标准的协议，而我们采用的webservice技术也同样是基于http协议的标准。所以不同的应用服务器不会造成webservice的异构，访问，和迁移的问题。Weblogic采用的webservice技术是它自带的但不是通用的webservice通信标准，最为常用的还是apache开发的Axis技术。所以我们选用了Axis技术。
+6.与客户端程序联合调试的困难：
+由于异地开发存在沟通不方便的问题和交流的问题，从一定程度上带来了测试和调试的难度。经过我方的积极联系与省公司信息化部，集团系统集成公司，和集团系统集成公司的外包公司开发人员之间的建立和很好的沟通和交流，能够很好的及时地了解双方项目的进展状况。
+从客户端，服务器程序开发不同的分工方面我们没有条件面对面的沟通，技术习惯也不尽相同，良好的交流成为了项目是否能顺利进行的关键。我方作了最大程度上的努力配合集团方和信息化中心的工作。
+由于专注于服务器程序的开发，我们在没有客户端的前提下不能有效的作本地化系统测试。
+在一定程度上也增加了开发的难度和成本。但是通过我方与集团的积极沟通的努力下已经很好的克服了这个困难。
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+面向服务
+
+面向服务采用webService实现业务逻辑
+作用使应用系统页面层和逻辑层与数据处理层解耦合
+webService调用数据库的存储过程及查询语句写在配置文件中
+不同的数据库操作调用不同的配置文件
+数据库配置文件格式：
+数据库名.实例/数据库/其他.操作类别.数据库操作名=数据库操作
+操作类别包括：增、删、改、查、存储过程
+
+4种so1不适合的场合
+1.同构系统之间互联
+2.实时、高性能的关键业务处理
+3.系统价格不需要灵活性
+4.紧耦合比松耦合的好处更多
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+Axis开发Webservice的简单步骤
+
+一、Axis安装
+1.测试环境
+    JDK 1.5
+    Servlet Container: Tomcat 5.5 
+2.下载地址:http://ws.apache.org/axis/
+3.解压缩安装包，将$AXIS_UNZIP_PATH\axis-version\webapps下的axis包拷贝到$TOMCAT_HOME\webapps\下，
+以下约定$AXIS_HOME为该$TOMCAT_HOME\webapps\axis目录
+4.启动tomcat,访问http://localhost:8080/axis 检查安装是否成功
+5.设置classpath编写setEnv.bat:
+set AXIS_HOME=$AXIS_UNZIP_HOME
+set CLASSPATH=.;%AXIS_HOME%\lib\axis.jar;%AXIS_HOME%\lib\axis-ant.jar;%AXIS_HOME%\lib\commons-discovery-0.2.jar;%AXIS_HOME%\lib\commons-logging-1.0.4.jar;%AXIS_HOME%\lib\jaxrpc.jar;%AXIS_HOME%\lib\saaj.jar;%AXIS_HOME%\lib\wsdl4j-1.5.1.jar;%AXIS_HOME%\lib\log4j-1.2.8.jar;E:/thirdparty/activation/activation.jar;E:/thirdparty/activation/mail.jar
+
+二.使用axis支持web service的部署和开发，最主要有两种方式：
+(一)。Dynamic Invocation Interface ( DII)
+1.编写服务端程序HelloClient
+
+public class HelloClient {
+ public String getName(String name){
+   return "hello "+name;
+ }
+}
+2.将源码拷贝到AXIS_HOME下，重命名为 HelloClient.jws
+3.访问连接http://localhost:8080/axis/HelloClient.jws?wsdl，页面显示axis自动生成的wsdl
+4.编写访问服务的客户端 TestHelloClient.java
+
+import org.apache.axis.client.Call;
+import org.apache.axis.client.Service;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.ServiceException;
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+public class SayHelloClient2 {
+public static void main(String[] args) {
+try {
+String endpoint = "http://localhost:8080/axis/HelloClient.jws";
+Service service = new Service();
+Call call = null;
+call = (Call) service.createCall();
+call.setOperationName(new QName(
+"http://localhost:8080/axis/HelloClient.jws", "getName"));
+call.setTargetEndpointAddress(new java.net.URL(endpoint));
+String ret = (String) call.invoke(new Object[] {"zhangsan"});
+System.out.println("return value is " + ret);
+} catch (Exception ex) {
+ex.printStackTrace();
+}
+}
+}
+5.运行TestHelloClient测试;
+(二)。 Stubs方式
+1.编写服务端程序server,SayHello.java，编译server.SayHello.java 
+package server;
+public class SayHello {
+public String getName(String name)
+{
+return "hello "+name;
+}
+}
+2.编写LogHandler.java
+import org.apache.axis.AxisFault;
+import org.apache.axis.Handler;
+import org.apache.axis.MessageContext;
+import org.apache.axis.handlers.BasicHandler;
+import java.util.Date;
+public class LogHandler extends BasicHandler {
+public void invoke(MessageContext msgContext) throws AxisFault
+{
+/** *//** Log an access each time we get invoked.
+*/
+try {
+Handler serviceHandler = msgContext.getService();
+Integer numAccesses =
+(Integer)serviceHandler.getOption("accesses");
+if (numAccesses == null)
+numAccesses = new Integer(0);
+numAccesses = new Integer(numAccesses.intValue() + 1);
+Date date = new Date();
+String result = date + ": service " +
+msgContext.getTargetService() +
+" accessed " + numAccesses + " time.";
+serviceHandler.setOption("accesses", numAccesses);
+System.out.println(result);
+} catch (Exception e) {
+throw AxisFault.makeFault;
+}
+}
+}
+3..编写wsdd文件
+
+deploy.wsdd
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"> 
+   
+<handler name="print" type="java:LogHandler"/> 
+<service name="sayhello" provider="java:RPC">
+<requestFlow>
+<handler type="print"/>
+</requestFlow>
+<parameter name="className" value="server.SayHello"/>
+<parameter name="allowedMethods" value="*"/> 
+</service>
+</deployment>
+4.将编译后的文件拷贝到AXIS_HOME/WEB-INF/classes下，如：D:\tomcat\webapps\axis\WEB-INF\classes
+5.发布服务：
+java org.apache.axis.client.AdminClient -h localhost -p 8080 -s /axis/servlet/AxisServlet deploy.wsdd
+命令参数为:
+
+The following Options are available:
+        -l<url>         sets the AxisServlet URL
+        -h<hostName     sets the AxisServlet host
+        -p<portNumber>  sets the AxisServlet port
+        -s<servletPath> sets the path to the AxisServlet
+        -f<fileName>    specifies that a simple file protocol should be used
+        -u<username>    sets the username
+        -w<password>    sets the password
+        -d              sets the debug flag (for instance, -ddd would set it to
+3)
+        -t<name>        sets the transport chain touse
+Commands:
+        list            will list the currently deployed services
+        quit            will send a quit message to SimpleAxisServer
+        passwd          value changes the admin password
+Deployment Descriptor files:
+<deployment-descriptor-files> deploys or undeploys Axis components and
+web services described in these files
+If -l or -h -p -s are not set, the AdminClient will invoke
+http://localhost:8080/axis/servlet/AxisServlet6.生成client stub文件
+a:方式1
+将SayHello.java拷贝到AXIS_HOME/下，重命名为SayHello.jws，执行下面的命令生存client stub
+java org.apache.axis.wsdl.WSDL2Java -p client http://localhost:8080/axis/services/SayHello.jws?wsdl
+b:方式2
+  执行如下命令生成SayHello.wsdl
+java org.apache.axis.wsdl.Java2WSDL -oSayHello.wsdl -lhttp://localhost:8080/axis/services/SayHello -nsayhello server.SayHello
+执行如下命令生成client stub
+   java org.apache.axis.wsdl.WSDL2Java SayHello.wsdl -p client
+生成的stub client文件列表为：
+1。SayHello.java
+2。SayHelloService.java。
+3。SayHelloServiceLocator.java
+4。SayHelloSoapBindingStub.java
+7.编写客户端程序，编译并执行
+public class SayHelloClient {
+public static void main(String[] args) {
+try {
+SayHelloService service = new client.
+SayHelloServiceLocator();
+client.SayHello_PortType client = service.getSayHello();
+String retValue=client.getName("zhangsan");
+System.out.println(retValue);
+
+} catch (Exception e) {
+System.err.println("Execution failed. Exception: " + e);
+}
+}
+} 
+8.开发自己的WEB应用程序的web service ,需要在描述文件WEB-INF/web.xml文件中添加:
+
+    <listener>
+        <listener-class>org.apache.axis.transport.http.AxisHTTPSessionListener</listener-class>
+    </listener>
+    
+  <servlet>
+    <servlet-name>AxisServlet</servlet-name>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AxisServlet
+    </servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <display-name>SOAPMonitorService</display-name>
+    <servlet-class>
+        org.apache.axis.monitor.SOAPMonitorService
+    </servlet-class>
+    <init-param>
+      <param-name>SOAPMonitorPort</param-name>
+      <param-value>5001</param-value>
+    </init-param>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/servlet/AxisServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>*.jws</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <url-pattern>/SOAPMonitor</url-pattern>
+  </servlet-mapping>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+Axis Wsdd参考
+
+Aapche Axis的Web Service Deployment Descriptor(WSDD)文件参考文档。
+
+本部分介绍的所有的WSDD元素的名称空间都是"http://xml.apache.org/axis/wsdd/"。
+<deployment>
+告诉Axis Engine这是一个部署描述文件。一个部署描述文件可以表示一个完整的engine配置或者将要部署到一个活动active的一部分组件。
+<GlobalConfiguration>
+用于控制engine范围的配置。可以包含以下子元素：
+· <parameter> : 用来设置Axis的各种属性，参考Global Axis Configuration，可以配置任意数量的参数元素.
+· <role> : 设置一个SOAP actor/role URI，engine可以对它进行识别。这允许指向这个role的SOAP headers成功的被engine处理。任意数量.
+· <requestFlow> : 全局的请求Handlers。在调用实际的服务之前调用.
+· <responseFlow> : 全局响应Handlers，在调用完实际的服务后，还没有返回到客户端之前调用.
+<requestFlow [name="name"] [type="type"] >
+可以放置任意多个<handler> or <chain>在<requestFlow>中，但是可能只有一个<requestFlow>.
+<responseFlow [name="name"] [type="type"] >
+This is used to configure handlers in response flow. You may put any number of <handler> or <chain> elements (see below) inside the <responseFlow>, but there may only be one <responseFlow>.
+<undeployment>
+部署文档的根元素，用于指示Axis这是个卸载描述文件.
+<handler [name="name"] type="type">
+位于顶层元素<deployment> or <undeployment>, or inside a <chain>, <requestFlow>, or <responseFlow>. 用于定义Handler，并定义handler的类型。"Type" 可以是已经定义的Handler或者是"java:class.name"形式的QName。可选的"name"属性允许将这个Handler的定义在其他部署描述部分中引用。可以包含任意数量的<parameter name="name" value="value">元素.
+<service name="name" provider="provider" >
+部署/卸载一个Axis服务。这是最复杂的一个WSDD标签。
+Options可能通过以下元素来指定: <parameter name="name" value="value"/>, 一些常用的包括:
+· className : 后台实现的类
+· allowedMethods : 每个provider可以决定那些方法允许web services访问
+Axis支持的providers有如下几种:
+Java RPC Provider (provider="java:RPC") 默认情况下所有的public方法都可以web service方式提供
+Java MsgProvder (provider="java:MSG")  
+为了更进一步的限制上面的方法，allowedMethods选项用于指定一个以空格分隔的方法名，只有这些方法可以通过web service访问。也可以将这个值指定为”*”表示所有的方法都可以访问。同时operation元素用来更进一步的定义被提供的方法，但是它不能决定方法的可见性.  
+注意，发布任何web service都有安全含义.
+· allowedRoles : 都好分离的允许访问服务的角色列表。注意，这些是安全角色，和SOAP角色相反。安全角色控制访问，SOAP角色控制哪些SOAPheaders会被处理。
+· extraClasses : 指定一个空格或者都好分离的类名称列表，这些类的名字应该被包含在WSDL文档的类型定义部分。当服务接口引用一个基类的时候，或者希望WSDL文件包含其他类的XML Schema类型定义的时候，这个参数很有用。
+如果希望为服务定义handler，可以在<service>元素中添加<requestFlow>和<responseFlow>子元素。他们的语义和<chain>元素中的定义时一样的。也就是说，它们可以包含<handler> and <chain> 元素，根据指定的顺序被调用.
+通过服务的Handlers来控制角色，可以在服务声明中指定任意数量的<role>元素。
+例如:
+<service name="test">
+<parameter name="className" value="test.Implementation"/>
+<parameter name="allowedMethods" value="*"/>
+<namespace>http://testservice/</namespace>
+<role>http://testservice/MyRole</role>
+<requestFlow> <!-- Run these before processing the request -->
+  <handler type="java:MyHandlerClass"/>\
+  <handler type="somethingIDefinedPreviously"/>
+</requestFlow>
+</service>
+可以通过使用<operation>标签指定关于服务的特殊操作的元数据。这可以将方法的java参数名和特定的XML名进行映射，为参数指定特定的模式，并将特定的XML名字映射到特定的操作。例如
+<operation name="method">
+</operation>  
+<chain name="name">
+<subelement/>...
+</chain>  
+定义一个链。当chain被调用的时候，按顺序调用其中的handler。这样就可以构建一个常用功能的模块，chain元素的子元素可以是handler或者chain。handler的定义形式可以是如下两种方式:
+<chain name="myChain">
+<handler type="java:org.apache.axis.handlers.LogHandler"/></chain>
+或者
+<handler name="logger" type="java:org.apache.axis.handlers.LogHandler"/>
+<chain name="myChain"/>
+  <handler type="logger"/></chain>
+<transport name="name">
+定义了一个服务器端的传输。当一个输入请求到达的时候，服务器传输被调用。服务器传输可能定义<requestFlow> and/or <responseFlow> 元素来指定handlers/chains，在请求和响应被处理的时候被调用，这个功能和service元素中的功能一样。典型的传输请求响应handler实现了关于传输的功能。例如转换协议headers等等.
+对于任何种类的传输，经常是指HTTP传输，当特定的查询字符串传递到servlet的时候用户可能允许Axis servlets执行任意的动作，以plug-in的方式。 (参考Axis Servlet Query String Plug-ins).当查询字符串handler的类名被指导后，用户可以通过在<transport>中添加合适的<parameter>来启用它(插件)。
+<transport name="http">
+  <parameter name="useDefaultQueryStrings" value="false" />
+  <parameter name="qs.name" value="class.name" /></transport>
+在上面的例子中，AxisServlet会处理的查询字符串是?name，它调用的类是class.name。<parameter>元素的name属性必须加上前缀qs来表示这个元素定义了一个查询字符串handler。value属性值相实现了org.apache.axis.transport.http.QSHandler 接口的类。默认情况下，Axis提供了三个Axis servlet查询字符串handlers (?list, ?method, and ?wsdl). 查看Axis服务器配置文件来了解它们的定义。如果不希望使用默认的handlers，就设置"useDefaultQueryStrings" 为false。默认会被设置成true.  
+<transport name="name" pivot="handler type" >
+定义了一个客户端的传输，当发送SOAP消息的时候来调用。"pivot"属性指定一个Handler来作为实际的传输sender，例如HTTPSender。请求和响应流和服务器端的设置相同.
+<typeMapping qname="ns:localName" classname="classname" serializer="classname" deserializer="classname"/>
+每个typeMapping将一个XML qualified名字和一个Java类进行映射，使用一个序列器和反序列器。
+<beanMapping qname="ns:localName" classname="classname">
+讲话的类型映射，使用一个预定义的序列器/反序列器来编码/解码JavaBeans。
+<documentation>
+在<service>, <operation> 或者操作的<parameter>中使用。.是文档说明，生成wsdl的<wsdl:document>元素.
+Example:
+<operation name="echoString" >
+  <documentation>This operation echoes a string</documentation> <parameter name="param">
+  <documentation>a string</documentation>
+  </parameter>
+</operation>  
+全局的Axis配置参数
+服务默认的是通过server-config.wsdd文件中的值来进行配置的。但是熟练的Axis用户可以写自己的配置handler，这样就可以将配置数据保存在LDAP服务器，数据库或者远程的web service等等。查看源代码来了解如何实现。也可以在web.xml文件中使自动的获取配置信息。但是Axis不推荐这样使用，因为最好将配置信息放在一个位置。
+在server-config文件中，有一个全局配置部分，支持以名/值对的形式作为嵌套元素使用。
+<globalConfiguration>
+  <parameter name="adminPassword" value="admin"/>
+  <parameter name="axis.servicesPath" value="/services/"/>
+  <parameter name="attachments.Directory" value="c:\temp\attachments"/>
+  <parameter name="sendMultiRefs" value="true"/>
+  <parameter name="sendXsiTypes" value="true"/>
+  <parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>  
+  <parameter name="sendXMLDeclaration" value="true"/>
+  <parameter name="enable2DArrayEncoding" value="true"/>
+  <parameter name="dotNetSoapEncFix" value="false"/>
+</globalConfiguration>
+
+单独的Service(服务)配置
+<service name="MyServiceName"  
+  provider="java:RPC"  
+  style="rpc|document|wrapped"  
+  use="encoded|literal"
+  streaming="off|on"
+  attachment="MIME|DIME|NONE">
+<parameter name="className" value="org.apache.mystuff.MyService"/>
+<parameter name="allowedMethods" value="method1 method2 method3"/>
+<parameter name="wsdlTargetNamespace" value="http://mystuff.apache.org/MyService"/>
+<parameter name="wsdlServiceElement" value="MyService"/>
+<parameter name="wsdlServicePort" value="MyServicePort"/>
+<parameter name="wsdlPortType" value="MyPort"/>
+<parameter name="wsdlSoapActionMode" value="NONE|DEFAULT|OPERATION"/>
+<parameter name="SingleSOAPVersion" value="1.1|1.2/>
+<documentation>Service level info</documentation>
+<endpointURL>http://example.com:5050/my/custom/url/to/service</endpointURL>
+<wsdlFile>/path/to/wsdl/file</wsdlFile>
+<namespace>http://my.namespace.com/myservice</namespace>
+<handlerInfoChain>handlerChainName</handlerInfoChain>
+<operation ... />
+<typeMapping ... />
+<beanMapping ... />
+</service>
+单独的Operation(操作)配置
+<operation name="GetQuote"  
+  qname="operNS:GetQuote"  
+  returnQName="GetQuoteResult"  
+  returnType="xsd:float"  
+  soapAction=""  
+  returnHeader="true|false">
+  <documentation>Operation level documentation here</documentation>
+  <parameter name="ticker" type="tns:string"/>
+  <fault name="InvalidTickerFaultMessage"  
+  qname="tickerSymbol"  
+  class="test.wsdl.faults.InvalidTickerFaultMessage"  
+  type="xsd:string"/>
+</operation>
+由于Service的配置和Operation的配置很容易理解，各个参数也都使用了self-explanation的表示，所以这里就不再赘述了。
+同时Axis还定义日志配置以及一些预定义的Handler，详细内容，参考Axis的参考文档。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+axis方式
+
+最小jar包：axis.jar，commons-discovery-0.2.jar，commons-logging.jar
+//webservice接口
+public class StatuteAxis {
+ public String findStatuteForXml(String name, String type) {
+  return "findStatuteForXml";
+ }
+ public String findStatuteForXmlByName(String name) {
+  return "findStatuteForXmlByName";
+ }
+ public String findStatuteForJsonByName(String name) {
+  return "findStatuteForJsonByName";
+ }
+ public String findStatuteForJson(String name, String type) {
+  return "findStatuteForJson";
+ }
+}
+
+//调用
+package law.axis.client;
+import javax.xml.namespace.QName;
+import javax.xml.rpc.Call;
+import org.apache.axis.client.Service;
+public class StatuteClient {
+ public static void main(String[] args) {
+  String url = "http://localhost:8080/tttt/services/StatuteAxisWsdd";
+  Service se = new Service();
+  try {
+   Call call = se.createCall();
+   call.setTargetEndpointAddress(url);
+   call.setOperationName(new QName(url, "findStatuteForXml"));
+   String result = (String) call.invoke(new Object[] { "", "" });
+   call.setOperationName(new QName(url, "findStatuteForJson"));
+   String result2 = (String) call.invoke(new Object[] { "", "" });
+   System.out.println(result);
+   System.out.println(result2);
+  } catch (Exception e) {
+   e.printStackTrace();
+  }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+web.xml
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web
+Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>Apache-Axis</display-name>
+    
+    <listener>
+        <listener-class>org.apache.axis.transport.http.AxisHTTPSessionListener</listener-class>
+    </listener>
+    
+  <servlet>
+    <servlet-name>AxisServlet</servlet-name>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AxisServlet
+    </servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <display-name>SOAPMonitorService</display-name>
+    <servlet-class>
+        org.apache.axis.monitor.SOAPMonitorService
+    </servlet-class>
+    <init-param>
+      <param-name>SOAPMonitorPort</param-name>
+      <param-value>5001</param-value>
+    </init-param>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/servlet/AxisServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>*.jws</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <url-pattern>/SOAPMonitor</url-pattern>
+  </servlet-mapping>
+ <!-- uncomment this if you want the admin servlet -->
+ <!--
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/servlet/AdminServlet</url-pattern>
+  </servlet-mapping>
+ -->
+    <session-config>
+        <!-- Default to 5 minute session timeouts -->
+        <session-timeout>5</session-timeout>
+    </session-config>
+    <!-- currently the W3C havent settled on a media type for WSDL;
+    http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+    for now we go with the basic 'it's XML' response -->
+  <mime-mapping>
+    <extension>wsdl</extension>
+     <mime-type>text/xml</mime-type>
+  </mime-mapping>
+ 
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+ 
+  <welcome-file-list id="WelcomeFileList">
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jws</welcome-file>
+  </welcome-file-list>
+</web-app>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+server-config.wsdd
+
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+ <globalConfiguration>
+  <parameter name="sendMultiRefs" value="true"/>
+  <parameter name="disablePrettyXML" value="true"/>
+  <parameter name="adminPassword" value="admin"/>
+  <parameter name="attachments.Directory" value="E:\apache-tomcat-6.0.20\webapps\axis\WEB-INF\attachments"/>
+  <parameter name="dotNetSoapEncFix" value="true"/>
+  <parameter name="enableNamespacePrefixOptimization" value="false"/>
+  <parameter name="sendXMLDeclaration" value="true"/>
+  <parameter name="sendXsiTypes" value="true"/>
+  <parameter name="attachments.implementation" value="org.apache.axis.attachments.AttachmentsImpl"/>
+  <requestFlow>
+   <handler type="java:org.apache.axis.handlers.JWSHandler">
+    <parameter name="scope" value="session"/>
+   </handler>
+   <handler type="java:org.apache.axis.handlers.JWSHandler">
+    <parameter name="scope" value="request"/>
+    <parameter name="extension" value=".jwr"/>
+   </handler>
+  </requestFlow>
+ </globalConfiguration>
+ <handler name="URLMapper" type="java:org.apache.axis.handlers.http.URLMapper"/>
+ <handler name="LocalResponder" type="java:org.apache.axis.transport.local.LocalResponder"/>
+ <handler name="Authenticate" type="java:org.apache.axis.handlers.SimpleAuthenticationHandler"/>
+ <service name="AdminService" provider="java:MSG">
+  <parameter name="allowedMethods" value="AdminService"/>
+  <parameter name="enableRemoteAdmin" value="false"/>
+  <parameter name="className" value="org.apache.axis.utils.Admin"/>
+  <namespace>http://xml.apache.org/axis/wsdd/</namespace>
+ </service>
+ <service name="StatuteAxisWsdd" provider="java:RPC">
+  <parameter name="allowedMethods" value="*"/>
+  <parameter name="scope" value="request"/>
+  <parameter name="className" value="law.axis.service.StatuteAxis"/>
+ </service>
+ <service name="Version" provider="java:RPC">
+  <parameter name="allowedMethods" value="getVersion"/>
+  <parameter name="className" value="org.apache.axis.Version"/>
+ </service>
+ <transport name="http">
+  <requestFlow>
+   <handler type="URLMapper"/>
+   <handler type="java:org.apache.axis.handlers.http.HTTPAuthHandler"/>
+  </requestFlow>
+  <parameter name="qs:list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <parameter name="qs:wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+  <parameter name="qs.list" value="org.apache.axis.transport.http.QSListHandler"/>
+  <parameter name="qs.method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <parameter name="qs:method" value="org.apache.axis.transport.http.QSMethodHandler"/>
+  <parameter name="qs.wsdl" value="org.apache.axis.transport.http.QSWSDLHandler"/>
+ </transport>
+ <transport name="local">
+  <responseFlow>
+   <handler type="LocalResponder"/>
+  </responseFlow>
+ </transport>
+</deployment>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+CXF方式
+
+jdk5.0+jaxws-api.2.0或jdk6.0
+ //webservice接口
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+@WebService(serviceName = "hello", targetNamespace = "http://localhost:9000/")
+@SOAPBinding(style = SOAPBinding.Style.RPC)
+public class Hello {
+ @WebMethod
+ public void say() {
+  System.out.println("hello");
+ }
+}
+ 
+//webservice发布
+import javax.xml.ws.Endpoint;
+public class Test {
+ public static void publish() {
+  String address = "http://localhost:9000/hello";
+  Endpoint.publish(address, new Hello());
+ }
+ public static void main(String[] s) {
+  publish();
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+spring+cxf
+
+一、下载cxf
+下载地址：http://cxf.apache.org/download.html
+我下载的是最新版的cxf 2.1.3
+ 
+二、准备工作：在spring环境下使用cxf
+1.下载完cxf的包后，至少需要添加如下包，才能正常使用cxf（我一个一个试的，很郁闷，居然要那么多，下载的包里都有）：
+cxf-2.1.3.jar
+
+commons-logging-1.1.1.jar
+geronimo-activation_1.1_spec-1.0.2.jar
+geronimo-annotation_1.0_spec-1.1.1.jar
+geronimo-ws-metadata_2.0_spec-1.1.2.jar
+geronimo-stax-api_1.0_spec-1.0.1.jar
+geronimo-jaxws_2.1_spec-1.0.jar
+jaxb-api-2.1.jar
+jaxb-impl-2.1.7.jar
+saaj-api-1.3.jar
+wstx-asl-3.2.6.jar
+wsdl4j-1.6.2.jar
+XmlSchema-1.4.2.jar
+xml-resolver-1.2.jar
+复制代码
+ 
+2.添加如下内容到web.xml
+    <!-- CXF WebService -->
+    <servlet>
+        <servlet-name>CXFServlet</servlet-name>
+        <display-name>CXF Servlet</display-name>
+        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CXFServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+复制代码
+ 
+3.在spring配置文件中，修改文件内容为：
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+复制代码
+添加的内容有三部分：
+①xmlns:jaxws="http://cxf.apache.org/jaxws"
+②http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+③ <import resource="classpath:META-INF/cxf/cxf.xml" />
+ <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+ <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+可以在原有配置文件上修改
+ 
+三、开始使用：编写服务端WebService
+1.添加一个接口，Hello.java：
+package com.test.webservice;
+
+import javax.jws.WebService;
+
+@WebService
+public interface Hello {
+    public String say(String text);
+}
+复制代码
+2.实现这个接口，HelloImpl.java：
+package com.test.webservice.impl;
+
+import javax.jws.WebService;
+
+import com.ruiri.webservice.Hello;
+
+@WebService(endpointInterface = "com.test.webservice.Hello")
+public class HelloImpl implements Hello {
+
+    public String say(String text) {
+        System.out.println(text);
+        return "Hello," + text;
+    }
+
+}
+复制代码
+跟平时使用的接口和类一样，只是添加了对应的注解
+3.在spring的配置文件添加如下内容:
+    <jaxws:endpoint id="helloWorld" implementor="com.test.webservice.impl.HelloImpl"
+        address="/HelloWorld" />
+复制代码
+这样，服务端的WebService就做好了，在浏览器可以通过 http://站点/services/ 看到可见的service
+ 
+四、编写客户端WebService
+1.编写一个接口，这里还使用先前写的Hello.java
+2.在spring的配置文件添加如下内容:
+    <jaxws:client id="helloClient" serviceClass="com.ruiri.webservice.Test1"
+        address="http://站点/services/HelloWorld" />
+复制代码
+3.在代码用调用这个bean：
+ServletContext sc = getServletContext();        
+WebApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
+        Hello hello = (Hello) ac.getBean("helloClient");
+        String str = hello.say("zhang");
+复制代码
+这样，客户端调用的代码也有了，配置稍微有些麻烦，配置完后，使用倒是很简单。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+java核心技术学习
+基本方式
+
+package ws;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
+import javax.xml.ws.WebEndpoint;
+import javax.xml.ws.WebServiceClient;
+import javax.xml.ws.WebServiceFeature;
+@WebServiceClient(name = "TestService", targetNamespace = "http://ws.ai.wasoft.com/", wsdlLocation = "http://localhost:8081/TestService?wsdl")
+public class TestService extends Service {
+ private static final URL TESTSERVICE_WSDL_LOCATION;
+ public TestService(URL paramURL, QName paramQName) {
+  super(paramURL, paramQName);
+ }
+ public TestService() {
+  super(TESTSERVICE_WSDL_LOCATION, new QName("http://ws.ai.wasoft.com/",
+    "TestService"));
+ }
+ @WebEndpoint(name = "TestPort")
+ public Test getTestPort() {
+  return (super.getPort(
+    new QName("http://ws.ai.wasoft.com/", "TestPort"), Test.class));
+ }
+ @WebEndpoint(name = "TestPort")
+ public Test getTestPort(WebServiceFeature[] paramArrayOfWebServiceFeature) {
+  return (super.getPort(
+    new QName("http://ws.ai.wasoft.com/", "TestPort"), Test.class,
+    paramArrayOfWebServiceFeature));
+ }
+ static {
+  URL localURL = null;
+  try {
+   localURL = new URL("http://localhost:8081/TestService?wsdl");
+  } catch (MalformedURLException localMalformedURLException) {
+   localMalformedURLException.printStackTrace();
+  }
+  TESTSERVICE_WSDL_LOCATION = localURL;
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

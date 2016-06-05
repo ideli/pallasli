@@ -1,0 +1,110 @@
+
+study
+Applet
+
+Applet的类层次：
+　◇ Applet的生命周期
+　　小应用程序的生命周期相对于Application而言较为复杂。在其生命周期中涉及到Applet类的四个方法（也被JApplet类继承）：init()、start()、stop()和destroy()。下面首先用图来表示一个小应用程序的生命周期，然后再简要描述这四个方法。
+　　Applet的生命周期中有四个状态：初始态、运行态、停止态和消亡态。当程序执行完init()方法以后，Applet程序就进入了初始态；然后马上执行start()方法，Applet程序进入运行态；当Applet程序所在的浏览器图标化或者是转入其它页面时，该Applet程序马上执行stop()方法，Applet程序进入停止态；在停止态中，如果浏览器又重新装载该Applet程序所在的页面，或者是浏览器从图标中复原，则Applet程序马上调用start()方法，进入运行态；当然，在停止态时，如果浏览器关闭，则Applet程序调用destroy()方法，进入消亡态。
+　◇ Applet的主要方法：
+　　1． init( )
+　　创建Applet时执行,只执行一次
+　　当小应用程序第一次被支持Java的浏览器加载时，便执行该方法。在小应用程序的生命周期中，只执行一次该方法，因此可以在其中进行一些只执行一次的初始化操作，如处理由浏览器传递进来的参数、添加用户接口组件、加载图像和声音文件等。
+小应用程序有默认的构造方法，但它习惯于在init()方法中执行所有的初始化，而不是在默认的构造方法内。 　　
+    2．start( )
+　　多次执行,当浏览器从图标恢复成窗口,或者是返回该主页时执行。
+　　系统在调用完init()方法之后，将自动调用start()方法。而且每当浏览器从图标恢复为窗口时，或者用户离开包含该小应用程序的主页后又再返回时，系统都会再执行一遍start()方法。start()方法在小应用程序的生命周期中被调用多次，以启动小应用程序的执行，这一点与init()方法不同。该方法是小应用程序的主体，在其中可以执行一些需要重复执行的任务或者重新激活一个线程，例如开始动画或播放声音等。
+　　3．stop( )
+　　多次执行,当浏览器变成图标时,或者是离开主页时执行，主要功能是停止一些耗用系统资源的工作,。
+　　与start()相反，当用户离开小应用程序所在页面或浏览器变成图标时，会自动调用stop()方法。因此，该方法在生命周期中也被多次调用。这样使得可以在用户并不注意小应用程序的时候，停止一些耗用系统资源的工作（如中断一个线程），以免影响系统的运行速度，且并不需要去人为地去调用该方法。如果你的小应用程序中不包含动画、声音等程序，通常也不必重载该方法。
+　　4．destroy( )
+　　用来释放资源，在stop( )之后执行
+　　浏览器正常关闭时，Java自动调用这个方法。destroy()方法用于回收任何一个与系统无关的内存资源。当然，如果这个小应用程序仍然处于活动状态，Java会在调用destroy()之前，调用stop()方法。
+　　5. add(Component c)
+    在Applet中添加组件
+    6. action(Event evt, Object arg)
+    Applet控件的监听事件
+            public boolean action(Event evt, Object arg) {
+                     if(evt.target.equals(component1 ))//如果事件发生在组件1上
+                              getAppletContext().showStatus("Button 1");
+                     else if(evt.target.equals(component2 ))//如果事件发生在组件2上
+                              component3.setEditable(false);
+                          else 
+                               return super.action(evt, arg);
+                     return true; 
+               }
+   
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+java applet
+
+applet没有main()方法，它必须嵌在超文本文件中，在浏览器中进行运行。所有的applet程序都是Applet类的子类, applet程序是从方法init( )开始执行的。Paint方法继承于其祖先类Component，在component第一次被显示或重画时调用该方法，其参数Graphics是被显示的对象。
+ 
+//这是我们的第一个java applet，该程序保存在文件HelloEducation.java中
+import java.awt.Graphics;
+import java.applet.Applet; 　public class HelloEducation extends Applet {
+ 
+public String s;
+　　public void init() { 　　　　　　　
+　　s=new String("Welcome to Tongfang Education");
+　　　　　　　　　　　　}
+　public void paint(Graphics g){
+　　　　　g.drawString(s,25,25);
+　　　　　　　　　　//在浏览器中坐标为（25，25）的位置显示字符串s
+　　　}
+　}　
+ 
+java applet程序也是一个类，其编译方式与java application完全一样。java applet的执行方式与java application完全不同，java applet程序必须嵌入到html文件中才能够执行，因此必须编写相应的html文件。
+ 
+下面为HelloEducaiton.html文件的内容：
+<html>
+<applet code=HelloEducation.class width=250 height=250>
+</applet>
+</html>
+ 
+然后可以通过JDK所提供的命令"appletviewer"，在命令行下面执行java applet程序。如果是在windows操作系统中，就可以在"命令提示符"下敲入"appletviewer HelloEducation.html"。applet还可以采用另外一种方式运行，那就是直接在浏览器中打开HelloEducation.html程序，在主流的浏览器如IE、Netscape中都包含有java虚拟机，负责解释执行java applet程序。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+applet学习
+
+js调用java
+可以在网页里使用
+<script language=javascript>
+document.applets[0].java中的方法名
+</script>
+可以对applet进行控制，也可以从applet返回值。
+返回值无需关心值得类型，js会隐式的转换。
+传值到applet中应考虑类型匹配。
+java调用js
+需要导入netscape.javascript.jsobject这个类
+比如：
+JSObject window=JSObject.getWindow(this);
+JSObject window=(JSObject)window.getMember("document");
+来获取对当前窗口的控制权。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

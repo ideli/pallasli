@@ -1,0 +1,2362 @@
+
+java核心技术学习
+xPath教程
+
+XPath介绍XPath是用于在XML文件上寻找信息的一种语言。XPath用于操纵XML文件上的元素和属性。
+What You Should Already Know
+写在前面
+首先你要了解以下几个概念：
+HTML / XHTML
+XML / XML Namespaces
+XML / XML命名空间
+你可以从我们的首页获取相关的教程
+What is XPath?
+什么是可扩展路径（XPath）？
+XPath 是XML中的一种语法
+XPath 是XML文档中的路径索引
+XPath 包含一个标准函数库
+XPath 是一个XSLT的主要元素
+XPath 是W3C标准
+XPath Path Expressions
+XPath 路径表达式
+XPath路径表达式用于从XML文档中选取节点或节点设置。这些语句类似于传统操作系统的语句。
+XPath Standard Functions
+XPath 标准函数
+XPath包含100多种内置函数。包括：字符值，数字值，日期和时间方法，节点操作，排序操作，布尔值等。
+XPath is Used in XSLT
+XPath用于XSLT
+XPath是XSLT标准的一个重要元素。在创建XSLT文档前你必须先了解XPath。
+你可以从我们的XSLT教程中了解更多。
+XQuery 和 XPointer都是基于XPath表达式构建的。它们有着相同的数据模式并支持相同的函数和操作。
+你可以从我们的XQuery教程中了解更多。
+XPath is a W3C Standard
+XPath 是W3C标准
+XPath 在1999年11月16日成为W3C标准。
+你可以从我们的W3C教程中了解更多。
+XPath Nodes(节点)
+w3pop.com / 2006-09-21
+XPath介绍 
+
+在XPath里，有7中不同的节点：元素，属性，文本，名称空间，处理指令，内容，文档（根目录root）节点。
+XPath Terminology
+XPath术语
+Nodes
+节点
+在XPath里，有7中不同的节点：元素，属性，文本，名称空间，处理指令，内容，文档（根）节点，XML文档是节点树状结构。“树根”称作文档节点（或根节点）。
+下面给出一个XML文档：
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bookstore>
+<book>
+  <title lang="en">Harry Potter</title>
+
+  <author>J K. Rowling</author> 
+  <year>2005</year>
+  <price>29.99</price>
+</book>
+</bookstore>
+上述XML文档中的节点实例：
+<bookstore>  (document node)
+<author>J K. Rowling</author>  (element node)
+lang="en"  (attribute node)
+Atomic values
+“单元素（Atomic）”属性值
+Atomic values are nodes with no children or parent.
+“单元素”属性值只没有子节点和父节点。
+Example of atomic values:
+“单元素（Atomic）”属性值例子：
+J K. Rowling
+"en"
+Items
+项目
+Items are atomic values or nodes.
+项目是指单元素或节点。
+Relationship of Nodes
+节点间的关系
+Parent
+父类
+每个元素和属性都有一个“父类”。
+在下面的例子里：book元素是title, author, year, 和 price元素的父元素。
+<book>
+  <title>Harry Potter</title>
+  <author>J K. Rowling</author>
+
+  <year>2005</year>
+  <price>29.99</price>
+</book>
+Children
+子类
+节点元素可拥有任意个数的子类。
+在下面例子里，title, author, year, 和 price元素都是book元素的子元素。
+<book>
+  <title>Harry Potter</title>
+
+  <author>J K. Rowling</author>
+  <year>2005</year>
+  <price>29.99</price>
+</book>
+Siblings
+同属类
+拥有相同的父类的节点称之为同属类。
+在下面的例子里title, author, year, 和price元素都是“同属类元素”。
+<book>
+  <title>Harry Potter</title>
+  <author>J K. Rowling</author>
+  <year>2005</year>
+
+  <price>29.99</price>
+</book>
+Ancestors
+祖类
+一个节点的父类，父类的父类及更多称为该节点的祖类。
+在下面例子里，title元素的“祖类元素”是book元素和bookstore元素。
+<bookstore>
+<book>
+  <title>Harry Potter</title>
+
+  <author>J K. Rowling</author>
+  <year>2005</year>
+  <price>29.99</price>
+</book>
+</bookstore>
+Descendants
+下属类
+节点的子类，子类的子类及更多称为下属类。
+在下面的例子里，bookstore元素的下属类元素是book, title, author, year, 和price元素：
+<bookstore>
+<book>
+  <title>Harry Potter</title>
+  <author>J K. Rowling</author>
+  <year>2005</year>
+
+  <price>29.99</price>
+</book>
+</bookstore>
+
+XPath 语法
+w3pop.com / 2006-09-21
+XPath Nodes(节点)
+XPath 通过路径表达式从XML文档中选取节点或节点设置。可以通过一条语句或相应的步骤选取一个节点。
+The XML Example Document
+XML文档实例
+我们将在接下来的文章中引用这个XML文档。
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bookstore>
+<book>
+  <title lang="eng">Harry Potter</title>
+  <price>29.99</price>
+</book>
+<book>
+  <title lang="eng">Learning XML</title>
+  <price>39.95</price>
+</book>
+</bookstore>
+
+
+Selecting Nodes
+选取节点
+XPath通过路径表达式在XML文档中选取节点。可以通过一条语句或相应的步骤选取一个节点。下面列出了最常使用的路径表达式：
+Expression
+表达式	Description
+注释
+nodename	Selects all child nodes of the node
+选取节点下的所有子节点
+/	Selects from the root node
+选取根节点
+//	Selects nodes in the document from the current node that match the selection no matter where they are
+选取文档中所有符合条件的节点，不管该节点位于何处
+.	Selects the current node
+选取单前节点
+..	Selects the parent of the current node
+选取单前节点的父节点
+@	Selects attributes
+选取属性
+Examples
+实例
+在下面的表格中，我们列出了一些路径表达式及其运行的结果：
+Path Expression
+表达式	Result
+结果
+bookstore	Selects all the child nodes of the bookstore element
+选取bookstore元素的所有子节点
+/bookstore	Selects the root element bookstore 
+选取bookstore元素的根节点
+Note: If the path starts with a slash ( / ) it always represents an absolute path to an element!
+注意：如果一个路径以（/）开始，那么它必须是表述该元素所在的绝对路径
+
+bookstore/book	Selects all book elements that are children of bookstore
+选取bookstore中的所有book子元素
+//book	Selects all book elements no matter where they are in the document
+选取文档中的所有book元素
+bookstore//book	Selects all book elements that are descendant of the bookstore element, no matter where they are under the bookstore element
+选取文档中所有处于bookstore节点下的book元素
+//@lang	Selects all attributes that are named lang
+选取所有lang属性
+
+Predicates
+条件
+Predicates are used to find a specific node or a node that contains a specific value.
+它指定了选取节点的范围。
+Predicates are always embedded in square brackets.
+通常使用方括号[ ]来指定条件。
+Examples
+实例
+In the table below we have listed some path expressions with predicates and the result of the expressions:
+在下面的表格中我们列出了一些指定条件的表达式及其运行结果：
+Path Expression
+表达式	Result
+结果
+/bookstore/book[1]	Selects the first book element that is the child of the bookstore element
+选取bookstore节点下的第一个book元素
+/bookstore/book[last()]	Selects the last book element that is the child of the bookstore element
+选取bookstore节点下的最后一个book元素
+/bookstore/book[last()-1]	Selects the last but one book element that is the child of the bookstore element
+选取bookstore节点下的倒数第二个book元素
+/bookstore/book[position()<3]	Selects the first two book elements that are children of the bookstore element
+选取bookstore节点下的前两个book元素
+//title[@lang]	Selects all the title elements that have an attribute named lang
+选取所有包含有lang属性的title元素
+//title[@lang='eng']	Selects all the title elements that have an attribute named lang with a value of 'eng'
+选取所有lang属性值为‘eng’的title元素
+/bookstore/book[price>35.00]	Selects all the book elements of the bookstore element that have a price element with a value greater than 35.00
+选取bookstore节点下的所有包含price元素大于35.00的book元素
+/bookstore/book[price>35.00]/title	Selects all the title elements of the book elements of the bookstore element that have a price element with a value greater than 35.00
+选取bookstore节点下的所有包含price元素大于35.00的book节点下的title元素
+
+Selecting Unknown Nodes
+选取未知节点
+XPath wildcards can be used to select unknown XML elements.
+可以通过 XPath 通配符选取未知的XML元素。
+Wildcard
+通配符	Description
+注释
+*	Matches any element node
+匹配任意的节点元素
+@*	Matches any attribute node
+匹配任意的节点属性
+node()	Matches any node of any kind
+匹配任意种类的节点
+Examples
+实例
+In the table below we have listed some path expressions and the result of the expressions:
+在下面的表格中我们列出了一些表达式及其运行结果：
+Path Expression
+表达式	Result
+结果
+/bookstore/*	Selects all the child nodes of the bookstore element
+选取bookstore节点中的任意子节点元素
+//*	Selects all elements in the document
+选取文档中的所有元素
+//title[@*]	Selects all title elements which have any attribute
+选取包含任意属性的title元素
+
+Selecting Several Paths
+选取多个路径
+By using the | operator in an XPath expression you can select several paths.
+你可以同过在表达式中添加 | 来选取多个路径。
+Examples
+实例
+In the table below we have listed some path expressions and the result of the expressions:
+在下面的表格中我们列出了一些表达式及其运行结果：
+Path Expression
+表达式	Result
+结果
+//book/title | //book/price	Selects all the title AND price elements of all book elements
+选取book节点中的所有title和price元素
+//title | //price	Selects all the title AND price elements in the document
+选取文档中的所有title和price元素
+/bookstore/book/title | //price	Selects all the title elements of the book element of the bookstore element AND all the price elements in the document
+选取bookstore节点下的book节点中的所有title元素和文档中所有的price元素
+XPath Axes
+w3pop.com / 2006-09-21
+ XPath 语法 XPath 操作符 
+The XML Example Document
+XML文档
+We will use the following XML document in the examples below.
+我们将在下文中引用该XML文档：
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bookstore>
+<book>
+
+  <title lang="eng">Harry Potter</title>
+  <price>29.99</price>
+</book>
+<book>
+  <title lang="eng">Learning XML</title>
+
+  <price>39.95</price>
+</book>
+</bookstore>
+
+XPath Axes
+XPath 方法
+An axis defines a node-set relative to the current node.
+用于定义与单前节点相关的属性。
+AxisName
+方法名称	Result
+结果
+ancestor	Selects all ancestors (parent, grandparent, etc.) of the current node
+选取单前节点的祖类（父类，父类的父类及更多）
+ancestor-or-self	Selects all ancestors (parent, grandparent, etc.) of the current node and the current node itself
+选取当前节点的祖类（父类，父类的父类及更多）和节点自身
+attribute	Selects all attributes of the current node
+选取当前节点的所有属性
+child	Selects all children of the current node
+选取当前节点的所有子类
+descendant	Selects all descendants (children, grandchildren, etc.) of the current node
+选取当前节点的所有下属类（子类，子类的子类及更多）
+descendant-or-self	Selects all descendants (children, grandchildren, etc.) of the current node and the current node itself
+选取当前节点的所有下属类（子类，子类的子类及更多）和节点自身
+following	Selects everything in the document after the closing tag of the current node
+选取文档中当前节点结束标签前的所有元素
+following-sibling	Selects all siblings after the current node
+选取位于当前节点后的所有同属类节点
+namespace	Selects all namespace nodes of the current node
+选取与当前节点相名的命名空间
+parent	Selects the parent of the current node
+选取当前节点的父节点
+preceding	Selects everything in the document that is before the start tag of the current node
+选取文档中所有位于当前节点开始标签前的元素
+preceding-sibling	Selects all siblings before the current node
+选取位于当前节点前的所有同属类节点
+self	Selects the current node
+选取当前节点
+
+Location Path Expression
+路径表达式
+A location path can be absolute or relative.
+路径表达式可以使用绝对路径也可以是相对路径。
+An absolute location path starts with a slash ( / ) and a relative location path does not. In both cases the location path consists of one or more steps, each separated by a slash:
+绝对路径表达式以（/）开始，两种路径表达式都包含一个或多个层次，用 / 分隔：
+An absolute location path:
+绝对路径：
+/step/step/...
+A relative location path:
+相对路径：
+step/step/...
+Each step is evaluated against the nodes in the current node-set.
+每个层次都对应当前节点的一个属性。
+A step consists of:
+层包括：
+an axis (defines the tree-relationship between the selected nodes and the current node)
+层路径（取决于目标节点与当前节点间的目录关联）
+a node-test (identifies a node within an axis)
+节点测试（确认节点包含此属性）
+zero or more predicates (to further refine the selected node-set)
+无条件或条件（进一步检索节点属性）
+The syntax for a location step is:
+选取的语法为：
+axisname::nodetest[predicate]
+Examples
+实例
+Example
+实例	Result
+结果
+child::book	Selects all book nodes that are children of the current node
+选取当前节点的所有book子节点
+attribute::lang	Selects the lang attribute of the current node
+选取当前节点的所有lang属性值
+child::*	Selects all children of the current node
+选取当前节点的所有子节点
+attribute::*	Selects all attributes of the current node
+选取当前节点的所有属性值
+child::text()	Selects all text child nodes of the current node
+选取当前节点下的所有text节点的子节点
+child::node()	Selects all child nodes of the current node
+选取当前节点的所有子节点
+descendant::book	Selects all book descendants of the current node
+选取当前节点下所有book节点的下属类
+ancestor::book	Selects all book ancestors of the current node
+选取当前节点下所有book的祖类
+ancestor-or-self::book	Selects all book ancestors of the current node - and the current as well if it is a book node
+选取所有当前节点下的book祖类和book节点自身
+child::*/child::price	Selects all price grandchildren of the current node
+选取所有当前节点的子节点中所包含的price元素
+
+XPath 操作符
+w3pop.com / 2006-09-21
+ XPath Axes XPath 实例 
+An XPath expression returns either a node-set, a string, a Boolean, or a number.
+XPath 表达式返回值可以是：节点属性，字符型，布尔型，数字型。
+XPath Operators
+XPath 操作符
+Below is a list of the operators that can be used in XPath expressions:
+下面给出了XPath表达式所支持的所有操作符：
+Operator
+操作符	Description
+注释	Example
+实例	Return value
+返回值
+|	Computes two node-sets
+连接两条语句	//book | //cd	Returns a node-set with all book and cd elements
+返回所有book和cd的节点属性
++	Addition
+加	6 + 4	10
+-	Subtraction
+减	6 - 4	2
+*	Multiplication
+乘	
+6 * 4
+
+24
+div	Division
+除	8 div 4	2
+=	Equal
+等	price=9.80	true if price is 9.80
+false if price is 9.90
+返回true或false
+!=	Not equal
+不等	price!=9.80	true if price is 9.90
+false if price is 9.80
+返回true或false
+<	Less than
+小于	price<9.80	true if price is 9.00
+false if price is 9.80
+返回true或false
+<=	Less than or equal to
+小于等于	price<=9.80	true if price is 9.00
+false if price is 9.90
+返回true或false
+>	Greater than
+大于	price>9.80	true if price is 9.90
+false if price is 9.80
+返回true或false
+>=	Greater than or equal to
+大于等于	price>=9.80	true if price is 9.90
+false if price is 9.70
+返回true或false
+or	or	price=9.80 or price=9.70	true if price is 9.80
+false if price is 9.50
+逻辑连接，判断两个条件中的一个
+and	and	price>9.00 and price<9.90	true if price is 9.80
+false if price is 8.50
+逻辑连接，同时判断两个条件
+mod	Modulus (division remainder)
+求余	5 mod 2	1
+
+XPath 实例
+w3pop.com / 2006-09-21
+ XPath 操作符 XPath 摘要 
+Let's try to learn some basic XPath syntax by looking at some examples.
+让我们通过一些实例来学习一些基础的XPath语法。
+The XML Example Document
+XML文档
+We will use the following XML document in the examples below.
+我们将在下面的例子中引用这个XML文档。
+"books.xml"文件:
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bookstore>
+<book category="COOKING">
+  <title lang="en">Everyday Italian</title>
+
+  <author>Giada De Laurentiis</author>
+  <year>2005</year>
+  <price>30.00</price>
+</book>
+<book category="CHILDREN">
+  <title lang="en">Harry Potter</title>
+  <author>J K. Rowling</author>
+  <year>2005</year>
+
+  <price>29.99</price>
+</book>
+<book category="WEB">
+  <title lang="en">XQuery Kick Start</title>
+
+  <author>James McGovern</author>
+  <author>Per Bothner</author>
+  <author>Kurt Cagle</author>
+  <author>James Linn</author>
+
+  <author>Vaidyanathan Nagarajan</author>
+  <year>2003</year>
+  <price>49.99</price>
+</book>
+<book category="WEB">
+  <title lang="en">Learning XML</title>
+  <author>Erik T. Ray</author>
+  <year>2003</year>
+
+  <price>39.95</price>
+</book>
+</bookstore>
+在浏览器中查看"books.xml"文件
+Selecting Nodes
+选取节点
+We will use the Microsoft XMLDOM object to load the XML document and the selectNodes() function to select nodes from the XML document:
+我们会用Microsoft XMLDOM object来载入XML文档，用selectNodes()方法来从XML文档中选择节点。
+set xmlDoc=CreateObject("Microsoft.XMLDOM")
+xmlDoc.async="false"
+
+xmlDoc.load("books.xml")
+xmlDoc.selectNodes(path expression)
+
+Select all book Nodes
+选取所有book节点
+The following example selects all the book nodes under the bookstore element:
+下面的实例演示如何选取booksotre节点的所有book子元素：
+xmlDoc.selectNodes("/bookstore/book")
+如果你的IE是5.0以上版本，你可以自己尝试一下！
+Select the First book Node
+选取第一个book节点
+The following example selects only the first book node under the bookstore element:
+下面的例子只选择了bookstore节点的第一个book子元素：
+xmlDoc.selectNodes("/bookstore/book[0]")
+如果你的IE是5.0以上版本，你可以自己尝试一下！
+Note: IE 5 and 6 has implemented that [0] should be the first node, but according to the W3C standard it should have been [1]!!
+注意：IE5和IE6把[0]作为第一节点，但是在W3C标准中第一个节点是[1]！！
+Note: This is corrected in IE 6 SP2!
+注意：IE6 SP2 已经更正！
+Select the prices
+选取prices
+The following example selects the text from all the price nodes:
+下面的例子演示了如何从所有的price节点获取文本：
+xmlDoc.selectNodes("/bookstore/book/price/text()") 
+如果你的IE是5.0以上版本，你可以自己尝试一下！
+Selecting price Nodes with Price>35
+选取price>35的price节点
+The following example selects all the price nodes with a price higher than 35:
+下面的例子演示了如何选取price值大于35的price节点：
+xmlDoc.selectNodes("/bookstore/book[price>35]/price") 
+如果你的IE是5.0以上版本，你可以自己尝试一下！
+Selecting title Nodes with Price>35
+选取price>35的titile节点
+The following example selects all the title nodes with a price higher than 35:
+下面的例子演示了如何选取price属性值大于35的title节点：
+xmlDoc.selectNodes("/bookstore/book[price>35]/title") 
+如果你的IE是5.0以上版本，你可以自己尝试一下！ 
+XPath 摘要
+w3pop.com / 2006-09-21
+ XPath 实例 函数参考 
+XPath Summary
+XPath概要
+This tutorial has taught you how to find information in an XML document.
+你已经学会了如何从一个XML文档中选取你所需要的信息。
+You have learned how to use XPath to navigate through elements and attributes in an XML document.
+你已经学会如何使用XPath语句从XML文档中寻找元素和属性。
+You have also learned how to use some of the standard functions that is built-in in XPath.
+你也学会了如何使用XPath的内置函数。
+For more information on XPath, please look at our XPath Reference.
+想了解更多的XPath，请查看我们的XPath参考。
+Now You Know XPath, What's Next?
+进一步学习XPath
+The next step is to learn about XSLT, XQuery, XLink, and XPointer.
+下一步我们将学习XSLT，XQuery，XLink和XPointer。
+XSLT
+XSLT is the style sheet language for XML files.
+XSLT是XML文件的样式语言。
+With XSLT you can transform XML documents into other formats, like XHTML.
+你可以用XSLT将XML文档转换成其他格式，例如XHTML。
+If you want to learn more about XSLT, please visit our XSLT tutorial.
+如果你要了解更多关于XSLT，请阅读XSLT教程。
+XQuery
+XQuery is about querying XML data.
+XQuery是XML数据的查询语句。
+XQuery is designed to query anything that can appear as XML, including databases.
+XQuery可以查询任何可以用XML呈现的数据，包括数据库。
+If you want to learn more about XQuery, please visit our XQuery tutorial.
+如果你要了解更多关于XQuery，请阅读XQuery教程。
+XLink and XPointer
+XLink 和 XPointer
+Linking in XML is divided into two parts: XLink and XPointer.
+XML中的链接分两种：XLink和XPointer。
+XLink and XPointer define a standard way of creating hyperlinks in XML documents.
+可以使用XLink和XPointer在XML文档中创建一个标准的超级链接。
+If you want to learn more about XLink and XPointer, please visit our XLink and XPointer tutorial.
+如果你要了解更多关于XLink和XPointer，请阅读XLink和XPointer教程。
+函数参考
+w3pop.com / 2006-09-21
+ XPath 摘要 
+The following reference library defines the functions required for XPath 2.0, XQuery 1.0 and XSLT 2.0.
+下面的参考目录库详细包括了XPath 2.0, XQuery 1.0 和 XSLT 2.0.所要求的函数
+Functions Reference
+函数参考目录
+Accessor
+Error and Trace
+Numeric
+String
+AnyURI
+Boolean
+Duration/Date/Time
+QName
+Node
+Sequence
+Context
+The default prefix for the function namespace is fn:, and the URI is:
+http://www.w3.org/2005/02/xpath-functions.
+函数命名空间的默认前缀是“fn”，URI是：http://www.w3.org/2005/02/xpath-functions.
+Accessor 函数
+Name
+名称	Description
+描述
+fn:node-name(node)	Returns the node-name of the argument node
+返回自变量节点的节点（node）名称
+fn:nilled(node)	Returns a Boolean value indicating whether the argument node is nilled
+返回一个逻辑值，用来指明自变量（argument）节点是否被拒绝
+fn:data(item.item,...)	Takes a sequence of items and returns a sequence of atomic values
+获取项目的一个序列并返回一个原子值（atomic value）序列
+fn:base-uri()
+fn:base-uri(node)	Returns the value of the base-uri property of the current or specified node 
+返回当前节点或指定节点内基于uri属性的值
+fn:document-uri(node)	Returns the value of the document-uri property for the specified node
+返回指定节点中uri文档属性的值
+Error 和 Trace 函数
+Name
+名称	Description
+描述
+fn:error()
+fn:error(error)
+fn:error(error,description)
+fn:error(error,description,error-object)	Example案例: error(fn:QName('http://example.com/test', 'err:toohigh'), 'Error: Price is too high')
+Result结果: Returns http://example.com/test#toohigh and the string "Error: Price is too high" to the external processing environment
+
+fn:trace(value,label)	Used to debug queries
+用来调试查询（queries）
+Numeric 函数
+Name
+名称	Description
+描述
+fn:number(arg)	Returns the numeric value of the argument. The argument could be a boolean, string, or node-set
+Example: number('100')
+Result: 100
+返回自变量数值。这个自变量可以是一个逻辑值（boolean）、字符串（string）或者是节点设置 
+举例: number('100') 
+结果: 100 
+
+fn:abs(num)	Returns the absolute value of the argument 
+返回自变量的绝对值
+Example举例: abs(3.14)
+Result结果: 3.14
+
+Example举例: abs(-3.14)
+Result结果: 3.14
+
+fn:ceiling(num)	Returns the smallest integer that is greater than the number argument 
+
+Example: ceiling(3.14)
+Result: 4
+
+fn:floor(num)	Returns the largest integer that is not greater than the number argument
+返回大于自变量数值的最小整数
+Example举例: floor(3.14)
+Result结果: 3
+
+fn:round(num)	Rounds the number argument to the nearest integer
+返回小于自变量数值的最大整数 
+Example举例: round(3.14)
+Result结果: 3
+
+fn:round-half-to-even()	Example举例: round-half-to-even(0.5)
+Result结果: 0
+
+Example举例: round-half-to-even(1.5)
+Result结果: 2
+
+Example举例: round-half-to-even(2.5)
+Result结果: 2
+
+Strings 函数
+Name
+名称	Description
+描述
+fn:string(arg)	Returns the string value of the argument. The argument could be a number, boolean, or node-set
+返回自变量的字符串值。这个自变量可以是一个数字、逻辑值或节点设置。 
+Example举例: string(314)
+Result结果: "314"
+
+fn:codepoints-to-string(int,int,...)	Returns a string from a sequence of code points
+从一组代码点（code points）中返回一个字符串
+Example举例: codepoints-to-string(84, 104, 233, 114, 232, 115, 101)
+Result结果: 'Thérèse'
+
+fn:string-to-codepoints(string)	Returns a sequence of code points from a string
+从字符串中返回一组连续的代码点（code points）
+Example举例: string-to-codepoints("Thérèse")
+Result结果: 84, 104, 233, 114, 232, 115, 101
+
+fn:codepoint-equal(comp1,comp2)	Returns true if the value of comp1 is equal to the value of comp2, according to the Unicode code point collation (http://www.w3.org/2005/02/xpath-functions/collation/codepoint), otherwise it returns false
+根据统一字符编码点整理，如果comp1值与comp2值等同，则返回true。(http://www.w3.org/2005/02/xpath-functions/collation/codepoint)反之则为false
+fn:compare(comp1,comp2)
+fn:compare(comp1,comp2,collation)	Returns -1 if comp1 is less than comp2, 0 if comp1 is equal to comp2, or 1 if comp1 is greater than comp2 (according to the rules of the collation that is used)
+如果comp1少于comp2则返回-1，如果comp1等同于comp2或comp1 
+大于comp2（根据整理规则）则返回0。 
+
+Example举例: compare('ghi', 'ghi')
+Result结果: 0
+
+fn:concat(string,string,...)	Returns the concatenation of the strings
+返回字符串的串联
+Example举例: concat('XPath ','is ','FUN!')
+Result结果: 'XPath is FUN!'
+
+fn:string-join((string,string,...),sep)	Returns a string created by concatenating the string arguments and using the sep argument as the separator
+返回一个字符串，此字符串是通过连接字符串自变量和使用解析器形式的sep自变量来创建的。
+Example举例: string-join(('We', 'are', 'having', 'fun!'), ' ')
+Result结果: ' We are having fun! '
+
+Example举例: string-join(('We', 'are', 'having', 'fun!'))
+Result结果: 'Wearehavingfun!'
+
+Example举例:string-join((), 'sep')
+Result结果: ''
+
+fn:substring(string,start,len)
+fn:substring(string,start)	Returns the substring from the start position to the specified length. Index of the first character is 1. If length is omitted it returns the substring from the start position to the end 
+输出一个从开始位置算起，指定长度的子字符串。第一字符索引是1.如果长度被忽略，那么就输出一个从开始位置起一直到末尾的子链。
+Example举例: substring('Beatles',1,4)
+Result结果: 'Beat'
+
+Example举例: substring('Beatles',2)
+Result结果: 'eatles'
+
+fn:string-length(string)
+fn:string-length()	Returns the length of the specified string. If there is no string argument it returns the length of the string value of the current node
+输出指定字符串的长度。如果没有字符串自变量则返回当前节点的字符串值的长度。
+Example举例: string-length('Beatles')
+Result结果: 7
+
+fn:normalize-space(string)
+fn:normalize-space()	Removes leading and trailing spaces from the specified string, and replaces all internal sequences of white space with one and returns the result. If there is no string argument it does the same on the current node
+从指定字符串中删除前端的空间与末尾的空间，用一个空格替代所有的内部空白序列。如果没有字符串自变量则在当前节点中进行上述操作。
+Example举例: normalize-space(' The   XML ')
+Result结果: 'The XML'
+
+fn:normalize-unicode()	 
+fn:upper-case(string)	Converts the string argument to upper-case
+把字符串自变量转换到upper-case 
+Example举例: upper-case('The XML')
+Result结果: 'THE XML'
+
+fn:lower-case(string)	Converts the string argument to lower-case
+把字符串转自变量换到lower-case 
+
+Example举例: lower-case('The XML')
+Result结果: 'the xml'
+fn:translate(string1,string2,string3)	Converts string1 by replacing the characters in string2 with the characters in string3
+通过用字符串3中的字符串替换字符串2中的字符，转换字符串1
+Example举例: translate('12:30','30','45')
+Result结果: '12:45'
+
+Example举例: translate('12:30','03','54')
+Result结果: '12:45'
+
+Example举例: translate('12:30','0123','abcd')
+Result结果: 'bc:da'
+
+fn:escape-uri(stringURI,esc-res)	Example举例: escape-uri("http://example.com/test#car", true())
+Result结果: "http%3A%2F%2Fexample.com%2Ftest#car"
+Example举例: escape-uri("http://example.com/test#car", false())
+Result结果: "http://example.com/test#car"
+
+Example举例: escape-uri ("http://example.com/~bébé", false())
+Result结果: "http://example.com/~b%C3%A9b%C3%A9"
+
+fn:contains(string1,string2)	Returns true if string1 contains string2, otherwise it returns false
+如果string 1含有string 2则输出true；反之为false
+Example举例: contains('XML','XM')
+Result结果: true
+
+fn:starts-with(string1,string2)	Returns true if string1 starts with string2, otherwise it returns false
+如果string 1以string 2开头则输出true；反之则为false
+Example举例: starts-with('XML','X')
+Result结果: true
+
+fn:ends-with(string1,string2)	Returns true if string1 ends with string2, otherwise it returns false
+如果string 1以string 2为结尾则输出true；反之为false 
+Example举例: ends-with('XML','X')
+Result结果: false
+
+fn:substring-before(string1,string2)	Returns the start of string1 before string2 occurs in it
+在string2触发之前输出 string1的始端 
+Example举例: substring-before('12/10','/')
+Result结果: '12'
+
+fn:substring-after(string1,string2)	Returns the remainder of string1 after string2 occurs in it 
+在string2触发之前输出string1的余数
+Example举例: substring-after('12/10','/')
+Result结果: '10'
+
+fn:matches(string,pattern)	Returns true if the string argument matches the pattern, otherwise, it returns false
+如果字符串自变量与模式相匹配则输出true，反之为false
+Example举例: matches("Merano", "ran")
+Result结果: true
+
+fn:replace(string,pattern,replace)	Returns a string that is created by replacing the given pattern with the replace argument
+输出一个字符串（用替换自变量替换特定模式） 
+Example举例: replace("Bella Italia", "l", "*")
+Result结果: 'Be**a Ita*ia'
+
+Example举例: replace("Bella Italia", "l", "")
+Result结果: 'Bea Itaia'
+fn:tokenize(string,pattern)	Example举例: tokenize("XPath is fun", "\s+")
+Result结果: ("XPath", "is", "fun")
+anyURI 函数
+Name
+名称	Description
+描述
+fn:resolve-uri(relative,base)	 
+Boolean 函数
+Name
+名称	Description
+描述
+fn:boolean(arg)	Returns a boolean value for a number, string, or node-set
+输出一个数字、字符串及节点设置的逻辑函数
+fn:not(arg)	The argument is first reduced to a boolean value by applying the boolean() function. Returns true if the boolean value is false, and false if the boolean value is true
+自变量是第一个成为适用于boolean()函数的逻辑值。如果逻辑值是false则输出true，反之亦然。
+Example举例: not(true())
+Result结果: false
+
+fn:true()	Returns the boolean value true
+输出逻辑值为true
+Example举例: true()
+Result结果: true
+
+fn:false()	Returns the boolean value false
+输出逻辑值为false 
+Example举例: false()
+Result结果: false
+
+Durations、Dates 和 Times 函数
+Component Extraction Functions on Durations, Dates and Times 
+持续时间、日期、时间函数组件
+Name
+名称	Description
+描述
+fn:dateTime(date,time)	Converts the arguments to a date and a time
+把自变量转换成日期和时间
+fn:years-from-duration(datetimedur)	Returns an integer that represents the years component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示年份的整形
+fn:months-from-duration(datetimedur)	Returns an integer that represents the months component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示月份的整形
+fn:days-from-duration(datetimedur)	Returns an integer that represents the days component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示天数的整形
+fn:hours-from-duration(datetimedur)	Returns an integer that represents the hours component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示时数的整形
+fn:minutes-from-duration(datetimedur)	Returns an integer that represents the minutes component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示分数的整形
+fn:seconds-from-duration(datetimedur)	Returns a decimal that represents the seconds component in the canonical lexical representation of the value of the argument
+输出一个在自变量值标准词汇表示中表示秒数的小数
+fn:year-from-dateTime(datetime)	Returns an integer that represents the year component in the localized value of the argument
+输出一个在自变量本地值中表示年份的整形 
+Example举例: year-from-dateTime(xs:dateTime("2005-01-10T12:30-04:10"))
+Result结果: 2005
+
+fn:month-from-dateTime(datetime)	Returns an integer that represents the month component in the localized value of the argument
+输出一个在自变量本地值中表示月份的整形
+Example举例: month-from-dateTime(xs:dateTime("2005-01-10T12:30-04:10"))
+Result结果: 01
+
+fn:day-from-dateTime(datetime)	Returns an integer that represents the day component in the localized value of the argument
+输出一个在自变量本地值中表示的整形
+Example举例: day-from-dateTime(xs:dateTime("2005-01-10T12:30-04:10"))
+Result结果: 10
+
+fn:hours-from-dateTime(datetime)	Returns an integer that represents the hours component in the localized value of the argument
+输出一个在自变量本地值中表示时数的整形
+Example举例: hours-from-dateTime(xs:dateTime("2005-01-10T12:30-04:10"))
+Result结果: 12
+
+fn:minutes-from-dateTime(datetime)	Returns an integer that represents the minutes component in the localized value of the argument
+输出一个在自变量本地值中表示分数的整形
+Example举例: minutes-from-dateTime(xs:dateTime("2005-01-10T12:30-04:10"))
+Result结果: 30
+
+fn:seconds-from-dateTime(datetime)	Returns a decimal that represents the seconds component in the localized value of the argument
+输出一个在自变量本地值中表示秒数的小数
+Example举例: seconds-from-dateTime(xs:dateTime("2005-01-10T12:30:00-04:10"))
+Result结果: 0
+
+fn:timezone-from-dateTime(datetime)	Returns the time zone component of the argument if any
+输出任何自变量时区组件如果它们存在
+fn:year-from-date(date)	Returns an integer that represents the year in the localized value of the argument
+输出一个在自变量本地值中表示年份的整形 
+Example举例: year-from-date(xs:date("2005-04-23"))
+Result结果: 2005
+
+fn:month-from-date(date)	Returns an integer that represents the month in the localized value of the argument
+输出一个在自变量本地值中表示月份的整形
+Example举例: month-from-date(xs:date("2005-04-23"))
+Result结果: 4
+
+fn:day-from-date(date)	Returns an integer that represents the day in the localized value of the argument
+输出一个在自变量本地值中表示天数的整形 
+Example举例: day-from-date(xs:date("2005-04-23"))
+Result结果: 23
+
+fn:timezone-from-date(date)	Returns the time zone component of the argument if any
+输出自变量的时区组件如果它们存在
+fn:hours-from-time(time)	Returns an integer that represents the hours component in the localized value of the argument
+输出一个在自变量本地值中表示时数的整形0 
+Example举例: hours-from-time(xs:time("10:22:00"))
+Result结果: 10
+
+fn:minutes-from-time(time)	Returns an integer that represents the minutes component in the localized value of the argument
+输出一个在自变量本地值中表示分数的整形
+
+Example举例: minutes-from-time(xs:time("10:22:00"))
+Result结果: 22
+fn:seconds-from-time(time)	Returns an integer that represents the seconds component in the localized value of the argument
+输出一个在自变量本地值中表示秒数的整形
+Example举例: seconds-from-time(xs:time("10:22:00"))
+Result结果: 0
+
+fn:timezone-from-time(time)	Returns the time zone component of the argument if any
+输出自变量时区组件如果它们存在
+fn:adjust-dateTime-to-timezone(datetime,timezone)	If the timezone argument is empty, it returns a dateTime without a timezone. Otherwise, it returns a dateTime with a timezone
+如果时区（timezone）自变量为空，那么就输出一个无时区的dateTime。相反就输出一个含有时区（timezone）的dateTime
+fn:adjust-date-to-timezone(date,timezone)	If the timezone argument is empty, it returns a date without a timezone. Otherwise, it returns a date with a timezone
+如果时区（timezone）自变量为空，则输出无时区的日期；相反则输出一个含有时区（timezone）的日期
+fn:adjust-time-to-timezone(time,timezone)	If the timezone argument is empty, it returns a time without a timezone. Otherwise, it returns a time with a timezone
+如果时区（timezone）自变量为空，那么输出一个无时区的时间，相反，则输出一个含有时区的时间。
+QNames 相关函数
+Name
+名称	Description
+描述
+fn:QName()	 
+fn:local-name-from-QName()	 
+fn:namespace-uri-from-QName()	 
+fn:namespace-uri-for-prefix()	 
+fn:in-scope-prefixes()	 
+fn:resolve-QName()	 
+Nodes 函数
+Name
+名称	Description
+描述
+fn:name()
+fn:name(nodeset)	Returns the name of the current node or the first node in the specified node set
+输出当前节点或指定节点设置中首个节点的名称
+fn:local-name()
+fn:local-name(nodeset)	Returns the name of the current node or the first node in the specified node set - without the namespace prefix
+输出当前节点或指定节点设置中首个节点的名称（无须命名空间前缀）
+fn:namespace-uri()
+fn:namespace-uri(nodeset)	Returns the namespace URI of the current node or the first node in the specified node set
+输出当前节点或指定节点设置中首个节点的命名空间URI
+fn:lang(lang)	Returns true if the language of the current node matches the language of the specified language
+如果当前节点语言与指定语言的语言相匹配则输出true
+Example举例: Lang("en") is true for
+<p xml:lang="en">...</p>
+
+Example举例: Lang("de") is false for
+<p xml:lang="en">...</p>
+
+fn:root()
+fn:root(node)	Returns the root of the tree to which the current node or the specified belongs. This will usually be a document node
+输出树的根目录到当前节点或指定节点所属区域。这通常是文件节点。
+Sequences 函数
+序列函数
+Name
+名称	Description
+描述
+fn:index-of((item,item,...),searchitem)	Returns the positions within the sequence of items that are equal to the searchitem argument
+输出与searchitem自变量匹对的项序列的位置
+Example举例: index-of ((15, 40, 25, 40, 10), 40)
+Result结果: (2, 4)
+
+Example举例: index-of (("a", "dog", "and", "a", "duck"), "a")
+Result结果: (1, 4)
+
+Example举例: index-of ((15, 40, 25, 40, 10), 18)
+Result结果: ()
+
+fn:remove((item,item,...),position)	Returns a new sequence constructed from the value of the item arguments - with the item specified by the position argument removed
+输出一个源于一个项目（item）自变量值的全新序列,从项自变量值中输出一个新序列结构（通过移除的位置自变量所指定的项） 
+
+Example举例: remove(("ab", "cd", "ef"), 0)
+Result结果: ("ab", "cd", "ef")
+
+Example举例: remove(("ab", "cd", "ef"), 1)
+Result结果: ("cd", "ef")
+
+Example举例: remove(("ab", "cd", "ef"), 4)
+Result结果: ("ab", "cd", "ef")
+
+fn:empty(item,item,...)	Returns true if the value of the arguments IS an empty sequence, otherwise it returns false
+如果自变量值是空序列则输出true；反之为FALSE
+Example举例: empty(remove(("ab", "cd"), 1))
+Result结果: false
+
+fn:exists(item,item,...)	Returns true if the value of the arguments IS NOT an empty sequence, otherwise it returns false
+如果自变量值不是空序列则输出true；反之为false
+Example举例: exists(remove(("ab"), 1))
+Result结果: false
+
+fn:distinct-values((item,item,...),collation)	Returns only distinct (different) values
+只输出明显（不同）值
+Example举例: distinct-values((1, 2, 3, 1, 2))
+Result结果: (1, 2, 3)
+
+fn:insert-before((item,item,...),pos,inserts)	Returns a new sequence constructed from the value of the item arguments - with the value of the inserts argument inserted in the position specified by the pos argument 
+从项自变量值中输出一个新序列结构（插入自变量会插入pos自变量指定的区域）
+Example举例: insert-before(("ab", "cd"), 0, "gh")
+Result结果: ("gh", "ab", "cd")
+
+Example举例: insert-before(("ab", "cd"), 1, "gh")
+Result结果: ("gh", "ab", "cd")
+
+Example举例: insert-before(("ab", "cd"), 2, "gh")
+Result结果: ("ab", "gh", "cd")
+
+Example举例: insert-before(("ab", "cd"), 5, "gh")
+Result结果: ("ab", "cd", "gh")
+
+fn:reverse((item,item,...))	Returns the reversed order of the items specified
+输出指定项的倒序
+Example举例: reverse(("ab", "cd", "ef"))
+Result结果: ("ef", "cd", "ab")
+
+Example举例: reverse(("ab"))
+Result结果: ("ab")
+
+fn:subsequence((item,item,...),start,len)	Returns a sequence of items from the position specified by the start argument and continuing for the number of items specified by the len argument. The first item is located at position 1
+从指定位置（由开始自变量和LEN自变量指定项数指定）输出项序列。首项是处于position 1.
+Example举例: subsequence(($item1, $item2, $item3,...), 3)
+Result结果: ($item3, ...)
+
+Example举例: subsequence(($item1, $item2, $item3, ...), 2, 2)
+Result结果: ($item2, $item3)
+
+fn:unordered((item,item,...))	Returns the items in an implementation dependent order
+按顺序输出一个执行程序中的项
+Functions That Test the Cardinality of Sequences 
+基数序列测试函数
+Name
+名称	Description
+描述
+fn:zero-or-one(item,item,...)	Returns the argument if it contains zero or one items, otherwise it raises an error
+如果含有0或1项则输出自变量；反之则产生错误
+fn:one-or-more(item,item,...)	Returns the argument if it contains one or more items, otherwise it raises an error
+如果含有1个或更多项则输出自变量；反之则产生错误
+fn:exactly-one(item,item,...)	Returns the argument if it contains exactly one item, otherwise it raises an error
+如果含有精确项则输出自变量；反之产生错误
+Equals, Union, Intersection and Except 
+等于、与、或、非
+Name
+名称	Description
+描述
+fn:deep-equal(param1,param2,collation)	Returns true if param1 and param2 are deep-equal to each other, otherwise it returns false
+如果param1和param2是同一级的则输出true反之输出false
+Aggregate Functions
+集合函数
+Name
+名称	Description
+描述
+fn:count((item,item,...))	Returns the count of nodes
+输出节点计数
+fn:avg((arg,arg,...))	Returns the average of the argument values
+输出自变量值的平均值
+Example举例: avg((1,2,3))
+Result结果: 2
+
+fn:max((arg,arg,...))	Returns the argument that is greater than the others
+输出最大自变量
+Example举例: max((1,2,3))
+Result结果: 3
+
+Example举例: max(('a', 'k'))
+Result结果: 'k'
+
+fn:min((arg,arg,...))	Returns the argument that is less than the others
+ 输出最小自变量
+Example举例: min((1,2,3))
+Result结果: 1
+
+Example举例: min(('a', 'k'))
+Result结果: 'a'
+
+fn:sum(arg,arg,...)	Returns the sum of the numeric value of each node in the specified node-set
+输出指定节点设置中的每个节点的数值总和
+Functions that Generate Sequences
+序列输出函数
+Name
+名称	Description
+描述
+fn:id((string,string,...),node)	Returns a sequence of element nodes that have an ID value equal to the value of one or more of the values specified in the string argument
+输出元素节点序列（含有与字符串自变量指定的一个或更多值相等的ID值）
+fn:idref((string,string,...),node)	Returns a sequence of element or attribute nodes that have an IDREF value equal to the value of one or more of the values specified in the string argument
+输出元素或属性节点的序列（含有与字符串自变量指定的一个或更多值相等的IDREF值）
+fn:doc(URI)	 
+fn:doc-available(URI)	Returns true if the doc() function returns a document node, otherwise it returns false
+如果doc()函数返回一个文件节点则输出true；反之为false
+fn:collection()
+fn:collection(string)	 
+Context 函数
+Name
+名称	Description
+描述
+fn:position()	Returns the index position of the node that is currently being processed
+输出当前正在处理的节点索引位置
+Example举例: //book[position()<=3]
+Result结果: Selects the first three book elements
+
+fn:last()	Returns the number of items in the processed node list
+ 输出处理节点列表中的数字项
+Example举例: //book[last()]
+Result结果: Selects the last book element
+
+fn:current-dateTime()	Returns the current dateTime (with timezone)
+输出当前dateTime（通过时区timezone）
+fn:current-date()	Returns the current date (with timezone)
+输出当前日期（通过时区timezone）
+fn:current-time()	Returns the current time (with timezone)
+输出当前时间（通过时区timezone）
+fn:implicit-timezone()	Returns the value of the implicit timezone
+输出固有（implicit）时区值
+fn:default-collation()	Returns the value of the default collation
+输出默认校对值
+fn:static-base-uri()	Returns the value of the base-uri
+输出base-uri值
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+举例
+
+
+/AAA
+Select the root element AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <BBB/> 
+          <BBB/> 
+          <DDD> 
+               <BBB/> 
+          </DDD> 
+          <CCC/> 
+     </AAA>
+/AAA/CCC
+Select all elements CCC which are children of the root element AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <BBB/> 
+          <BBB/> 
+          <DDD> 
+               <BBB/> 
+          </DDD> 
+          <CCC/> 
+     </AAA>
+/AAA/DDD/BBB
+Select all elements BBB which are children of DDD which are children of the root element AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <BBB/> 
+          <BBB/> 
+          <DDD> 
+               <BBB/> 
+          </DDD> 
+          <CCC/> 
+     </AAA>
+
+Example 2
+If the path starts with // then all elements in the document which fulfill following criteria are selected.
+//BBB
+Select all elements BBB
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <BBB/> 
+          <DDD> 
+               <BBB/> 
+          </DDD> 
+          <CCC> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+//DDD/BBB
+Select all elements BBB which are children of DDD
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <BBB/> 
+          <DDD> 
+               <BBB/> 
+          </DDD> 
+          <CCC> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+
+Example 3
+The star * selects all elements located by preceeding path
+/AAA/CCC/DDD/*
+Select all elements enclosed by elements /AAA/CCC/DDD
+
+     <AAA> 
+          <XXX> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </CCC> 
+          <CCC> 
+               <BBB> 
+                    <BBB> 
+                         <BBB/> 
+                    </BBB> 
+               </BBB> 
+          </CCC> 
+     </AAA>
+/*/*/*/BBB
+Select all elements BBB which have 3 ancestors
+
+     <AAA> 
+          <XXX> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </CCC> 
+          <CCC> 
+               <BBB> 
+                    <BBB> 
+                         <BBB/> 
+                    </BBB> 
+               </BBB> 
+          </CCC> 
+     </AAA>
+//*
+Select all elements
+
+     <AAA> 
+          <XXX> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD> 
+                    <BBB/> 
+                    <BBB/> 
+                    <EEE/> 
+                    <FFF/> 
+               </DDD> 
+          </CCC> 
+          <CCC> 
+               <BBB> 
+                    <BBB> 
+                         <BBB/> 
+                    </BBB> 
+               </BBB> 
+          </CCC> 
+     </AAA>
+
+Example 4
+Expresion in square brackets can further specify an element. A number in the brackets gives the position of the element in the selected set. The function last() selects the last element in the selection.
+/AAA/BBB[1]
+Select the first BBB child of element AAA
+
+     <AAA> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+     </AAA>
+/AAA/BBB[last()]
+Select the last BBB child of element AAA
+
+     <AAA> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+     </AAA>
+
+Example 5
+Attributes are specified by @ prefix.
+//@id
+Select all attributes @id
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB id = "b2"/> 
+          <BBB name = "bbb"/> 
+          <BBB/> 
+     </AAA>
+//BBB[@id]
+Select BBB elements which have attribute id
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB id = "b2"/> 
+          <BBB name = "bbb"/> 
+          <BBB/> 
+     </AAA>
+//BBB[@name]
+Select BBB elements which have attribute name
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB id = "b2"/> 
+          <BBB name = "bbb"/> 
+          <BBB/> 
+     </AAA>
+//BBB[@*]
+Select BBB elements which have any attribute
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB id = "b2"/> 
+          <BBB name = "bbb"/> 
+          <BBB/> 
+     </AAA>
+//BBB[not(@*)]
+Select BBB elements without an attribute
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB id = "b2"/> 
+          <BBB name = "bbb"/> 
+          <BBB/> 
+     </AAA>
+
+Example 6
+Values of attributes can be used as selection criteria. Function normalize-space removes leading and trailing spaces and replaces sequences of whitespace characters by a single space.
+//BBB[@id='b1']
+Select BBB elements which have attribute id with value b1
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB name = " bbb "/> 
+          <BBB name = "bbb"/> 
+     </AAA>
+//BBB[@name='bbb']
+Select BBB elements which have attribute name with value 'bbb'
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB name = " bbb "/> 
+          <BBB name = "bbb"/> 
+     </AAA>
+//BBB[normalize-space(@name)='bbb']
+Select BBB elements which have attribute name with value bbb, leading and trailing spaces are removed before comparison
+
+     <AAA> 
+          <BBB id = "b1"/> 
+          <BBB name = " bbb "/> 
+          <BBB name = "bbb"/> 
+     </AAA>
+
+Example 7
+Function count() counts the number of selected elements
+//*[count(BBB)=2]
+Select elements which have two children BBB
+
+     <AAA> 
+          <CCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </CCC> 
+          <DDD> 
+               <BBB/> 
+               <BBB/> 
+          </DDD> 
+          <EEE> 
+               <CCC/> 
+               <DDD/> 
+          </EEE> 
+     </AAA>
+//*[count(*)=2]
+Select elements which have 2 children
+
+     <AAA> 
+          <CCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </CCC> 
+          <DDD> 
+               <BBB/> 
+               <BBB/> 
+          </DDD> 
+          <EEE> 
+               <CCC/> 
+               <DDD/> 
+          </EEE> 
+     </AAA>
+//*[count(*)=3]
+Select elements which have 3 children
+
+     <AAA> 
+          <CCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </CCC> 
+          <DDD> 
+               <BBB/> 
+               <BBB/> 
+          </DDD> 
+          <EEE> 
+               <CCC/> 
+               <DDD/> 
+          </EEE> 
+     </AAA>
+
+Example 8
+Function name() returns name of the element, the starts-with function returns true if the first argument string starts with the second argument string, and the contains function returns true if the first argument string contains the second argument string.
+//*[name()='BBB']
+Select all elements with name BBB, equivalent with //BBB
+
+     <AAA> 
+          <BCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </BCC> 
+          <DDB> 
+               <BBB/> 
+               <BBB/> 
+          </DDB> 
+          <BEC> 
+               <CCC/> 
+               <DBD/> 
+          </BEC> 
+     </AAA>
+//*[starts-with(name(),'B')]
+Select all elements name of which starts with letter B
+
+     <AAA> 
+          <BCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </BCC> 
+          <DDB> 
+               <BBB/> 
+               <BBB/> 
+          </DDB> 
+          <BEC> 
+               <CCC/> 
+               <DBD/> 
+          </BEC> 
+     </AAA>
+//*[contains(name(),'C')]
+Select all elements name of which contain letter C
+
+     <AAA> 
+          <BCC> 
+               <BBB/> 
+               <BBB/> 
+               <BBB/> 
+          </BCC> 
+          <DDB> 
+               <BBB/> 
+               <BBB/> 
+          </DDB> 
+          <BEC> 
+               <CCC/> 
+               <DBD/> 
+          </BEC> 
+     </AAA>
+
+Example 9
+The string-length function returns the number of characters in the string. You must use &lt; as a substitute for < and &gt; as a substitute for > .
+//*[string-length(name()) = 3]
+Select elements with three-letter name
+
+     <AAA> 
+          <Q/> 
+          <SSSS/> 
+          <BB/> 
+          <CCC/> 
+          <DDDDDDDD/> 
+          <EEEE/> 
+     </AAA>
+//*[string-length(name()) < 3]
+Select elements name of which has one or two characters
+
+     <AAA> 
+          <Q/> 
+          <SSSS/> 
+          <BB/> 
+          <CCC/> 
+          <DDDDDDDD/> 
+          <EEEE/> 
+     </AAA>
+//*[string-length(name()) > 3]
+Select elements with name longer than three characters
+
+     <AAA> 
+          <Q/> 
+          <SSSS/> 
+          <BB/> 
+          <CCC/> 
+          <DDDDDDDD/> 
+          <EEEE/> 
+     </AAA>
+
+Example 10
+Several paths can be combined with | separator.
+//CCC | //BBB
+Select all elements CCC and BBB
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <DDD> 
+               <CCC/> 
+          </DDD> 
+          <EEE/> 
+     </AAA>
+/AAA/EEE | //BBB
+Select all elements BBB and elements EEE which are children of root element AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <DDD> 
+               <CCC/> 
+          </DDD> 
+          <EEE/> 
+     </AAA>
+/AAA/EEE | //DDD/CCC | /AAA | //BBB
+Number of combinations is not restricted
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+          <DDD> 
+               <CCC/> 
+          </DDD> 
+          <EEE/> 
+     </AAA>
+
+Example 11
+The child axis contains the children of the context node. The child axis is the default axis and it can be omitted.
+/AAA
+Equivalent of /child::AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+     </AAA>
+/child::AAA
+Equivalent of /AAA
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+     </AAA>
+/AAA/BBB
+Equivalent of /child::AAA/child::BBB
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+     </AAA>
+/child::AAA/child::BBB
+Equivalent of /AAA/BBB
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+     </AAA>
+/child::AAA/BBB
+Both possibilities can be combined
+
+     <AAA> 
+          <BBB/> 
+          <CCC/> 
+     </AAA>
+
+Example 12
+The descendant axis contains the descendants of the context node; a descendant is a child or a child of a child and so on; thus the descendant axis never contains attribute or namespace nodes
+/descendant::*
+Select all descendants of document root and therefore all elements
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+/AAA/BBB/descendant::*
+Select all descendants of /AAA/BBB
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+//CCC/descendant::*
+Select all elements which have CCC among its ancestors
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+//CCC/descendant::DDD
+Select elements DDD which have CCC among its ancestors
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+
+Example 13
+The parent axis contains the parent of the context node, if there is one.
+//DDD/parent::*
+Select all parents of DDD element
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+
+Example 14
+The ancestor axis contains the ancestors of the context node; the ancestors of the context node consist of the parent of context node and the parent's parent and so on; thus, the ancestor axis will always include the root node, unless the context node is the root node.
+/AAA/BBB/DDD/CCC/EEE/ancestor::*
+Select all elements given in this absolute path
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+//FFF/ancestor::*
+Select ancestors of FFF element
+
+     <AAA> 
+          <BBB> 
+               <DDD> 
+                    <CCC> 
+                         <DDD/> 
+                         <EEE/> 
+                    </CCC> 
+               </DDD> 
+          </BBB> 
+          <CCC> 
+               <DDD> 
+                    <EEE> 
+                         <DDD> 
+                              <FFF/> 
+                         </DDD> 
+                    </EEE> 
+               </DDD> 
+          </CCC> 
+     </AAA>
+
+Example 15
+The following-sibling axis contains all the following siblings of the context node.
+/AAA/BBB/following-sibling::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <DDD/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//CCC/following-sibling::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <DDD/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+Example 16
+The preceding-sibling axis contains all the preceding siblings of the context node
+/AAA/XXX/preceding-sibling::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <DDD/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//CCC/preceding-sibling::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <DDD/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+ Example 17
+The following axis contains all nodes in the same document as the context node that are after the context node in document order, excluding any descendants and excluding attribute nodes and namespace nodes.
+/AAA/XXX/following::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+                    <DDD> 
+                         <EEE/> 
+                    </DDD> 
+               </ZZZ> 
+               <FFF> 
+                    <GGG/> 
+               </FFF> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//ZZZ/following::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+                    <DDD> 
+                         <EEE/> 
+                    </DDD> 
+               </ZZZ> 
+               <FFF> 
+                    <GGG/> 
+               </FFF> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+Example 18
+The preceding axis contains all nodes in the same document as the context node that are before the context node in document order, excluding any ancestors and excluding attribute nodes and namespace nodes
+/AAA/XXX/preceding::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/preceding::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+ Example 19
+The descendant-or-self axis contains the context node and the descendants of the context node
+/AAA/XXX/descendant-or-self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//CCC/descendant-or-self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+Example 20
+The ancestor-or-self axis contains the context node and the ancestors of the context node; thus, the ancestor-or-self axis will always include the root node.
+/AAA/XXX/DDD/EEE/ancestor-or-self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/ancestor-or-self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ> 
+                    <DDD/> 
+               </ZZZ> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <DDD/> 
+                    <CCC/> 
+                    <FFF/> 
+                    <FFF> 
+                         <GGG/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+Example 21
+The ancestor, descendant, following, preceding and self axes partition a document (ignoring attribute and namespace nodes): they do not overlap and together they contain all the nodes in the document.
+//GGG/ancestor::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/descendant::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/following::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/preceding::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+//GGG/ancestor::* | //GGG/descendant::* | //GGG/following::* | //GGG/preceding::* | //GGG/self::*
+
+     <AAA> 
+          <BBB> 
+               <CCC/> 
+               <ZZZ/> 
+          </BBB> 
+          <XXX> 
+               <DDD> 
+                    <EEE/> 
+                    <FFF> 
+                         <HHH/> 
+                         <GGG> 
+                              <JJJ> 
+                                   <QQQ/> 
+                              </JJJ> 
+                              <JJJ/> 
+                         </GGG> 
+                         <HHH/> 
+                    </FFF> 
+               </DDD> 
+          </XXX> 
+          <CCC> 
+               <DDD/> 
+          </CCC> 
+     </AAA>
+
+Example 22
+The div operator performs floating-point division, the mod operator returns the remainder from a truncating division. The floor function returns the largest (closest to positive infinity) number that is not greater than the argument and that is an integer.The ceiling function returns the smallest (closest to negative infinity) number that is not less than the argument and that is an integer.
+//BBB[position() mod 2 = 0 ]
+Select even BBB elements
+
+     <AAA> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <CCC/> 
+          <CCC/> 
+          <CCC/> 
+     </AAA>
+//BBB[ position() = floor(last() div 2 + 0.5) or position() = ceiling(last() div 2 + 0.5) ]
+Select middle BBB element(s)
+
+     <AAA> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <CCC/> 
+          <CCC/> 
+          <CCC/> 
+     </AAA>
+//CCC[ position() = floor(last() div 2 + 0.5) or position() = ceiling(last() div 2 + 0.5) ]
+Select middle CCC element(s)
+
+     <AAA> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <BBB/> 
+          <CCC/> 
+          <CCC/> 
+          <CCC/> 
+     </AAA>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+调用XPath
+
+XPathFactory factory = XPathFactory.newInstance();
+  XPath xpath = factory.newXPath();
+  //设定XPath表达式
+  XPathExpression expr = xpath.compile("//user[@userid='" + id + "']/*");
+  //根据给定的XPath解析XML文档
+  Object result = expr.evaluate(dom, XPathConstants.NODESET);
+  NodeList nodelist = (NodeList) result;
+ 
+package com.mylog.common.xmlaccessframework.util;
+ 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+ 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+ 
+public class ElementTool {
+ 
+ /**
+  * 根据XPath路径查询某一行数据
+  * @param expression
+  * @return 元素节点
+  * @throws XPathExpressionException 
+  */
+ public static Element find(String expression,Document doc) throws XPathExpressionException{
+  XPathFactory factory = XPathFactory.newInstance();
+  XPath xPath = factory.newXPath();
+  XPathExpression expr;
+  Element result =null;
+  expr = xPath.compile(expression);
+  result = (Element)expr.evaluate(doc, XPathConstants.NODE);
+  return result;
+  
+ }
+ 
+ /**
+  * 根据XPath路径查询某一行数据
+  * @param expression
+  * @return 元素节点
+  * @throws XPathExpressionException 
+  */
+ public static NodeList findAll(String expression,Document doc) throws XPathExpressionException{
+  XPathFactory factory = XPathFactory.newInstance();
+  XPath xPath = factory.newXPath();
+  XPathExpression expr;
+  NodeList result =null;
+  expr = xPath.compile(expression);
+  result = (NodeList)expr.evaluate(doc, XPathConstants.NODESET);
+  return result;  
+ }
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

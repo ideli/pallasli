@@ -233,3 +233,735 @@ RefineryUtilities :
 类方法
 S.N.	方法及描述
 1	centerFrameOnScreen(java.awt.Window frame) 它定位在屏幕的中间的指定帧。
+
+
+
+
+java核心技术学习
+基本用法
+
+jFreeChart产生图形的流程 
+创建一个数据源（dataset）来包含将要在图形中显示的数据>>创建一个 JFreeChart 对象来代表要显示的图形
+>>把图形输出
+重要的类和接口：
+org.jfree.data.general.Dataset 所有数据源类都要实现的接口
+org.jfree.chart.ChartFactory 由它来产生 JFreeChart 对象
+org.jfree.chart.JFreeChart 所有对图形的调整都是通过它噢！！
+org.jfree.chart.plot.Plot 通过JFreeChart 对象获得它，然后再通过它对图形外部部分（例：坐标轴）调整
+注意：它有很多子类，一般都下嗍造型到它的子类！
+org.jfree.chart.renderer.AbstractRenderer 通过JFreeChart 对象获得它，然后再通过它对图形内部部分
+（例：折线的类型）调整。同样，针对不同类型的报表图，它有
+着不同的子类实现！在下面我们简称它为 Renderer
+下面我们结合不同类型的图形来具体分析这个流程。
+ 
+package com;
+ 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+ 
+import junit.framework.TestCase;
+ 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.servlet.ServletUtilities;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset; 
+ 
+public class FreeChart extends TestCase{
+            
+public JFreeChart setFreeChar(){
+       DefaultCategoryDataset dataset =new DefaultCategoryDataset();
+ 
+       dataset.addValue(100,"丢分百分比","知识点1");
+       dataset.addValue(200,"丢份人数百分比","知识点1");
+       dataset.addValue(300,"丢分百分比","知识点2");
+       dataset.addValue(100,"丢份人数百分比","知识点2");
+       dataset.addValue(60,"丢分百分比","知识点3");
+       dataset.addValue(100,"丢份人数百分比","知识点3");
+       dataset.addValue(340,"丢分百分比","知识点4");
+       dataset.addValue(130,"丢份人数百分比","知识点4");
+      
+       JFreeChart chart = ChartFactory.createBarChart3D("丢分统计图",
+            "知识点",
+            "百分比",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            false,
+            false);
+      
+       FileOutputStream fos = null;
+       try {
+        try {
+              fos = new FileOutputStream("c:/bar1.png");
+       } catch (FileNotFoundException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+       }
+        ChartUtilities.writeChartAsPNG(fos, chart, 400, 300);
+       } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+       } finally {
+         try {
+              fos.close();
+       } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+       }
+       }
+return chart;
+ 
+}
+}   
+ 
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.FreeChart"%>
+ 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <%@ page import="org.jfree.chart.servlet.ServletUtilities" %>
+   <%@ page import="org.jfree.chart.JFreeChart"%>
+  <%
+       JFreeChart chart =new FreeChart().setFreeChar();
+      String filename = ServletUtilities.saveChartAsPNG(chart, 500, 300, null, session);
+    String graphURL = request.getContextPath() + "/DisplayChart?filename=" + filename;
+  %>
+  <body>
+    <img src="<%= graphURL %>" width="500" height="300" border="0" usemap="#<%= filename %>">
+  </body>
+</html>
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+饼状图1
+
+饼状图
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ page import="org.jfree.chart.*,
+                 org.jfree.chart.plot.PiePlot,
+                 org.jfree.data.general.DefaultPieDataset,
+                 org.jfree.chart.servlet.ServletUtilities,
+                 java.awt.*,
+                 org.jfree.chart.labels.StandardPieSectionLabelGenerator,
+                 java.text.NumberFormat,
+                 java.text.DecimalFormat"%>
+<%
+//设置数据集
+DefaultPieDataset dataset = new DefaultPieDataset();
+dataset.setValue("初级程序员", 10000);
+dataset.setValue("中级程序员", 23000);
+dataset.setValue("高级程序员", 10000);
+dataset.setValue("项目经理", 6000);
+dataset.setValue("系统分析师", 6000);
+dataset.setValue("软件架构师", 3000);
+dataset.setValue("其他", 10000);
+ 
+//通过工厂类生成JFreeChart对象
+JFreeChart chart = ChartFactory.createPieChart3D("IT行业职业分布图", dataset, true, true, true);
+PiePlot pieplot = (PiePlot) chart.getPlot();
+pieplot.setLabelFont(new Font("宋体", 0, 12));
+//没有数据的时候显示的内容
+pieplot.setNoDataMessage("无数据显示");
+ 
+//在饼图的各块中显示百分比
+pieplot.setCircular(true);
+pieplot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {2}",
+              NumberFormat.getNumberInstance(),
+              NumberFormat.getPercentInstance()));
+ 
+String filename = ServletUtilities.saveChartAsPNG(chart, 700, 400, null, session);
+String graphURL = request.getContextPath() + "/DisplayChart?filename=" + filename;
+%>
+<img src="<%= graphURL %>" width="700" height="400" border="0" usemap="#<%= filename %>">
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+饼状图2
+
+饼图的dataset 一般是用PieDataset 接口，具体实现类是 DefaultPieDataset
+1、创建一个数据源（dataset）：
+private static PieDataset createDataset()
+{
+DefaultPieDataset defaultpiedataset = new DefaultPieDataset(); //注意是DefaultPieDataset！！
+defaultpiedataset.setValue(”One”, new Double(43.200000000000003D));
+defaultpiedataset.setValue(”Two”, new Double(10D));
+defaultpiedataset.setValue(”Three”, new Double(27.5D));
+defaultpiedataset.setValue(”Four”, new Double(17.5D));
+return defaultpiedataset;
+}
+2、由ChartFactory 产生 JFreeChart 对象
+private static JFreeChart createChart(PieDataset piedataset)
+{
+JFreeChart jfreechart = ChartFactory.createPieChart(”Pie Chart Demo 1″, //图形标题名称
+piedataset, // dataset
+true, // legend?
+true, // tooltips?
+false); //URLs?
+PiePlot pieplot = (PiePlot)jfreechart.getPlot(); //通过JFreeChart 对象获得 plot：PiePlot！！
+pieplot.setNoDataMessage(”No data available”); // 没有数据的时候显示的内容
+return jfreechart;
+}
+一些重要的方法：
+pieplot.setExplodePercent(0,0.3D) //把Lable 为”One” 的那一块”挖”出来30%
+3、输出略
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+柱形图1
+
+柱形图
+<%@ page contentType="text/html;charset=GBK"%>
+<%@ page import="org.jfree.chart.ChartFactory,
+                 org.jfree.chart.JFreeChart,
+                 org.jfree.chart.plot.PlotOrientation,
+                 org.jfree.chart.servlet.ServletUtilities,
+                 org.jfree.data.category.CategoryDataset,
+                 org.jfree.data.general.DatasetUtilities"%>
+<%
+double[][] data = new double[][] {{110}, {220}, {330}, {440}};
+String[] rowKeys = {"白菜", "生菜","西洋菜", "豆芽菜"};
+String[] columnKeys = {""};
+ 
+//图表中依赖的数据
+CategoryDataset dataset = DatasetUtilities.createCategoryDataset(rowKeys, columnKeys, data);
+ 
+//1，标题
+//2，横轴标题
+//4，数据
+//5, 图形竖着显示
+//6, 是否显示小图标
+  
+JFreeChart chart = ChartFactory.createBarChart3D("长沙蔬菜类销量统计图",
+                  "蔬菜类",
+                  "销量",
+                  dataset,
+                  PlotOrientation.VERTICAL,
+                  true,
+                  false,
+                  false);
+ 
+String filename = ServletUtilities.saveChartAsPNG(chart, 500, 300, null, session);
+String graphURL = request.getContextPath() + "/DisplayChart?filename=" + filename;
+%>
+<img src="<%= graphURL %>" width="500" height="300" border="0" usemap="#<%= filename %>">
+方法2：
+DefaultCategoryDataset　dataset　=　new　DefaultCategoryDataset();　
+//添加jan组数据，可分租
+//加负值时显示负向坐标
+dataset.addValue(100,　"Spring　Security",　"Jan");　
+dataset.addValue(200,　"jBPM　4",　"Jan");　
+dataset.addValue(300,　"Ext　JS",　"Jan");
+dataset.addValue(400,　"JFreeChart",　"Jan");　
+　           //PlotOrientation.HORIZONTAL水平柱状图
+// PlotOrientation.VERTICAL竖直柱状图
+// createBarChart3D三维柱状图
+// createBarChart而为柱状图
+JFreeChart　chart　=　ChartFactory.createBarChart("chart",　"num",　
+　　　　"type",　dataset,　PlotOrientation.VERTICAL,　true,　false,　
+　　　　false);　
+FileOutputStream　fos　=　null;　
+　
+try　{　
+fos　=　new　FileOutputStream("target/bar1.png");　
+　　ChartUtilities.writeChartAsPNG(fos,　chart,　400,　300);　
+}　finally　{　
+　　fos.close();　
+}　
+TODO
+　　SlidingCategoryDataset
+　　IntervalBar
+　　LayeredBar
+　　survey
+　　设置Label
+　　隐藏axis
+　　中文
+　　背景颜色
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+柱状图
+
+柱状图的dataset 一般是用CatagoryDataset接口(具体实现类是DefaultCategoryDataset),也会用 IntervalXYDataset
+接口
+1、创建一个数据源（dataset）：
+private static CategoryDataset createDataset()
+{
+String series1 = “First”;
+String series2 = “Second”;
+String series3 = “Third”;
+String category1 = “Category 1″;
+String category2 = “Category 2″;
+String category3 = “Category 3″;
+String category4 = “Category 4″;
+String category5 = “Category 5″;
+DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
+defaultcategorydataset.addValue(1.0D, series1, category1);
+defaultcategorydataset.addValue(4D, series1, category2);
+defaultcategorydataset.addValue(3D, series1, category3);
+defaultcategorydataset.addValue(5D, series1, category4);
+defaultcategorydataset.addValue(5D, series1, category5);
+defaultcategorydataset.addValue(5D, series2, category1);
+defaultcategorydataset.addValue(7D, series2, category2);
+defaultcategorydataset.addValue(6D, series2, category3);
+defaultcategorydataset.addValue(8D, series2, category4);
+defaultcategorydataset.addValue(4D, series2, category5);
+defaultcategorydataset.addValue(4D, series3, category1);
+defaultcategorydataset.addValue(3D, series3, category2);
+defaultcategorydataset.addValue(2D, series3, category3);
+defaultcategorydataset.addValue(3D, series3, category4);
+defaultcategorydataset.addValue(6D, series3, category5);
+return defaultcategorydataset;
+}
+2、由ChartFactory 产生 JFreeChart 对象
+private static JFreeChart createChart(CategoryDataset categorydataset)
+{
+JFreeChart jfreechart = ChartFactory.createBarChart(”Bar Chart Demo”, //图形标题名称
+“Category”,//domain 轴 Lable
+这里先简单理解为横坐标Lable好了
+“Value”, //range 轴 Lable
+这里也先简单理解为纵坐标Lable好了
+categorydataset, // dataset
+PlotOrientation.VERTICAL, //垂直显示
+true, // legend?
+true, // tooltips?
+false); //URLs?
+jfreechart.setBackgroundPaint(Color.white); //设定背景色为白色
+CategoryPlot categoryplot = jfreechart.getCategoryPlot(); //获得 plot：CategoryPlot！！
+categoryplot.setBackgroundPaint(Color.lightGray); //设定图表数据显示部分背景色
+categoryplot.setDomainGridlinePaint(Color.white); //横坐标网格线白色
+categoryplot.setDomainGridlinesVisible(true); //可见
+categoryplot.setRangeGridlinePaint(Color.white); //纵坐标网格线白色
+//下面两行使纵坐标的最小单位格为整数
+NumberAxis numberaxis = (NumberAxis)categoryplot.getRangeAxis();
+numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+BarRenderer barrenderer = (BarRenderer)categoryplot.getRenderer(); //获得renderer 注意这里是下嗍造型
+到BarRenderer！！
+barrenderer.setDrawBarOutline(false); // Bar的外轮廓线不画
+GradientPaint gradientpaint = new GradientPaint(0.0F, 0.0F, Color.blue,
+0.0F, 0.0F, new Color(0, 0, 64)); //设定特定颜色
+GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, Color.green,
+0.0F, 0.0F, new Color(0, 64, 0));
+GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, Color.red,
+0.0F, 0.0F, new Color(64, 0, 0));
+barrenderer.setSeriesPaint(0, gradientpaint); //给series1 Bar设定上面定义的颜色
+barrenderer.setSeriesPaint(1, gradientpaint1); //给series2 Bar 设定上面定义的颜色
+barrenderer.setSeriesPaint(2, gradientpaint2); //给series3 Bar 设定上面定义的颜色
+CategoryAxis categoryaxis = categoryplot.getDomainAxis(); //横轴上的 Lable 45度倾斜
+categoryaxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+return jfreechart;
+}
+一些重要的方法：（增加一块标记）
+IntervalMarker intervalmarker = new IntervalMarker(4.5D, 7.5D);
+intervalmarker.setLabel(”Target Range”);
+intervalmarker.setLabelFont(new Font(”SansSerif”, 2, 11));
+intervalmarker.setLabelAnchor(RectangleAnchor.LEFT);
+intervalmarker.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
+intervalmarker.setPaint(new Color(222, 222, 255, 128));
+categoryplot.addRangeMarker(intervalmarker, Layer.BACKGROUND);
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+分组柱状图
+
+柱状图的dataset 一般是用CatagoryDataset接口(具体实现类是DefaultCategoryDataset),也会用 IntervalXYDataset
+接口
+1、创建一个数据源（dataset）：
+private static CategoryDataset createDataset()
+{
+String series1 = “First”;
+String series2 = “Second”;
+String series3 = “Third”;
+String category1 = “Category 1″;
+String category2 = “Category 2″;
+String category3 = “Category 3″;
+String category4 = “Category 4″;
+String category5 = “Category 5″;
+DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
+defaultcategorydataset.addValue(1.0D, series1, category1);
+defaultcategorydataset.addValue(4D, series1, category2);
+defaultcategorydataset.addValue(3D, series1, category3);
+defaultcategorydataset.addValue(5D, series1, category4);
+defaultcategorydataset.addValue(5D, series1, category5);
+defaultcategorydataset.addValue(5D, series2, category1);
+defaultcategorydataset.addValue(7D, series2, category2);
+defaultcategorydataset.addValue(6D, series2, category3);
+defaultcategorydataset.addValue(8D, series2, category4);
+defaultcategorydataset.addValue(4D, series2, category5);
+defaultcategorydataset.addValue(4D, series3, category1);
+defaultcategorydataset.addValue(3D, series3, category2);
+defaultcategorydataset.addValue(2D, series3, category3);
+defaultcategorydataset.addValue(3D, series3, category4);
+defaultcategorydataset.addValue(6D, series3, category5);
+return defaultcategorydataset;
+}
+2、由ChartFactory 产生 JFreeChart 对象
+private static JFreeChart createChart(CategoryDataset categorydataset)
+{
+JFreeChart jfreechart = ChartFactory.createBarChart(”Bar Chart Demo”, //图形标题名称
+“Category”,//domain 轴 Lable
+这里先简单理解为横坐标Lable好了
+“Value”, //range 轴 Lable
+这里也先简单理解为纵坐标Lable好了
+categorydataset, // dataset
+PlotOrientation.VERTICAL, //垂直显示
+true, // legend?
+true, // tooltips?
+false); //URLs?
+jfreechart.setBackgroundPaint(Color.white); //设定背景色为白色
+CategoryPlot categoryplot = jfreechart.getCategoryPlot(); //获得 plot：CategoryPlot！！
+categoryplot.setBackgroundPaint(Color.lightGray); //设定图表数据显示部分背景色
+categoryplot.setDomainGridlinePaint(Color.white); //横坐标网格线白色
+categoryplot.setDomainGridlinesVisible(true); //可见
+categoryplot.setRangeGridlinePaint(Color.white); //纵坐标网格线白色
+//下面两行使纵坐标的最小单位格为整数
+NumberAxis numberaxis = (NumberAxis)categoryplot.getRangeAxis();
+numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+BarRenderer barrenderer = (BarRenderer)categoryplot.getRenderer(); //获得renderer 注意这里是下嗍造型
+到BarRenderer！！
+barrenderer.setDrawBarOutline(false); // Bar的外轮廓线不画
+GradientPaint gradientpaint = new GradientPaint(0.0F, 0.0F, Color.blue,
+0.0F, 0.0F, new Color(0, 0, 64)); //设定特定颜色
+GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, Color.green,
+0.0F, 0.0F, new Color(0, 64, 0));
+GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, Color.red,
+0.0F, 0.0F, new Color(64, 0, 0));
+barrenderer.setSeriesPaint(0, gradientpaint); //给series1 Bar设定上面定义的颜色
+barrenderer.setSeriesPaint(1, gradientpaint1); //给series2 Bar 设定上面定义的颜色
+barrenderer.setSeriesPaint(2, gradientpaint2); //给series3 Bar 设定上面定义的颜色
+CategoryAxis categoryaxis = categoryplot.getDomainAxis(); //横轴上的 Lable 45度倾斜
+categoryaxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+return jfreechart;
+}
+一些重要的方法：（增加一块标记）
+IntervalMarker intervalmarker = new IntervalMarker(4.5D, 7.5D);
+intervalmarker.setLabel(”Target Range”);
+intervalmarker.setLabelFont(new Font(”SansSerif”, 2, 11));
+intervalmarker.setLabelAnchor(RectangleAnchor.LEFT);
+intervalmarker.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
+intervalmarker.setPaint(new Color(222, 222, 255, 128));
+categoryplot.addRangeMarker(intervalmarker, Layer.BACKGROUND);
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+时间序列图
+
+时间序列图
+时间序列图和折线图很相似，不同的是它在 domain轴的数据是时间而不是数字。 时间序列图的dataset 是
+XYDataset 接口，具体实现类是TimeSeriesCollection ，和上面类似，有TimeSeries 对象，它被添加入
+TimeSeriesCollection 。
+1、创建一个数据源（dataset）：
+private static XYDataset createDataset()
+{
+TimeSeries timeseries = new TimeSeries(”L&G European Index Trust”,Month.class);
+timeseries.add(new Month(2, 2001), 181.8D);//这里用的是Month.class，同样还有Day.class Year.class 等等
+timeseries.add(new Month(3, 2001), 167.3D);
+timeseries.add(new Month(4, 2001), 153.8D);
+timeseries.add(new Month(5, 2001), 167.6D);
+timeseries.add(new Month(6, 2001), 158.8D);
+timeseries.add(new Month(7, 2001), 148.3D);
+timeseries.add(new Month(8, 2001), 153.9D);
+timeseries.add(new Month(9, 2001), 142.7D);
+timeseries.add(new Month(10, 2001), 123.2D);
+timeseries.add(new Month(11, 2001), 131.8D);
+timeseries.add(new Month(12, 2001), 139.6D);
+timeseries.add(new Month(1, 2002), 142.9D);
+timeseries.add(new Month(2, 2002), 138.7D);
+timeseries.add(new Month(3, 2002), 137.3D);
+timeseries.add(new Month(4, 2002), 143.9D);
+timeseries.add(new Month(5, 2002), 139.8D);
+timeseries.add(new Month(6, 2002), 137D);
+timeseries.add(new Month(7, 2002), 132.8D);
+TimeSeries timeseries1 = new TimeSeries(”L&G UK Index Trust”,Month.class);
+timeseries1.add(new Month(2, 2001), 129.6D);
+timeseries1.add(new Month(3, 2001), 123.2D);
+timeseries1.add(new Month(4, 2001), 117.2D);
+timeseries1.add(new Month(5, 2001), 124.1D);
+timeseries1.add(new Month(6, 2001), 122.6D);
+timeseries1.add(new Month(7, 2001), 119.2D);
+timeseries1.add(new Month(8, 2001), 116.5D);
+timeseries1.add(new Month(9, 2001), 112.7D);
+timeseries1.add(new Month(10, 2001), 101.5D);
+timeseries1.add(new Month(11, 2001), 106.1D);
+timeseries1.add(new Month(12, 2001), 110.3D);
+timeseries1.add(new Month(1, 2002), 111.7D);
+timeseries1.add(new Month(2, 2002), 111D);
+timeseries1.add(new Month(3, 2002), 109.6D);
+timeseries1.add(new Month(4, 2002), 113.2D);
+timeseries1.add(new Month(5, 2002), 111.6D);
+timeseries1.add(new Month(6, 2002), 108.8D);
+timeseries1.add(new Month(7, 2002), 101.6D);
+TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
+timeseriescollection.addSeries(timeseries);
+timeseriescollection.addSeries(timeseries1);
+timeseriescollection.setDomainIsPointsInTime(true); //domain轴上的刻度点代表的是时间点而不是时间段
+return timeseriescollection;
+}
+2、由ChartFactory 产生 JFreeChart 对象
+private static JFreeChart createChart(XYDataset xydataset)
+{
+JFreeChart jfreechart = ChartFactory.createTimeSeriesChart(”Legal & General Unit Trust Prices”,
+“Date”,
+“Price Per Unit”,
+xydataset,
+true,
+true,
+false);
+jfreechart.setBackgroundPaint(Color.white);
+XYPlot xyplot = (XYPlot)jfreechart.getPlot(); //获得 plot : XYPlot!!
+xyplot.setBackgroundPaint(Color.lightGray);
+xyplot.setDomainGridlinePaint(Color.white);
+xyplot.setRangeGridlinePaint(Color.white);
+xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+xyplot.setDomainCrosshairVisible(true);
+xyplot.setRangeCrosshairVisible(true);
+org.jfree.chart.renderer.xy.XYItemRenderer xyitemrenderer = xyplot.getRenderer();
+if(xyitemrenderer instanceof XYLineAndShapeRenderer)
+{
+XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer)xyitemrenderer;
+xylineandshaperenderer.setDefaultShapesVisible(true); //数据点可见
+xylineandshaperenderer.setDefaultShapesFilled(true); //数据点是实心点
+}
+DateAxis dateaxis = (DateAxis)xyplot.getDomainAxis(); //对domain 轴上日期显示格式定义
+dateaxis.setDateFormatOverride(new SimpleDateFormat(”MMM-yyyy”));
+return jfreechart;
+}
+一些重要的方法：
+A、增加标记线：
+xyplot.addRangeMarker(new ValueMarker(550D)); //数值轴
+Quarter quarter = new Quarter(2, 2002);
+xyplot.addDomainMarker(new ValueMarker(quarter.getMiddleMillisecond())); //时间轴
+B、数据点的调整
+XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer)xyplot.getRenderer();
+xylineandshaperenderer.setDefaultShapesVisible(true); //数据点可见
+xylineandshaperenderer.setSeriesFillPaint(0, Color.red); //数据点填充为红色
+xylineandshaperenderer.setSeriesFillPaint(1, Color.white); //数据点填充为白色
+xylineandshaperenderer.setUseFillPaint(true); //应用
+C、平均值曲线
+这个曲线有什么用呢？很简单的例子，这里有一个以半年每天为单位的数据绘制的曲线，我们想看看以月为单位数据
+的变化，这时就可以用到它了。
+TimeSeries timeseries = createEURTimeSeries(); //就是以半年每天为单位的数据
+TimeSeries timeseries1 = MovingAverage.createMovingAverage(timeseries,
+“30 day moving average”,
+30, //30天为一个周期
+30); //最开始的30天跳过
+TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
+timeseriescollection.addSeries(timeseries);
+timeseriescollection.addSeries(timeseries1);
+return timeseriescollection;
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+折线图
+
+折线图的dataset 两种CatagoryDataset接口(具体实现类是DefaultCategoryDataset),XYDataset 接口
+1、CatagoryDataset接口：
+A、创建一个数据源（dataset）：
+private static CategoryDataset createDataset()
+{
+String series1 = “First”;
+String series2 = “Second”;
+String series3 = “Third”;
+String type1 = “Type 1″;
+String type2 = “Type 2″;
+String type3 = “Type 3″;
+String type4 = “Type 4″;
+String type5 = “Type 5″;
+String type6 = “Type 6″;
+String type7 = “Type 7″;
+String type8 = “Type 8″;
+DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
+defaultcategorydataset.addValue(1.0D, series1, type1);
+defaultcategorydataset.addValue(4D, series1, type2);
+defaultcategorydataset.addValue(3D, series1, type3);
+defaultcategorydataset.addValue(5D, series1, type4);
+defaultcategorydataset.addValue(5D, series1, type5);
+defaultcategorydataset.addValue(7D, series1, type6);
+defaultcategorydataset.addValue(7D, series1, type7);
+defaultcategorydataset.addValue(8D, series1, type8);
+defaultcategorydataset.addValue(5D, series2, type1);
+defaultcategorydataset.addValue(7D, series2, type2);
+defaultcategorydataset.addValue(6D, series2, type3);
+defaultcategorydataset.addValue(8D, series2, type4);
+defaultcategorydataset.addValue(4D, series2, type5);
+defaultcategorydataset.addValue(4D, series2, type6);
+defaultcategorydataset.addValue(2D, series2, type7);
+defaultcategorydataset.addValue(1.0D, series2, type8);
+defaultcategorydataset.addValue(4D, series3, type1);
+defaultcategorydataset.addValue(3D, series3, type2);
+defaultcategorydataset.addValue(2D, series3, type3);
+defaultcategorydataset.addValue(3D, series3, type4);
+defaultcategorydataset.addValue(6D, series3, type5);
+defaultcategorydataset.addValue(3D, series3, type6);
+defaultcategorydataset.addValue(4D, series3, type7);
+defaultcategorydataset.addValue(3D, series3, type8);
+return defaultcategorydataset;
+}
+B、由ChartFactory 产生 JFreeChart 对象 (与上面重复的部分就不再注释）
+private static JFreeChart createChart(CategoryDataset categorydataset)
+{
+JFreeChart jfreechart = ChartFactory.createLineChart(”Line Chart Demo 1″,
+“Type”,
+“Value”,
+categorydataset,
+PlotOrientation.VERTICAL,
+true,
+true,
+false);
+jfreechart.setBackgroundPaint(Color.white);
+CategoryPlot categoryplot = (CategoryPlot)jfreechart.getPlot();
+categoryplot.setBackgroundPaint(Color.lightGray);
+categoryplot.setRangeGridlinePaint(Color.white);
+NumberAxis numberaxis = (NumberAxis)categoryplot.getRangeAxis();
+numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+numberaxis.setAutoRangeIncludesZero(true);
+//获得renderer 注意这里是下嗍造型到lineandshaperenderer！！
+LineAndShapeRenderer lineandshaperenderer = (LineAndShapeRenderer)categoryplot.getRenderer();
+lineandshaperenderer.setShapesVisible(true); //series 点（即数据点）可见
+lineandshaperenderer.setSeriesStroke(0, new BasicStroke(2.0F, 1, 1, 1.0F, new float[] {
+10F, 6F
+}, 0.0F)); //定义series为”First”的（即series1）点之间的连线 ，这里是虚线，默认是直线
+lineandshaperenderer.setSeriesStroke(1, new BasicStroke(2.0F, 1, 1, 1.0F, new float[] {
+6F, 6F
+}, 0.0F)); //定义series为”Second”的（即series2）点之间的连线
+lineandshaperenderer.setSeriesStroke(2, new BasicStroke(2.0F, 1, 1, 1.0F, new float[] {
+2.0F, 6F
+}, 0.0F)); //定义series为”Third”的（即series3）点之间的连线
+return jfreechart;
+}
+一些重要的方法：
+lineandshaperenderer.setLineVisible(true) //series 点（即数据点）间有连线可见
+2、XYDataset 接口：
+A、创建一个数据源（dataset）：
+private static XYDataset createDataset()
+{
+XYSeries xyseries = new XYSeries(”First”); //先产生XYSeries 对象
+xyseries.add(1.0D, 1.0D);
+xyseries.add(2D, 4D);
+xyseries.add(3D, 3D);
+xyseries.add(4D, 5D);
+xyseries.add(5D, 5D);
+xyseries.add(6D, 7D);
+xyseries.add(7D, 7D);
+xyseries.add(8D, 8D);
+XYSeries xyseries1 = new XYSeries(”Second”);
+xyseries1.add(1.0D, 5D);
+xyseries1.add(2D, 7D);
+xyseries1.add(3D, 6D);
+xyseries1.add(4D, 8D);
+xyseries1.add(5D, 4D);
+xyseries1.add(6D, 4D);
+xyseries1.add(7D, 2D);
+xyseries1.add(8D, 1.0D);
+XYSeries xyseries2 = new XYSeries(”Third”);
+xyseries2.add(3D, 4D);
+xyseries2.add(4D, 3D);
+xyseries2.add(5D, 2D);
+xyseries2.add(6D, 3D);
+xyseries2.add(7D, 6D);
+xyseries2.add(8D, 3D);
+xyseries2.add(9D, 4D);
+xyseries2.add(10D, 3D);
+XYSeriesCollection xyseriescollection = new XYSeriesCollection(); //再用XYSeriesCollection添加入XYSeries 对象
+xyseriescollection.addSeries(xyseries);
+xyseriescollection.addSeries(xyseries1);
+xyseriescollection.addSeries(xyseries2);
+return xyseriescollection;
+}
+B、由ChartFactory 产生 JFreeChart 对象
+private static JFreeChart createChart(XYDataset xydataset)
+{
+JFreeChart jfreechart = ChartFactory.createXYLineChart(”Line Chart Demo 2″,
+“X”,
+“Y”,
+xydataset,
+PlotOrientation.VERTICAL,
+true,
+true,
+false);
+jfreechart.setBackgroundPaint(Color.white);
+XYPlot xyplot = (XYPlot)jfreechart.getPlot(); //获得 plot：XYPlot！！
+xyplot.setBackgroundPaint(Color.lightGray); //设定图表数据显示部分背景色
+xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D)); //设定坐标轴与图表数据显示部分距离
+xyplot.setDomainGridlinePaint(Color.white); //网格线颜色
+xyplot.setRangeGridlinePaint(Color.white);
+//获得 renderer 注意这里是XYLineAndShapeRenderer ！！
+XYLineAndShapeRenderer xylineandshaperenderer = (XYLineAndShapeRenderer)xyplot.getRenderer();
+xylineandshaperenderer.setShapesVisible(true); //数据点可见
+xylineandshaperenderer.setShapesFilled(true); //数据点被填充即不是空心点
+NumberAxis numberaxis = (NumberAxis)xyplot.getRangeAxis();
+numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+return jfreechart;
+}
+一些重要的方法：
+XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer();
+xylineandshaperenderer.setSeriesLinesVisible(0, false); //第一个XYSeries数据点间连线不可见
+xylineandshaperenderer.setSeriesShapesVisible(1, false); //第二个XYSeries数据点不可见
+xyplot.setRenderer(xylineandshaperenderer);
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+java核心技术学习
+Item Lable
+
+Item Lable
+这里以柱状图为例说明，具体来说就是在每个柱状上显示它的数据，具体有下面内容：
+A、使 Item Lable 可见
+B、调整 Item Lable 的颜色、字体等
+C、调整 Item Lable 的位置
+D、定制 Item Lable 的内容
+1、分配一个 Lable Generator 给 renderer
+BarRenderer barrenderer = (BarRenderer)categoryplot.getRenderer();
+GategoryLableGenerator generator =new StandardGategoryLableGenerator(
+“{2}”, new DecimalFormat(”0.00″) //调整显示的数字和字符格式
+);
+barrenderer.setLableGenerator(generator);
+2、使 Item Lable 可见
+barrenderer.setItemLableVisible(true);
+3、调整 Item Lable 的颜色、字体等
+barrenderer.setItemLablePaint(Color.red);
+barrenderer.setItemLableFont(new Font(”SansSerif”,Font.PLAIN,10));
+4、调整 Item Lable 的位置
+这里涉及到一个新的对象 ItemLablePosition , ItemLablePosition的构造函数有两个或四个参数
+public ItemLabelPosition(ItemLabelAnchor itemLabelAnchor,
+org.jfree.ui.TextAnchor textAnchor,
+org.jfree.ui.TextAnchor rotationAnchor,
+double angle)
+itemLabelAnchor - Item Lable 的位置 （最重要的！！）
+textAnchor - Item Lable里包含的正文相对于Item Lable 的位置
+rotationAnchor - Item Lable里包含的正文旋转的位置
+angle - 旋转的角度
+ItemLabelPosition itemlabelposition = new ItemLabelPosition(ItemLabelAnchor.INSIDE12,
+TextAnchor.CENTER_RIGHT,
+TextAnchor.CENTER_RIGHT,
+-1.57D);
+barrenderer.setPositiveItemLabelPosition(itemlabelposition);
+这样就可以每个柱状上显示它的数据了，当然可以定制 Item Lable 的内容，比如 Item Lable text 超过100的才
+显示，这样就需要定制自己的类，它要实现GategoryLableGenerator 接口，实现generateItemLable()方法
+ Copyright ©2011 lyt. All Rights Reserved.

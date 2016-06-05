@@ -1,0 +1,387 @@
+
+java核心技术学习
+clickFrameWork
+
+click-1.x.jar 
+click-extras-1.x.jar
+ web.xml
+<?xml version="1.0" encoding="UTF-8"?>   
+<web-app>   
+  
+ <servlet>   
+  <servlet-name>ClickServlet</servlet-name>   
+ <servlet-class>net.sf.click.ClickServlet</servlet-class>   
+   <load-on-startup>0</load-on-startup>   
+ </servlet>   
+    
+ <servlet-mapping>   
+  <servlet-name>ClickServlet</servlet-name>   
+  <url-pattern>*.htm</url-pattern>   
+</servlet-mapping>         
+ <welcome-file-list>   
+  <welcome-file>redirect.html</welcome-file>   
+</welcome-file-list>   
+   
+</web-app> 
+click.xml
+<?xml version="1.0" encoding="UTF-8"?>    
+<click-app>    
+<pages package="com.quickstart.page"/>   
+</click-app>  
+ 
+welcome file
+为确保默认的请求被转发到 home page， 我们将在web程序根目录下新建 
+redirect.html。 文件内容： 
+Java代码
+<html>   
+<head><meta http-equiv="Refresh" content="0;URL=home.htm"></head>   
+</html>  
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+Click framework快速入门
+
+Click framework 快速入门指南
+web应用结构 
+
+首先在你的web程序WEB-INF 目录下添加click.xml 和web.xml 配置文件。 
+click.xml 
+你的click.xml应该包含：
+<?xml version="1.0" encoding="UTF-8"?>    
+<click-app>    
+   <pages package="com.quickstart.page"/>   
+ </click-app>    
+web.xml 
+你的web.xml应该包含
+<?xml version="1.0" encoding="UTF-8"?>   
+<web-app>   
+  <servlet>   
+    <servlet-name>ClickServlet</servlet-name>   
+    <servlet-class>net.sf.click.ClickServlet</servlet-class>   
+    <load-on-startup>0</load-on-startup>   
+  </servlet>   
+    <servlet-mapping>   
+    <servlet-name>ClickServlet</servlet-name>   
+    <url-pattern>*.htm</url-pattern>   
+  </servlet-mapping>   
+  <welcome-file-list>   
+    <welcome-file>redirect.html</welcome-file>   
+  </welcome-file-list>   
+  </web-app>  
+Jar文件 
+把如下jar文件添加到你的程序的WEB-INF/lib目录下： 
+click-1.x.jar 
+click-extras-1.x.jar 
+你可以在Click 的dist目录下获得这些文件。 
+Welcome File 
+为确保默认的请求被转发到 home page， 我们将在web程序根目录下新建 
+redirect.html。 文件内容：
+<html>   
+<head><meta http-equiv="Refresh" content="0;URL=home.htm"></head>   
+</html>    
+在web.xml中配置redirect.html， 使默认的请求都由该文件来提供服务。 
+当浏览器执行redirect.html 时， 它将被转发到home.html页面。 
+Home Page 
+现在我们准备来添加我们的第一个Click页面来作为我们应用程序的主页。 
+首先我们定义一个class HomePage ， 确保该class文件部署到应用程序 
+的 WEB-INF/classes 目录 。
+package com.quickstart.page;
+import net.sf.click.Page;
+public class HomePage extends Page {
+}
+我们在web主目录下添加相应的主页home.htm 。
+<html>
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" type="text/css" href="style.css" title="Style"/>
+</head>
+<body>
+   <div id="header">
+    <span id="title">Home</span>
+  </div>
+  <div id="container">
+    <b>Welcome</b> to Home page your application starting point.
+  </div>
+ </body>
+</html>
+在你的主目录下添加 style.css文件
+body {
+       font-family: Arial;
+}
+#header {
+       background-color: navy;
+}
+#title {
+       color: white;
+       font-size: 18px;
+       font-weight: bolder;
+}
+#container {
+       padding-top: 1em;
+       padding-left: 1.5em;
+       position: relative;
+       z-index: 0;
+}
+h3.title {
+       margin-top: 0em;
+       margin-bottom: 1em;
+}
+现在如果你web应用被部署到quickstart， 你应该能够生成如下请求： 
+http://localhost:8080/quickstart/ 
+你的浏览器被定位到HomePage ， 你应该能看到如下页面： 
+在这个例子中，Click将对文件home.htm的请求自动映射到HomePage class， 
+并使用该class来处理请求。 
+框架模板（Border Template） 
+现在我们打算建立一个页面框架模板，以便应用程序页面有一个统一的风格。 
+首先在web根目录下建立文件border-template.htm。 此文件包含如下内容。
+<html>
+<head>
+<title>Click Quickstart - $title</title>
+<link rel="stylesheet" type="text/css" href="$context/assets/style.css" title="Style"/>
+</head>
+<body>
+   <div id="header">
+    <span class="title">$title</span>
+  </div>
+    <div id="container">
+    #parse($path)
+  </div>
+ </body>
+</html>
+现在我们定义BorderPage 类， 并将border-template.htm 文件指定为他的 
+模板。
+package com.quickstart.page;
+import net.sf.click.Page;
+public class BorderPage extends Page {
+   public String getTemplate() {
+      return "border-template.htm";
+   }
+}
+我们命名模板文件为border-template.htm ， 以便它不会自动地被Click映射 
+我们的BorderPage 类。 
+现在我们修改HomePage 类， 使其继承自BorderPage ， 并定义一个title字段。
+public class HomePage extends BorderPage {
+    public String title = "Home";
+} 
+修改home.htm， 将页面borber去掉。 home.html内容如下：
+<b>Welcome</b> to Home page your application starting point. 
+修改后的web应用程序文件如下： 
+现在， 如果你将浏览器请求定位到更新后的页面，你应该能够看到和前面同样的页面。 
+日志 
+Click有一些自带的日志功能， 它们可以帮助你显示页面模板何时自动映射到 
+页面class。 可以在click.xml中添加debug模块来激活debug日志。
+<?xml version="1.0" encoding="UTF-8"?>
+<click-app>
+  <pages package="com.quickstart.page"/>
+  <mode value="debug"/>
+</click-app>  
+当click应用启动的时候，它将打印如下日志信息：
+ [Click] [debug] automapped pages:
+[Click] [debug] /border-template.htm -> CLASS NOT FOUND
+[Click] [debug] /home.htm -> com.quickstart.page.HomePage
+[Click] [info ] initialized in debug mode  
+click告诉我们 border-template.htm 模板没有映射到任何page类，但是 
+home.htm 模板被映射到HomePage 类，我们还可以得出click正运行在debug 
+模式下。 
+当向我们的主页发送一个请求时， 我们可以得到如下输出：
+[Click] [debug] GET http://localhost:8080/quickstart/home.htm
+[Click] [info ] renderTemplate: /home.htm,border-template.htm - 46 ms
+[Click] [info ] handleRequest:  /home.htm - 62 ms 
+它告诉我们ClickServlet收到的http请求。然后我们看到绘制页面home.htm 
+和模板border-template.htm 用掉了41毫秒。最后，我们可以看到处理请求 
+共用掉了62毫秒。 
+如果你想获得更多的debuging信息， 你可以将应用模式设置为trace。 
+现在， 我们向浏览器发送一个请求： 
+http://localhost:8080/quickstart/home.htm?user=malcolm&password=secret 
+我们可以看到请求参数被记录下来，这对调试post方式提交的表单很有用处。
+[Click] [debug] GET http://localhost:8080/quickstart/home.htm   
+[Click] [trace]    request param: password=secret   
+[Click] [trace]    request param: user=malcolm   
+[Click] [trace]    invoked: HomePage.<<init>>   
+[Click] [trace]    invoked: HomePage.onSecurityCheck() : true  
+[Click] [trace]    invoked: HomePage.onInit()   
+[Click] [trace]    invoked: HomePage.onGet()   
+[Click] [trace]    invoked: HomePage.onRender()   
+[Click] [info ]    renderTemplate: /user/home.htm,border-template.htm - 6 ms   
+[Click] [trace]    invoked: HomePage.onDestroy()   
+[Click] [info ] handleRequest:  /home.htm - 24 ms 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+Click FrameWork框架初体验
+
+Click FrameWork框架初体验
+ Click一个高性能的J2EE Web应用程序框架适用商业Java开发者。它具有:
+ ◆ 简单易学，
+ ◆ 面向页面与组件设计，
+ ◆ 基于事件编程模型，
+ ◆ 自动表单验证，
+ ◆ 使用Velocity模板作为页面视图，
+ ◆ 漂亮的错误报告功能，
+ ◆ 使用Rico(一个开源的JavaScript库,它提供对AJAX完全支持并可让Web应用程序支持拖放操作等其它功能)来对AJAX的支持等。
+(摘自JAVA开源大全)
+官方网站：http://click.sourceforge.net/
+最近帮朋友写了个毕业设计，由于时间比较紧迫于是选择了这个简单快速的框架作为Web层的实现。
+Click框架对Spring的支持也是比较好的，只需要在WEB配置中配置：
+<servlet>
+        <servlet-name>click-servlet</servlet-name>
+        <servlet-class>net.sf.click.extras.spring.SpringClickServlet</servlet-class>
+        <init-param>
+            <param-name>spring-path</param-name>
+            <param-value>/applicationContext.xml</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+而且使用的是Velocity模板作为页面的试图，并有一套比较完善的组件，组件提供了方便的数据绑定功能。
+而且通过母版页面可以很方便的实现像ASP.NET的Masterpage一样的功能。
+例如：
+ 
+package page;
+ 
+import java.util.List;
+import net.sf.click.control.*;
+import dao.HibernateCarbrankDAO;
+ 
+public class Index extends BorderPage ...{
+    public Table table=new Table();
+    public Index() ...{
+        // TODO 自动生成构造函数存根
+        table.setClass(Table.CLASS_ITS);
+        table.setPageSize(10);
+        table.setShowBanner(true);
+        table.setSortable(true);
+ 
+        table.addColumn(new Column("id"));
+        table.addColumn(new Column("brankName"));
+    }
+    public void onRender() ...{
+        HibernateCarbrankDAO dao=(HibernateCarbrankDAO)this.getBean("HibernateCarbrankDAO");
+        List list =(List)dao.list();
+        table.setRowList(list);
+    }
+ 
+}该类又BorderPage继承而来，BorderPage重写了getTemplate() 的方法。
+此时，前台页面只需要一个：
+$table
+就可以显示BorderPage模板的内容以及该页面的数据内容。
+ 
+在WEBWORK框架的官网上有个视频演示叫WhyClick,演示了如何快捷的使用Click开发。当我第一次看这个视频的时候，我感到很惊讶：“原来可以这样做网页！”在几分钟之类你已经完成了一个比较完美的页面。
+ 
+最后总结一下开发过程中的一些问题：
+1、Click中文显示问题。
+Click显示中文时候，按默认的配置会显示乱码，你可以在Click.xml中配置编码：
+ 
+<click-app charset="GBK">
+<pages package="page" automapping="true">
+  
+</pages>
+<headers>
+   <header name="Content-Type" value="text/html;charset=GBK"/>
+ </headers>
+<mode value="debug">
+</mode>
+</click-app>
+也可以使用UTF-8编码，并在velocity.properties文件中配置：
+input.encoding=GBK
+注意编码要统一，如果用UTF-8就要全部配置为UTF-8。
+2、在Click中使用FCKEditor控件。
+FCKEditor控件的JAVA版本可以有三种使用方式，在Click中大约只能是JAVASCRIPT方式。
+至于FCKEditor的配置方式网上文章不少就不重复了。
+在Click中使用时候首先需要在Page类中申明一个TextArea控件：
+ 
+package page.admin;
+ 
+import pojo.*;
+import dao.*;
+import net.sf.click.control.*;
+public class CompanyBusEdit extends SecurePage ...{
+ 
+    public CompanyPro compro=null;
+    public String staticcontent;
+    public Form form = new Form();
+    public TextArea FCKeditor1;
+    public CompanyBusEdit() ...{
+        // TODO Auto-generated constructor stub
+        FCKeditor1=new TextArea("联系我们");
+        FCKeditor1.setId("FCKeditor1");
+        FCKeditor1.setWidth("800px");
+        form.add(FCKeditor1);
+        form.add(new Submit("ok", "提交"));
+    }
+public void onRender()...{
+       
+        HibernateCompanyProDAO comdao=(HibernateCompanyProDAO)getBean("HibernateCompanyProDAO");   
+        compro=(CompanyPro)comdao.load(1);
+        staticcontent=compro.getBusinessLinks();
+    }
+     public void onPost()...{
+         HibernateCompanyProDAO comdao=(HibernateCompanyProDAO)getBean("HibernateCompanyProDAO");
+         compro=(CompanyPro)comdao.load(1);
+         compro.setBusinessLinks(FCKeditor1.getValue());
+         comdao.saveOrUpdate(compro,1);
+     }
+ 
+}
+这里我申明了一个叫FCKEditor1的TextArea，在页面中：
+ 
+<style>...
+table{...}{
+width:100%;
+height:auto;
+}
+textarea{...}{
+height:400px;
+}
+</style>
+<script type="text/javascript" src="/CarSale/fckeditor.js"></script>
+<script type="text/javascript" src="/CarSale/fckconfig.js"></script>
+<script type="text/javascript">...
+ var oFCKeditor = new FCKeditor('FCKeditor1');
+ window.onload = function()...{
+ // var oFCKeditor = new FCKeditor('FCKeditor1');
+  oFCKeditor.BasePath = "/CarSale/";
+  oFCKeditor.Config["LinkBrowserURL"]="/CarSale/editor/filemanager/browser/default/browser.html?Connector=connectors/jsp/connector";
+  oFCKeditor.Config["FlashBrowserURL"]="/CarSale/editor/filemanager/browser/default/browser.html?Type=Flash&Connector=connectors/jsp/connector";
+  oFCKeditor.Config["ImageUploadURL"]="/CarSale/editor/filemanager/upload/simpleuploader?Type=Image";
+  oFCKeditor.Config["LinkUploadURL"]="/CarSale/editor/filemanager/upload/simpleuploader?Type=File";
+  oFCKeditor.Config["FlashUploadURL"]="/CarSale/editor/filemanager/upload/simpleuploader?Type=Flash";
+  oFCKeditor.Config["ImageUpload"]=true;
+  oFCKeditor.ReplaceTextarea();
+  }
+</script>
+$form
+#if($form.getContext().isPost() && $form.isValid())
+修改成功！
+#end3、使用Click的页面权限验证：
+Click的整个Page周期中有个onSecurityCheck()事件，你可以通过重写这个函数定义你的权限验证，如：
+ 
+public boolean onSecurityCheck() ...{
+         if (getContext().getSessionAttribute("user")!=null) ...{
+             return true;
+         }else...{
+             setRedirect(Login.class);
+             return false;
+         }
+     }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

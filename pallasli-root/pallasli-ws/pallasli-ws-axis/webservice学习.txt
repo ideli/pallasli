@@ -1,0 +1,604 @@
+
+study
+Webservice设计与模式
+
+Webservice 的设计和模式
+Webservice 作为一项新的技术出现在我们面前，它的出世是用于解决在不同的平台下的应用的协同的。目前几乎每家厂商都要去开发Webservice 应用，然而如果缺乏对Webservice更深的了解，不能很好的在设计阶段处理好一些重要的问题，那么最终完成的系统必然是效率低下，没有可靠性的产品。 
+ 
+在设计Webservice 应用时，以下几点务必要考虑到：
+l         管理好与外系统的协同关系
+l         掌握底层的传输模型
+l         提供与应用相适应的安全策略
+l         计划好部署的相关事项
+ 
+以下，将就这几条相关的设计需求和一些常用模式是如何应用于Webservice模型展开详细讨论。在讨论中，你会发现Webservice这项新的技术是如何与我们在以往的软件开发相结合的。
+ 
+l         标准提供了协同的能力
+ 
+Webservice的一个最基本的目的就是提供在各个不同平台的不同应用系统的协同工作能力。
+为了使得一个公司的网络应用达到最高的效率，存在它自己和它的合作伙伴，供应商以及客户之间的Webservice，应该能够实现无缝的交互。如果在众多的Webservice之间不能轻松的实现交互，那么该应用的效率将大打折扣。但是，在现实中这种情况是极有可能出现的。由于各个公司对业务的理解各不相同，就是理解相同的情况下，对于相同的概念也可能用不同的形式加以表现，具体而言就是对于同一数据可能采取不同的xml表示。由于以上的原因，对于协同性的问题应该在设计应用架构时就加以考虑，而不是留待以后去改变。
+ 
+Webservice 主要由以下几块技术所构成，SOAP (Simple Object Access Protocol), WSDL (Web service Description Language), 以及UDDI (Universal Description, Discovery and Integration)。
+ 
+在这里我们不会去详细研究这些技术，而是揭示他们的一些重要特性，这些特性需要在Webservice的设计时详加考虑。
+ 
+WSDL是实现协同能力的关键，它提供了一份契约用于与新老的应用之间交互。这项技术使得各个组织可以将标准的制定集中在Service的外部接口，而不用考虑各组织的具体实现。简而言之，它实现了Webservice的接口与实现的分离。从而使得标准的制定，更加容易。并且，基于这份接口描述，很多工具可以从中自动生成客户端代码，减少了开发者的工作量，并使得大部分开发者摆脱了编写SOAP消息传递代码过程。
+ 
+SOAP是实现在各个Webservice组件之间传递消息的传输层。因此，SOAP应该是一项透明的协同技术。但是，由于很多的SOAP实现方法却与标准背道而驰，要么添加了新的扩展功能要么删减了一些标准功能。由于对SOAP标准的支持程度不同，使得Webservice的协同能力大打折扣，实现协同的困难加大了。基于这种情况，当开发者需要Webservice运行在不同平台上时，就要对具体情况加以了解并相应的编码以解决这种不一致性。如果所有的SOAP实现组织都能够遵循标准的话，那么Webservice的开发者就不需要考虑使用该Webservice的底层平台了。
+ 
+尽管如此，不同SOAP实现的协同还是相当困难，因为协同标准的制定存在大量的分歧，目前一些组织正致力于标准的制定，比如SOAP Builders 和 WS-I。然而，现在Webservice开发者只有针对不同平台，给予不同的实现，使得开发的成本和负担加大了。 
+l         理解传输模型
+ 
+SOAP并不是完全透明的解决方案，它把一些复杂的实现细节隐藏起来。Webservice的开发者必须深入的了解SOAP，了解底层的传输机制以及模型,从而知道SOAP是如何实现的。在一些简单的应用中，某些工具可以帮助Webservice的开发者生成SOAP消息传递的代码，但是这只在最简单的应用中有效。真正的情况不可能那么简单，可能在某些方面你需要有特殊的处理（这种情况在实际开发中是很常见的），这个时候，你就需要直接操纵SOAP的消息传递代码，以及一些底层的XML内容。因此，Webservice的开发者需要深入了解SOAP和XML层的内容。
+ 
+在开发Webservice的接口的时候，不要以为使用XML技术，协作性的问题就迎刃而解了，XML并不是解决集成问题的灵丹妙药。这里同样需要标准的制定，需要一个在业界公认的词汇表。仅仅在你的设计框架中引入XML技术并不能保证系统具有协同性，XML仅仅是用来描述数据的语言，XML自己并不提供语义去理解数据。就如同英语和德语都使用拉丁字母，但是他们的语义却并不相同。
+ 
+即使你使用相同的语言，也不能保证具有良好的协作性。比如你的公司可能使用Order描述一个订单，但你的合作伙伴可能使用Purchase_Order，而另一个伙伴可能又不相同。你不可能强迫你所有的合作伙伴都采用和你相同的词汇。因此需要有一项技术可以在众多的描述之间充当翻译的角色。XSLT就是这么一种技术，它用于不同语言的转换。和XSLT的配合使用XML才能解决协同性的问题。
+ 
+l         DOM vs. SAX
+许多的Webservice开发环境，将开发者从底层的XML文档的解析和处理中解放出来，他们提供了自动化或者很方便的工具，使得这一过程变得很简单。但是对于一些有特殊要求的Webservice应用，比如需要更好的柔性或者对速度要求特别高的应用，就需要手工处理XML文档。这时候两种XML解析的模型－DOM 和SAX的选择，将成为重要的问题。
+DOM使用树状图的方式解析XML文档，而SAX则更多的采用事件驱动的模型。
+ 
+DOM先将XML文档映射成一颗树，然后通过采用一系列与树相关的操作去处理这份文档。这种方法有很多的好处，首先开发者很容易理解，使用一颗树这对于开发者来说是最常见不过的了。DOM最常用于XML在Service中需要频繁修改的场合。当然DOM也有它的缺点，在处理XML文档的时候，它需要载入整个文档，而不管你需要修改的是否只是其中的一小部分。因此它的运行效率以及对内存的使用显然是不能接受的，尤其是面对很大的XML文档。
+SAX使用事件驱动的模型来处理XML文档。通过一系列事件的触发，来完成对XML的解析，你可以只关心你所要处理的事件，当这些事件发生时，会调用到相应的回调函数来通知到你。采用这种方式就可以在很大程度上提高XML文档解析的效率。但是它的缺点在于难于使用，以及对同一文档的多次处理会存在一些问题。
+总而言之，DOM更适合处理那种文档型的XML文件，而SAX则适于那种想直接将XML结构映射成在你系统中的一个对象的操作。（比如将一个XML结构直接映射成JAVA中的一个Class）或者那种针对XML文件中特殊Tag的操作。
+ 
+l         文档交换vs. RPC模型
+这两种交互方式应该在应用架构的设计初始就应该详加考虑，因为它将在很大程度上决定系统的耦合程度。
+RPC（Remote Procedure Call）本质上就是远程方法的调用。尽管Webservice是基于XML的但是你仍然可以使用远程方法调用这种模式来进行Webservice的实现，尤其是在那种简单的请求相应的模型中。在这个过程中，传输中的XML文件所描述的更多是有关远程方法的信息，比如方法名，方法参数等等。
+而文档交换方式，与RPC相比较在XML文件中不是做远程方法的映射，而是一份完整的自包含的业务文档，当Service端收到这份文档后，先进行预处理（比如词汇的翻译和映射），然后再构造出返回消息。这个构造返回消息的过程中，往往不再是简简单单的一个方法调用，而是多个对象协同完成一个事务的处理，再将结果返回。
+这两种方式的区别，类似与打电话和发邮件的不同处理方法。在目前，对于第一种方法提供了很多自动化的工具使得远程方法的调用能够很容易的完成，而后一种方法缺少一系列工具的支持，需要开发者手工完成。
+尽管如此，在此还是推荐使用文档交换的方式。由于它在以下方面具有RPC所不具备的优点。
+使用文档方式，你可以充分利用XML文件的功能去描述和验证一份业务文档，而在RPC模型中XML仅仅被用于描述方法的信息。
+使用文档方式，在客户的Service的提供者之间不再需要紧密的约定，而RPC模型需要客户和Service的提供者紧密相连，一旦方法发生变化，客户端就需要做相应的改动。这不符合低耦合系统的要求，而在文档交换方式中则灵活的多。
+由于业务数据是自包含的，显然文档模型更利于采用异步处理。
+ 
+l         利用设计模式
+设计模式在设计Webservice的时候显然可以起到相当大的作用。设计模式的主要目的就是为解决某些在类似环境下的相像问题提供已有的较为成熟的设计方案。在这里，只简单的提及一些很常用的模式，让我们了解到模式在Webservice中可以起到的作用。
+Adapter ：为内部系统提供一个不同的接口
+Façade： 封装复杂的内部实现，提供一系列简单的接口
+Proxy： 作为其他对象的代理，代替它提供服务
+Adapter模式用于将一个组件的接口转化成客户所需要的样子，这里的客户就是Webservice。一个常见的情况就是将原有的老的系统包装成一个Webservice。比如现在使用的是J2EE的平台，而原来有一个C++的系统实现了某些功能，现在需要将它发布成Webservice，那么就需要利用JNI技术做一个Adapter，为原来的C++组件提供一个Java的接口，然后再转化为Webservice。
+Façade模式用于构建粗粒度的服务，它包装了细粒度的服务，从而为复杂的系统提供了一个简单的接口。在J2EE中，Session Bean就象是一个Façade，而Entity Bean则是细粒度的服务。在Webservice中也一样，使用Façade模式可以将已有的组件的功能发挥殆尽。
+Proxy 模式用于充当其他对象的代理，类似于中间人的作用，将处理工作从一个对象传递到另一个对象。在Webservice中，它主要用于隐藏Soap消息构造的过程。也可以用于模拟对象（Mock Object）的创建。
+以上仅仅是一些可以用于Webservice开发的模式，如果你熟练的将这些模式应用于Webservice开发，你将会发现开发Webservice应用，将好像做一种特殊的面向对象设计。
+l         安全
+Webservice为作为方便的服务被用广大领域使用的同时，也成为了黑客们的美食。在这里，本文将就目前对Webservice安全所能做的改进做简单介绍。
+在Webservice中的安全主要分为以下三个方面。
+传输      SSL/HTTPS 对连接加密，而不是传输数据
+消息      数据加密(XML Encryption)   数字签名(XML-DSIG)
+底层架构  利用应用服务安全机制
+传输时的安全是最容易被加入到你的Webservice应用中的，利用现有的SSL 和HTTPS协议，就可以很容易的获得连接过程中的安全。
+然而这种安全实现方法有两个弱点。一是它只能保证数据传输的安全，而不是数据本身的安全，数据一旦到达某地，那么就可以被任何人所查看。而在Webservice中，一份数据可能到达多个地方，而这份数据却不该被所有的接受者所查看。二是它提供的是要么全有要么全无的保护，你不能选择哪部分数据要被保护，而这种可选择性也是在Webservice中所常要用到的。
+第二层的保护是对于消息本身的保护。你可以使用已有的XML安全扩展标准，实现数字签名的功能，从而保证你的消息是来自特定方并没有被修改过。XML文件的加密技术从更大程度上加强了Webservice的安全，它能够定制数据传输到后，能否被接受者所查看，进一步完善了传输后的安全，业界也在不断的制定Webservice的安全标准，比如SAML 和 WS-Security。
+最后一层保护就是依靠底层架构的安全，这更多的来自于操作系统和某些中间件的保护。比如在J2EE中，主持Webservice的应用服务器。目前很多的J2EE应用服务器都支持Java Authentication and Authorization Service (JAAS)，这是最近被加入到J2SE 1.4当中的。利用主持Webservice的服务器，实现一些安全机制这是很自然的做法。另一种利用底层架构的安全方法就是，做一个独立的负责安全的服务器，Webservice的使用者和创建者都需要与之取得安全信任。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+webservice例子
+
+简单的webservice开发例子
+Axis支持三种web  service的部署和开发，分别为：  
+ 
+1、Dynamic  Invocation  Interface  (  DII)  
+ 
+2、Stubs方式  
+ 
+3、Dynamic  Proxy方式  
+ 
+二、编写DII(Dynamic  Invocation  Interface  )方式web服务  
+ 
+1.编写服务端程序HelloClient  
+ 
+ 
+public  class  HelloClient  
+{  
+       public  String  getName(String  name)  
+       {  
+               return  "hello  "+name;  
+       }  
+}  
+   
+ 
+ 
+ 
+2、将源码拷贝到Axis_HOME下，重命名为  HelloClient.jws    
+ 
+3、访问连接http://localhost:8080/Axis/HelloClient.jws?wsdl，页面显示Axis自动生成的wsdl    
+ 
+4、编写访问服务的客户端  TestHelloClient.java    
+ 
+ 
+import  org.apache.Axis.client.Call;  
+import  org.apache.Axis.client.Service;  
+import  javax.xml.namespace.QName;  
+import  javax.xml.rpc.ServiceException;  
+import  java.net.MalformedURLException;  
+import  java.rmi.RemoteException;  
+ 
+public  class  SayHelloClient2  
+{  
+       public  static  void  main(String[]  args)  
+           {  
+               try  
+                       {  
+   String  endpoint  =  
+   "http://localhost:8080/Axis/HelloClient.jws";  
+ 
+       Service  service  =  new  Service();  
+                       Call  call  =  null;  
+ 
+                       call  =  (Call)  service.createCall();  
+ 
+                       call.setOperationName(new  QName(  
+                             "http://localhost:8080/Axis/HelloClient.jws",    
+                                         "getName"));  
+                       call.setTargetEndpointAddress  
+                                   (new  java.net.URL(endpoint));  
+ 
+                       String  ret  =  (String)  call.invoke(new  Object[]    
+                                   {"zhangsan"});  
+                       System.out.println("return  value  is  "  +  ret);  
+               }    
+                       catch  (Exception  ex)  
+                       {  
+             ex.printStackTrace();  
+               }  
+       }  
+}  
+   
+ 
+ 
+ 
+三、编写Dynamic  Proxy方式访问服务    
+ 
+1、编写部署服务端程序，同上边DII方式，本次仍使用上边部署的HelloClient    
+ 
+2、编写代理接口    
+ 
+ 
+public  interface  HelloClientInterface  
+extends  java.rmi.Remote  
+{  
+       public  String  getName(String  name)  
+           throws  java.rmi.RemoteException;  
+}  
+   
+ 
+ 
+ 
+3、编写并执行客户端程序TestHelloClient.java    
+ 
+ 
+import  javax.xml.rpc.Service;  
+import  javax.xml.rpc.ServiceFactory;  
+import  java.net.URL;  
+import  javax.xml.namespace.QName;  
+ 
+public  class  TestHelloClient    
+{  
+       public  static  void  main(String[]  args)  
+           {  
+               try  
+               {  
+                       String  wsdlUrl  =    
+                                   "http://localhost:8080/Axis/HelloClient.jws?wsdl";  
+                       String  nameSpaceUri  =    
+                                   "http://localhost:8080/Axis/HelloClient.jws";  
+                       String  serviceName  =  "HelloClientService";  
+                       String  portName  =  "HelloClient";  
+ 
+                       ServiceFactory  serviceFactory  =    
+                                   ServiceFactory.newInstance();  
+                       Service  afService  =  
+                                   serviceFactory.createService(new  URL(wsdlUrl),  
+                 new  QName(nameSpaceUri,  serviceName));  
+                       HelloClientInterface  proxy  =  (HelloClientInterface)  
+               afService.getPort(new  QName(  
+                                       nameSpaceUri,  portName),    
+                                                           HelloClientInterface.class);  
+                       System.out.println  
+                                   ("return  value  is  "+proxy.getName("john")  )  ;  
+               }catch(Exception  ex)  
+               {  
+                       ex.printStackTrace()  ;  
+               }  
+       }  
+}  
+   
+ 
+ 
+ 
+四、编写wsdd发布web服务，编写stub  client访问web服务    
+ 
+1、编写服务端程序server,SayHello.java，编译server.SayHello.java    
+ 
+ 
+package  server;  
+public  class  SayHello  
+{  
+       public  String  getName(String  name)  
+       {  
+               return  "hello  "+name;  
+       }  
+}  
+2.编写LogHandler.java  
+import  org.apache.Axis.AxisFault;  
+import  org.apache.Axis.Handler;  
+import  org.apache.Axis.MessageContext;  
+import  org.apache.Axis.handlers.BasicHandler;  
+ 
+import  java.util.Date;  
+ 
+public  class  LogHandler    
+extends  BasicHandler    
+{  
+ public  void  invoke  
+(MessageContext  msgContext)    
+throws  AxisFault  
+       {  
+               /**  Log  an  access  each  time    
+                       we  get  invoked.  
+                 */  
+               try  {  
+                       Handler  serviceHandler  
+                                   =  msgContext.getService();  
+ 
+                       Integer  numAccesses  =  
+   (Integer)serviceHandler.getOption("accesses");  
+                       if  (numAccesses  ==  null)  
+                               numAccesses  =  new  Integer(0);  
+numAccesses  =  new  Integer  
+(numAccesses.intValue()  +  1);  
+Date  date  =  new  Date();  
+ String  result  =    
+ date  +  ":  service  "  +  
+msgContext.getTargetService()  +  
+"  accessed  "  +  numAccesses  +  "  time(s).";  
+serviceHandler.setOption  
+("accesses",  numAccesses);  
+System.out.println(result);  
+               }  catch  (Exception  e)  
+                       {  
+                       throw  AxisFault.makeFault(e);  
+               }  
+       }  
+}  
+   
+ 
+ 
+ 
+3、编写wsdd文件    
+ 
+ 
+deploy.wsdd  
+<deployment  xmlns=  
+"http://xml.apache.org/Axis/wsdd/"  
+   xmlns:java=  
+                                   "http://xml.apache.org/Axis/wsdd/providers/java">                        
+     <handler  name="print"  type="java:LogHandler"/>    
+ <service  name="sayhello"  
+ provider="java:RPC">  
+     <requestFlow>  
+         <handler  type="print"/>  
+     </requestFlow>  
+   <parameter  name="className"    
+   value="server.SayHello"/>  
+   <parameter  name="allowedMethods"  
+   value="*"/>      
+ </service>  
+</deployment>  
+   
+ 
+ 
+ 
+3、将编译后的文件拷贝到Axis_HOME/WEB-INF/classes下，如：D:\tomcat\webapps\Axis\WEB-INF\classes    
+ 
+4、发布服务：    
+ 
+java  org.apache.Axis.client.AdminClient  deploy.wsdd    
+ 
+5、生成client  stub文件    
+ 
+a:方式1    
+ 
+将SayHello.java拷贝到Axis_HOME/下，重命名为SayHello.jws，    
+ 
+执行下面的命令生存client  stub    
+ 
+ 
+java  org.apache.Axis.wsdl.WSDL2Java    
+-p  client    http://localhost:8080  
+/Axis/services/SayHello.jws?wsdl  
+   
+ 
+ 
+ 
+b:方式2    
+ 
+执行如下命令生成SayHello.wsdl    
+ 
+ 
+java  org.apache.Axis.wsdl.Java2WSDL  
+-oSayHello.wsdl  -lhttp://localhost:8080  
+/Axis/services/SayHello  -nsayhello  server.SayHello  
+   
+ 
+ 
+ 
+执行如下命令生成client  stub    
+ 
+ 
+java  org.apache.Axis.wsdl.WSDL2Java    
+SayHello.wsdl    -p  client  
+   
+ 
+ 
+ 
+生成的stub  client文件列表为：    
+ 
+1.SayHello.java    
+ 
+2.SayHelloService.java。    
+ 
+3.SayHelloServiceLocator.java    
+ 
+4.SayHelloSoapBindingStub.java    
+ 
+6、编写客户端程序，编译并执行    
+ 
+ 
+public  class  SayHelloClient  
+{  
+       public  static  void  main(String[]  args)  
+           {  
+               try  
+                       {  
+       SayHelloService  service  =  new  client.  
+             SayHelloServiceLocator();  
+                   client.SayHello_PortType    
+                           client  =  service.getSayHello();  
+                       String  retValue=client.getName("zhangsan");  
+                       System.out.println(retValue);  
+}    
+catch  (Exception  e)  
+{  
+ System.err.println  
+ ("Execution  failed.  Exception:  "  +  e);  
+               }  
+       }  
+}  
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+webservice介绍
+
+关键的技术和规则
+
+技术和规则
+
+　　在构建和使用Web Service时,主要用到以下几个关键的技术和规则:
+　　1.XML:描述数据的标准方法.
+　　2.SOAP:表示信息交换的协议.
+　　3.WSDL:Web服务描述语言.
+　　4.UDDI(Universal Description, Discovery and Integration):通用描述、发现与集成，它是一种独立于平台的，基于XML语言的用于在互联网上描述商务的协议。
+相关
+
+　　实际上，WebService的主要目标是跨平台的可互操作性。为了达到这一目标，WebService完全基于XML（可扩展标记语言）、XSD（XMLSchema）等独立于平台、独立于软件供应商的标准，是创建可互操作的、分布式应用程序的新平台。由此可以看出，在以下三种情况下，使用WebService会带来极大的好处。
+长项一：跨防火墙的通信
+
+　　如果应用程序有成千上万的用户，而且分布在世界各地，那么客户端和服务器之间的通信将是一个棘手的问题。因为客户端和服务器之间通常会有防火墙或者代理服务器。在这种情况下，使用DCOM就不是那么简单，通常也不便于把客户端程序发布到数量如此庞大的每一个用户手中。传统的做法是，选择用浏览器作为客户端，写下一大堆ASP页面，把应用程序的中间层暴露给最终用户。这样做的结果是开发难度大，程序很难维护。
+　　图1通过WebService集成应用程序
+　　举个例子，在应用程序里加入一个新页面，必须先建立好用户界面(Web页面)，并在这个页面后面，包含相应商业逻辑的中间层组件，还要再建立至少一个ASP页面，用来接受用户输入的信息，调用中间层组件，把结果格式化为HTML形式，最后还要把“结果页”送回浏览器。要是客户端代码不再如此依赖于HTML表单，客户端的编程就简单多了。
+　　如果中间层组件换成WebService的话，就可以从用户界面直接调用中间层组件，从而省掉建立ASP页面的那一步。要调用WebService，可以直接使用MicrosoftSOAPToolkit或.NET这样的SOAP客户端，也可以使用自己开发的SOAP客户端，然后把它和应用程序连接起来。不仅缩短了开发周期，还减少了代码复杂度，并能够增强应用程序的可维护性。同时，应用程序也不再需要在每次调用中间层组件时，都跳转到相应的“结果页”。
+　　从经验来看，在一个用户界面和中间层有较多交互的应用程序中，使用WebService这种结构，可以节省花在用户界面编程上20%的开发时间。另外，这样一个由WebService组成的中间层，完全可以在应用程序集成或其它场合下重用。最后，通过WebService把应用程序的逻辑和数据“暴露”出来，还可以让其它平台上的客户重用这些应用程序。
+长项二：应用程序集成
+
+　　企业级的应用程序开发者都知道，企业里经常都要把用不同语言写成的、在不同平台上运行的各种程序集成起来，而这种集成将花费很大的开发力量。应用程序经常需要从运行在IBM主机上的程序中获取数据；或者把数据发送到主机或UNIX应用程序中去。即使在同一个平台上，不同软件厂商生产的各种软件也常常需要集成起来。通过WebService，应用程序可以用标准的方法把功能和数据“暴露”出来，供其它应用程序使用。
+　　例如，有一个订单登录程序，用于登录从客户来的新订单，包括客户信息、发货地址、数量、价格和付款方式等内容；还有一个订单执行程序，用于实际货物发送的管理。这两个程序来自不同软件厂商。一份新订单进来之后，订单登录程序需要通知订单执行程序发送货物。通过在订单执行程序上面增加一层WebService，订单执行程序可以把“AddOrder”函数“暴露”出来。这样，每当有新订单到来时，订单登录程序就可以调用这个函数来发送货物了。
+长项三：B2B的集成
+
+　　用WebService集成应用程序，可以使公司内部的商务处理更加自动化。但当交易跨越供应商和客户、突破公司的界限时会怎么样呢？跨公司的商务交易集成通常叫做B2B集成。
+　　WebService是B2B集成成功的关键。通过WebService，公司可以把关键的商务应用“暴露”给指定的供应商和客户。例如，把电子下单系统和电子发票系统“暴露”出来，客户就可以以电子的方式发送订单，供应商则可以以电子的方式发送原料采购发票。当然，这并不是一个新的概念，EDI(电子文档交换)早就是这样了。但是，WebService的实现要比EDI简单得多，而且WebService运行在Internet上，在世界任何地方都可轻易实现，其运行成本就相对较低。不过，WebService并不像EDI那样，是文档交换或B2B集成的完整解决方案。WebService只是B2B集成的一个关键部分，还需要许多其它的部分才能实现集成。
+　　用WebService来实现B2B集成的最大好处在于可以轻易实现互操作性。只要把商务逻辑“暴露”出来，成为WebService，就可以让任何指定的合作伙伴调用这些商务逻辑，而不管他们的系统在什么平台上运行，使用什么开发语言。这样就大大减少了花在B2B集成上的时间和成本，让许多原本无法承受EDI的中小企业也能实现B2B集成。
+长项四：软件和数据重用
+
+　　软件重用是一个很大的主题，重用的形式很多，重用的程度有大有小。最基本的形式是源代码模块或者类一级的重用，另一种形式是二进制形式的组件重用。
+　　图2用WebService集成各种应用中的功能，为用户提供一个统一的界面
+　　当前，像表格控件或用户界面控件这样的可重用软件组件，在市场上都占有很大的份额。但这类软件的重用有一个很大的限制，就是重用仅限于代码，数据不能重用。原因在于，发布组件甚至源代码都比较容易，但要发布数据就没那么容易，除非是不会经常变化的静态数据。
+　　WebService在允许重用代码的同时，可以重用代码背后的数据。使用WebService，再也不必像以前那样，要先从第三方购买、安装软件组件，再从应用程序中调用这些组件；只需要直接调用远端的WebService就可以了。举个例子，要在应用程序中确认用户输入的地址，只需把这个地址直接发送给相应的WebService，这个WebService就会帮你查阅街道地址、城市、省区和邮政编码等信息，确认这个地址是否在相应的邮政编码区域。WebService的提供商可以按时间或使用次数来对这项服务进行收费。这样的服务要通过组件重用来实现是不可能的，那样的话你必须下载并安装好包含街道地址、城市、省区和邮政编码等信息的数据库，而且这个数据库还是不能实时更新的。
+　　另一种软件重用的情况是，把好几个应用程序的功能集成起来。例如，要建立一个局域网上的门户站点应用，让用户既可以查询联邦快递包裹，查看股市行情，又可以管理自己的日程安排，还可以在线购买电影票。现在Web上有很多应用程序供应商，都在其应用中实现了这些功能。一旦他们把这些功能都通过WebService“暴露”出来，就可以非常容易地把所有这些功能都集成到你的门户站点中，为用户提供一个统一的、友好的界面。
+　　将来，许多应用程序都会利用WebService，把当前基于组件的应用程序结构扩展为组件/WebService的混合结构，可以在应用程序中使用第三方的WebService提供的功能，也可以把自己的应用程序功能通过WebService提供给别人。两种情况下，都可以重用代码和代码背后的数据。
+　　从以上论述可以看出，WebService在通过Web进行互操作或远程调用的时候是最有用的。不过，也有一些情况，WebService根本不能带来任何好处。
+短处一：单机应用程序
+
+　　目前，企业和个人还使用着很多桌面应用程序。其中一些只需要与本机上的其它程序通信。在这种情况下，最好就不要用WebService，只要用本地的API就可以了。COM非常适合于在这种情况下工作，因为它既小又快。运行在同一台服务器上的服务器软件也是这样。最好直接用COM或其它本地的API来进行应用程序间的调用。当然WebService也能用在这些场合，但那样不仅消耗太大，而且不会带来任何好处。
+短处二：局域网的同构应用程序
+
+　　在许多应用中，所有的程序都是用VB或VC开发的，都在Windows平台下使用COM，都运行在同一个局域网上。例如，有两个服务器应用程序需要相互通信，或者有一个Win32或WinForm的客户程序要连接局域网上另一个服务器的程序。在这些程序里，使用DCOM会比SOAP/HTTP有效得多。与此相类似，如果一个.NET程序要连接到局域网上的另一个.NET程序，应该使用.NETremoting。有趣的是，在.NETremoting中，也可以指定使用SOAP/HTTP来进行WebService调用。不过最好还是直接通过TCP进行RPC调用，那样会有效得多。
+　　总之，只要从应用程序结构的角度看，有别的方法比WebService更有效、更可行，那就不要用WebService
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+study
+webservice使用
+1、在VS2005中创建 ASP.NET Web服务 项目： WebServiceSample位置：http://localhost/WebServiceSample语言：Visual C#
+2.新建WebService文件：WebServiceSession.asmx
+1) WebServiceSession.asmx
+<%@ WebService Language="C#" CodeBehind="~/App_Code/WebServiceSession.cs" Class="WebServiceSession" %>
+2) WebServiceSession.cs内容如下：
+using System;
+using System.Web;
+using System.Collections;
+using System.Web.Services;
+using System.Web.Services.Protocols;
+/// <summary>
+/// WebServiceSession 的摘要说明
+/// </summary>
+[WebService(Namespace = "http://tempuri.org/")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+public class WebServiceSession : System.Web.Services.WebService {
+    public WebServiceSession () {
+        //如果使用设计的组件，请取消注释以下行 
+        //InitializeComponent(); 
+    }
+
+    [WebMethod(EnableSession=true)]
+    public string AccessCount()
+    {
+        //首先判断用户是否是第一次登陆
+        if (Session["AccessCount"] == null)
+        {
+            Session["AccessCount"] = 1; //如果第一次登陆，从1开始
+        }
+        else
+        {
+            Session["AccessCount"] = int.Parse(Session["AccessCount"].ToString()) + 1;
+        }
+        //返回用户需要的登陆次数信息
+        return "这是您第" + Session["AccessCount"].ToString() + "次访问该服务.";
+    }
+}
+3. 在IE浏览器中时行测试:(略)
+4. 建立一个Web Service的客户，并保存wsdl文件
+C:\Program Files\Microsoft Visual Studio 8\VC>disco  /o:D:/  http://localhost/WebServiceSample/WebServiceSession.asmx  [Enter]
+Microsoft (R) Web 服务发现实用工具
+[Microsoft (R) .NET Framework, Version 2.0.50727.42]
+Copyright (C) Microsoft Corporation. All rights reserved.
+Disco 在下列 URL 处找到文档:
+http://localhost/WebServiceSample/WebServiceSession.asmx?disco
+http://localhost/WebServiceSample/WebServiceSession.asmx?wsdl
+下列文件保存在相应的 URL 处找到的内容:
+  D:/WebServiceSession.disco <- http://localhost/WebServiceSample/WebServiceSess
+ion.asmx?disco
+  D:/WebServiceSession.wsdl <- http://localhost/WebServiceSample/WebServiceSessi
+on.asmx?wsdl
+文件 D:/results.discomap 保存指向这些文件中的每一个的链接。
+结果会发现:在D盘产生了3个文件:WebServiceSession.disco ,WebServiceSession.wsdl,results.discomap
+5.生成代理类cs文件
+C:\Program Files\Microsoft Visual Studio 8\VC>wsdl /out:D:\WebServiceSession.cs
+http://localhost/WebServiceSample/WebServiceSession.asmx   [Enter]
+Microsoft(R) Web Services 描述语言实用工具
+[Microsoft (R) .NET Framework, Version 2.0.50727.42]
+Copyright (C) Microsoft Corporation. All rights reserved.
+正在写入文件“D:\WebServiceSession.cs”。
+结果发现:在D盘产生了一个文件:WebServiceSession.cs
+创建一个ASP.NET WebSite
+位置: 文件系统  D:\WebApp\TestWebService
+语言: Visual C#
+将刚生成的代理类WebServiceSession.cs添加项目中App_Code目录下
+接下来,在Default.aspx.cs的Page_Load事件中调用该Web Service.
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        //实例化获取次数的服务
+        WebServiceSession ws = new WebServiceSession();
+        //调用获取次数的方法
+        string sCount = ws.AccessCount();
+        //显示从服务处获取的访问次数
+        Response.Write(sCount);
+    }
+运行就可以看到结果.
+另外也可以通过另一种方式来调用Web Service
+也可以右键点击"项目解决方案",在弹出的菜单中选择"添加Web 引用... ",对Web Service进行调用.
+这样的话,会在根目录下生成App_WebReferences/localhost目录,下面会有3个文件:WebServiceSession.disco,WebServiceSession.discomap,WebServiceSession.wsdl
+接下来,在Default.aspx.cs的Page_Load事件中进行调用即可:
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        localhost.WebServiceSession ws = new localhost.WebServiceSession();
+        Response.Write(ws.AccessCount());
+    }
+results.discomap
+<?xml version="1.0" encoding="utf-8"?>
+<DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Results>
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="http://localhost/WebServiceSample/WebServiceSession.asmx?wsdl" filename="WebServiceSession.wsdl" />
+    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="http://localhost/WebServiceSample/WebServiceSession.asmx?disco" filename="WebServiceSession.disco" />
+  </Results>
+</DiscoveryClientResultsFile>
+WebServiceSession.wsdl
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="AccessCount">
+        <s:complexType />
+      </s:element>
+      <s:element name="AccessCountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccessCountResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AccessCountSoapIn">
+    <wsdl:part name="parameters" element="tns:AccessCount" />
+  </wsdl:message>
+  <wsdl:message name="AccessCountSoapOut">
+    <wsdl:part name="parameters" element="tns:AccessCountResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSessionSoap">
+    <wsdl:operation name="AccessCount">
+      <wsdl:input message="tns:AccessCountSoapIn" />
+      <wsdl:output message="tns:AccessCountSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSessionSoap" type="tns:WebServiceSessionSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AccessCount">
+      <soap:operation soapAction="http://tempuri.org/AccessCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSessionSoap12" type="tns:WebServiceSessionSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AccessCount">
+      <soap12:operation soapAction="http://tempuri.org/AccessCount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebServiceSession">
+    <wsdl:port name="WebServiceSessionSoap" binding="tns:WebServiceSessionSoap">
+      <soap:address location="http://localhost/WebServiceSample/WebServiceSession.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSessionSoap12" binding="tns:WebServiceSessionSoap12">
+      <soap12:address location="http://localhost/WebServiceSample/WebServiceSession.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
+WebServiceSession.disco
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://localhost/WebServiceSample/WebServiceSession.asmx?wsdl" docRef="http://localhost/WebServiceSample/WebServiceSession.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://localhost/WebServiceSample/WebServiceSession.asmx" xmlns:q1="http://tempuri.org/" binding="q1:WebServiceSessionSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://localhost/WebServiceSample/WebServiceSession.asmx" xmlns:q2="http://tempuri.org/" binding="q2:WebServiceSessionSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 

@@ -1,0 +1,883 @@
+
+java核心技术学习
+springstruts编程步骤
+
+1.导包  顺序是struts+spring+web library(整合包)
+2.applicationContext 放到WEB-INF下面
+3.struts-config.xml下面加插件
+代码如下:(注意applicationContext.xml路径)
+   <plug-in
+  className="org.springframework.web.struts.ContextLoaderPlugIn">
+  <set-property property="contextConfigLocation"
+   value="/WEB-INF/applicationContext.xml" />
+ </plug-in>
+4.修改Action的type的值
+type="org.springframework.web.struts.DelegatingActionProxy"
+或者：
+去掉type的值，加
+ <controller
+  processorClass="org.springframework.web.struts.DelegatingRequestProcessor">
+ </controller>
+5.将Action的path值复制到bean中（用name，因为id不能有“/”）
+如下：
+ <bean name="/register" class="com.handson.RegisterAction">
+  <property name="service">
+   <ref local="service" />
+  </property>
+ </bean>
+ <bean id="service" class="com.handson.Service"></bean>
+spring+struts的集成（第一种集成方案依赖查找）
+原理：在Action中取得BeanFactory对象，然后通过BeanFactory获取业务逻辑对象
+1、spring和struts依赖库配置
+     * 配置struts
+          --拷贝struts类库和jstl类库
+             {
+               antlr.jar
+               commons-beanutils.jar
+               commons-digester.jar
+               commons-fileupload.jar
+               commons-logging.jar
+               commons-validator.jar
+               jakarta-oro.jar
+               struts.jar
+               ---------------------
+               jstl.jar
+               standard.jar
+             }
+          --修改web.xml文件来配置ActionServlet
+          --提供struts-config.xml文件
+          --提供国际化资源文件
+     * 配置spring
+          --拷贝spring类库
+             {
+               spring.jar
+               commons-logging.jar<相同文件以高版本为标准进行覆盖>
+               log4j-1.2.14.jar
+               aspectjrt.jar
+               aspectjweaver.jar
+             }        
+           --提供spring配置文件
+2、在struts的Action中调用如下代码，取得BeanFactory        
+    BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+   
+1、  通过BeanFactory取得业务对象，调用业务逻辑方法
+2、  创建jsp页面时使用基本模板和高级模板的不同之处
+*          高级模板中嵌入了java代码
+*          高级模板中增加了<base>标签，举例：如果页面需要图片，这个标签被赋值了之后，就不用再使用..的方式配置相对路径，直接从根目录写就可以
+*          一般情况下，使用基本模板就可以了
+spring+struts的集成（第二种集成方案依赖注入）
+ 
+原理：将业务逻辑对象通过spring注入到Action中，从而避免了在Action类中的直接代码查找
+ 
+1、spring和struts依赖库配置
+     * 配置struts
+          --拷贝struts类库和jstl类库
+             {
+               antlr.jar
+               commons-beanutils.jar
+               commons-digester.jar
+               commons-fileupload.jar
+               commons-logging.jar
+               commons-validator.jar
+               jakarta-oro.jar
+               struts.jar
+               ---------------------
+               jstl.jar
+               standard.jar
+             }
+          --修改web.xml文件来配置ActionServlet
+          --提供struts-config.xml文件
+          --提供国际化资源文件
+     * 配置spring
+          --拷贝spring类库
+             {
+               spring.jar
+               commons-logging.jar<相同文件以高版本为标准进行覆盖>
+               log4j-1.2.14.jar
+               aspectjrt.jar
+               aspectjweaver.jar
+             }        
+           --提供spring配置文件
+2、因为Action需要业务逻辑方法，所以需要在Action中提供setter方法，让spring将业务逻辑对象注入过来
+ 
+3、在struts-config.xml文件中配置Action
+     * <action>中的type属性需要修改为：type="org.springframework.web.struts.DelegatingActionProxy"
+     DelegatingActionProxy是一个Action，主要作用是取得BeanFactory，然后根据<action>中的path属性值
+     到IoC容器中取得本次请求相对应的Action
+    
+4、在spring的配置文件中，需要定义struts的Action，如：
+     <bean name="/login" class="com.bjsxt.usermgr.action.LoginAction" scope="prototype">
+       <property name="userManager" ref="userManager"/>
+     </bean>
+     * 必须使用name属性，name属性必须跟struts-config.xml文件中的<action>标签的path属性值一致
+     * 必须注入业务逻辑对象
+     * 建议设置scope="prototype" 多实例的Action，这样就避免了Struts Action的线程安全问题
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+springhibernate编程步骤
+
+spring2.0 hibernate3.1
+1.导包  spring+hibernate+整合包+DBCP+mysql连接数据库的包
+2.没有hibernate的cfg.xml包，全写到spring中的applicationContext中
+3.根本思路是免去的new DAO()，用spring去构造 
+大概代码如下：
+ <bean id="dataSource"
+  class="org.apache.commons.dbcp.BasicDataSource">
+  <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+  <property name="url" value="jdbc:mysql://localhost:3306/mybbs"></property>
+  <property name="username" value="root"></property>
+  <property name="password" value="root"></property>
+ </bean>
+ <bean id="sessionFactory"
+  class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  <property name="dataSource">
+   <ref local="dataSource" />
+  </property>
+  <property name="hibernateProperties">
+   <props>
+    <prop key="hibernate.dialect">
+     org.hibernate.dialect.MySQLDialect
+    </prop>
+    <prop key="hibernate.show_sql">true</prop>
+   </props>
+  </property>
+  <property name="mappingResources">
+   <list>
+    <value>com/pojo/Person.hbm.xml</value>
+   </list>
+  </property>
+ </bean>
+------------------------------
+当使用时，代码如下
+ <bean id="personDao" class="PersonDao">
+  <property name="sessionFactory">
+   <ref local="sessionFactory" />
+  </property>
+ </bean>
+==========================================================下面列举3中DAO类
+1.这种是最原始的
+public class PersonDao {
+ org.hibernate.SessionFactory sessionFactory;
+ public org.hibernate.SessionFactory getSessionFactory() {
+  return sessionFactory;
+ }
+ public void setSessionFactory(org.hibernate.SessionFactory sessionFactory) {
+  this.sessionFactory = sessionFactory;
+ }
+ public void add(com.pojo.Person person) {
+  org.hibernate.Session session = sessionFactory.openSession();
+  org.hibernate.Transaction tra = session.beginTransaction();
+  session.save(person);
+  tra.commit();
+  session.close();
+ }
+}
+2.这种是为了省去事务的管理，模板（HibernateTemplate）
+
+public class PersonDao1 {
+ org.hibernate.SessionFactory sessionFactory;
+ public org.hibernate.SessionFactory getSessionFactory() {
+  return sessionFactory;
+ }
+ public void setSessionFactory(org.hibernate.SessionFactory sessionFactory) {
+  this.sessionFactory = sessionFactory;
+ }
+ public org.springframework.orm.hibernate3.HibernateTemplate getHibernateTemplate() {
+  return new org.springframework.orm.hibernate3.HibernateTemplate(
+    sessionFactory);
+ }
+ public void add(com.pojo.Person person) {
+  this.getHibernateTemplate().save(person);
+ }
+}
+
+3.这种是2的代码每一个DAO都要有的，所以还有很多的代码重复，hibernate提空了一个父类 HibernateDaoSupport（这种才是常用的）
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+public class PersonDao2 extends HibernateDaoSupport {
+ public void add(com.pojo.Person person) {
+  super.getHibernateTemplate().save(person);
+ }
+ public void update() {
+  org.hibernate.Session session = super.getSession();
+  super.releaseSession(session);
+ }
+}
+
+----
+当使用session时，必须归还数据库连接池
+  Session session = super.getSession();
+  session.save(person);
+  super.releaseSession(session);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+SSH编程步骤
+
+1.导包
+顺序是struts1.2+spring2.0+hibernate3.1(四个包)+dbcp(其中的两个包)
+2.用数据库自动生成pojo类
+3.创建Action和ActionForm；
+4.struts-config.xml下面加插件
+代码如下:(注意applicationContext.xml路径)
+   <plug-in
+  className="org.springframework.web.struts.ContextLoaderPlugIn">
+  <set-property property="contextConfigLocation"
+   value="/WEB-INF/applicationContext.xml" />
+ </plug-in>
+
+5.修改Action的type的值
+type="org.springframework.web.struts.DelegatingActionProxy"
+或者：
+去掉type的值，加
+ <controller
+  processorClass="org.springframework.web.struts.DelegatingRequestProcessor">
+ </controller>
+6.将Action的path值复制到bean中（用name，因为id不能有“/”）
+如下：
+ <bean name="/register" class="com.struts.RegAction">
+  <property name="pd">
+   <ref local="PersonDAO" />
+  </property>
+ </bean>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+struts的国际化资源文件
+
+MessageResources.properties
+ 
+# -- standard errors --
+errors.header=<UL>
+errors.prefix=<LI>
+errors.suffix=</LI>
+errors.footer=</UL>
+# -- validator --
+errors.invalid={0} is invalid.
+errors.maxlength={0} can not be greater than {1} characters.
+errors.minlength={0} can not be less than {1} characters.
+errors.range={0} is not in the range {1} through {2}.
+errors.required={0} is required.
+errors.byte={0} must be an byte.
+errors.date={0} is not a date.
+errors.double={0} must be an double.
+errors.float={0} must be an float.
+errors.integer={0} must be an integer.
+errors.long={0} must be an long.
+errors.short={0} must be an short.
+errors.creditcard={0} is not a valid credit card number.
+errors.email={0} is an invalid e-mail address.
+# -- other --
+errors.cancel=Operation cancelled.
+errors.detail={0}
+errors.general=The process did not complete. Details should follow.
+errors.token=Request could not be completed. Operation is not in sequence.
+# -- welcome --
+welcome.title=Struts Blank Application
+welcome.heading=Welcome!
+welcome.message=To get started on your own application, copy the struts-blank.war to a new WAR file using the name for your application. Place it in your container's "webapp" folder (or equivalent), and let your container auto-deploy the application. Edit the skeleton configuration files as needed, restart your container, and you are on your way! (You can find the MessageResources.properties file with this message in the /WEB-INF/src folder.)
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+hibernate数据库连接配置文件
+
+hibernate.cfg.xml
+ 
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+ 
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:oleora</property>
+        <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <property name="hibernate.connection.username">TESTDB</property>
+        <property name="hibernate.connection.password">TESTDB</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <!-- 当创建sessionFactory的时候会自动创建表 -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+    </session-factory>
+</hibernate-configuration>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+spring配置声明式事务
+
+applicationContext-common.xml
+ 
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:tx="http://www.springframework.org/schema/tx"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+    <!-- 配置sessionFactory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+    </bean>
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+    <!-- 配置事务的传播特性 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="modify*" propagation="REQUIRED"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--
+          配置哪些类的哪些方法参与事务
+         expression表达式：(*匹配所有返回值 包.所有类.所有方法(返回值匹配任何情况))
+          //此处包名需要重新指定
+    -->
+    <aop:config>
+        <aop:pointcut id="allManagerMethod" expression="execution(* 包.*.*(..))"/>
+        <aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice"/>
+    </aop:config>
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+spring管理的Bean配置
+
+applicationContext-beans.xml  
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:tx="http://www.springframework.org/schema/tx"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+spring管理的Action配置
+
+applicationContext-actions.xml
+ 
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:tx="http://www.springframework.org/schema/tx"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+applicationContext.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+       <bean id="dataSource"
+              class="org.apache.commons.dbcp.BasicDataSource">
+              <property name="driverClassName"
+                     value="com.mysql.jdbc.Driver">
+              </property>
+              <property name="url"
+                     value="jdbc:mysql://localhost:3306/mybbs">
+              </property>
+              <property name="username" value="root"></property>
+              <property name="password" value="root"></property>
+       </bean>
+       <bean id="sessionFactory"
+              class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+              <property name="dataSource">
+                     <ref bean="dataSource" />
+              </property>
+              <property name="hibernateProperties">
+                     <props>
+                            <prop key="hibernate.dialect">
+                                   org.hibernate.dialect.MySQLDialect
+                            </prop>
+                            <prop key="hibernate.show_sql">true</prop>
+                     </props>
+              </property>
+              <property name="mappingResources">
+                     <list>
+                            <value>com/pojo/Person.hbm.xml</value>
+                     </list>
+              </property>
+       </bean>
+ 
+       <bean id="personDAO" class="com.dao.PersonDAO">
+              <property name="sessionFactory">
+                     <ref bean="sessionFactory" />
+              </property>
+       </bean>
+ 
+       <bean id="personService" class="com.service.PersonService">
+              <property name="personDao">
+                     <ref local="personDAO" />
+              </property>
+       </bean>
+ 
+       <bean name="/regist" class="com.struts.RegistAction">
+              <property name="personService">
+                     <ref local="personService" />
+              </property>
+       </bean>
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+struts-config.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+  <data-sources />
+  <form-beans name="loginForm" type="com.bjsxt.usermgr.forms.LoginActionForm">
+  </form-beans>
+  <global-exceptions />
+  <global-forwards>
+  </global-forwards>
+  <action-mappings>
+<action path="/logininput" forward="/login.jsp"/>
+       <action path="/login"
+              type="com.bjsxt.usermgr.action.LoginAction"
+              name="loginForm"
+              scope="request"         
+      >
+          <forward name="success" path="/success.jsp"/>
+      </action>
+ //特殊配置type属性
+      <action path="/login"
+              type="org.springframework.web.struts.DelegatingActionProxy"
+              name="loginForm"
+              scope="request"         
+      >
+          <forward name="success" path="/success.jsp"/>
+      </action>
+ 
+  </action-mappings>
+       <controller
+              processorClass="org.springframework.web.struts.DelegatingRequestProcessor">
+       </controller>
+ 
+       <message-resources  parameter="com.yourcompany.struts.ApplicationResources" />
+ 
+       <plug-in  className="org.springframework.web.struts.ContextLoaderPlugIn">
+              <set-property property="contextConfigLocation"
+                     value="/WEB-INF/applicationContext.xml" />
+       </plug-in>
+</struts-config>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4"
+    xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  //spring的配置文件 配置
+  <!-- Spring Configuration -->
+  <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath*:applicationContext-*.xml</param-value>
+  </context-param>
+  //字符集 配置
+  <!-- Encoding Filter -->
+  <filter>
+      <filter-name>Spring character encoding filter</filter-name>
+      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+      <init-param>
+          <param-name>encoding</param-name>
+          <param-value>GBK</param-value>
+      </init-param>
+  </filter>
+  <filter-mapping>
+      <filter-name>Spring character encoding filter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  //Hibernate 处理session lazy的 配置
+  <!-- Hibernate Session Filter dowith lazy-->
+  <filter>
+      <filter-name>hibernateFilter</filter-name>
+      <filter-class>
+org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+</filter-class>
+  </filter>
+  <filter-mapping>
+      <filter-name>hibernateFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  //spring监听 配置
+  <!-- Spring listener -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  //struts servlet 配置
+  <!-- Standard Action Servlet Configuration -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <!-- Standard Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  //首页
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+web.xml详解
+
+1、配置FilterDemo1过滤器
+<filter>
+       <filter-name>FilterDemo1</filter-name>
+       <filter-class>demo.filter.FilterDemo1</filter-class>
+              <init-param>
+                     <param-name>encoding</param-name>
+                     <param-value>GB2312</param-value>
+              </init-param>
+</filter>
+<filter-mapping>
+       <filter-name>FilterDemo1</filter-name>
+       <url-pattern>/*</url-pattern>
+</filter-mapping>
+（获得param的值）
+    public void init(FilterConfig arg0) throws ServletException {
+       // TODO Auto-generated method stub
+       age = arg0.getInitParameter("age");
+    }
+ 
+2、使用error-code元素自定义出错响应（404可以用500替换）
+<error-page>
+<error-code>404</error-code>
+<location>/e404.jsp</location>
+</error-page>
+3、session保存时间（单位是分钟）
+  <session-config>
+  <session-timeout>1</session-timeout>
+  </session-config>
+4、设置监听
+    <listener>
+    <listener-class>com.handson.....</listener-class>
+    </listener>
+5、项目首页
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+6、servlet配置
+    <servlet>
+    <servlet-name>name</servlet-name>
+    <servlet-class>com.handson.add.....</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>name</servlet-name>
+    <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+7、设置全局变量（servletContext）
+<context-param>
+<param-name>age</param-name>
+<param-value>10</param-value>
+</context-param>
+8、自定义标签
+    <taglib>
+    <taglib-uri>/mytag</taglib-uri>
+    <taglib-location>/WEB-INF/mytag.tld</taglib-location>
+    </taglib>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+applicationContext.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+ <bean id="sessionFactory"
+  class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  <property name="configLocation"
+   value="classpath:hibernate.cfg.xml">
+  </property>
+ </bean>
+ <!-- 事务处理设置 -->
+ <bean id="transactionManager"
+  class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  <property name="sessionFactory">
+   <ref local="sessionFactory" />
+  </property>
+ </bean>
+ <!-- 所有方法使用PROPAGATION_REQUIRED类型的事务 -->
+ <bean id="interceptorTransaction"
+  class="org.springframework.transaction.interceptor.TransactionInterceptor">
+  <property name="transactionManager">
+   <ref local="transactionManager" />
+  </property>
+  <property name="transactionAttributes">
+   <props>
+    <prop key="*">PROPAGATION_REQUIRED</prop>
+   </props>
+  </property>
+ </bean>
+ <!-- 管理所有以Service结尾的Bean -->
+ <bean
+  class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+  <property name="beanNames">
+   <list>
+    <value>*Service</value>
+   </list>
+  </property>
+  <property name="interceptorNames">
+   <list>
+    <value>interceptorTransaction</value>
+   </list>
+  </property>
+ </bean>
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+bean.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+ <bean id="daoTempldate" abstract="true">
+  <property name="sessionFactory">
+   <ref bean="sessionFactory" />
+  </property>
+ </bean>
+ <bean id="itemDao" class="com.dao.ItemDao" parent="daoTempldate"></bean>
+ <bean id="subDao" class="com.dao.SubItemDao"
+  parent="daoTempldate">
+ </bean>
+ <bean id="itemAndSubService"
+  class="com.service.ItemAndSubService">
+  <property name="itemDao">
+   <ref local="itemDao" />
+  </property>
+  <property name="subDao">
+   <ref local="subDao" />
+  </property>
+ </bean>
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+hibernate.cfg.xml
+
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="connection.username">root</property>
+  <property name="connection.url">
+   jdbc:mysql://localhost:3306/mybbbs
+  </property>
+  <property name="dialect">
+   org.hibernate.dialect.MySQLDialect
+  </property>
+  <property name="myeclipse.connection.profile">
+   MySQL5.0
+  </property>
+  <property name="connection.password">root</property>
+  <property name="connection.driver_class">
+   com.mysql.jdbc.Driver
+  </property>
+  <property name="hibernate.connection.autocommit">true</property>
+  <property name="c3p0.max_size">5</property>
+  <property name="c3p0.min_size">1</property>
+  <property name="c3p0.timeout">5</property>
+  <property name="show_sql">true</property>
+  <mapping resource="com/pojo/Item.hbm.xml" />
+  <mapping resource="com/pojo/SubItem.hbm.xml" />
+ </session-factory>
+</hibernate-configuration>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+struts-config.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+ <data-sources />
+ <form-beans></form-beans>
+ <global-exceptions />
+ <global-forwards />
+ <action-mappings>
+  <action path="/test" parameter="method"></action>
+ </action-mappings>
+ <controller
+  processorClass="org.springframework.web.struts.DelegatingRequestProcessor">
+ </controller>
+ <message-resources
+  parameter="com.yourcompany.struts.ApplicationResources" />
+ <plug-in
+  className="org.springframework.web.struts.ContextLoaderPlugIn">
+  <set-property property="contextConfigLocation"
+   value="/WEB-INF/action-servlet.xml" />
+ </plug-in>
+</struts-config>
+ Copyright ©2011 lyt. All Rights
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+action-servlet.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+ <bean name="/test" class="com.action.TestAction">
+  <property name="itemAndSubService">
+   <ref bean="itemAndSubService" />
+  </property>
+ </bean>
+</beans>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+web.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+ xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+ <!--Struts ActionServlet config-->
+ <servlet>
+  <servlet-name>action</servlet-name>
+  <servlet-class>
+   org.apache.struts.action.ActionServlet
+  </servlet-class>
+  <init-param>
+   <param-name>config</param-name>
+   <param-value>/WEB-INF/struts-config.xml</param-value>
+  </init-param>
+  <init-param>
+   <param-name>debug</param-name>
+   <param-value>3</param-value>
+  </init-param>
+  <init-param>
+   <param-name>detail</param-name>
+   <param-value>3</param-value>
+  </init-param>
+  <load-on-startup>0</load-on-startup>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>action</servlet-name>
+  <url-pattern>*.do</url-pattern>
+ </servlet-mapping>
+ <!--SpringContextServlet config-->
+ <context-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>
+   /WEB-INF/classes/applicationContext.xml,/WEB-INF/classes/bean.xml
+  </param-value>
+ </context-param>
+ <listener>
+  <listener-class>
+   org.springframework.web.context.ContextLoaderListener
+  </listener-class>
+ </listener>
+ <filter>
+  <filter-name>lazyFilter</filter-name>
+  <filter-class>
+   org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+  </filter-class>
+ </filter>
+ <filter-mapping>
+  <filter-name>lazyFilter</filter-name>
+  <url-pattern>*.do</url-pattern>
+ </filter-mapping>
+ <welcome-file-list>
+  <welcome-file>index.jsp</welcome-file>
+ </welcome-file-list>
+</web-app>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 

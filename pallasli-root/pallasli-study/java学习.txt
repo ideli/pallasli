@@ -1,0 +1,507 @@
+
+java核心技术学习
+定时器
+
+//排程
+Timer t = new java.util.Timer();
+//排程处理
+t.schedule(eltimer, 1000 * 5, 1000 * 60 * 60 * 24);
+public class ElRpt001Timer extends java.util.TimerTask {
+public void run() {
+SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+Calendar calendar = Calendar.getInstance();
+String now = sdf.format(calendar.getTime());
+
+boolean b = now.equals(firstDate);
+
+if (!b) {
+//需要做的东西
+} else {
+//需要做的东西
+}
+}
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+反射机制核心类
+
+java.lang.Class
+java.lang.refrection.Method
+java.lang.refrection.Field
+java.lang.refrection.Constructor
+java.lang.refrection.Modifier
+java.lang.refrection.Interface
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+通过bat文件运行jar包
+
+通过jar命令或集成开发环境的打包工具，利用manifest.mf文件将.class文件打成可执行jar包时，如果程序引用大量第三方的jar包，那么会使得manifest.mf文件的编写变得很繁琐，并且可执行的jar需要运行机器上装有jre，考虑通过编写bat文件运行jar包程序。
+过程如下：
+1 对自己编写的java文件，对其编译，将class文件打成jar包(包名eg DMManager.jar)
+2 新建文件夹，作为应用程序的home文件夹(文件夹名eg DMManager)
+3 在DMManager文件夹下建立子文件夹lib、bin、jdk
+4 将DMManager.jar放入lib下
+5 在lib下新建子文件夹other
+6 将程序所需的第三方jar包放至other下
+7 处理jdk文件夹，jdk文件夹是个可选项，如果要使得程序的执行不依赖与目标机是否装有jre运行环境，那么需将本地JAVA_HOME文件夹下的内容拷贝至该文件夹下
+8 编写bat文件(*.bat)
+a 利用目标机的jre(第7步可省)
+@echo off
+cd ..
+set APP_HOME=%cd%
+cd bin
+start "" "%JAVA_HOME%\bin\javaw.exe" -classpath "%APP_HOME%\lib\DMManager.jar" -Djava.ext.dirs="%JAVA_HOME%\jre\lib\ext";"%APP_HOME%\lib\other" -Xms256m -Xmx512m my.package.name.Main
+b 利用自身的jre(第7步不能省)
+@echo off
+cd ..
+set APP_HOME=%cd%
+set JAVA_HOME=%APP_HOME%\jdk
+cd bin
+start "" "%JAVA_HOME%\bin\javaw.exe" -classpath "%APP_HOME%\lib\DMManager.jar" -Djava.ext.dirs="%JAVA_HOME%\jre\lib\ext";"%APP_HOME%\lib\other" -Xms256m -Xmx512m my.package.name.Main
+9 将*.bat文件放至bin下
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+编译
+
+将当前工作目录切换到$MyAppPath\WEB-INF；
+运行javac编译HelloWorldServlet.java
+javac –cp "%CATALINA_HOME%\lib\servlet-api.jar" –d classes
+ src\HelloWorldServlet.java 
+将项目HelloWorld的文件夹复制至Tomcat的webapps目录下
+启动Tomcat运行HelloWorld项目
+打开浏览器，在地址栏输入URL：http://localhost:8080/HelloWorld/
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+生成API
+
+运行"javadoc -d .doc  DocTest.java"，就在当前目下的doc目录中生成了介绍类DocTest的index.html等文件
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+jar的基本操作
+
+1.创建相关 
+
+　　\>jar cf jar-file input-file(s) 
+　　/* 
+　　说明，windows下和UNIX下对目录结构的分隔符习惯不同，前者为\，后者为/ ，本文仅仅为了说明问题，并不严格加以说明。——注意，无论任何平台，在manifest文件中均采用/ 
+　　*/ 
+　　/* 
+　　该形式的命令在当前目录下创建一个jar-file 
+　　c开关指明“创建”一个jar文件 
+　　f开关指明输出到文件，而不是stdout（标准输出） 
+　　jar-file如果不指明后缀，则默认为*.jar 
+　　空格用于分隔多个输入文件，可以使用通配符“*” 
+　　有必要时指明目录 
+　　开关出现的顺序不重要，但是如果有m开关则另当别论。 
+　　该命令默认创建一个manifest文件 
+　　*/ 
+　　/* 
+　　对于java版本1，jar文件仅支持ASCII作文件名，java版本2则支持UTF-8编码的文件名。 
+　　*/ 
+　　/* 
+　　关于创建，可用的其他开关： 
+　　v 当jar文件创建时，在stderr（java版本1）或stdout（java版本2）产生冗余（verbose）输出。报告添加到jar的文件名录。 
+　　0 (zero)指明不要压缩。 
+　　M 指明不要产生默认的manifest文件。 
+　　m 添加手工已编制好的manifest文件： 
+　　\>jar cmf existing-manifest jar-file input-file(s) 
+　　-C 在操作过程中转变目录（仅对java版本2）。 
+　　*/ 
+　　/* 
+　　一个例子。 
+　　假设，如下目录结构（windows下）： 
+　　TicTacToe\TicTacToe.class （文件） 
+　　TicTacToe\audio （子目录，该层下全是au文件） 
+　　TicTacToe\images （子目录，该层下全是gif文件） 
+
+　　如果要将该东东压入jar文件TicTacToe.jar，应在TicTacToe目录中（！）执行下面命令： 
+　　TicTacToe>jar cvf TicTacToe.jar TicTacToe.class audio images 
+　　jar程序会自动将audio和images目录及其子目录一咕脑（recursively）全压入TicTacToe.jar文件，该文件将出现于　　TicTacToe\TicTacToe.jar 
+　　因为使用了verbose output开关，可以看到类似如下的输出： 
+　　adding: TicTacToe.class (in=3825) (out=2222) (deflated 41%) 
+　　adding: audio/ (in=0) (out=0) (stored 0%) 
+　　adding: audio/beep.au (in=4032) (out=3572) (deflated 11%) 
+　　adding: audio/ding.au (in=2566) (out=2055) (deflated 19%) 
+　　adding: audio/return.au (in=6558) (out=4401) (deflated 32%) 
+　　adding: audio/yahoo1.au (in=7834) (out=6985) (deflated 10%) 
+　　adding: audio/yahoo2.au (in=7463) (out=4607) (deflated 38%) 
+　　adding: images/ (in=0) (out=0) (stored 0%) 
+　　adding: images/cross.gif (in=157) (out=160) (deflated -1%) 
+　　adding: images/not.gif (in=158) (out=161) (deflated -1%) 
+
+　　如果： TicTacToe>jar cvf0 TicTacToe.jar TicTacToe.class audio images 则表示只备份不压缩。 
+　 
+　　如果该目录内全是需要jar掉的文件及其相应目录结构： TicTacToe>jar cvf TicTacToe.jar * 是比较简洁的写法。 
+
+　　如果不特别使用开关m或M，默认的manifest文件将产生于 META-INF/MANIFEST.MF 
+
+　　继承了GZIP的特点，-C开关用于跳到某目录，以改变所存入jar文件的目录结构。多半用于将原来位于不同目录结构的文件作jar时聚合在一起。例如： 
+　　TicTacToe>jar cf ImageAudio.jar -C images . -C audio . 
+　　产生的jar文件内容和结构： 
+　　META-INF/MANIFEST.MF 
+　　cross.gif 
+　　not.gif 
+　　beep.au 
+　　ding.au 
+　　return.au 
+　　yahoo1.au 
+　　yahoo2.au 
+　　（现在假设我们images子目录下还有子目录，像这样： 
+　　TicTacToe\images\jpg 
+　　jpg子目录下还有一些*.jpg文件那以上命令的结果应该是： 
+　　META-INF/MANIFEST.MF 
+　　jpg/AMAKUSA.jpg 
+　　jpg/UKYO.jpg 
+　　cross.gif 
+　　not.gif 
+　　beep.au 
+　　ding.au 
+　　return.au 
+　　yahoo1.au 
+　　yahoo2.au 
+　　说明了-C的真正含义。 
+　　） 
+
+　　*/ 
+
+
+2.关于查看jar内容 
+
+　　\>jar tf jar-file 
+　　/* 
+　　t 开关指明jar文件的内容表（table of contents）。 
+　　f 开关指明该jar文件由命令行指出，如果不用该开关，jar则在stdin中期待一个文件名。 
+　　t和f出现的顺序无关，但是之间不能有空格。 
+　　该命令向stdout输出相应jar文件的内容表。 
+　　v 开关可以用于查看关于文件大小、最近更改日期等等详细内容。 
+
+　　*/ 
+　　/* 
+　　例子。 
+　　TicTacToe>jar tf TicTacToe.jar 
+　　将在标准输出中看到： 
+　　META-INF/MANIFEST.MF 
+　　TicTacToe.class 
+　　audio/ 
+　　audio/beep.au 
+　　audio/ding.au 
+　　audio/return.au 
+　　audio/yahoo1.au 
+　　audio/yahoo2.au 
+　　images/ 
+　　images/cross.gif 
+　　images/not.gif 
+　　注意，无论在任何操作系统下（windows、Linux或Unix）所有文件结构均以正斜杠/（forward slash）分隔。而在jar文件中的路径显示都是相对（relative）的。 
+      又例。 TicTacToe>jar tvf TicTacToe.jar 
+　　显示如下： 
+　　256 Mon Apr 20 10:50:28 PDT 1998 META-INF/MANIFEST.MF 
+　　3885 Mon Apr 20 10:49:50 PDT 1998 TicTacToe.class 
+　　0 Wed Apr 15 16:39:32 PDT 1998 audio/ 
+　　4032 Wed Apr 15 16:39:32 PDT 1998 audio/beep.au 
+　　2566 Wed Apr 15 16:39:32 PDT 1998 audio/ding.au 
+　　6558 Wed Apr 15 16:39:32 PDT 1998 audio/return.au 
+　　7834 Wed Apr 15 16:39:32 PDT 1998 audio/yahoo1.au 
+　　7463 Wed Apr 15 16:39:32 PDT 1998 audio/yahoo2.au 
+　　0 Wed Apr 15 16:39:44 PDT 1998 images/ 
+　　157 Wed Apr 15 16:39:44 PDT 1998 images/cross.gif 
+　　158 Wed Apr 15 16:39:44 PDT 1998 images/not.gif 
+
+　　*/ 
+
+3. 释放文件 
+
+　　\>jar xf jar-file [archived-file(s)] 
+　　/* 
+　　x 开关是“释放文件”的标志 
+　　f 开关指明是由命令行提供待释放jar文件的文件名，而不是stdin 
+　　jar-file 可以是一个带有路径的文件 
+　　[archived-file(s)] 指出期待释放的内容，如果略去这个参数，则将jar-file中的内容完全释放。 
+　　释放之后，原jar文件保持不变。 
+　　注意，当释放文件时，jar会覆盖目标目录下同名的文件（但之下不同名的目录和文件不会被洗掉（——覆盖的原则！））。 
+　　*/ 
+　　/* 
+　　例子。 
+　　TicTacToe>jar xf TicTacToe.jar TicTacToe.class images/cross.gif 
+　　该命令做两件事情： 
+　　在当前目录下产生一个TicTacToe新的拷贝。 
+　　在当前目录下产生子目录images，并在其下产生一个cross.gif新的拷贝。如果该目录已经存在，则只作后一个动作。 
+　　可以用命令： 
+　　TicTacToe>jar xf TicTacToe.jar 
+　　释放整个TicTacToe.jar文件。 
+　　*/ 
+
+4.jar归档和相应描述文件（manifest file） 
+
+　　jar归档实现多种功能，例如electronic signing, version control, package sealing, extensions。其中的　　　　　　manifest文件发生了不可替代的作用。 
+　　manifest像一个归档内容清单。（The manifest is a special file that can contain information about the files 　　packaged in a JAR file. ） 
+　　manifest文件的默认和定制方法前面已经描述，下面看内容。 
+　　默认的MANIFEST.MF（java版本2制造）： 
+　　———————————— 
+　　Manifest-Version: 1.0 
+　　———————————— 
+　　可见，manifest文件的表项形式为"header: value"，由默认产生的manifest文件表项（entry）只包括描述manifest自身的一项（版本）。 
+　　java版本1和java版本2都对应相同的manifest标准（manifest版本一）。但是，两个java版本的jar产生的默认manifest文件却是不同的。如果是java版本1，则产生MANIFEST.MF如下形式： 
+　　———————————— 
+　　Manifest-Version: 1.0 
+　　Name: java/math/BigDecimal.class 
+　　SHA1-Digest: TD1GZt8G11dXY2p4olSZPc5Rj64= 
+　　MD5-Digest: z6z8xPj2AW/Q9AkRSPF0cg== 
+
+　　Name: java/math/BigInteger.class 
+　　SHA1-Digest: oBmrvIkBnSxdNZzPh5iLyF0S+bE= 
+　　MD5-Digest: wFymhDKjNreNZ4AzDWWg1Q== 
+　　———————————— 
+　　　可见，java版本1的MANIFEST.MF对jar包中每一个文件都有所描述，表项包括文件的路径名（pathname）和摘要值（digest value，指由文件内容产生的某种哈希密文）。——注意Name和Digest之间没有空行。 这里的摘要值一般用于对jar文件签名（sign），但由于它不是总是很有必要，于是在java版本2中将其省掉了。（也是为了更好地将功能结构化。） 
+
+　　　一言以蔽之，manifest记录什么样的文件信息完全取决于jar包的用途。（Exactly what file information is recorded in the manifest will depend on what use you intend for the JAR file.）你可以根据jar文件打算扮演的何种角色，来修改manifest文件。 
+　　如果仅仅将jar用作一种简单的压缩方式（像一种zip），则不必关心manifest文件。 
+　　manifest用作特定用途（以下仅对java版本2）： 
+　　1)java应用程序（application）以jar文件形式捆绑（bundle） 表项 Main-Class: classname 指明程序的入口（entry point）——即含有方法public static void main(String[] args){}的类。 
+　　2)下载扩展（Download Extensions） 
+　　下载扩展是指被其他jar文件的manifest文件所引用的jar文件（http://java.sun.com/docs/books/tutorial/ext/index.html）。 
+　　举典型一例，某个applet会被捆绑在一个jar文件内，该jar的manifest引用（指向）了一个或多个其他jar文件（这些文件serve as an extension(or extensions) for the purpose of that applet）。当然，扩展之间可以相互引用。 下载扩展由引用者的相应manifest文件以Class-Path为头部（header field）的表项指明，例如： 
+　　Class-Path: servlet.jar infobus.jar acme/beans.jar 
+　　注意，The URLs in the Class-Path header are given relative to the URL of the JAR file of the applet or application. 
+　　3)包密封（Package Sealing） 
+　　这是指定义在同一个package内的所有的class都打包在同一个jar文件内。这样，可以保证版本一致性（version consistency）或者作为一种安全措施（security measure）——避免默认的package可视性（当前目录.加入classpath之后）。 
+　　Seal一个包，格式如此： 
+———————————————— 
+　　Name: myCompany/myPackage/ 
+　　Sealed: true 
+———————————————— 
+　　Name头（head）的值（value）指明该包对应的相对路径名（代码中"package myCompany.myPackage;"）。（注意，它以/结尾以区别于文件名）。 
+　　4)包版本控制（Package Versioning） 参见http://java.sun.com/products/jdk/1.2/docs/guide/versioning/spec/VersioningSpecification.html#PackageVersioning 一个例子。 
+———————————————— 
+　　Name: java/util/ 
+　　Specification-Title: "Java Utility Classes" 
+　　Specification-Version: "1.2" 
+　　Specification-Vendor: "Sun Microsystems, Inc.". 
+　　Implementation-Title: "java.util" 
+　　Implementation-Version: "build57" 
+　　Implementation-Vendor: "Sun Microsystems, Inc." 
+———————————————— 
+　　关于manifest格式的specification： 
+　　http://java.sun.com/products/jdk/1.2/docs/guide/jar/manifest.html 
+
+　　下面有关jar工具的m开关的说明。 
+　　如果要使用m开关，则先要准备一个用作manifest的文本文件。m开关的意思是合并（merge），作用是将该文件的内容（！）附加在默认的（或者已有的）manifest之上（注意不是替换！）。 
+　　\>jar cmf manifest-addition jar-file input-file(s) 
+　　\>jar cfm jar-file manifest-addition input-file(s) 
+　　产生同样的结果，注意开关和参数的对应关系！ 
+
+　　一个例子，用以说明jar、manifest和package的seal…… 假设jar文件准备包含下列package（注意package没有进行jar时和目录是对应的）： 
+　　myCompany/firstPackage/ 
+　　myCompany/secondPackage/ 
+　　myCompany/thirdPackage/ 
+　　myCompany/fourthPackage/ 
+　　如果要seal了firstPackage和thirdPackage，应该写一个这样的manifest： 
+sealInfo 
+———————————————— 
+　　Name: myCompany/firstPackage/ 
+　　Sealed: true 
+
+　　Name: myCompany/thirdPackage/ 
+　　Sealed: true 
+———————————————— 
+　　注意，该文本文件需要以一对回车换行结束，否则难通过parse程序。 设当前目录为myCompany的父目录。则， >jar cmf sealInfo myJar.jar myCompany 在myJar.jar中产生了如下的manifest文档： 
+———————————————— 
+　　Manifest-Version: 1.0 
+
+　　Name: myCompany/firstPackage/ 
+　　Sealed: true 
+
+　　Name: myCompany/thirdPackage/ 
+　　Sealed: true 
+———————————————— 
+　　其中，第一行来自默认manifest，其他来自手工添加。 
+
+5.更新jar文件 
+
+　　java版本2的u开关用于更新已存在的jar文件（通过修改他的manifest或者增添新的文件）。 
+　　\>jar uf jar-file input-file(s) 
+　　u开关指明更新一个已存在的jar文件。 
+　　input-file(s)是将要add进jar-file里的文件列表，以空格分隔。 
+　　用这个命令，jar-file里同名同路径的文件将被覆盖。 
+　　正如前面创建jar文件所述，可以用-C开关转换路径。 
+　　\>jar umf manifest1 jar-file 
+　　该命令归并manifest1到jar-file的manifest文件中。 
+
+　　一个例子。 TicTacToe.jar有如下内容： 
+　　META-INF/MANIFEST.MF 
+　　TicTacToe.class 
+　　audio/ 
+　　audio/beep.au 
+　　audio/ding.au 
+　　audio/return.au 
+　　audio/yahoo1.au 
+　　audio/yahoo2.au 
+　　images/ 
+　　images/cross.gif 
+　　images/not.gif 
+　　设将要向jar归档中加入images/new.gif，应该在images的父目录中执行： TicTacToe>jar uf TicTacToe.jar images/new.gif 则修改过的jar归档应该有如下内容：
+      META-INF/MANIFEST.MF　　 
+　　TicTacToe.class 
+　　audio/ 
+　　audio/beep.au 
+　　audio/ding.au 
+　　audio/return.au 
+　　audio/yahoo1.au 
+　　audio/yahoo2.au 
+　　images/ 
+　　images/cross.gif 
+　　images/not.gif 
+　　images/new.gif 
+　　如果， TicTacToe>jar uf TicTacToe.jar -C images new.gif 该命令会在添加new.gif文件前先转到目录images，归档结果就不会将images路径包括进去了。结果： 
+　　META-INF/MANIFEST.MF 
+　　TicTacToe.class 
+　　audio/ 
+　　audio/beep.au 
+　　audio/ding.au 
+　　audio/return.au 
+　　audio/yahoo1.au 
+　　audio/yahoo2.au 
+　　images/ 
+　　images/cross.gif 
+　　images/not.gif 
+　　new.gif 
+　　最后，假设想更改TicTacToe.jar的manifest文件（添加一些版本和销售商信息），应该先准备如下文本文档： 
+　　versionInfo 
+———————————————— 
+　　Name: TicTacToe.class 
+　　Implementation-Title: "TicTacToe demo" 
+　　Implementation-Version: "build57" 
+　　Implementation-Vendor: "Sun Microsystems, Inc." 
+———————————————— 
+　　然后， 
+　　TicTacToe>jar umf versionInfo TicTacToe.jar 
+　　更新就搞定啦。 
+
+6.执行以jar归档的软件 
+
+　　三种情况： 
+　　1）jar归档了applet，被浏览器浏览 
+　　2）jar归档了application，在命令行调用 
+　　3）jar包含了将被用以扩展（extension）的代码 
+　　（前两种情况将在下面描述，3）参见URL： http://java.sun.com/docs/books/tutorial/ext/index.html） 
+　 
+　　对于applet，html中如下例： 
+———————————————— 
+　　<applet code=TicTacToe.class width=120 height=120> </applet> 
+———————————————— 
+　　如果该class在jar归档内，用参数archive： 
+———————————————— 
+　　applet code=TicTacToe.class archive="TicTacToe.jar" width=120 height=120> </applet> 
+———————————————— 
+　　如果该jar和该html不在同一目录下，而在当前目录的子目录applets下， 
+———————————————— 
+　　<applet code=TicTacToe.class archive="applets/TicTacToe.jar" width=120 height=120> </applet> 
+———————————————— 
+　 
+　　对于application，在java版本1的平台上。可以使用jre工具： \>jre -cp app.jar MainClass -cp 开关将app.jar预添加到系统classpath中。 　 
+　　如果是在java版本2的平台上。 \>java -jar jar-file 注意，java版本2之前的java命令不支持-jar开关。 
+　　当然，runtime environment必需知道程序的入口点（Mainclass）。前面说过，这是manifest的任务了。在manifest中： Main-Class: classname 
+　　例如： 
+———————————————— 
+　　Main-Class: HelloWorld 
+———————————————— 
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+jdk Md5
+
+package com.handson.testonline.util;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+public class Md5 {
+ public static String Md5(String plainText) {
+  StringBuffer buf = new StringBuffer("");
+  try {
+   MessageDigest md = MessageDigest.getInstance("MD5");
+   md.update(plainText.getBytes());
+   byte b[] = md.digest();
+   int i;
+   for (int offset = 0; offset < b.length; offset++) {
+    i = b[offset];
+    if (i < 0)
+     i += 256;
+    if (i < 16)
+     buf.append("0");
+    buf.append(Integer.toHexString(i));
+   }
+  } catch (NoSuchAlgorithmException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  }
+  return buf.toString();
+ }
+}
+
+ 
+ md5使用
+ package com.handson.md5test;
+ import java.security.MessageDigest;
+ import sun.misc.BASE64Encoder;
+ public class Md5 {
+  // 利用MD5加密字符串
+  public static String EncoderByMd5(String str) throws Exception {
+  // 算法
+  MessageDigest md5 = MessageDigest.getInstance("MD5");
+  BASE64Encoder base64en = new BASE64Encoder();
+  // 加密后的字符串
+  String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
+  return newstr;
+ }
+ // 验证密码是否正确
+ public static boolean checkpw(String newpw, String oldpw) throws Exception {
+  if (EncoderByMd5(newpw).equals(oldpw))
+   return true;
+  else
+   return false;
+ }
+ public static void main(String[] args) {
+  try {
+   String pswd = Md5.EncoderByMd5("← 夕※炎 →");
+   System.out.println(pswd);
+  } catch (Exception e) {
+   e.printStackTrace();
+  }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,239 @@
+
+study
+java集合框架
+
+ArrayList:适合在列表尾部添加和删除元素，支持随机访问。
+LinkedList:适合频繁的从列表中间位置添加和删除元素，适于顺序访问。 linkedList.removeLast();
+list.listIterator():返回一个ListIterator迭代器。
+list.listIterator(intStartIndex):返回一个ListIterator迭代器，开始位置为intStartIndex。
+list.subList(intFrom,intTo):返回一个List子集包含from不包含to。
+通用集合Collection 
+Collection collection=new ArrayList();
+ Iterator it=collection.iterator(); while(it.hasNext）{ 
+    system.out.print(it.next);
+  }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+成员介绍
+ 
+ 
+
+重量级家族成员
+ 
+
+•集合中的元素必须具有唯一确定性。 
+•集合分类：有序集，无序集，映射。 
+•Collection——集合框架的根，位于集合框架的顶层。 
+•有序集—— List ：必须按特定顺序容纳元素。 
+•无序集—— Set ：不能包含重复元素。 
+•映    射——Map: 一组 key-value （键--值）对。 
+–Map的键和值都分别对应一个collection。 
+–键不能重复。 
+–Map可返回一个包含键值的Set，一个包含值的List,，或者包含key-value 对的Set。 
+–和数组类似，Map可以扩充到多个‘维‘——只需在一个Map里包含其他Map。 
+•工具类——Collections和Arrays 
+–这是JCF里面功能强大的工具，这两个类提供了封装器实现（Wrapper Implementations）、数据结构算法和数组相关的应用。 
+•比较接口——Comparable, Comparator
+ 
+ 
+Arrays提供了操作数组的各种方法（算法）
+binarySearch ：对数组进行折半查找
+fill ：对数组进行填充。
+Equals：判断两数组是否相等。
+Sort：排序
+List  asList(Object[ ] a) :将数组转换为线性表。
+ 
+ 
+Collections数据结构算法——静态方法：
+binarySearch：折半查找。
+sort：排序
+max(Collection coll) ：根据自然顺序查找最大元素。
+reverse：将线性表进行逆序操作
+swap：交换一个线性表中两个元素的位置。
+“封装器”（Wrapper）：
+unmodifiableXXX：集合只读化。
+synchronizedXXX：集合同步化。
+这里XXX代表六种基本集合接口：Collection、List、Map、Set、SortedMap和SortedSet。
+ 
+ 
+ 
+
+Comparable实现java.lang.Comparable接口，可以实现类的按‘自然顺序’的比较方法。
+只有一个方法：
+int compareTo(Object o): 
+如果要使实例对象排在参数对象前，返回负值；
+如果两个对象在排序中位置相同，则返回0，
+如果位于参数对象o后面，则返回正值.
+ 
+
+Comparator对于那些没有实现Comparable接口的类、或者虽实现Comparable,但不符合自己的排序需求，可以通过Comparator接口来定义自己的比较方式。 
+Strategy设计模式
+属于设计模式中 对象行为型模式
+主要是定义一系列的算法,把这些算法一个个封装成单独的类.
+方法：
+int compare(Object o1, Object o2）
+boolean equals(Object obj): 判断对象obj是否和比较器相等。
+ 
+
+Collection接口是一组允许重复的对象。用于表示任何对象或元素组。
+想要尽可能以常规方式处理一组元素时，就使用这一接口
+通用方法
+boolean add(Object o)
+boolean remove(Object o)
+boolean contains(Object a)
+boolean equals(Object a)
+Iterator iterator() 
+int size() 
+void clear() 
+ Object[ ]  toArray() 
+ Object[ ]  toArray(Object[] a) 
+AbstractCollection实现了除iterator,size之外的所有方法。
+ 
+
+Collection 接口的iterator()方法返回java.util.Iterator接口的一个实例。
+Iterator接口方法能从头到尾循环遍历一个Collection对象中的实例，并能够安全的删除iterator(游标)所表示的元素。
+迭代器是 故障快速修复（fail-fast）的。
+Collection c = new ArrayList();
+Iterator it = c.iterator();
+c.add(“1");  
+String s = (String)it.next();
+ 
+
+List 接口是允许重复项的有序集合。 
+该接口添加了面向位置的操作。 
+void add(int index, Object element)
+Object get(int index)
+int indexOf(Object o) 
+ List 接口可以制造ListIterator对象，能够用它在List中间插入、删除对象，沿两个方向遍历List，并处理集合的子集。
+ListIterator listIterator() : 用来访问列表中的元素
+ListIterator listIterator(int index) : 用来从指定位置index开始访问列表中的元素
+List subList(int fromIndex, int toIndex) ：返回从fromIndex（包含）到toIndex（不包含）范围中各个元素的列表视图
+ 
+
+ListIterator 接口继承 Iterator 接口以支持添加或更改底层集合中的元素，还支持双向访问。
+void add(Object o): 将对象o添加到当前位置的前面
+void set(Object o): 用对象o替代next或previous方法访问的上一个元素。如果上次调用后列表结构被修改了，将抛出IllegalStateException异常。
+boolean hasPrevious(): 判断向后迭代时是否有元素可访问
+Object previous()：返回上一个对象
+int nextIndex(), int previousIndex().
+如何从后向前遍历一个列表的元素? 
+在遍历开始之前把ListIterator定位于列表最后一个元素之后 ListIterator iter = aList.listIterator(aList.size());
+while (iter.hasPrevious())
+  System.out.println(iter.previous().toString());
+}
+ 
+
+ArrayList：
+ArrayList 类是 List 接口的可变大小数组实现。
+ArrayList() :
+Constructs an empty list with an initial capacity of ten. 
+ArrayList(Collection c) 
+ArrayList(int initialCapacity)
+一般用法：List list = new ArrayList(); list.add(myObject); 
+能进行快速的随机访问，但在列表中间插入、删除元素较慢。
+ListIterator只适用于反向遍历ArrayList的场合。若用它作插入、删除，则系统开销较大。
+ 
+LinkedList
+双向链表。
+对顺序访问进行了优化，随机访问速度较慢。
+适用于频繁在列表中间添加和除去元素。
+适宜制造并使用ListIterator。
+LinkedList类添加了一些处理列表两端元素的方法。 
+addFirst(),addLast(),removeFirst(),removeLast().
+可以使用LinkedList实现栈和队列。
+Queue实现——先进先出 (FIFO) 
+    LinkedList queue = new LinkedList(collection);
+    queue.addFirst(newElement);
+    Object anElement = queue.removeLast();
+一端放，另一端取。
+Stack实现——后进先出 (LIFO)
+   LinkedList  stack = new LinkedList(aCollection);
+   stack.addFirst(newElement);
+   Object anElement= stack.removeFirst();
+   此端放，此端取。
+ 
+Set 接口继承 Collection 接口，没有增加额外的方法。只不过行为不同。
+不允许集合中存在重复项，Set实现类依赖添加的对象的 equals()方法来检查唯一性。
+Set接口不保证用哪种顺序存贮对象。
+由于Set需要判断以什么顺序存储对象——自定义类必须实现Comparable接口，并定义compareTo方法。
+ 
+
+HashSet 
+为优化查询速度而设计的Set.
+使用了专为快速查找而设计的散列函数。
+自定义类必须同时实现equals()和hasCode()方法。
+TreeSet 
+实现SortedSet接口,是一个有序的Set,其底层是一棵树。
+采用了红黑树的数据结构。
+LinkedHashSet
+内部使用链表的Set，既有HashSet的查询速度，又能保存元素插入顺序。
+用Iterator遍历时，按插入顺序进行访问。
+ 
+
+Map接口描述了从键(不重复)到值的映射。
+Map.Entry接口代表一个“元素对”, 通过Map的entrySet()方法可以得到这样一个由“元素对”组成的Set对象。  
+重要方法
+添加、删除操作：
+ Object put(Object key, Object value)，
+ Object remove(Object key）
+查询操作：
+ Object get(Object key)
+ boolean containsKey(Object key）
+ boolean containsValue(Object value）。　
+视图操作 ：处理映像中键/值对组
+Set keySet(): 返回映像中所有关键字的视图集
+Collection values():返回映像中所有值的视图集
+Set entrySet(): 返回Map.Entry对象的视图集，即映像中的关键字/值对
+ 
+HashMap
+性能是Map所面临的一大问题
+采用hash code的特殊值来进行查找，性能有了急剧提高。
+Hash（散列）——一种算法。
+如果使用自定义类作为HashMap中的值（key），必须覆盖Object类的equals()和hashCode()方法。
+使用hashcode()方法来进行get操作。
+HashMap() :  
+default initial capacity (16) and the default load factor (0.75).
+初始容量，负载因子
+HashMap(int initialCapacity, float loadFactor) 
+如何遍历存贮在HashMap中的Key?
+怎样写一个检测java Random类的随机数生成的程序 ?
+ 
+TreeMap
+实现SortedMap接口（其中定义了Comparator comparator( )方法， 若为自然顺序，则返回 null ）,创建有序树.
+键和值按顺序（根据Comparable或Comparator)排列。
+subMap()方法得到一棵子树。
+LinkedHashMap
+用链表保存内部顺序
+使用Iterator遍历时，按插入顺序或最先使用顺序进行访问。
+LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) 
+很像HashMap,除了使用Iterator时速度更快，其余情况下比HashMap慢。
+ 
+
+Enumeration vs. Iterator
+    Enumeration是一个传统的集合遍历工具，在新的JCF中使用的是Iterator，Iterator同样具有遍历功能，还包含一个remove()方法来删除当前得到的元素。
+ 
+Vector vs. ArrayList
+    Vector和ArrayList是数组在JCF中的体现. Vector和ArrayList就是一种可以动态增长的数组。Vector是历史实现，它和ArrayList的主要区别在于，Vector是同步集合（或者说是线程安全的），但ArrayList并不是同步的，由于同步需要花一定的代价，所以ArrayList要比Vector的存取访问效率更高。
+ 
+
+Dictionary vs. Map
+    Dictionary是一个现在已经被标记为deprecated的类，实现了老版本中的映射功能，现在已经完全被Map取代。它们的区别是：Dictionary不key和value不能为null，但Map却允许空的关键字和值，这一点直接影响到它们的后代：Hashtable和HashMap。
+Hashtable vs. HashMap
+    Hashtable是Dictionary的子类，属于历史实现，而HashMap是Map的子类，是新实现。它们的区别除了上面所说的key和value是否可以为空之外，也有同步的差别，Hashtable是同步的，但HashMap不是。
+ 
+ 
+ 
+同步 vs. 不同步
+   从上面的描述中我们似乎可以得出这么一个印象：历史实现好像都是同步的，但新实现中却没有。需要同步操作的理由是，可能存在多个线程对同一个集合进行操作的情况：譬如一个线程正在对某集合进行遍历，但与此同时，另一个线程又在对该集合进行插入或删除，那么第一个线程的遍历结果将是不可预测的。对于同步集合，它将会抛出一个ConcurrentModificationException异常.
+JCF则采用 “fail-fast”机制。
+对比一下Vector和ArrayList的源代码就可以发现Vector的很多方法都是有synchronized关键字修饰的，但ArrayList没有。 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 

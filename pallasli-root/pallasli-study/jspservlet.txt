@@ -1,0 +1,2193 @@
+
+java核心技术学习
+web.xml
+
+<servlet>
+      <servlet-name>
+             HelloWorldServlet
+      </servlet-name>
+      <servlet-class>
+             handson.HelloWorldServlet
+      </servlet-class>
+</servlet>
+<servlet-mapping>
+      <servlet-name>HelloWorldServlet</servlet-name>
+      <url-pattern>/</url-pattern>
+</servlet-mapping> <filter>
+  <filter-name>character</filter-name>
+  <filter-class>com.handson.filter.CharacterFilter</filter-class>
+  <init-param>
+   <param-name>encoding</param-name>
+   <param-value>UTF-8</param-value>
+  </init-param>
+ </filter>
+ <filter-mapping>
+  <filter-name>character</filter-name>
+  <url-pattern>*.html</url-pattern>
+ </filter-mapping>
+ <filter-mapping>
+  <filter-name>character</filter-name>
+  <url-pattern>*.jsp</url-pattern>
+ </filter-mapping>
+ <filter>
+  <filter-name>login</filter-name>
+  <filter-class>com.handson.filter.LoginFilter</filter-class>
+ </filter>
+ <filter-mapping>
+  <filter-name>login</filter-name>
+  <url-pattern>*.jsp</url-pattern>
+ </filter-mapping>
+ <filter-mapping>
+  <filter-name>login</filter-name>
+  <url-pattern>*.html</url-pattern>
+ </filter-mapping>
+ <error-page>
+<error-code>404</error-code>
+<location>/e404.jsp</location>
+</error-page>
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+forward()与sendRedirect()
+
+区分对待forward()与sendRedirect()方法
+request.getRequestDispatcher(“…”).forward()
+forward方法是将请求数据派发到另外一个web页面，因此另外一个jsp可以通过request.getAttribute()方法获取到属性值。
+response.sendRedirect(“…..”);
+sendRedirect方法则是页面重定向，它是通知客户端进行页面跳转。我们可以形象的看做服务器告诉浏览器模拟点击某个“超链接”，从而跳转到其他web页面，原有的请求内容因此全部丢失。因此sendRedirect()方法不能通过request.getAttribute()获取到原先的请求属性值。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+过滤器
+
+public class MyFilter implements Filter {
+ public void destroy() {
+  // TODO Auto-generated method stub
+ }
+ public void doFilter(ServletRequest arg0, ServletResponse arg1,
+   FilterChain arg2) throws IOException, ServletException {
+  HttpServletRequest request=(HttpServletRequest)arg0;
+  String addr=request.getRequestURI();
+  String reqAddr=addr.substring(addr.lastIndexOf("/")+1);
+  if(((reqAddr.equals("forward.jsp"))||
+    (reqAddr.equals("addLog.jsp"))||
+    (reqAddr.equals("myMainPage.jsp"))||
+    (reqAddr.equals("manageLog.jsp")))&&
+    request.getSession().getAttribute("user_name")==null){ 
+   request.getRequestDispatcher("/myLog.jsp").forward(arg0, arg1);
+  }
+  else{
+   arg2.doFilter(arg0, arg1);
+  }
+ }
+ public void init(FilterConfig arg0) throws ServletException {
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+预处理
+
+public class Myprocessor extends RequestProcessor{
+ public boolean processPreprocess(HttpServletRequest request, HttpServletResponse response){
+  try {
+   request.setCharacterEncoding("utf-8");
+   
+  } catch (UnsupportedEncodingException e) {
+   e.printStackTrace();
+  }
+  return true;
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+缓存
+
+浏览器缓存对jsp,servlet来说都有时候是很致命的。以前用AJAX实现一个进度条，每隔1秒向服务器询问一次进度，服务器返回当前的百分比，就一个数字。开始的时候没有禁止缓存，结果进度条老是不动。我在自己的电脑上测试还没发现这个问题，因为我在internet选项了选择了“每次访问此页时检查”，而默认选项是“自动”，其实就是允许缓存。禁止缓存可以在HTML中写，也可以在http header里面写，但对于非HTML页面，就只有后面那种选择了，在servlet里可以这样写：
+response.setHeader("Pragma","No-Cache");
+response.setHeader("Cache-Control","No-Cache");
+response.setDateHeader("Expires",0);
+ 必须三个都写上才能应付各种浏览器。似乎大小写敏感（不确定，但上面这种肯定适用于IE 5,6）。还有Expires那个值有人说是-1。
+  response.setHeader("Cache-Control", "no-store");
+  response.setHeader("Program", "no-cache");
+  response.setDateHeader("Expirse", 0);
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+编码过滤
+
+<filter>
+ <filter-name>FilterDemo1</filter-name>
+ <filter-class>demo.filter.FilterDemo1</filter-class>
+  <init-param>
+   <param-name>encoding</param-name>
+   <param-value>GB2312</param-value>
+  </init-param>
+</filter>
+<filter-mapping>
+ <filter-name>FilterDemo1</filter-name>
+ <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+public class CharacterFilter implements Filter {
+ String encoding = "";
+ public void destroy() {
+  // TODO Auto-generated method stub
+ }
+ public void doFilter(ServletRequest arg0, ServletResponse arg1,
+   FilterChain chain) throws IOException, ServletException {
+  // TODO Auto-generated method stub
+  
+   HttpServletRequest request = (HttpServletRequest)arg0;
+   HttpServletResponse response = (HttpServletResponse)arg1;
+   System.out.println(request.getRequestURL());
+   request.setCharacterEncoding(encoding);
+   response.setContentType("text/html;charset=" + encoding);
+   chain.doFilter(request, response);
+ }
+ public void init(FilterConfig config) throws ServletException {
+  // TODO Auto-generated method stub
+  encoding = config.getInitParameter("encoding");
+  System.out.println("CharacterFilter已被初始化！！！");
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+ip过滤
+
+public void doFilter(ServletRequest arg0, ServletResponse arg1,
+   FilterChain chain) throws IOException, ServletException {
+  // TODO Auto-generated method stub
+  HttpServletRequest request = (HttpServletRequest)arg0;
+  HttpServletResponse response = (HttpServletResponse)arg1;
+  String uri = request.getServletPath();
+  System.out.println("本次访问的ServletPath为" + uri);
+  List list = new ArrayList();
+  list.add("/login/login.html");
+  list.add("/login/login.jsp");
+  if(list.contains(uri)){
+   chain.doFilter(request, response);
+   return;
+  }
+  
+  String username = (String)request.getSession().getAttribute("username");
+  if(username == null){
+   response.getWriter().println("You Must Login!!!");
+  }else{
+   chain.doFilter(request, response);
+  }
+  
+ }
+ **********************黑名单*******************************************
+  <context-param>
+   <param-name>blackIP</param-name>
+   <param-value>192.168.0.1;202.99.160.68;255.255.255.0</param-value>
+  </context-param>
+String ips = this.getServletContext().getInitParameter("blackIP");
+ String[] ip = ips.split(";");
+ 
+ List blackList = new ArrayList();
+ for(int i = 0 ; i < ip.length ; i++){
+  blackList.add(ip[i]);
+ }
+ 
+ String clientIP =  request.getRemoteAddr();
+ if(blackList.contains(clientIP)){
+ }else{
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+访问权限过滤
+
+元素名
+必需/可选
+描述
+filter-name
+必需
+给过滤器分配一个选定的名字
+display-name
+可选
+过滤器别名
+description
+可选
+描述过滤器功能，及其它注释
+filter-class
+必需
+指定过滤器实现类的完全限定名
+init-param
+可选
+定义可利用FilterConfig的getInitParameter方法读
+取的初始化参数。单个过滤器元素可包含多个init-
+param元素
+<filter>
+  <filter-name>过滤器名称</filter-name>
+  <filter-class>实际类</filter-class>
+  <init-param>
+  <param-name>参数名</param-name>
+  <param-value>参数值</param-value>
+  </init-param>
+</filter>
+
+我们要保护的页面是admin/index.jsp，为此我们在web.xml进行如下配置。
+<filter>
+    <filter-name>SecurityFilter</filter-name>
+    <filter-class>anni.SecurityFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>SecurityFilter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+</filter-mapping>
+        
+定义SecurityFilter过滤器，让它过滤匹配/admin/*的所有请求，这就是说，对/admin/路径下的所有请求都会接受SecurityFilter的检查，那么SecurityFilter里到底做了些什么呢？
+public void doFilter(ServletRequest request,
+        ServletResponse response,
+        FilterChain chain)
+        throws IOException, ServletException {
+    HttpServletRequest req = (HttpServletRequest) request;
+    HttpServletResponse res = (HttpServletResponse) response;
+    HttpSession session = req.getSession();
+    if (session.getAttribute("username") != null) {
+        chain.doFilter(request, response);
+    } else {
+        res.sendRedirect("../failure.jsp");
+    }
+}
+        
+首先要将ServletRequest和ServletResponse转换成HttpServletRequest和HttpServletResponse，因为Filter本来设计成为多种协议服务，http协议仅仅是其中一部分。不过我们接触到的也只有http，而且也只有转换成对应HttpServletRequest和HttpServletResponse才能进行下面的session操作和页面重定向。
+得到了http请求之后，可以获得请求对应的session，判断session中的username变量是否为null，如果不为null，说明用户已经登录，就可以调用doFilter继续请求访问的资源。如果为null，说明用户还没有登录，禁止用户访问，并使用页面重定向跳转到failure.jsp页面显示提示信息。
+session中的username实在登录的时候设置进去的，值就是登录用户使用的用户名，详细代码可以参考07-02/WEB-INF/src/LoginServlet.java，登录和注销都写成了servlet并映射到/login.do和/logout.do这两个请求路径上。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+监听
+
+/**  <listener>
+*   <listener-class>SampleListener</listener-class>
+*  </listener>
+**/
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.ServletRequestAttributeEvent;
+import javax.servlet.ServletRequestAttributeListener;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+public class SampleListener implements ServletRequestListener,
+  ServletRequestAttributeListener, HttpSessionListener,
+  HttpSessionAttributeListener, ServletContextListener {
+ public void requestDestroyed(ServletRequestEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("请求已被销毁！！！");
+ }
+ public void requestInitialized(ServletRequestEvent event) {
+  // TODO Auto-generated method stub
+  HttpServletRequest request = (HttpServletRequest) event
+    .getServletRequest();
+  System.out.println("请求被创建，用户访问的URL：" + request.getRequestURL());
+ }
+ public void attributeAdded(ServletRequestAttributeEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("新增请求属性" + event.getName() + ":" + event.getValue());
+ }
+ public void attributeRemoved(ServletRequestAttributeEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("移除请求属性" + event.getName() + ":" + event.getValue());
+ }
+ public void attributeReplaced(ServletRequestAttributeEvent event) {
+  // TODO Auto-generated method stub
+  HttpServletRequest request = (HttpServletRequest) event
+    .getServletRequest();
+  System.out.println("替换请求属性" + event.getName() + ":" + event.getValue()
+    + "->" + request.getAttribute(event.getName()));
+ }
+ public void sessionCreated(HttpSessionEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("会话被创建,SessionId:" + event.getSession().getId());
+ }
+ public void sessionDestroyed(HttpSessionEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("会话被销毁");
+ }
+ public void attributeAdded(HttpSessionBindingEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("新增会话属性" + event.getName() + ":" + event.getValue());
+ }
+ public void attributeRemoved(HttpSessionBindingEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("移除会话属性" + event.getName() + ":" + event.getValue());
+ }
+ public void attributeReplaced(HttpSessionBindingEvent event) {
+  // TODO Auto-generated method stub
+  System.out.println("替换会话属性" + event.getName() + ":" + event.getValue()
+    + "->" + event.getSession().getAttribute(event.getName()));
+ }
+ public void contextDestroyed(ServletContextEvent arg0) {
+  // TODO Auto-generated method stub
+  System.out.println("ServletContext被销毁");
+ }
+ public void contextInitialized(ServletContextEvent arg0) {
+  // TODO Auto-generated method stub
+  System.out.println("ServletContext被创建");
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+cookie
+
+//读
+public void doPost(HttpServletRequest request, HttpServletResponse response)
+   throws ServletException, IOException {
+  request.setCharacterEncoding("UTF-8");
+  response.setContentType("text/html;charset=utf-8");
+  Cookie[] cs = request.getCookies();
+  if(cs == null){
+   response.sendRedirect("index.html");
+   return;
+  }
+  for(int i = 0 ; i < cs.length ; i++){
+   if(cs[i].getName().equals("nologin")){
+    String s=new String(cs[i].getValue().getBytes("ISO-8859-1"),"UTF-8");
+    response.getWriter().println(s);
+    return;
+   }
+  }
+  response.sendRedirect("index.html");
+  return;
+ }
+//写
+public void doPost(HttpServletRequest request, HttpServletResponse response)
+   throws ServletException, IOException {
+  
+  String username = request.getParameter("username");
+  String password = request.getParameter("password");
+  StringBuffer s=new StringBuffer();
+  s.append("a行号");
+  //System.out.println(s);
+  Cookie c = new Cookie("nologin" , s.toString());
+  c.setMaxAge(2*7*24*60*60);
+  response.addCookie(c);
+  response.getWriter().println("This is HomePage");
+ }
+
+Cookie是服务器发送给浏览器的体积很小的纯文本信息,用户以后访问同一个Web服务器时浏览器会把
+它们原样发送给服务器.通过让服务器读取它原先保存到客户端的信息,网站能够为浏览者提供一系列的方便
+,例如在线交易过程中标识用户身份,安全要求不高的场合避免用户重复输入名字和密码,门户网站的主页定
+制,有针对性地投放广告,等等. 
+Cookie的目的就是为用户带来方便,为网站带来增值.虽然有着许多误传,事实上Cookie并不会造成严
+重的安全威胁.Cookie永远不会以任何方式执行,因此也不会带来病毒或攻击你的系统.另外,由于浏览器一
+般只允许存放300个Cookie,每个站点最多存放20个Cookie,每个Cookie的大小限制为4 KB,因此Cookie不
+会塞满你的硬盘,更不会被用作"拒绝服务"攻击手段. 
+9.2 Servlet的Cookie API 
+要把Cookie发送到客户端,Servlet先要调用new Cookie(name,value)用合适的名字和值创建一个或多
+个Cookie(2.1节),通过cookie.setXXX设置各种属性(2.2节),通过response.addCookie(cookie)把
+cookie加入应答头(2.3节). 
+要从客户端读入Cookie,Servlet应该调用request.getCookies(),getCookies()方法返回一个Cookie对
+象的数组.在大多数情况下,你只需要用循环访问该数组的各个元素寻找指定名字的Cookie,然后对该
+Cookie调用getValue方法取得与指定名字关联的值,这部分内容将在2.4节讨论. 
+9.2.1 创建Cookie 
+调用Cookie对象的构造函数可以创建Cookie.Cookie对象的构造函数有两个字符串参数:Cookie名字
+和Cookie值.名字和值都不能包含空白字符以及下列字符: 
+[ ] ( ) = , " / @ : ; 
+9.2.2 读取和设置Cookie属性 
+把Cookie加入待发送的应答头之前,你可以查看或设置Cookie的各种属性.下面摘要介绍这些方法: 
+getComment/setComment 
+获取/设置Cookie的注释. 
+getDomain/setDomain 
+获取/设置Cookie适用的域.一般地,Cookie只返回给与发送它的服务器名字完全相同的服务器.使用这里的
+方法可以指示浏览器把Cookie返回给同一域内的其他服务器.注意域必须以点开始(例如
+.sitename.com),非国家类的域(如.com,.edu,.gov)必须包含两个点,国家类的域(如
+.com.cn,.edu.uk)必须包含三个点. 
+getMaxAge/setMaxAge 
+获取/设置Cookie过期之前的时间,以秒计.如果不设置该值,则Cookie只在当前会话内有效,即在用户关闭
+浏览器之前有效,而且这些Cookie不会保存到磁盘上.参见下面有关LongLivedCookie的说明. 
+getName/setName 
+获取/设置Cookie的名字.本质上,名字和值是我们始终关心的两个部分.由于HttpServletRequest的
+getCookies方法返回的是一个Cookie对象的数组,因此通常要用循环来访问这个数组查找特定名字,然后用
+getValue检查它的值. 
+getPath/setPath 
+获取/设置Cookie适用的路径.如果不指定路径,Cookie将返回给当前页面所在目录及其子目录下的所有页面
+.这里的方法可以用来设定一些更一般的条件.例如,someCookie.setPath("/"),此时服务器上的所有页面都
+可以接收到该Cookie. 
+getSecure/setSecure 
+获取/设置一个boolean值,该值表示是否Cookie只能通过加密的连接(即SSL)发送. 
+getValue/setValue 
+获取/设置Cookie的值.如前所述,名字和值实际上是我们始终关心的两个方面.不过也有一些例外情况,比
+如把名字作为逻辑标记(也就是说,如果名字存在,则表示true). 
+getVersion/setVersion 
+获取/设置Cookie所遵从的协议版本.默认版本0(遵从原先的Netscape规范);版本1遵从RFC 2109 , 但
+尚未得到广泛的支持. 
+9.2.3 在应答头中设置Cookie 
+Cookie可以通过HttpServletResponse的addCookie方法加入到Set-Cookie应答头.下面是一个例子: 
+Cookie userCookie = new Cookie("user", "uid1234"); 
+response.addCookie(userCookie); 
+9.2.4 读取保存到客户端的Cookie 
+要把Cookie发送到客户端,先要创建Cookie,然后用addCookie发送一个Set-Cookie HTTP应答头.这
+些内容已经在上面的2.1节介绍.从客户端读取Cookie时调用的是HttpServletRequest的getCookies方法.该
+方法返回一个与HTTP请求头中的内容对应的Cookie对象数组.得到这个数组之后,一般是用循环访问其中的
+各个元素,调用getName检查各个Cookie的名字,直至找到目标Cookie.然后对这个目标Cookie调用
+getValue,根据获得的结果进行其他处理. 
+上述处理过程经常会遇到,为方便计下面我们提供一个getCookieValue方法.只要给出Cookie对象数组
+,Cookie名字和默认值,getCookieValue方法就会返回匹配指定名字的Cookie值,如果找不到指定
+Cookie,则返回默认值. 
+9.3 几个Cookie工具函数 
+下面是几个工具函数.这些函数虽然简单,但是,在和Cookie打交道的时候很有用. 
+9.3.1 获取指定名字的Cookie值 
+该函数是ServletUtilities.java的一部分.getCookieValue通过循环依次访问Cookie对象数组的各个元素
+,寻找是否有指定名字的Cookie,如找到,则返回该Cookie的值;否则,返回参数中给出的默认值.
+getCookieValue能够在一定程度上简化Cookie值的提取. 
+public static String getCookieValue(Cookie[] cookies, 
+String cookieName, 
+String defaultValue) { 
+for(int i=0; i Cookie cookie = cookies; 
+if (cookieName.equals(cookie.getName())) 
+return(cookie.getValue()); 
+} 
+return(defaultValue); 
+}
+9.3.2自动保存的Cookie 
+下面是LongLivedCookie类的代码.如果你希望Cookie能够在浏览器退出的时候自动保存下来,则可以
+用这个LongLivedCookie类来取代标准的Cookie类.
+package hall;
+import javax.servlet.http.*;
+public class LongLivedCookie extends Cookie { 
+public static final int SECONDS_PER_YEAR = 60*60*24*365; 
+public LongLivedCookie(String name, String value) { 
+super(name, value); 
+setMaxAge(SECONDS_PER_YEAR); 
+} 
+}
+9.4.实例:定制的搜索引擎界面 
+下面也是一个搜索引擎界面的例子,通过修改前面HTTP状态代码的例子得到.在这个Servlet中,用户界
+面是动态生成而不是由静态HTML文件提供的.Servlet除了负责读取表单数据并把它们发送给搜索引擎之外
+,还要把包含表单数据的Cookie发送给客户端.以后客户再次访问同一表单时,这些Cookie的值将用来预先填
+充表单,使表单自动显示最近使用过的数据. 
+SearchEnginesFrontEnd.java 
+该Servlet构造一个主要由表单构成的用户界面.第一次显示的时候,它和前面用静态HTML页面提供的界
+面差不多.然而,用户选择的值将被保存到Cookie(本页面将数据发送到CustomizedSearchEngines
+Servlet,由后者设置Cookie).用户以后再访问同一页面时,即使浏览器是退出之后再启动,表单中也会自动
+填好上一次搜索所填写的内容. 
+注意该Servlet用到了ServletUtilities.java,其中getCookieValue前面已经介绍过,headWithTitle用于
+生成HTML页面的一部分.另外,这里也用到了前面已经说明的LongLiveCookie类,我们用它来创建作废期限
+很长的Cookie. 
+package hall;
+import java.io.*; 
+import javax.servlet.*; 
+import javax.servlet.http.*; 
+import java.net.*;
+public class SearchEnginesFrontEnd extends HttpServlet { 
+public void doGet(HttpServletRequest request, 
+HttpServletResponse response) 
+throws ServletException, IOException { 
+Cookie[] cookies = request.getCookies(); 
+String searchString = 
+ServletUtilities.getCookieValue(cookies, 
+"searchString", 
+"Java Programming"); 
+String numResults = 
+ServletUtilities.getCookieValue(cookies, 
+"numResults", 
+"10"); 
+String searchEngine = 
+ServletUtilities.getCookieValue(cookies, 
+"searchEngine", 
+"google"); 
+response.setContentType("text/html"); 
+PrintWriter out = response.getWriter(); 
+String title = "Searching the Web"; 
+out.println(ServletUtilities.headWithTitle(title) + 
+"\n" + 
+"Searching the Web\n" + 
+"\n" + 
+"\n" + 
+"\n" + 
+"Search String:\n" + 
+"\n" + 
+"Results to Show Per Page:\n" + 
+"\n" + 
+"\n" + 
+"Google |\n" + 
+"\n" + 
+"Infoseek |\n" + 
+"\n" + 
+"Lycos |\n" + 
+"\n" + 
+"HotBot\n" + 
+"\n" + 
+"\n" + 
+"\n" + 
+"\n" + 
+"\n" + 
+"\n" + 
+"\n"); 
+}
+private String checked(String name1, String name2) { 
+if (name1.equals(name2)) 
+return(" CHECKED"); 
+else 
+return(""); 
+} 
+}
+CustomizedSearchEngines.java 
+前面的SearchEnginesFrontEnd Servlet把数据发送到CustomizedSearchEngines Servlet.本例在许多
+方面与前面介绍HTTP状态代码时的例子相似,区别在于,本例除了要构造一个针对搜索引擎的URL并向用户发
+送一个重定向应答之外,还要发送保存用户数据的Cookies. 
+package hall;
+import java.io.*; 
+import javax.servlet.*; 
+import javax.servlet.http.*; 
+import java.net.*;
+public class CustomizedSearchEngines extends HttpServlet { 
+public void doGet(HttpServletRequest request, 
+HttpServletResponse response) 
+throws ServletException, IOException {
+String searchString = request.getParameter("searchString"); 
+Cookie searchStringCookie = 
+new LongLivedCookie("searchString", searchString); 
+response.addCookie(searchStringCookie); 
+searchString = URLEncoder.encode(searchString); 
+String numResults = request.getParameter("numResults"); 
+Cookie numResultsCookie = 
+new LongLivedCookie("numResults", numResults); 
+response.addCookie(numResultsCookie); 
+String searchEngine = request.getParameter("searchEngine"); 
+Cookie searchEngineCookie = 
+new LongLivedCookie("searchEngine", searchEngine); 
+response.addCookie(searchEngineCookie); 
+SearchSpec[] commonSpecs = SearchSpec.getCommonSpecs(); 
+for(int i=0; i SearchSpec searchSpec = commonSpecs; 
+if (searchSpec.getName().equals(searchEngine)) { 
+String url = 
+searchSpec.makeURL(searchString, numResults); 
+response.sendRedirect(url); 
+return; 
+} 
+} 
+response.sendError(response.SC_NOT_FOUND, 
+"No recognized search engine specified."); 
+}
+public void doPost(HttpServletRequest request, 
+HttpServletResponse response) 
+throws ServletException, IOException { 
+doGet(request, response); 
+} 
+} 
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+servlet类
+
+1.继承HttpServlet类
+2.编写doGet()方法
+3.设置响应
+4.建立PrintWriter对象
+5.利用PrintWriter对象输出语句
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+java核心技术学习
+jsp指令
+
+1.page指令
+2.include指令
+3.taglib指令
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+内置对象
+
+内置对象简介
+request对象：代表客户端请求对象
+response对象：封装了JSP响应，被发送到客户端以响应客户的请求
+pageContext对象：封装了JSP页面上下文
+session对象：保存每个用户信息，跟踪每个用户的操作状态
+application对象：为多个应用程序保存信息
+out对象：向客户端输出数据
+config对象：封装Servlet配置信息
+page对象：JSP页面对象
+exception对象：运行时出现的异常，被调用的错误页面的结果
+ response对象用来对客户端做出响应，该对象可以设置和发送必要的信息，例如文档类型、字符编码、设置缓存及二进制数据等等，它一般会和out对象配合使用。
+sendRedirect(String location)：把响应发送到另一个位置进行处理
+setHeader(String name，String value)：设定指定名字的HTTP文件头的值
+setCharacterEncoding(String encoding):设置响应字符编码
+setContentType(String contenttype)：设置响应内容类型
+sendError(int)：向客户端发送错误信息
+containsHeader(java.lang.String arg0)：判断指定的HTTP文件头是否存在
+addHeader(String name，String value)：添加Http文件头信息
+addCookie(Cookie cook)：添加一个Cookie对象,用来保存客户端的用户信息
+setContentType(String contentType)：为应答设置内容类型
+request
+ <%
+// String language = request.getHeader("accept-language");
+// if(language.equalsIgnoreCase("zh-cn")){
+//  response.sendRedirect("zh.html");
+// }else{
+//  response.sendRedirect("en.html");
+// }
+%>
+request.getServerName:<%=request.getServerName()%><br/>
+request.getServletPath:<%=request.getServletPath()%><br/>
+request.getRequestURL:<%=request.getRequestURL()%><br/>
+request.getRemoteAddr:<%=request.getRemoteAddr()%>
+setAttribute(String name,Object)：设置名字为name的request的参数值 
+getAttribute(String name)：返回由name指定的属性值 
+getAttributeNames()：返回request对象所有属性的名字集合，结果是一个枚举的实例 
+getCookies()：返回客户端的所有Cookie对象，结果是一个Cookie数组 
+getCharacterEncoding()：返回请求中的字符编码方式 
+getContentLength()：返回请求的Body的长度 
+getHeader(String name)：获得HTTP协议定义的文件头信息 
+getHeaders(String name)：返回指定名字的request Header的所有值，结果是一个枚举的实例 
+getHeaderNames()：返回所以request Header的名字，结果是一个枚举的实例 
+getInputStream()：返回请求的输入流，用于获得请求中的数据 
+getMethod()：获得客户端向服务器端传送数据的方法 
+getParameter(String name)：获得客户端传送给服务器端的有name指定的参数值 
+getParameterNames()：获得客户端传送给服务器端的所有参数的名字，结果是一个枚举的实例 
+getParameterValues(String name)：获得有name指定的参数的所有值 
+getProtocol()：获取客户端向服务器端传送数据所依据的协议名称 
+getQueryString()：获得查询字符串 
+getRequestURI()：获取发出请求字符串的客户端地址 
+getRemoteAddr()：获取客户端的IP地址 
+getRemoteHost()：获取客户端的名字 
+getSession([Boolean create])：返回和请求相关Session 
+getServerName()：获取服务器的名字 
+getServletPath()：获取客户端所请求的脚本文件的路径 
+getServerPort()：获取服务器的端口号 
+removeAttribute(String name)：删除请求中的一个属性
+ session对象代表客户端和服务器端得会话，使用session可以将数据在用户操作的页面间相互传递。
+getAttribute(String name)，获得回话属性
+setAttribute(String name , String value)，设置回话属性值
+removeValue(java.lang.String arg0)：删除指定名字的参数值
+isNew()：检查是否客户端参加了会话
+invalidate()：删除session对象
+getSessionContext()：返回会话相连的上下文
+getId()：返回会话标识符
+getCreationTime()：返回会话创建的时间
+
+application对象保存了一个应用系统中一些公用的数据。与session对象相比，application对象是所有客户共享的，而session对象则是每个客户专用的。服务器启动后，就会自动创建application对象，直到服务器关闭为止。
+ <context-param>
+   <param-name>appname</param-name>
+   <param-value>l7</param-value>
+  </context-param>
+<%= application.getInitParameter("appname") %> 
+getAttribute(string name):获取application的属性值
+setAttribute(String name,Object object)：设置某个application对象的某个属性值
+getServerInfo()：获得当前版本的Servlet编译器的信息
+getInitParameter(String name)：返回application某个属性的值
+getAttributeNames()：以Enumeration数据形式返回所有application对象的属性名称
+getRealPath():获取web 应用物理地址
+log(String msg)：向控制台输出日志
+ out
+println()：向客户端输出文本流
+isAutoFlush()：返回输出缓冲器是否自动刷新
+getBufferSize()：返回缓冲区的大小(以字节计算) 
+getRemaining()：返回缓冲区中未使用部分的大小(以字节计算)
+clearBuffer()：清除缓冲区的内容，并把数据输出到客户端
+clear()：清除缓冲区的内容,但不把数据输出到客户端
+newLine()：输出一个换行符
+flush()：输出缓冲区里的数据
+close()：关闭输出流
+pageContext 
+getRequest()：返回触发页面处理的request请求对象
+getResponse()：返回response页面响应对象
+getOut()：返回页面的当前输出流
+getSession()：返回与当前页面请求关联的会话
+getServletConfig()：返回Servlet配置对象
+getServletContext()：返回页面Servlet的运行环境
+getException()：返回此页面的异常对象
+forward(“..”);请求派发
+setAttribute(String name , String value , int Scopt);
+getAttribute(String name , int Scope)
+  pageContext.getRequest();//等价于request对象
+ pageContext.getResponse();//等价于request对象
+ pageContext.getOut();//等价out
+ pageContext.getException();//等价exception
+ pageContext.getSession();//等价 session
+ pageContext.getServletContext();//等价application
+ pageContext.getServletConfig();//等价config
+ pageContext.forward("....");//等价于request.getRequestDispatcher("...").forward(request , response);
+ pageContext.setAttribute("name" , "value" , PageContext.REQUEST_SCOPE);//等价于request.setAttribute()
+ pageContext.setAttribute("name" , "value" , PageContext.SESSION_SCOPE);//等价于session.setAttribute()
+ pageContext.setAttribute("name" , "value" , PageContext.APPLICATION_SCOPE);//等价于application.setAttribute()
+ pageContext.setAttribute("name" , "value" , PageContext.PAGE_SCOPE);//在当前页定义一个变量 
+ 
+ config
+ <servlet>
+   <servlet-name>servlet</servlet-name>
+   <jsp-file>/config/index.jsp</jsp-file>
+   <init-param>
+    <param-name>author</param-name>
+    <param-value>qiyi</param-value>
+   </init-param>
+  </servlet>
+ <!-- 重点看web.xml中Servlet的配置信息 -->
+<%=config.getInitParameter("author")%>
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+标准动作
+
+标准动作标签名称
+作用
+<jsp:include>
+在页面被请求的时候引入一个文件
+<jsp:useBean>
+寻找或者实例化一个JavaBean
+<jsp:setProperty>
+设置JavaBean的属性
+<jsp:getProperty>
+获得或输出某个JavaBean的属性
+<jsp:forward>
+把请求转到一个新的页面
+<jsp:param>
+用来提供key/value 的信息，可以在<jsp:include>、<jsp:forward> 或 jsp:params>动作中使用，指定一个将加入请求的当前参数组中的参数
+<jsp:plugin>
+根据浏览器类型为Java插件生成<object>和<embed>标签
+<jsp:params>
+向一个动态文件发送一个或多个参数
+<jsp:fallback>
+如果浏览器不支持APPLETS则会显示的内容
+ 
+<jsp:include page = "{relativeURL | <％= expression％>}"
+flush = "true | false" />
+ 
+<jsp:include page = "{relativeURL | <％= expression ％>}"
+ flush ="true | false " >
+ <jsp:param name = "parameterName" 
+  value = "{parameterValue | <％= expression ％>}" /> 
+</jsp:include>
+page="{relativeURL | <％= expression ％>}"，参数可以是一个相对路径，即你所要包含进来的文件位置或是经过表达式所运算出的相对路径 
+flush = "true | false"，flush值为boolean类型，若为true，表示缓冲区满时将会被清空。flush的缺省值为false
+ 
+<jsp:plugin>用于在浏览器中播放或显示一个对象，通常是Applet或Bean。当JSP页面被编译后送往浏览器执行时，<jsp:plugin>会根据浏览器的版本替换成<object>标签或<embed>标签。
+<jsp:fallback>是作为<jsp:plugin>的子元素出现，当不能启动Applet或Bean时，浏览器会有一段错误信息。
+<jsp:params>用于向一个动态文件发送一个或多个参数<jsp:plugin>、<jsp:fallback>和<jsp:params>标签综合运用
+<jsp:plugin type="bean|applet" code="classFileName.class"
+ codebase="classFileDirectoryName">
+ [<jsp:params>
+  <jsp:param name="pramName"  
+   value="paramvalue"/>
+ </jsp:params>]
+ [<jsp:fallback> text message for user</jsp:fallback>]
+</jsp:plugin> 
+Scope属性代表了Javabean对象的生存时间，包含以下四种，它们分别代表JavaBean的不同生命周期和不同使用范围。下面就分别介绍这四种不同的情况：
+page
+request
+session
+application
+page作用范围：当前页面
+request作用范围：从用户的一次请求到向用户返回响应之间
+session作用范围：一次会话范围
+application作用范围：从服务器一开始执行服务，到服务器关闭为止 
+ 
+<jsp:useBean id = "BeanName" scope = "page/session/application/request"
+class = "BeanClass" /> 
+ id属性，一个JavaBean有一个唯一的id，在执行JSP时，JavaBean被实例化为对象，对象名称即id名称
+class属性，是指这个JavaBean所对应的Java类名
+scope属性，指定JavaBean的有效作用范围，scope的值可是page、session、application、request四者之一，默认情况下，scope被设置为page
+ 
+<jsp:setProperty>当JavaBean被实例化后，可对其属性操作，可以使用<jsp:setProperty>操作，也可直接调用JavaBean对象的方法。
+<jsp:setProperty name = "BeanName" property = "propertyName"  value = "value" />
+Name属性，指定JavaBean的名称，它的值应与<jsp:setProperty>操作中的id属性的值一致
+property属性，指定要设置值的JavaBean的属性名称
+value属性，指定属性值
+ 
+<jsp:getProperty name = "BeanName" property = "Prop" />
+与<jsp:useBean>操作一起使用，可用于获取JavaBean中指定的属性中的值。
+Name属性，指定JavaBean的名称
+property属性，指定要设置值的JavaBean的属性名称
+ 
+<jsp:forward page="url"> 
+page属性，指定目标页面的地址。
+ 
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+头文件
+
+假如用户在浏览器地址栏输入：http://localhost:8080/books.jsp?name=Professional，浏览器会向地址栏发送类似以下的HTTP请求块：
+GET /books.jsp?name=Professional HTTP/1.1
+请求行。使用HTTP 1.1协议发送请求，期望获得book.jsp。
+Host: localhost:8080
+Header。主机名称，端口号是8080
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; SV1; TheWorld)
+Header。用户环境为 XP 操作系统，IE 7 浏览器 ，The World代表使用了“世界之窗”浏览器
+Pragma：no-cache
+Header。表示服务器必须返回一个刷新后的文档
+Connection: Keep-Alive
+Header。保持连接，还要获取更多的内容  
+POST请求在请求主体中为服务器提供了一些附加的信息通常，当填写一个在线表单并提交它时，这些填入的数据将以POST请求的方式发送给服务器
+POST /books.jsp HTTP/1.1
+Request - Line
+Host:localhost
+Header:主机名
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.6)
+Header:主机名客户端环境描述
+Content-Type: application/x-www-form-urlencoded
+Header:表单数据类型
+Content-Length: 40
+Header:主机名内容长度
+Connection: Keep-Alive
+Header:主机名保持连接
+name=Professional&publisher=Wiley
+Request – Body：请求数据
+响应内容
+HTTP / 1.1 200 OK
+Status-Line:以HTTP 1.1 协议成功返回
+SERVER: Apache
+Header:Web服务器是Apache-Coyote/1.1
+Date: Sat , 17 Mar 2007 04:42:57 GMT
+Header:当前时间
+Content-Type:text/html
+Header:内容是text/html , MIME类型
+Last-Modified:Tue , 27 Feb 2007 19:31:58 GMT
+Header:请求体最后修改时间
+ETag:W/”320-1180413521626”
+Header:标识值
+Content-Length:4244
+Header:内容长度
+<html>….</html>
+Response-Body  
+ 常用的MIME类型：
+超文本标记语言文本 .html,.html text/html 
+XML文档 text/xml
+普通文本 .txt text/plain 
+RTF文本 .rtf application/rtf 
+GIF图形 .gif image/gif 
+JPEG图形 .jpeg,.jpg image/jpeg
+au声音文件 .au audio/basic 
+MIDI音乐文件 mid,.midi audio/midi,audio/x-midi 
+RealAudio音乐文件 .ra, .ram audio/x-pn-realaudio 
+MPEG文件 .mpg,.mpeg video/mpeg 
+AVI文件 .avi video/x-msvideo 
+GZIP文件 .gz application/x-gzip 
+TAR文件 .tar application/x-tar
+ 
+使用JSP处理请求报头
+我们可以使用JSP内建的request对象来获取HTTP请求中传递的任何消息。
+JSP使用request对象来获取浏览器送出的HTTP报头信息，它是HttpServletRequest接口的实现。使用request对象的getXXX()方法可以获得浏览器送出的HTTP报头信息。常见的request.getXXXXXX()如下：
+request.getParameter()  - 获取请求中包含的数据
+request.getHeader() – 获取请求包头中包含的信息
+request.getServerName() - 获取服务器名称
+request.getServletPath() - 获取Servlet路径
+request.getRequestURL() - 获取请求完整URL
+request.getRemoteAddr() – 获取客户端IP地址
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+HTTP应答头
+
+HTTP应答头概述 
+
+　　 Web服务器的HTTP应答一般由以下几项构成：一个状态行，一个或多个应答头，一个空行，内容文档。设置HTTP应答头往往和设置状态行中的状态代码结合起来。例如，有好几个表示“文档位置已经改变”的状态代码都伴随着一个Location头，而401（Unauthorized）状态代码则必须伴随一个WWW-Authenticate头。 
+
+　　 然而，即使在没有设置特殊含义的状态代码时，指定应答头也是很有用的。应答头可以用来完成：设置Cookie，指定修改日期，指示浏览器按照指定的间隔刷新页面，声明文档的长度以便利用持久HTTP连接，……等等许多其他任务。 
+
+　　 设置应答头最常用的方法是HttpServletResponse的setHeader，该方法有两个参数，分别表示应答头的名字和值。和设置状态代码相似，设置应答头应该在发送任何文档内容之前进行。 
+
+　　 setDateHeader方法和setIntHeadr方法专门用来设置包含日期和整数值的应答头，前者避免了把Java时间转换为GMT时间字符串的麻烦，后者则避免了把整数转换为字符串的麻烦。 
+
+　　 HttpServletResponse还提供了许多设置常见应答头的简便方法，如下所示： 
+
+setContentType：设置Content-Type头。大多数Servlet都要用到这个方法。 
+setContentLength：设置Content-Length头。对于支持持久HTTP连接的浏览器来说，这个函数是很有用的。 
+addCookie：设置一个Cookie（Servlet API中没有setCookie方法，因为应答往往包含多个Set-Cookie头）。 
+另外，如上节介绍，sendRedirect方法设置状态代码302时也会设置Location头。 
+常见应答头及其含义 
+
+　　 有关HTTP头详细和完整的说明，请参见http://www.w3.org/Protocols/规范。 
+
+应答头 说明 
+Allow 服务器支持哪些请求方法（如GET、POST等）。 
+Content-Encoding 文档的编码（Encode）方法。只有在解码之后才可以得到Content-Type头指定的内容类型。利用gzip压缩文档能够显著地减少HTML文档的下载时间。Java的GZIPOutputStream可以很方便地进行gzip压缩，但只有Unix上的Netscape和Windows上的IE 4、IE 5才支持它。因此，Servlet应该通过查看Accept-Encoding头（即request.getHeader("Accept-Encoding")）检查浏览器是否支持gzip，为支持gzip的浏览器返回经gzip压缩的HTML页面，为其他浏览器返回普通页面。 
+Content-Length 表示内容长度。只有当浏览器使用持久HTTP连接时才需要这个数据。如果你想要利用持久连接的优势，可以把输出文档写入ByteArrayOutputStram，完成后查看其大小，然后把该值放入Content-Length头，最后通过byteArrayStream.writeTo(response.getOutputStream()发送内容。 
+Content-Type 表示后面的文档属于什么MIME类型。Servlet默认为text/plain，但通常需要显式地指定为text/html。由于经常要设置Content-Type，因此HttpServletResponse提供了一个专用的方法setContentTyep。 
+Date 当前的GMT时间。你可以用setDateHeader来设置这个头以避免转换时间格式的麻烦。 
+Expires 应该在什么时候认为文档已经过期，从而不再缓存它？ 
+Last-Modified 文档的最后改动时间。客户可以通过If-Modified-Since请求头提供一个日期，该请求将被视为一个条件GET，只有改动时间迟于指定时间的文档才会返回，否则返回一个304（Not Modified）状态。Last-Modified也可用setDateHeader方法来设置。
+Location 表示客户应当到哪里去提取文档。Location通常不是直接设置的，而是通过HttpServletResponse的sendRedirect方法，该方法同时设置状态代码为302。 
+Refresh 表示浏览器应该在多少时间之后刷新文档，以秒计。除了刷新当前文档之外，你还可以通过setHeader("Refresh", "5; URL=http://host/path")让浏览器读取指定的页面。 
+注意这种功能通常是通过设置HTML页面HEAD区的＜META HTTP-EQUIV="Refresh" CONTENT="5;URL=http://host/path"＞实现，这是因为，自动刷新或重定向对于那些不能使用CGI或Servlet的HTML编写者十分重要。但是，对于Servlet来说，直接设置Refresh头更加方便。 
+
+注意Refresh的意义是“N秒之后刷新本页面或访问指定页面”，而不是“每隔N秒刷新本页面或访问指定页面”。因此，连续刷新要求每次都发送一个Refresh头，而发送204状态代码则可以阻止浏览器继续刷新，不管是使用Refresh头还是＜META HTTP-EQUIV="Refresh" ...＞。 
+
+注意Refresh头不属于HTTP 1.1正式规范的一部分，而是一个扩展，但Netscape和IE都支持它。 
+
+Server 服务器名字。Servlet一般不设置这个值，而是由Web服务器自己设置。 
+Set-Cookie 设置和页面关联的Cookie。Servlet不应使用response.setHeader("Set-Cookie", ...)，而是应使用HttpServletResponse提供的专用方法addCookie。
+Cookie userCookie = new Cookie("user", "uid1234");response.addCookie(userCookie);。
+
+WWW-Authenticate 客户应该在Authorization头中提供什么类型的授权信息？在包含401（Unauthorized）状态行的应答中这个头是必需的。例如，response.setHeader("WWW-Authenticate", "BASIC realm=＼"executives＼"")。
+注意Servlet一般不进行这方面的处理，而是让Web服务器的专门机制来控制受密码保护页面的访问（例如.htaccess）。 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+http状态码
+
+100  Continue  初始的请求已经接受，客户应当继续发送请求的其余部分。（HTTP 1.1新） 
+101  Switching Protocols  服务器将遵从客户的请求转换到另外一种协议（HTTP 1.1新） 
+200  OK  一切正常，对GET和POST请求的应答文档跟在后面。
+201  Created  服务器已经创建了文档，Location头给出了它的URL。 
+202  Accepted  已经接受请求，但处理尚未完成。 
+203  Non-Authoritative Information  文档已经正常地返回，但一些应答头可能不正确，因为使用的是文档的拷贝（HTTP 1.1新）。 
+204  No Content  没有新文档，浏览器应该继续显示原来的文档。如果用户定期地刷新页面，而Servlet可以确定用户文档足够新，这个状态代码是很有用的。 
+205  Reset Content  没有新的内容，但浏览器应该重置它所显示的内容。用来强制浏览器清除表单输入内容（HTTP 1.1新）。 
+ 
+206  Partial Content  客户发送了一个带有Range头的GET请求，服务器完成了它（HTTP 1.1新）。
+  
+300  Multiple Choices  客户请求的文档可以在多个位置找到，这些位置已经在返回的文档内列出。如果服务器要提出优先选择，则应该在Location应答头指明。
+  
+301  Moved Permanently  客户请求的文档在其他地方，新的URL在Location头中给出，浏览器应该自动地访问新的URL。 
+302  Found  类似于301，但新的URL应该被视为临时性的替代，而不是永久性的。注意，在HTTP1.0中对应的状态信息是“Moved Temporatily”。 
+出现该状态代码时，浏览器能够自动访问新的URL，因此它是一个很有用的状态代码。
+注意这个状态代码有时候可以和301替换使用。例如，如果浏览器错误地请求http://host/~user（缺少了后面的斜杠），有的服务器返回301，有的则返回302。
+严格地说，我们只能假定只有当原来的请求是GET时浏览器才会自动重定向。请参见307。 
+ 
+303  See Other  类似于301/302，不同之处在于，如果原来的请求是POST，Location头指定的重定向目标文档应该通过GET提取（HTTP 1.1新）。 
+304  Not Modified  客户端有缓冲的文档并发出了一个条件性的请求（一般是提供If-Modified-Since头表示客户只想比指定日期更新的文档）。服务器告诉客户，原来缓冲的文档还可以继续使用。 
+305  Use Proxy  客户请求的文档应该通过Location头所指明的代理服务器提取（HTTP 1.1新）。 
+307  Temporary Redirect  和302（Found）相同。许多浏览器会错误地响应302应答进行重定向，即使原来的请求是POST，即使它实际上只能在POST请求的应答是303时才能重定向。由于这个原因，HTTP 1.1新增了307，以便更加清除地区分几个状态代码：当出现303应答时，浏览器可以跟随重定向的GET和POST请求；如果是307应答，则浏览器只能跟随对GET请求的重定向。（HTTP 1.1新） 
+400  Bad Request  请求出现语法错误。 
+401  Unauthorized  客户试图未经授权访问受密码保护的页面。应答中会包含一个WWW-Authenticate头，浏览器据此显示用户名字/密码对话框，然后在填写合适的Authorization头后再次发出请求。 
+403  Forbidden  资源不可用。服务器理解客户的请求，但拒绝处理它。通常由于服务器上文件或目录的权限设置导致。 
+404  Not Found  无法找到指定位置的资源。这也是一个常用的应答。 
+405  Method Not Allowed  请求方法（GET、POST、HEAD、Delete、PUT、TRACE等）对指定的资源不适用。（HTTP 1.1新） 
+406  Not Acceptable  指定的资源已经找到，但它的MIME类型和客户在Accpet头中所指定的不兼容（HTTP 1.1新）。 
+407  Proxy Authentication Required  类似于401，表示客户必须先经过代理服务器的授权。（HTTP 1.1新） 
+408  Request Timeout  在服务器许可的等待时间内，客户一直没有发出任何请求。客户可以在以后重复同一请求。（HTTP 1.1新） 
+409  Conflict  通常和PUT请求有关。由于请求和资源的当前状态相冲突，因此请求不能成功。（HTTP 1.1新） 
+410  Gone  所请求的文档已经不再可用，而且服务器不知道应该重定向到哪一个地址。它和404的不同在于，返回407表示文档永久地离开了指定的位置，而404表示由于未知的原因文档不可用。（HTTP 1.1新） 
+411  Length Required  服务器不能处理请求，除非客户发送一个Content-Length头。（HTTP 1.1新） 
+412  Precondition Failed  请求头中指定的一些前提条件失败（HTTP 1.1新）。 
+413  Request Entity Too Large  目标文档的大小超过服务器当前愿意处理的大小。如果服务器认为自己能够稍后再处理该请求，则应该提供一个Retry-After头（HTTP 1.1新）。 
+414  Request URI Too Long  URI太长（HTTP 1.1新）。 
+416  Requested Range Not Satisfiable  服务器不能满足客户在请求中指定的Range头。（HTTP 1.1新） 
+500  Internal Server Error  服务器遇到了意料不到的情况，不能完成客户的请求。 
+501  Not Implemented  服务器不支持实现请求所需要的功能。例如，客户发出了一个服务器不支持的PUT请求。 
+502  Bad Gateway  服务器作为网关或者代理时，为了完成请求访问下一个服务器，但该服务器返回了非法的应答。 
+503  Service Unavailable  服务器由于维护或者负载过重未能应答。例如，Servlet可能在数据库连接池已满的情况下返回503。服务器返回503时可以提供一个Retry-After头。 
+504  Gateway Timeout  由作为代理或网关的服务器使用，表示不能及时地从远程服务器获得应答。（HTTP 1.1新） 
+505  HTTP Version Not Supported  服务器不支持请求中所指明的HTTP版本。（HTTP 1.1新）  
+
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+验证码
+
+<%@ page contentType="image/jpeg;charset=utf-8" import="java.awt.*,java.awt.image.*,java.util.*,javax.imageio.*"%>
+<%!
+ Color getRandColor(int fc, int bc){
+  Random random = new Random();
+  if(fc > 255) fc = 255;
+  if(bc > 255) bc = 255;
+  int r = fc + random.nextInt(bc - fc);
+  int g = fc + random.nextInt(bc - fc);
+  int b = fc + random.nextInt(bc - fc);
+  return new Color(r, g, b);
+ }
+%>
+<%
+//设置页面不缓存
+ response.setHeader("Pragma","No-cache");
+ response.setHeader("Cache-control","no-cache");
+ response.setDateHeader("Expires",0);
+ 
+//在内存中创建图像
+ int width = 60;
+ int height = 20;
+ BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+ 
+//获取图形上下文
+ Graphics g = image.getGraphics();
+//生成随机类
+ Random random = new Random();
+//设定背景色
+ g.setColor(getRandColor(200, 250));
+ g.fillRect(0, 0, width, height);
+//设定字体
+ g.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+//随机产生155条干扰线，使中的认证码不易被其它程序探测到
+ g.setColor(getRandColor(160, 200));
+for(int i = 0; i < 155; i++){
+   int x = random.nextInt(width);
+   int y = random.nextInt(height);
+   int x1 = random.nextInt(12);
+   int y1 = random.nextInt(12);
+   g.drawLine(x, y, x1, y1);
+}
+//取随机产生的认证码（4位数字）
+ String sRand="";
+for(int i = 0; i < 4; i++){
+    String rand = String.valueOf(random.nextInt(10));
+    sRand+=rand;
+//将谁码显示到图像中
+ g.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
+//调用函数出来的颜色相同，可能是因为种子太接近，所以只能直接生成
+ g.drawString(rand, 13 * i + 6, 16);
+}
+//将认证码存入SESSION
+ session.setAttribute("rand", sRand);
+//图像生效
+ g.dispose();
+//输出图像到页面
+ ImageIO.write(image, "JPEG", response.getOutputStream());
+ out.clear();
+ out = pageContext.pushBody();
+%>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+error page
+
+web.xml
+<error-page>
+   <error-code>404</error-code>
+   <location>/error.jsp</location>
+  </error-page>
+在每个JSP网页中使用page指令可以对出现的异常进行处理。
+在产生错误页面加入下面的语句，可以将页面跳转至错误页面。
+<%@ page errorPage=“错误页路径”%>
+错误页面必须要加入下面的语句才能在页面中输出错误信息
+<%@ page isErrorPage=“true”%>
+<%= exception.getMessage() %>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+自定义标签
+Web.xml
+<jsp-config>
+  <taglib>
+   <taglib-uri>/custom</taglib-uri>
+   <taglib-location>/WEB-INF/custom.tld</taglib-location>
+  </taglib>
+</jsp-config>
+ tag类
+ import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.servlet.jsp.tagext.TagSupport;
+public class DateFormatTag extends TagSupport {
+ private String format = "yyyy年MM月ss日";
+ 
+ public String getFormat() {
+  return format;
+ }
+ public void setFormat(String format) {
+  this.format = format;
+ } public int doStartTag(){
+  
+  return this.EVAL_BODY_INCLUDE;
+ }
+ 
+ public int doEndTag(){
+  SimpleDateFormat sdf = new SimpleDateFormat(format);
+  try {
+   this.pageContext.getOut().println(sdf.format(new Date()));
+  } catch (IOException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  }
+  return this.SKIP_PAGE;
+ }
+} 
+taglib.tdl
+  <taglib>
+ <tlib-version>1.0</tlib-version>
+ <jsp-version>2.0</jsp-version>
+ <tag>
+  <name>showTime</name>
+  <tag-class>com.handson.tag.DateFormatTag</tag-class>
+  <attribute>
+   <name>format</name>
+   <required>false</required>
+  </attribute>
+ </tag>
+</taglib>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+转译
+
+URLEncoder.encode(s, "utf-8")
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+jstl标签库
+
+fmt标签的引入方式:
+<%@ taglib uri = "http://java.sun.com/jstl/fmt_rt" prefix = "fmt"%>
+ <fmt:formatDate>标签根据区域格式化时间
+<fmt:formatDate>标签使用语法如下：
+<fmt:formatDate value=“expression” [timeZone=“expression”] [type=“field”] [dateStyle=“style”] [timeStype=“style”] [pattern=“expression”] [var=“name”] [scope=“scopename”]/>
+只有value属性是必须的，其值应为java.util.Date类的一个实例。
+timeZone – 代表时区
+type – 代表输出类型 date/time/both
+dateStyle – 预定义的输出格式: short、medium、long、full
+pattern – 自定义输出格式
+<fmt:formatNumber>标签用于使用特定格式显示数字
+<fmt:formatNumber>语法如下：
+<fmt:formatNumber value=“数字”
+[type=“{number|currency|percent}”] //字符显示类型
+[currencyCode=“字符”] //货币单位
+[currencySymbol = “字符”]//货币前缀
+[groupingUsed=“{true|false}”]//是否使用逗号分割数字
+[maxIntegerDigits=“整数”] //最大保留整数部分位数，超出截断
+[minIntegerDigits=“整数”]//最小保留整数位数，位数不够用“0”填充
+[maxFractionDigits=“整数”]//最多保留几位小数，超出位四舍五入
+[minIntegerDigits=“整数”]//最少保留几位小数，不够用“0”填充
+[pattern=“正则表达式”]//使用正则表达式格式化数据
+[var=“varname”]
+[scope=“scopename”]
+引入函数库：
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn"%>
+ 
+方法
+描述
+fn:contains
+检查一个字符串是否包含某个子字符串(区分大小写)
+fn:containsIgnoreCase
+检查一个字符串是否包含某个子字符串(忽略大小写)
+fn:escapeXml
+用来转义字符
+fn:indexOf
+获取子字符串在源字符串中第一次出现的位置
+fn:join
+将字符串数组通过连接在一起
+fn:length
+返回字符串长度
+fn:replace
+替换字符串
+fn:split
+切割字符串
+fn:endsWidth
+判断源字符串是否以子字符串结尾
+fn:startsWith
+判断源字符串是否以子字符串开头
+fn:substring
+获取指定位置间的子字符串
+fn:substringAfter
+获取出现在子字符串后的源字符串
+fn:substringBefore
+获取出现在子字符串前的源字符串
+fn:toLowerCase
+转换为小写
+fn:toUpperCase
+转换为大写
+fn:trim
+去掉源字符串所有两侧空格
+ 
+称呼 Functions 标签库为标签库，倒不如称呼其为函数库来得更容易理解些。因为 Functions 标签库并没有提供传统的标签来为 JSP 页面的工作服务，而是被用于 EL 表达式语句中。在 JSP2.0 规范下出现的 Functions 标签库为 EL 表达式语句提供了许多更为有用的功能。 Functions 标签库分为两大类，共 16 个函数。
+长度函数： fn:length
+ 字符串处理函数： fn:contains 、 fn:containsIgnoreCase 、 fn:endsWith 、 fn:escapeXml 、 fn:indexOf 、 fn:join 、 fn:replace 、 fn:split 、 fn:startsWith 、 fn:substring 、 fn:substringAfter 、 fn:substringBefore 、 fn:toLowerCase 、 fn:toUpperCase 、 fn:trim
+以下是各个函数的用途和属性以及简单示例。
+9.7.1  长度函数 fn:length 函数(参数为:Collection和String)
+长度函数 fn:length 的出现有重要的意义。在 JSTL1.0 中，有一个功能被忽略了，那就是对集合的长度取值。虽然 java.util.Collection 接口定义了 size 方法，但是该方法不是一个标准的 JavaBean 属性方法（没有 get,set 方法），因此，无法通过 EL 表达式“ ${collection.size} ”来轻松取得。
+fn:length 函数正是为了解决这个问题而被设计出来的。它的参数为 input ，将计算通过该属性传入的对象长度。该对象应该为集合类型或 String 类型。其返回结果是一个 int 类型的值。下面看一个示例。
+<%ArrayList arrayList1 = new ArrayList();
+                            arrayList1.add("aa");
+                            arrayList1.add("bb");
+                            arrayList1.add("cc");
+%>
+<%request.getSession().setAttribute("arrayList1", arrayList1);%>
+${fn:length(sessionScope.arrayList1)}
+假设一个 ArrayList 类型的实例“ arrayList1 ”，并为其添加三个字符串对象，使用 fn:length 函数后就可以取得返回结果为“ 3 ”。
+9.7.2  判断函数 fn:contains 函数
+fn:contains 函数用来判断源字符串是否包含子字符串。它包括 string 和 substring 两个参数，它们都是 String 类型，分布表示源字符串和子字符串。其返回结果为一个 boolean 类型的值。下面看一个示例。
+${fn:contains("ABC", "a")}<br>
+${fn:contains("ABC", "A")}<br>
+前者返回“ false ”，后者返回“ true ”。
+9.7.3  fn:containsIgnoreCase 函数
+fn:containsIgnoreCase 函数与 fn:contains 函数的功能差不多，唯一的区别是 fn:containsIgnoreCase 函数对于子字符串的包含比较将忽略大小写。它与 fn:contains 函数相同，包括 string 和 substring 两个参数，并返回一个 boolean 类型的值。下面看一个示例。
+${fn:containsIgnoreCase("ABC", "a")}<br>
+${fn:containsIgnoreCase("ABC", "A")}<br>
+前者和后者都会返回“ true ”。
+9.7.4  词头判断函数 fn:startsWith 函数
+fn:startsWith 函数用来判断源字符串是否符合一连串的特定词头。它除了包含一个 string 参数外，还包含一个 subffx 参数，表示词头字符串，同样是 String 类型。该函数返回一个 boolean 类型的值。下面看一个示例。
+${fn:startsWith ("ABC", "ab")}<br>
+${fn:startsWith ("ABC", "AB")}<br>
+前者返回“ false ”，后者返回“ true ”。
+9.7.5  词尾判断函数 fn:endsWith 函数
+fn:endsWith 函数用来判断源字符串是否符合一连串的特定词尾。它与 fn:startsWith 函数相同，包括 string 和 subffx 两个参数，并返回一个 boolean 类型的值。下面看一个示例。
+${fn:endsWith("ABC", "bc")}<br>
+${fn:endsWith("ABC", "BC")}<br>
+前者返回“ false ”，后者返回“ true ”。
+9.7.6  字符实体转换函数 fn:escapeXml 函数
+fn:escapeXml 函数用于将所有特殊字符转化为字符实体码。它只包含一个 string 参数，返回一个 String 类型的值。
+9.7.8  字符匹配函数 fn:indexOf 函数
+fn:indexOf 函数用于取得子字符串与源字符串匹配的开始位置，若子字符串与源字符串中的内容没有匹配成功将返回“ -1 ”。它包括 string 和 substring 两个参数，返回结果为 int 类型。下面看一个示例。
+${fn:indexOf("ABCD","aBC")}<br>
+${fn:indexOf("ABCD","BC")}<br>
+前者由于没有匹配成功，所以返回 -1 ，后者匹配成功将返回位置的下标，为 1 。
+9.7.9  分隔符函数 fn:join 函数
+fn:join 函数允许为一个字符串数组中的每一个字符串加上分隔符，并连接起来。它的参数、返回结果和描述如表 9.25 所示：
+表 9.25 　 fn:join 函数
+参数
+
+描述
+
+array
+
+字符串数组。其类型必须为 String[] 类型
+
+separator
+
+分隔符。其类型必须为 String 类型
+
+返回结果
+
+返回一个 String 类型的值
+
+下面看一个示例。
+<% String[] stringArray = {"a","b","c"}; %>
+<%request.getSession().setAttribute("stringArray", stringArray);%>
+${fn:join(sessionScope.stringArray,";")}<br>
+定义数组并放置到 Session 中，然后通过 Session 得到该字符串数组，使用 fn:join 函数并传入分隔符“ ; ”，得到的结果为“ a;b;c ”。
+9.7.10  替换函数 fn:replace 函数
+fn:replace 函数允许为源字符串做替换的工作。它的参数、返回结果和描述如表 9.26 所示：
+表 9.26 　 fn:replace 函数
+参数
+
+描述
+
+inputString
+
+源字符串。其类型必须为 String 类型
+
+beforeSubstring
+
+指定被替换字符串。其类型必须为 String 类型
+
+afterSubstring
+
+指定替换字符串。其类型必须为 String 类型
+
+返回结果
+
+返回一个 String 类型的值
+
+下面看一个示例。
+${fn:replace("ABC","A","B")}<br>
+将“ ABC ”字符串替换为“ BBC ”，在“ ABC ”字符串中用“ B ”替换了“ A ”。
+9.7.11  分隔符转换数组函数 fn:split 函数
+fn:split 函数用于将一组由分隔符分隔的字符串转换成字符串数组。它的参数、返回结果和描述如表 9.27 所示：
+表 9.27 　 fn:split 函数
+参数
+
+描述
+
+string
+
+源字符串。其类型必须为 String 类型
+
+delimiters
+
+指定分隔符。其类型必须为 String 类型
+
+返回结果
+
+返回一个 String[] 类型的值
+
+下面看一个示例。
+${fn:split("A,B,C",",")}<br>
+将“ A,B,C ”字符串转换为数组 {A,B,C} 。
+9.7.12  字符串截取函数 fn:substring 函数
+fn:substring 函数用于截取字符串。它的参数、返回结果和描述如表 9.28 所示：
+表 9.28 　 fn:substring 函数
+参数
+
+描述
+
+string
+
+源字符串。其类型必须为 String 类型
+
+beginIndex
+
+指定起始下标（值从 0 开始）。其类型必须为 int 类型
+
+endIndex
+
+指定结束下标（值从 0 开始）。其类型必须为 int 类型
+
+返回结果
+
+返回一个 String 类型的值
+
+下面看一个示例。
+${fn:substring("ABC","1","2")}<br>
+截取结果为“ B ”。
+ 
+9.7.14  起始到定位截取字符串函数 fn:substringBefore 函数
+fn:substringBefore 函数允许截取源字符从开始到某个字符串。它的参数和 fn:substringAfter 函数相同，不同的是 substring 表示的是结束字符串。下面看一个示例。
+${fn:substringBefore("ABCD","BC")}<br>
+截取的结果为“ A ”。
+9.7.15  小写转换函数 fn:toLowerCase 函数
+fn:toLowerCase 函数允许将源字符串中的字符全部转换成小写字符。它只有一个表示源字符串的参数 string ，函数返回一个 String 类型的值。下面看一个示例。
+${fn:toLowerCase("ABCD")}<br>
+转换的结果为“ abcd ”。
+9.7.16 大写转换函数 fn:toUpperCase 函数
+fn:toUpperCase 函数允许将源字符串中的字符全部转换成大写字符。它与 fn:toLowerCase 函数相同，也只有一个 String 参数，并返回一个 String 类型的值。下面看一个示例。
+${fn:toUpperCase("abcd")}<br>
+转换的结果为“ ABCD ”。
+9.7.17 空格删除函数 fn:trim 函数
+fn:trim 函数将删除源字符串中结尾部分的“空格”以产生一个新的字符串。它与 fn:toLowerCase 函数相同，只有一个 String 参数，并返回一个 String 类型的值。下面看一个示例。
+${fn:trim("AB C ")}D<br>
+转换的结果为“ AB CD ”，注意，它将只删除词尾的空格而不是全部，因此“ B ”和“ C ”之间仍然留有一个空格。
+ 
+JSTL Core 标签库
+Core 标签库，又被称为核心标签库，该标签库的工作是对于 JSP 页面一般处理的封装。在该标签库中的标签一共有 14 个，被分为了四类，分别是：
+q         多用途核心标签： <c:out> 、 <c:set> 、 <c:remove> 、 <c:catch> 。
+q         条件控制标签： <c:if> 、 <c:choose> 、 <c:when> 、 <c:otherwise> 。
+q         循环控制标签： <c:forEach> 、 <c:forTokens> 。
+q         URL 相关标签： <c:import> 、 <c:url> 、 <c:redirect> 、 <c:param> 。
+以下是各个标签的用途和属性以及简单示例。
+9.3.1  用于显示的 <c:out> 标签 （重要）
+<c:out> 标签是一个最常用的标签，用于在 JSP 中显示数据。它的属性和描述如表 9.3 所示：
+表 9.3 　 <c:out> 标签属性和说明
+属性
+
+描述
+
+value
+
+输出到页面的数据，可以是 EL 表达式或常量（必须）
+
+default
+
+当 value 为 null 时显示的数据（可选）
+
+escapeXml
+
+当设置为 true 时会主动更换特殊字符，比如“ &lt;,&gt;,&amp; ”（可选，默认为 true ）
+
+在 JSTL1.0 的时候，在页面显示数据必须使用 <c:out> 来进行。然而，在 JSTL1.1 中，由于 JSP2.0 规范已经默认支持了 EL 表达式 ，因此可以直接在 JSP 页面使用表达式。下面看一个示例。
+<c:out value="${sessionScope.anyValue}" default="no value" escapeXml="false"/>
+该示例将从 Session 查找名为“ anyValue ”的参数，并显示在页面，若没有找到则显示“ no value ”。
+9.3.2  用于赋值的 <c:set> 标签（重要）
+<c:set> 标签用于为变量或 JavaBean 中的变量属性赋值的工作。它的属性和描述如表 9.4 所示：
+表 9.4 　 <c:set> 标签属性和说明
+属性
+
+描述
+
+value
+
+值的信息，可以是 EL 表达式或常量
+
+target
+
+被赋值的 JavaBean 实例的名称，若存在该属性则必须存在 property 属性（可选）
+
+property
+
+JavaBean 实例的变量属性名称（可选）
+
+var
+
+被赋值的变量名（可选）
+
+scope
+
+变量的作用范围，若没有指定，默认为 page （可选）
+
+当不存在 value 的属性时，将以包含在标签内的实体数据作为赋值的内容。下面看一个示例：
+<c:set value="this is andy" var="oneString"/>
+${oneString} <br>
+该示例将为名为“ oneString ”的变量赋值为“ this is andy ”，其作用范围为 page 。
+9.3.3  用于删除的 <c:remove> 标签
+<c:remove> 标签用于删除存在于 scope 中的变量。它的属性和描述如表 9.5 所示：
+表 9.5 　 <c:remove> 标签属性和说明
+属性
+
+描述
+
+var
+
+需要被删除的变量名
+
+scope
+
+变量的作用范围，若没有指定，默认为全部查找（可选）
+
+下面看一个示例：
+<c:remove var="sampleValue" scope="session"/>
+${sessionScope.sampleValue} <br>
+该示例将存在于 Session 中名为“ sampleValue ”的变量删除。下一句 EL 表达式显示该变量时，该变量已经不存在了。
+9.3.4  用于异常捕获的 <c:catch> 标签
+<c:catch> 标签允许在 JSP 页面中捕捉异常。它包含一个 var 属性，是一个描述异常的变量，改变量可选。若没有 var 属性的定义，那么仅仅捕捉异常而不做任何事情，若定义了 var 属性，则可以利用 var 所定义的异常变量进行判断转发到其他页面或提示报错信息。看一个示例。
+<c:catch var="err">
+  ${param.sampleSingleValue[9] == 3}
+</c:catch>
+${err}
+当“ ${param.sampleSingleValue[9] == 3} ”表达式有异常时，可以从 var 属性“ err ”得到异常的内容，通常判断“ err ”是否为 null 来决定错误信息的提示。
+   可以用struts中的全局exceptions替换
+9.3.5  用于判断的 <c:if> 标签（常用）
+<c:if> 标签用于简单的条件语句。它的属性和描述如表 9.6 所示：
+表 9.6 　 <c:if> 标签属性和说明
+属性
+
+描述
+
+test
+
+需要判断的条件
+
+var
+
+保存判断结果 true 或 false 的变量名，该变量可供之后的工作使用（可选）
+
+scope
+
+变量的作用范围，若没有指定，默认为保存于 page 范围中的变量（可选）
+
+下面看一个示例：
+<c:if test="${paramValues.sampleValue[2] == 12}" var="visits">
+       It is 12
+</c:if><br>
+${visits} <br>
+该示例将判断 request 请求提交的传入控件数组参数中，下标为“ 2 ”的控件内容是否为“ 12 ”，若为 12 则显示“ It is 12 ”。判断结果被保存在 page 范围中的“ visits ”变量中。　　
+9.3.6  用于复杂判断的<c:choose>、<c:when>、<c:otherwise>标签（重要）
+这三个标签用于实现复杂条件判断语句，类似“ if,elseif ”的条件语句。
+q         <c:choose> 标签没有属性，可以被认为是父标签， <c:when> 、 <c:otherwise> 将作为其子标签来使用。
+q         <c:when> 标签等价于“ if ”语句，它包含一个 test 属性，该属性表示需要判断的条件。
+q         <c:otherwise> 标签没有属性，它等价于“ else ”语句。
+下面看一个复杂条件语句的示例。
+<c:choose>
+  <c:when test="${paramValues.sampleValue[2] == 11}">
+         not 12 not 13,it is 11
+  </c:when>
+  <c:when test="${paramValues.sampleValue[2] == 12}">
+         not 11 not 13,it is 12
+  </c:when>
+  <c:when test="${paramValues.sampleValue[2] == 13}">
+         not 11 not 12,it is 13
+  </c:when>
+  <c:otherwise>
+         not 11 、 12 、 13
+  </c:otherwise>
+</c:choose>
+该示例将判断 request 请求提交的传入控件数组参数中，下标为“ 2 ”控件内容是否为“ 11 ”或“ 12 ”或“ 13 ”，并根据判断结果显示各自的语句，若都不是则显示“ not 11 、 12 、 13 ”。
+9.3.7  用于循环的<c:forEach>标签
+<c:forEach> 为循环控制标签。它的属性和描述如表 9.7 所示：
+表 9.7 　 <c:forEach> 标签属性和说明
+属性
+
+描述
+
+items
+
+进行循环的集合（可选）
+
+begin
+
+开始条件（可选）
+
+end
+
+结束条件（可选）
+
+step
+
+循环的步长，默认为 1 （可选）
+
+var
+
+做循环的对象变量名，若存在 items 属性，则表示循环集合中对象的变量名（可选）
+
+varStatus
+
+显示循环状态的变量（可选）
+
+下面看一个集合循环的示例。
+<%ArrayList arrayList = new ArrayList();
+         arrayList.add("aa");
+         arrayList.add("bb");
+         arrayList.add("cc");
+%>
+<%request.getSession().setAttribute("arrayList", arrayList);%>
+<c:forEach items="${sessionScope.arrayList}" var="arrayListI">
+  ${arrayListI}
+</c:forEach>
+该示例将保存在 Session 中的名为“ arrayList ”的 ArrayList 类型集合参数中的对象依次读取出来， items 属性指向了 ArrayList 类型集合参数， var 属性定义了一个新的变量来接收集合中的对象。最后直接通过 EL 表达式显示在页面上。下面看一个简单循环的示例。
+<c:forEach var="i" begin="1" end="10" step="1">
+      ${i}<br />
+</c:forEach>
+该示例从“ 1 ”循环到“ 10 ”，并将循环中变量“ i ”显示在页面上。
+9.3.8  用于分隔字符的<c:forTokens>标签（重要）
+<c:forTokens> 标签可以根据某个分隔符分隔指定字符串，相当于 java.util.StringTokenizer 类。它的属性和描述如表 9.8 所示：
+表 9.8 　 <c:forTokens> 标签 属性和说明
+属性
+
+描述
+
+items
+
+进行分隔的 EL 表达式或常量
+
+delims
+
+分隔符
+
+begin
+
+开始条件（可选）
+
+end
+
+结束条件（可选）
+
+step
+
+循环的步长，默认为 1 （可选）
+
+var
+
+做循环的对象变量名（可选）
+
+varStatus
+
+显示循环状态的变量（可选）
+
+下面看一个示例。
+<c:forTokens items="aa,bb,cc,dd" begin="0" end="2" step="2" delims="," var="aValue">
+  ${aValue}
+</c:forTokens>
+需要分隔的字符串为“ aa,bb,cc,dd ”，分隔符为“ , ”。 begin 属性 指定从第一个“ , ”开始分隔， end 属性指定分隔到第三个“ , ”，并将做循环的变量名指定为“ aValue ”。由于步长为“ 2 ”，使用 EL 表达式 ${aValue} 只能显示“ aa
+9.3.9  用于包含页面的 <c:import>
+<c:import> 标签允许包含另一个 JSP 页面到本页面来。它的属性和描述如表 9.9 所示：
+表 9.9 　 <c:import> 标签属性和说明
+属性
+
+描述
+
+url
+
+需要导入页面的 URL
+
+context
+
+Web Context 该属性用于在不同的 Context 下导入页面，当出现 context 属性时，必须以“ / ”开头，此时也需要 url 属性以“ / ”开头（可选）
+
+charEncoding
+
+导入页面的字符集（可选）
+
+var
+
+可以定义导入文本的变量名（可选）
+
+scope
+
+导入文本的变量名作用范围（可选）
+
+varReader
+
+接受文本的 java.io.Reader 类变量名（可选）
+
+下面看一个示例。
+<c:import url="/MyHtml.html" var="thisPage" />
+<c:import url="/MyHtml.html" context=”/sample2” var="thisPage"/>
+<c:import url="www.sample.com/MyHtml.html" var="thisPage"/>
+该示例演示了三种不同的导入方法，第一种是在同一 Context 下的导入，第二种是在不同的 Context 下导入，第三种是导入任意一个 URL 。
+9.3.10  用于得到 URL 地址的 <c:url> 标签
+<c:url> 标签用于得到一个 URL 地址。它的属性和描述如表 9.10 所示：
+表 9.10  <c:url> 标签属性和说明
+属性
+
+描述
+
+value
+
+页面的 URL 地址
+
+context
+
+Web Context 该属性用于得到不同 Context 下的 URL 地址，当出现 context 属性时，必须以“ / ”开头，此时也需要 url 属性以“ / ”开头（可选）
+
+charEncoding
+
+URL 的字符集（可选）
+
+var
+
+存储 URL 的变量名（可选）
+
+scope
+
+变量名作用范围（可选）
+
+下面看一个示例：
+<c:url value="/MyHtml.html" var="urlPage" />
+<a href="${urlPage}">link</a>
+得到了一个 URL 后，以 EL 表达式放入 <a> 标签的 href 属性，达到链接的目的。
+9.3.11  用于页面重定向的 <c:redirect> 标签
+<c:redirect> 用于页面的重定向，该标签的作用相当于 response.setRedirect 方法的工作。它包含 url 和 context 两个属性，属性含义和 <C:url> 标签相同。下面看一个示例。
+<c:redirect url="/MyHtml.html"/>
+该示例若出现在 JSP 中，则将重定向到当前 Web Context 下的“ MyHtml.html ”页面，一般会与 <c:if> 等标签一起使用。
+9.3.12  用于包含传递参数的 <c:param> 标签
+<c:param> 用来为包含或重定向的页面传递参数。它的属性和描述如表 9.11 所示：
+表 9.11 　 <c:param> 标签属性和说明
+属性
+
+描述
+
+name
+
+传递的参数名
+
+value
+
+传递的参数值（可选）
+
+下面是一个示例：
+<c:redirect url="/MyHtml.jsp">
+<c:param name="userName" value=”RW” />
+</c:redirect>
+该示例将为重定向的“ MyHtml.jsp ”传递指定参数“ userName=’RW’ ”。
+ 
+ EL表达式
+Sun 发布的标准 JSTL1.1 标签库有以下几个标签：
+         核心标签库：包含 Web 应用的常见工作，比如：循环、表达式赋值、基本输入输出等。
+         国际化标签库：用来格式化显示数据的工作，比如：对不同区域的日期格式化等。
+         数据库标签库：可以做访问数据库的工作。（略）
+         XML 标签库：用来访问 XML 文件的工作，这是 JSTL 标签库的一个特点。
+         函数标签库：用来读取已经定义的某个函数。
+此外， JSTL 还提供了 EL 表达式语言（ Expression Language ）来进行辅助的工作。
+JSTL 标签 库由标签库和 EL 表达式语言两个部分组成。
+说明： EL 可以独立出现在 JSP 页面的任何角落。
+表达式语言
+简介
+EL 是从 JavaScript 脚本语言得到启发的一种表达式语言，它借鉴了 JavaScript 多类型转换无关性的特点。
+包含变量+操作符，操作符有 算数，逻辑，条件 三种，如    ${sampleValue + 1} <br>
+EL 表达式的默认变量
+一个 EL 表达式包含变量和操作符两个内容。任何存在于 JSP 作用范围的 JavaBean 都可以被转化成 EL 表达式来使用，它所包含的默认变量如下：
+1 ．默认变量 pageScope 、 requestScope 、 sessionScope 、 applicationScope
+这 4 个默认变量包含 Scope 作用范围的参数集合，相当于被保存在 java.util.Map 中的某个参数。下面看简单的示例 9.2 ：
+例 9.2 ：使用 sessionScope 变量的 EL 表达式
+<%request.getSession().setAttribute("sampleValue", new Integer(10));%>
+${sessionScope.sampleValue}
+取得保存在 Session 中参数的 sessionScope 变量的 EL 表达式，“ . ”是 property 访问操作符，在这里表示从 Session 中取得“键”为“ sampleValue ”的参数，并显示出来。显示结果为“ 10 ”。
+2 ．默认变量 param 、 paramValues
+这两个默认变量包含请求参数的集合， param 表明请求包含的参数为单一控件， paramValues 表明请求包含的参数为控件数组。下面看一个简单示例 9.3 ：
+例 9.3 ：提交请求的页面和接受的页面
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <body>
+        <form action="SampleJsp.jsp">
+    <input type="text" name="sampleValue" value="10">
+    <input type="text" name="sampleValue" value="11">
+    <input type="text" name="sampleValue" value="12">
+    <input type="text" name="sampleSingleValue" value="SingleValue">
+    <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+在这个页面中定义了两组控件，控件名为“ sampleValue ”的是一套控件数组，控件名为“ sampleSingleValue ”的是单一控件，通过递交将请求参数传送到 SampleJsp.jsp 。
+<%@ page contentType="text/html; charset=UTF-8"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <body>
+    ${paramValues.sampleValue[2]} <br>
+    ${param.sampleSingleValue} <br>
+  </body>
+</html>
+这是请求转发到的页面，通过 EL 表达式的 paramValues 变量得到控件数组中最后一个控件的递交参数，通过 EL 表达式的 param 变量得到单一控件的递交参数。控件数组参数的 EL 表达式使用“ [] ”来指定数组下标。本示例将显示控件数组中最后一个控件的值“ 12 ”和单一控件的值“ SingleValue ”。
+3 ．默认变量 header 、 headerValues
+这两个默认变量包含请求参数头部信息的集合， header 变量表示单一头部信息， headerValues 则表示数组型的头部信息。
+4 ．默认变量 cookie
+包含所有请求的 cookie 集合，集合中的每个对象对应 javax.servlet.http.Cookie 。
+5 ．默认变量 initParam
+包含所有应用程序初始化参数的集合。
+6 ．默认变量 pageContext
+等价于 page 环境类 javax.servlet.jsp.PageContext 的实例，用来提供访问不同的请求参数。
+11 个默认变量几乎包含了 Web 应用的所有基本操作，若一个表达式不使用这些变量而直接使用参数名，那么就采用就近原则。该表达式将使用最近取得的参数值。
+EL 表达式的操作符
+EL 表达式中还有许多操作符可以帮助完成各种所需的操作，之前的示例中“ . ”、“ [] ”就是其中的两个，下面将用表 9.1 来展示所有操作符及它们各自的功能。
+表 9.1  EL 表达式的操作符
+操作符
+
+功能和作用
+
+.
+
+访问一个 bean 属性或者 Map entry
+
+[]
+
+访问一个数组或者链表元素
+
+()
+
+对子表达式分组，用来改变赋值顺序
+
+? :
+
+条件语句，比如：条件 ?ifTrue:ifFalse
+
+如果条件为真，表达式值为前者，反之为后者
+
++
+
+数学运算符，加操作
+
+-
+
+数学运算符，减操作或者对一个值取反
+
+*
+
+数学运算符，乘操作
+
+/ 或 div
+
+数学运算符，除操作
+
+% 或 mod
+
+数学运算符，模操作 ( 取余 )
+
+== 或 eq
+
+逻辑运算符，判断符号左右两端是否相等，如果相等返回 true ，否则返回 false
+
+!= 或 ne
+
+逻辑运算符，判断符号左右两端是否不相等，如果不相等返回 true ，否则返回 false
+
+< 或 lt
+
+逻辑运算符，判断符号左边是否小于右边，如果小于返回 true ，否则返回 false
+
+> 或 gt
+
+逻辑运算符，判断符号左边是否大于右边，如果大于返回 true ，否则返回 false
+
+<= 或 le
+
+逻辑运算符，判断符号左边是否小于或者等于右边，如果小于或者等于返回 true ，否则返回 false
+
+>= 或 ge
+
+逻辑运算符，判断符号左边是否大于或者等于右边，如果大于或者等于返回 true ，否则返回 false
+
+&& 或 and
+
+逻辑运算符，与操作赋。如果左右两边同为 true 返回 true ，否则返回 false
+
+|| 或 or
+
+逻辑运算符，或操作赋。如果左右两边有任何一边为 true 返回 true ，否则返回 false
+
+! 或 not
+
+逻辑运算符，非操作赋。如果对 true 取运算返回 false ，否则返回 true
+
+empty
+
+用来对一个空变量值进行判断 : null 、一个空 String 、空数组、 空 Map 、没有条目的 Collection 集合
+
+func(args)
+
+调用方法 , func 是方法名， args 是参数，可以没有，或者有一个、多个参数 . 参数间用逗号隔开
+
+这些操作符都是极其有用的，下面通过几个示例来演示它们的使用方法：
+例 9.4 ：几组操作符的示例
+${pageScope.sampleValue + 12} <br>           // 显示 12
+${(pageScope.sampleValue + 12)/3} <br>      // 显示 4.0
+${(pageScope.sampleValue + 12) /3==4} <br>       // 显示 true
+${(pageScope.sampleValue + 12) /3>=5} <br>       // 显示 false
+<input type="text" name="sample1" value="${pageScope.sampleValue + 10}"> // 显示值为 10 的 Text 控件
+ 
+ 
+ XML处理
+在企业级应用越来越依赖 XML 的今天， XML 格式的数据被作为信息交换的优先选择。 XML processing 标签库为程序设计者提供了基本的对 XML 格式文件的操作。在该标签库中的标签一共有 10 个，被分为了三类，分别是：
+q         XML 核心标签： <x:parse> 、 <x:out> 、 <x:set> 。
+q         XML 流控制标签： <x:if> 、 <x:choose> 、 <x:when> 、 <x:otherwise> 、 <x:forEach> 。
+q         XML 转换标签： <x:transform> 、 <x:param> 。
+由于该组标签库专注于对某一特定领域的实现，因此本书将只选择其中常见的一些标签和属性进行介绍。
+9.4.1  用于解析 XML 文件的 <x:parse> 标签
+<x:parse> 标签是该组标签库的核心，从其标签名就可以知道，它是作为解析 XML 文件而存在的。它的属性和描述如表 9.12 所示：
+表 9.12 　 <x:parse> 标签属性和说明
+属性
+
+描述
+
+doc
+
+源 XML 的内容，该属性的内容应该为 String 类型或者 java.io.Reader 的实例，可以用 xml 属性来替代，但是不被推荐
+
+var
+
+将解析后的 XML 保存在该属性所指定的变量中，之后 XML processing 标签库中的其他标签若要取 XML 中的内容就可以从该变量中得到（可选）
+
+scope
+
+变量的作用范围（可选）
+
+varDom
+
+指定保存的变量为 org.w3c.dom.Document 接口类型（可选）
+
+scopeDom
+
+org.w3c.dom.Document 的接口类型变量作用范围（可选）
+
+systemId
+
+定义一个 URI ，该 URI 将被使用到 XML 文件中以接入其他资源文件（可选）
+
+filter
+
+该属性必须为 org.xml.sax.XMLFilter 类的一个实例，可以使用 EL 表达式传入，将对 XML 文件做过滤得到自身需要的部分（可选）
+
+其中， var 、 scope 和 varDom 、 scopeDom 不应该同时出现，而应该被视为两个版本来使用，二者的变量都可以被 XML processing 标签库的其他标签来使用。
+<x:parse> 标签单独使用的情况很少，一般会结合 XML processing 标签库中的其他标签来一起工作。下面看一个示例。
+首先给出一个简单的 XML 文件，将对该 XML 文件做解析，该 XML 文件名为 SampleXml.xml 。
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-body>
+  <name>RW</name>
+  <passWord>123456</passWord>
+  <age>28</age>
+  <books>
+         <book>book1</book>
+         <book>book2</book>
+         <book>book3</book>
+  </books>
+</xml-body>
+标签库的工作：
+<c:import var="xmlFile" url="http://localhost:8080/booksamplejstl/SampleXml.xml"/>
+<x:parse var="xmlFileValue" doc="${xmlFile}"/>
+ 
+ 
+国际化标签
+看到 I18N 就应该想到知识“国际化”， I18N formatting 标签库就是用于在 JSP 页面中做国际化的动作。在该标签库中的标签一共有 12 个，被分为了两类，分别是：
+q         国际化核心标签： <fmt:setLocale> 、 <fmt:bundle> 、 <fmt:setBundle> 、 <fmt:message> 、 <fmt:param> 、 <fmt:requestEncoding> 。
+q         格式化标签： <fmt:timeZone> 、 <fmt:setTimeZone> 、 <fmt:formatNumber> 、 <fmt:parseNumber> 、 <fmt:formatDate> 、 <fmt:parseDate> 。
+下面只选择其中常见的一些标签和属性进行介绍。
+9.5.1  用于设置本地化环境的 <fmt:setLocale> 标签
+<fmt:setLocale> 标签用于设置 Locale 环境。它的属性和描述如表 9.17 所示：
+表 9.17 　 <fmt:setLocale> 标签属性和说明
+属性
+
+描述
+
+value
+
+Locale 环境的指定，可以是 java.util.Locale 或 String 类型的实例
+
+scope
+
+Locale 环境变量的作用范围（可选）
+
+下面看一个示例：
+<fmt:setLocale value="zh_TW"/>
+表示设置本地环境为繁体中文。
+9.5.2  用于资源文件绑定的 <fmt:bundle> 、 <fmt:setBundle> 标签
+这两组标签用于资源配置文件的绑定，唯一不同的是 <fmt:bundle> 标签将资源配置文件绑定于它标签体中的显示， <fmt:setBundle> 标签则允许将资源配置文件保存为一个变量，在之后的工作可以根据该变量来进行。
+根据 Locale 环境的不同将查找不同后缀的资源配置文件，这点在国际化的任何技术上都是一致的，通常来说，这两种标签单独使用是没有意义的，它们都会与 I18N formatting 标签库中的其他标签配合使用。它们的属性和描述如表 9.18 所示：
+表 9.18 　 <fmt:bundle> 、 <fmt:setBundle> 标签属性和说明
+属性
+
+描述
+
+basename
+
+资源配置文件的指定，只需要指定文件名而无须扩展名，二组标签共有的属性
+
+var
+
+<fmt:setBundle> 独有的属性，用于保存资源配置文件为一个变量
+
+scope
+
+变量的作用范围
+
+下面看一个示例
+<fmt:setLocale value="zh_CN"/>
+<fmt:setBundle basename="applicationMessage" var="applicationBundle"/>
+该示例将会查找一个名为 applicationMessage_zh_CN.properties 的资源配置文件，来作为显示的 Resource 绑定。
+9.5.3  用于显示资源配置文件信息的 <fmt:message> 标签
+用于信息显示的标签，将显示资源配置文件中定义的信息。它的属性和描述如表 9.19 所示：
+表 9.19 　 <fmt:message> 标签属性和说明
+属性
+
+描述
+
+key
+
+资源配置文件的“键”指定
+
+bundle
+
+若使用 <fmt:setBundle> 保存了资源配置文件，该属性就可以从保存的资源配置文件中进行查找
+
+var
+
+将显示信息保存为一个变量
+
+scope
+
+变量的作用范围
+
+下面看一个示例：
+<fmt:setBundle basename="applicationMessage" var="applicationBundle"/>
+<fmt:bundle basename="applicationAllMessage">
+         <fmt:message key="userName" />
+         <p>
+         <fmt:message key="passWord" bundle="${applicationBundle}" />
+</fmt:bundle>
+该示例使用了两种资源配置文件的绑定的做法，“ applicationMessage ”资源配置文件利用 <fmt:setBundle> 标签被赋于了变量“ applicationBundle ”，而作为 <fmt:bundle> 标签定义的“ applicationAllMessage ”资源配置文件作用于其标签体内的显示。
+q         第一个 <fmt:message> 标签将使用“ applicationAllMessage ”资源配置文件中“键”为“ userName ”的信息显示。
+q         第二个 <fmt:message> 标签虽然被定义在 <fmt:bundle> 标签体内，但是它使用了 bundle 属性，因此将指定之前由 <fmt:setBundle> 标签保存的“ applicationMessage ”资源配置文件，该“键”为“ passWord ”的信息显示。
+9.5.4  用于参数传递的 <fmt:param> 标签
+<fmt:param> 标签应该位于 <fmt:message> 标签内，将为该消息标签提供参数值。它只有一个属性 value 。
+<fmt:param> 标签有两种使用版本，一种是直接将参数值写在 value 属性中，另一种是将参数值写在标签体内。
+9.5.6  用于为请求设置字符编码的 <fmt:requestEncoding> 标签
+<fmt:requestEncoding> 标签用于为请求设置字符编码。它只有一个属性 value ，在该属性中可以定义字符编码。
+9.5.7  用于设定时区的 <fmt:timeZone> 、 <fmt:setTimeZone> 标签
+这两组标签都用于设定一个时区。唯一不同的是 <fmt:timeZone> 标签将使得在其标签体内的工作可以使用该时区设置， <fmt:setBundle> 标签则允许将时区设置保存为一个变量，在之后的工作可以根据该变量来进行。它们的属性和描述如表 9.20 所示：
+表 9.20 　 <fmt:timeZone> 、 <fmt:setTimeZone> 标签 属性和说明
+属性
+
+描述
+
+value
+
+时区的设置
+
+var
+
+<fmt:setTimeZone> 独有的属性，用于保存时区为一个变量
+
+scope
+
+变量的作用范围
+
+9.5.8  用于格式化数字的 <fmt:formatNumber> 标签（重要）
+<fmt: formatNumber > 标 签用于格式化数字。它的属性和描述如表 9.21 所示：
+表 9.21 　 <fmt:formatNumber> 标签属性和说明
+属性
+
+描述
+
+value
+
+格式化的数字，该数值可以是 String 类型或 java.lang.Number 类型的实例
+
+type
+
+格式化的类型
+
+pattern
+
+格式化模式
+
+var
+
+结果保存变量
+
+scope
+
+变量的作用范围
+
+maxIntegerDigits
+
+指定格式化结果的最大值
+
+minIntegerDigits
+
+指定格式化结果的最小值
+
+maxFractionDigits
+
+指定格式化结果的最大值，带小数
+
+minFractionDigits
+
+指定格式化结果的最小值，带小数
+
+<fmt:formatNumber> 标签实际是对应 java.util.NumberFormat 类， type 属性的可能值包括 currency （货币）、 number （数字）和 percent （百分比）。
+下面看一个示例。
+<fmt:formatNumber value="1000.888" type="currency" var="money"/>
+该结果将被保存在“ money ”变量中，将根据 Locale 环境显示当地的货币格式。
+ 
+9.5.9  用于解析数字的 <fmt:parseNumber> 标签（重要）
+<fmt:parseNumber> 标签用于解析一个数字，并将结果作为 java.lang.Number 类的实例返回。 <fmt:parseNumber> 标签看起来和 <fmt:formatNumber> 标签的作用正好相反。它的属性和描述如表 9.22 所示：
+表 9.22 　 <fmt:parseNumber> 标签属性和说明
+属性
+
+描述
+
+value
+
+将被解析的字符串
+
+type
+
+解析格式化的类型
+
+pattern
+
+解析格式化模式
+
+var
+
+结果保存变量，类型为 java.lang.Number
+
+scope
+
+变量的作用范围
+
+parseLocale
+
+以本地化的形式来解析字符串，该属性的内容应为 String 或 java.util.Locale 类型的实例
+
+下面看一个示例。
+<fmt:parseNumber value="15%" type="percent" var="num"/>
+解析之后的结果为“ 0.15 ”。
+9.5.10  用于格式化日期的 <fmt:formatDate> 标签（重要）
+<fmt:formatDate> 标签用于格式化日期。它的属性和描述如表 9.23 所示：
+表 9.23 　 <fmt:formatDate> 标签属性和说明
+属性
+
+描述
+
+value
+
+格式化的日期，该属性的内容应该是 java.util.Date 类型的实例
+
+type
+
+格式化的类型
+
+pattern
+
+格式化模式
+
+var
+
+结果保存变量
+
+scope
+
+变量的作用范围
+
+timeZone
+
+指定格式化日期的时区
+
+<fmt:formatDate> 标签与 <fmt:timeZone> 、 <fmt:setTimeZone> 两组标签的关系密切。若没有指定 timeZone属性， 也可以通过 <fmt:timeZone> 、 <fmt:setTimeZone> 两组标签设定的时区来格式化最后的结果。
+9.5.11  用于解析日期的 <fmt:parseDate> 标签（重要）
+<fmt:parseDate> 标签用于解析一个日期，并将结果作为 java.lang.Date 类型的实例返回。 <fmt:parseDate> 标签看起来和 <fmt:formatDate> 标签的作用正好相反。它的属性和描述如表 9.24 所示：
+表 9.24 　 <fmt:parseDate> 标签属性和说明
+属性
+
+描述
+
+value
+
+将被解析的字符串
+
+type
+
+解析格式化的类型
+
+pattern
+
+解析格式化模式
+
+var
+
+结果保存变量，类型为 java.lang.Date
+
+scope
+
+变量的作用范围
+
+parseLocale
+
+以本地化的形式来解析字符串，该属性的内容为 String 或 java.util.Locale 类型的实例
+
+timeZone
+
+指定解析格式化日期的时区
+
+<fmt:parseNumber> 和 <fmt:parseDate> 两组标签都实现解析字符串为一个具体对象实例的工作，因此，这两组解析标签对 var 属性的字符串参数要求非常严格。就 JSP 页面的表示层前段来说，处理这种解析本不属于份内之事，因此 <fmt:parseNumber> 和 <fmt:parseDate> 两组标签应该尽量少用，替代工作的地方应该在服务器端表示层的后段，比如在 Servlet 中。
+ 
+ 
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+

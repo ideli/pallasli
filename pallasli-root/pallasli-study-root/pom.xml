@@ -41,5 +41,6 @@
       <module>pallasli-study-lucene5</module>
       <module>pallasli-study-lucene</module>
       <module>pallasli-study-lucene3</module>
+      <module>pallasli-study-dwr</module>
   </modules>
 </project>

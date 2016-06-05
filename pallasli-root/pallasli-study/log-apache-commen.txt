@@ -1,0 +1,62 @@
+
+java核心技术学习
+将logging配置写入环境变量
+
+对源码进行浏览后,估计需要修改的文件应该是
+src\java\org\apache\log4j\helpers\OptionConverter.java
+在这个文件可以看到, log4j 对 ${} 这种形式的变量会进行以下转换（下面是代码片段）
+     // first try in System properties
+     String replacement = getSystemProperty(key, null);
+     // then try props parameter
+     if(replacement == null && props != null) {
+     replacement = props.getProperty(key);
+     }
+就是说,会先从系统变量中读取属性值,如果系统变量不存在这个属性,就从log4j配置文件中属性中读取.
+问题就在这里了!
+并没有从环境变量中读取,因此,我增加了一个函数:
+public static String getEnvProperty(String key, String def) {
+    try {
+        String value = System.getenv(key);
+        if (value == null)
+        {
+            value = def;
+        }
+      return value;
+    } catch(Throwable e) { // MS-Java throws com.ms.security.SecurityExceptionEx
+      LogLog.debug("Was not allowed to read system property \""+key+"\".");
+      return def;
+    }
+  }
+是的,通过调用 System.getenv() ,就可以从环境变量中读取属性值了.
+再修改上面的第一个代码片段，改为
+     // first try in System properties
+     String replacement = getSystemProperty(key, null);
+     // then try in environment properties
+     if (replacement == null)
+     {
+         replacement = getEnvProperty(key, null);
+     }
+     // then try props parameter
+     if(replacement == null && props != null) {
+     replacement = props.getProperty(key);
+     }
+ok, 代码修改工作完毕, 现在需要编译了.
+在 logging-log4j-1.2.11 目录下输入
+ant
+会提示要加参数,所以改为输入
+ant build
+编译通过,但发现有其它问题,不过不要紧了,已经有这个文件就可以了
+logging-log4j-1.2.11\dist\classes\org\apache\log4j\helpers\OptionConverter.class
+要正常生成 jar 文件,可能需要其它库文件支持,但不是我研究的方向了.
+我只要把这个 OptionConverter.class 放到 log4j-1.2.11.jar 文件里, 替换掉旧的 OptionConverter.class 就可以了.
+howto? easy job. 用 winrar 打开 log4j-1.2.11.jar, 用新的 OptionConverter.class 覆盖掉旧的, done!
+最后一步, 把这个新的log4j-1.2.11.jar 拷贝到你的系统中,就可以了.
+或者改一个名字? log4j-1.2.11-pro.jar ? 增强版~ 咔咔, well done!
+最后，看一下 log4j.properties 中怎么用环境变量
+log4j.appender.demo=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.demo.File=${MY_PROJECT_HOME}/logs/demo.log
+log4j.appender.demo.DatePattern='.'yyyyMMdd
+log4j.appender.demo.layout=org.apache.log4j.PatternLayout 
+log4j.appender.demo.layout.ConversionPattern=%-d{yyyy-MM-dd HH:mm:ss} [%c] : %L - %n%m%n%n
+蓝色粗体字部分就是环境变量了，因此只需要定义一个名为 MY_PROJECT_HOME 的环境变量，就可以把 log 文件输出到指定的目录下，而不需要修改 log4j.properties 了。
+ Copyright ©2011 lyt. All Rights Reserved.

@@ -1,0 +1,673 @@
+
+study
+连接池
+
+　　import java.sql.*;
+　　import java.util.*;
+　　public class ConnectionPool {
+　　private String jdbcDriver = ""; // 数据库驱动
+　　private String dbUrl = ""; // 数据 URL
+　　private String dbUsername = ""; // 数据库用户名
+　　private String dbPassword = ""; // 数据库用户密码
+　　private String testTable = ""; // 测试连接是否可用的测试表名，默认没有测试表
+　　private int initialConnections = 10; // 连接池的初始大小
+　　private int incrementalConnections = 5;// 连接池自动增加的大小
+　　private int maxConnections = 50; // 连接池最大的大小
+　　private Vector connections = null; // 存放连接池中数据库连接的向量 , 初始时为 null
+　　// 它中存放的对象为 PooledConnection 型
+　　/**
+　　* 构造函数
+　　* @param jdbcDriver String JDBC 驱动类串
+　　* @param dbUrl String 数据库 URL
+　　* @param dbUsername String 连接数据库用户名
+　　* @param dbPassword String 连接数据库用户的密码
+　　*/
+　public ConnectionPool(String jdbcDriver,String dbUrl,String dbUsername,String dbPassword){
+　　this.jdbcDriver = jdbcDriver;
+　　this.dbUrl = dbUrl;
+　　this.dbUsername = dbUsername;
+　　this.dbPassword = dbPassword;
+　　}
+　　/**
+　　* 返回连接池的初始大小
+　　* @return 初始连接池中可获得的连接数量
+　　*/
+　　public int getInitialConnections() {
+　　return this.initialConnections;
+　　}
+　　/**
+　　* 设置连接池的初始大小
+　　* @param 用于设置初始连接池中连接的数量
+　　*/
+　　public void setInitialConnections(int initialConnections) {
+　　this.initialConnections = initialConnections;
+　　}
+　　/**
+　　* 返回连接池自动增加的大小 、
+　　* @return 连接池自动增加的大小
+　　*/
+　　public int getIncrementalConnections() {
+　　return this.incrementalConnections;
+　　}
+　　/**
+　　* 设置连接池自动增加的大小
+　　* @param 连接池自动增加的大小
+　　*/
+　　public void setIncrementalConnections(int incrementalConnections) {
+　　this.incrementalConnections = incrementalConnections;
+　　}
+　　/**
+　　* 返回连接池中最大的可用连接数量
+　　* @return 连接池中最大的可用连接数量
+　　*/
+　　public int getMaxConnections() {
+　　return this.maxConnections;
+　　}
+　　/**
+　　* 设置连接池中最大可用的连接数量
+　  * @param 设置连接池中最大可用的连接数量值
+　　*/
+　　public void setMaxConnections(int maxConnections) {
+　　this.maxConnections = maxConnections;
+　　}
+　　/**
+　　* 获取测试数据库表的名字
+　  * @return 测试数据库表的名字
+　　*/
+　　public String getTestTable() {
+　　return this.testTable;
+　　}
+　　/**
+　　* 设置测试表的名字
+　　* @param testTable String 测试表的名字
+　　*/
+　public void setTestTable(String testTable) {
+　　this.testTable = testTable;
+　　}
+　　/**
+　　* 创建一个数据库连接池，连接池中的可用连接的数量采用类成员
+　　* initialConnections 中设置的值
+   */
+　　public synchronized void createPool() throws Exception {
+　　// 确保连接池没有创建
+　　// 如果连接池己经创建了，保存连接的向量 connections 不会为空
+　　if (connections != null) {
+　　return; // 如果己经创建，则返回
+　　}
+　　// 实例化 JDBC Driver 中指定的驱动类实例
+　　Driver driver = (Driver) (Class.forName(this.jdbcDriver).newInstance());
+　　DriverManager.registerDriver(driver); // 注册 JDBC 驱动程序
+　　// 创建保存连接的向量 , 初始时有 0 个元素
+　　connections = new Vector();
+　　// 根据 initialConnections 中设置的值，创建连接。
+　　createConnections(this.initialConnections);
+System.out.println(" 数据库连接池创建成功！ ");
+　　}
+　　/**
+　　* 创建由 numConnections 指定数目的数据库连接 , 并把这些连接
+　　* 放入 connections 向量中
+　　* @param numConnections 要创建的数据库连接的数目
+　　*/
+　　@SuppressWarnings("unchecked")
+　　private void createConnections(int numConnections) throws SQLException {
+　　// 循环创建指定数目的数据库连接
+　　for (int x = 0; x < numConnections; x++) {
+　　// 是否连接池中的数据库连接的数量己经达到最大？最大值由类成员 maxConnections
+　　// 指出，如果 maxConnections 为 0 或负数，表示连接数量没有限制。
+　　// 如果连接数己经达到最大，即退出。
+　　if (this.maxConnections > 0 && this.connections.size() >= this.maxConnections) {
+　　break;
+　　}
+　　//add a new PooledConnection object to connections vector
+　　// 增加一个连接到连接池中（向量 connections 中）
+　　try{
+　　connections.addElement(new PooledConnection(newConnection()));
+　　}catch(SQLException e){
+　　System.out.println(" 创建数据库连接失败！ "+e.getMessage());
+　　throw new SQLException();
+　　}
+　　System.out.println(" 数据库连接己创建 ......");
+　　}
+　　}
+　　/**
+　　* 创建一个新的数据库连接并返回它
+　　* @return 返回一个新创建的数据库连接
+　　*/
+　　private Connection newConnection() throws SQLException {
+　　// 创建一个数据库连接
+　　Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+　　// 如果这是第一次创建数据库连接，即检查数据库，获得此数据库允许支持的
+　　// 最大客户连接数目
+　　//connections.size()==0 表示目前没有连接己被创建
+　　if (connections.size() == 0) {
+　　DatabaseMetaData metaData = http://blog.soso.com/qz.q/conn.getMetaData();
+　　int driverMaxConnections = metaData.getMaxConnections();
+　　// 数据库返回的 driverMaxConnections 若为 0 ，表示此数据库没有最大
+　　// 连接限制，或数据库的最大连接限制不知道
+　　//driverMaxConnections 为返回的一个整数，表示此数据库允许客户连接的数目
+　　// 如果连接池中设置的最大连接数量大于数据库允许的连接数目 , 则置连接池的最大
+　　// 连接数目为数据库允许的最大数目
+　　if (driverMaxConnections > 0 && this.maxConnections > driverMaxConnections) {
+　　this.maxConnections = driverMaxConnections;
+　　}
+　　}
+　　return conn; // 返回创建的新的数据库连接
+　　}
+　　/**
+　　* 通过调用 getFreeConnection() 函数返回一个可用的数据库连接 ,
+　　* 如果当前没有可用的数据库连接，并且更多的数据库连接不能创
+　　* 建（如连接池大小的限制），此函数等待一会再尝试获取。
+　　* @return 返回一个可用的数据库连接对象
+　　*/
+　　public synchronized Connection getConnection() throws SQLException {
+　　// 确保连接池己被创建
+　　if (connections == null) {
+　　return null; // 连接池还没创建，则返回 null
+　　}
+　　Connection conn = getFreeConnection(); // 获得一个可用的数据库连接
+　　// 如果目前没有可以使用的连接，即所有的连接都在使用中
+　　while (conn == null){
+　　// 等一会再试
+　　wait(250);
+　　conn = getFreeConnection(); // 重新再试，直到获得可用的连接，如果
+　　//getFreeConnection() 返回的为 null
+　　// 则表明创建一批连接后也不可获得可用连接
+　　}
+　　return conn;// 返回获得的可用的连接
+　　}
+　　/**
+　　* 本函数从连接池向量 connections 中返回一个可用的的数据库连接，如果
+　　* 当前没有可用的数据库连接，本函数则根据 incrementalConnections 设置
+　　* 的值创建几个数据库连接，并放入连接池中。
+　　* 如果创建后，所有的连接仍都在使用中，则返回 null
+　　* @return 返回一个可用的数据库连接
+　　*/
+　　private Connection getFreeConnection() throws SQLException {
+　　// 从连接池中获得一个可用的数据库连接
+　　Connection conn = findFreeConnection();
+　　if (conn == null) {
+　　// 如果目前连接池中没有可用的连接
+　　// 创建一些连接
+　　createConnections(incrementalConnections);
+　　// 重新从池中查找是否有可用连接
+　　conn = findFreeConnection();
+　　if (conn == null) {
+　　// 如果创建连接后仍获得不到可用的连接，则返回 null
+　　return null;
+　　}
+　　}
+　　return conn;
+　　}
+　　/**
+　　* 查找连接池中所有的连接，查找一个可用的数据库连接，
+　　* 如果没有可用的连接，返回 null
+　　*
+* @return 返回一个可用的数据库连接
+　　*/
+　　private Connection findFreeConnection() throws SQLException {
+　　Connection conn = null;
+　　PooledConnection pConn = null;
+　　// 获得连接池向量中所有的对象
+　　Enumeration enumerate = connections.elements();
+　　// 遍历所有的对象，看是否有可用的连接
+　　while (enumerate.hasMoreElements()) {
+　　pConn = (PooledConnection) enumerate.nextElement();
+　　if (!pConn.isBusy()) {
+　　// 如果此对象不忙，则获得它的数据库连接并把它设为忙
+　　conn = pConn.getConnection();
+　　pConn.setBusy(true);
+　　// 测试此连接是否可用
+　　if (!testConnection(conn)) {
+　　// 如果此连接不可再用了，则创建一个新的连接，
+　　// 并替换此不可用的连接对象，如果创建失败，返回 null
+　　try{
+　　conn = newConnection();
+　　}catch(SQLException e){
+　　System.out.println(" 创建数据库连接失败！ "+e.getMessage());
+　　return null;
+　　}
+　　pConn.setConnection(conn);
+　　}
+　　break; // 己经找到一个可用的连接，退出
+　　}
+　　}
+　　return conn;// 返回找到到的可用连接
+　　}
+　　/**
+　　* 测试一个连接是否可用，如果不可用，关掉它并返回 false
+　　* 否则可用返回 true
+　　*
+　　* @param conn 需要测试的数据库连接
+　　* @return 返回 true 表示此连接可用， false 表示不可用
+　　*/
+　　private boolean testConnection(Connection conn) {
+　　try {
+　　// 判断测试表是否存在
+　　if (testTable.equals("")) {
+　　// 如果测试表为空，试着使用此连接的 setAutoCommit() 方法
+　　// 来判断连接否可用（此方法只在部分数据库可用，如果不可用 ,
+　　// 抛出异常）。注意：使用测试表的方法更可靠
+　　conn.setAutoCommit(true);
+　　} else {// 有测试表的时候使用测试表测试
+　　//check if this connection is valid
+　　Statement stmt = conn.createStatement();
+　　stmt.execute("select count(*) from " + testTable);
+　　}
+　　} catch (SQLException e) {
+　　// 上面抛出异常，此连接己不可用，关闭它，并返回 false;
+　　closeConnection(conn);
+　　return false;
+　　}
+　　// 连接可用，返回 true
+　　return true;
+　　}
+　　/**
+　　* 此函数返回一个数据库连接到连接池中，并把此连接置为空闲。
+　　* 所有使用连接池获得的数据库连接均应在不使用此连接时返回它。
+　　*
+　　* @param 需返回到连接池中的连接对象
+　　*/
+　　public void returnConnection(Connection conn) {
+　　// 确保连接池存在，如果连接没有创建（不存在），直接返回
+　　if (connections == null) {
+　　System.out.println(" 连接池不存在，无法返回此连接到连接池中 !");
+　　return;
+　　}
+　　PooledConnection pConn = null;
+　　Enumeration enumerate = connections.elements();
+　　// 遍历连接池中的所有连接，找到这个要返回的连接对象
+　　while (enumerate.hasMoreElements()) {
+　　pConn = (PooledConnection) enumerate.nextElement();
+　　// 先找到连接池中的要返回的连接对象
+　　if (conn == pConn.getConnection()) {
+　　// 找到了 , 设置此连接为空闲状态
+　　pConn.setBusy(false);
+　　break;
+　　}
+　　}
+　　}
+　　/**
+　　* 刷新连接池中所有的连接对象
+　　*/
+　　public synchronized void refreshConnections() throws SQLException {
+　　// 确保连接池己创新存在
+　　if (connections == null) {
+　　System.out.println(" 连接池不存在，无法刷新 !");
+　　return;
+　　}
+　　PooledConnection pConn = null;
+　　Enumeration enumerate = connections.elements();
+　　while (enumerate.hasMoreElements()) {
+　　// 获得一个连接对象
+　　pConn = (PooledConnection) enumerate.nextElement();
+　　// 如果对象忙则等 5 秒 ,5 秒后直接刷新
+　　if (pConn.isBusy()) {
+　　wait(5000); // 等 5 秒
+　　}
+　　// 关闭此连接，用一个新的连接代替它。
+　　closeConnection(pConn.getConnection());
+　　pConn.setConnection(newConnection());
+　　pConn.setBusy(false);
+　　}
+　　}
+　　/**
+　　* 关闭连接池中所有的连接，并清空连接池。
+　　*/
+　　public synchronized void closeConnectionPool() throws SQLException {
+　　// 确保连接池存在，如果不存在，返回
+　　if (connections == null) {
+　　System.out.println(" 连接池不存在，无法关闭 !");
+　　return;
+　　}
+　　PooledConnection pConn = null;
+Enumeration enumerate = connections.elements();
+　　while (enumerate.hasMoreElements()) {
+　　pConn = (PooledConnection) enumerate.nextElement();
+　　// 如果忙，等 5 秒
+　　if (pConn.isBusy()) {
+　　wait(5000); // 等 5 秒
+　　}
+　　//5 秒后直接关闭它
+　　closeConnection(pConn.getConnection());
+　　// 从连接池向量中删除它
+　　connections.removeElement(pConn);
+　　}
+　　// 置连接池为空
+　　connections = null;
+　　}
+　　/**
+　　* 关闭一个数据库连接
+　　* @param 需要关闭的数据库连接
+　　*/
+　　private void closeConnection(Connection conn) {
+　　try {
+　　conn.close();
+　　}catch (SQLException e) {
+　　System.out.println(" 关闭数据库连接出错： "+e.getMessage());
+　　}
+　　}
+　　/**
+　　* 使程序等待给定的毫秒数
+　　* @param 给定的毫秒数
+　　*/
+　　private void wait(int mSeconds) {
+　　try {
+　　Thread.sleep(mSeconds);
+　　} catch (InterruptedException e) {
+　　}
+　　}
+　　/**
+　　*
+　　* 内部使用的用于保存连接池中连接对象的类
+　　* 此类中有两个成员，一个是数据库的连接，另一个是指示此连接是否
+　　* 正在使用的标志。
+　　*/
+　　class PooledConnection {
+　　Connection connection = null;// 数据库连接
+　　boolean busy = false; // 此连接是否正在使用的标志，默认没有正在使用
+　　// 构造函数，根据一个 Connection 构告一个 PooledConnection 对象
+　　public PooledConnection(Connection connection) {
+　　this.connection = connection;
+　　}
+　　// 返回此对象中的连接
+　　public Connection getConnection() {
+　　return connection;
+　　}
+　　// 设置此对象的，连接
+　　public void setConnection(Connection connection) {
+　　this.connection = connection;
+　　}
+　　// 获得对象连接是否忙
+　　public boolean isBusy() {
+　　return busy;
+　　}
+　　// 设置对象的连接正在忙
+　　public void setBusy(boolean busy) {
+　　this.busy = busy;
+　　}
+　　}
+　　}
+　　=======================================
+　　这个例子是根据POSTGRESQL数据库写的，
+　　请用的时候根据实际的数据库调整。
+　　调用方法如下：
+　　①　ConnectionPool connPool　　= new ConnectionPool("org.postgresql.Driver","jdbc:postgresql://dbURI:5432/DBName","postgre","postgre");
+　　②　connPool .createPool();
+　　Connection conn = connPool .getConnection();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+study
+连接池
+
+通过JDBC 实现对数据库的访问
+（1）引用必要的包
+ import java.sql.*;  //它包含有操作数据库的各个类与接口  
+（2）加载连接数据库的驱动程序类    
+    为实现与特定的数据库相连接，JDBC必须加载相应的驱动程序类。这通常可以采用Class.forName()方法显式地加载一个驱动程序类，由驱动程序负责向DriverManager登记注册并在与数据库相连接时，DriverManager将使用此驱动程序。
+      Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+注意：这条语句直接加载了sun公司提供的JDBC-ODBC Bridge驱动程序类。
+（3）创建与数据源的连接
+ String url="jdbc:odbc:DatabaseDSN"; 
+ Connection con=DriverManager.getConnection(url,"Login","Password");
+注意：采用DriverManager类中的getConnection()方法实现与url所指定的数据源建立连接并返回一个Connection类的对象，以后对这个数据源的操作都是基于该Connection类对象；但对于Access等小型数据库，可以不用给出用户名与密码。
+ String url="jdbc:odbc:DatabaseDSN"; 
+ Connection con=DriverManager.getConnection(url);
+ System.out.println(con.getCatalog()); //取得数据库的完整路径及文件名　
+    JDBC借用了url语法来确定全球的数据库（数据库URL类似于通用的URL），对由url所指定的数据源的表示格式为
+   jdbc::[ database locator]
+jdbc---指出要使用JDBC
+subprotocal---定义驱动程序类型
+database locator---提供网络数据库的位置和端口号(包括主机名、端口和数据库系统名等)    jdbc:odbc://host.domain.com:port/databasefile   
+  主协议jdbc   驱动程序类型为odbc，它指明JDBC管理器如何访问数据库，该例指名为采用JDBC-ODBC桥接方式；其它为数据库的位置表示。  
+例如：装载mySQL JDBC驱动程序
+Class.forName("org.gjt.mm.mysql.Driver ");
+String url
+="jdbc:mysql://localhost/softforum?user=soft&password=soft1234&useUnicode=true&characterEncoding=8859_1"
+　　//testDB为你的数据库名
+　　Connection conn= DriverManager.getConnection(url);
+例如：装载Oracle JDBC OCI驱动程序（用thin模式）
+Class.forName("oracle.jdbc.driver.OracleDriver ");
+String url="jdbc:oracle:thin:@localhost:1521:orcl";
+　　//orcl为你的数据库的SID
+　　String user="scott";
+　　String password="tiger";
+　　Connection conn= DriverManager.getConnection(url,user,password);
+注意：也可以通过con.setCatalog("MyDatabase")来加载数据库。
+例如：装载DB2驱动程序
+Class.forName("com.ibm.db2.jdbc.app.DB2Driver ")
+String url="jdbc:db2://localhost:5000/sample";
+　　//sample为你的数据库名
+　　String user="admin";
+　　String password="";
+　　Connection conn= DriverManager.getConnection(url,user,password);
+例如：装载MicroSoft SQLServer驱动程序
+Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver ");
+String url="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=pubs";
+　　//pubs为你的数据库的
+　　String user="sa";
+　　String password=""; 　　
+　　Connection conn= DriverManager.getConnection(url,user,password);
+（4）查询数据库的一些结构信息
+     这主要是获得数据库中的各个表，各个列及数据类型和存储过程等各方面的信息。根据这些信息，从而可以访问一个未知结构的数据库。这主要是通过DatabaseMetaData类的对象来实现并调用其中的方法来获得数据库的详细信息（即数据库的基本信息，数据库中的各个表的情况，表中的各个列的信息及索引方面的信息）。
+    DatabaseMetaData dbms=con.getMetaData();
+    System.out.println("数据库的驱动程序为 "+dbms.getDriverName());
+（5）查询数据库中的数据：
+   在JDBC中查询数据库中的数据的执行方法可以分为三种类型，分别对应Statement （用于执行不带参数的简单SQL语句字符串），PreparedStatement（预编译SQL语句）和CallableStatement（主要用于执行存储过程）三个接口。
+9.5.1、实现对数据库的一般查询Statement
+ 1、创建Statement对象（要想执行一个SQL查询语句，必须首先创建出Statement对象，它封装代表要执行的SQL语句）并执行SQL语句以返回一个ResultSet对象，这可以通过Connection类中的createStatement()方法来实现。
+     Statement stmt=con.createStatement();
+ 2、执行一个SQL查询语句，以查询数据库中的数据。Statement接口提供了三种执行SQL语句的方法：executeQuery()、executeUpdate() 和execute()。具体使用哪一个方法由SQL语句本身来决定。
+l      方法 executeQuery 用于产生单个结果集的语句，例如 SELECT 语句等。
+l      方法 executeUpdate 用于执行INSERT、UPDATE或DELETE 语句以及SQL DDL（数据定义语言）语句，例如 CREATE TABLE 和 DROP TABLE。INSERT、UPDATE 或DELETE 语句的效果是修改表中零行或多行中的一列或多列。executeUpdate 的返回值是一个整数，指示受影响的行数（即更新计数）。对于 CREATE TABLE 或DROP TABLE 等不操作行的语句，executeUpdate 的返回值总为零。
+l         方法 execute 用于执行返回多个结果集、多个更新计数或二者组合的语句。一般不会需要该高级功能。
+下面给出通过Statement类中的executeQuery()方法来实现的代码段。executeQuery()方法的输入参数是一个标准的SQL查询语句，其返回值是一个ResultSet类的对象。
+ResultSet rs=stmt. executeQuery ("select * from DBTableName");         
+要点：①JDBC在编译时并不对将要执行的SQL查询语句作任何检查，只是将其作为一个String类对象，直到驱动程序执行SQL查询语句时才知道其是否正确。对于错误的SQL查询语句，在执行时将会产生 SQLException。
+      ②一个Statement对象在同一时间只能打开一个结果集，对第二个结果集的打开隐含着对第一个结果集的关闭。
+      ③如果想对多个结果集同时操作，必须创建出多个Statement对象，在每个Statement对象上执行SQL查询语句以获得相应的结果集。
+      ④如果不需要同时处理多个结果集，则可以在一个Statement对象上顺序执行多个SQL查询语句，对获得的结果集进行顺序操作。
+import java.sql.*;
+public class ResultSetTest
+{    public static void main(String args[])
+        {      try
+                {  
+                    Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                    Connection con=DriverManager.getConnection("jdbc:odbc:studlist");
+                    Statement stmt=con.createStatement();
+                    ResultSet rs1=stmt.executeQuery("select name from  student");
+                    ResultSet rs2=stmt.executeQuery("select age from student");
+//此时rs1已经被关闭                   
+                    while(rs2.next())
+                    {  
+                       System.out.println(rs2.getObject(1));
+                    }
+                    rs2.close();
+                    stmt.close();
+                    con.close();
+                }
+                catch(Exception e)
+                {
+                    System.out.println(e);
+                }  
+    }
+}
+注意：
+此时显示出的将是姓名还是年龄？（将显示的是rs2的结果集的内容，即学生的年龄，因为采用JDBC-ODBC方式的驱动程序时，并且是采用同一个Statement对象，它只会保留最新的结果集，rs1中的内容将会被新的结果集所取代）。
+ 3、关闭Statement对象：每一个Statement对象在使用完毕后，都应该关闭。
+     stmt.close()
+9.5.2、预编译方式执行SQL语句PreparedStatement
+    由于Statement对象在每次执行SQL语句时都将该语句传给数据库，如果需要多次执行同一条SQL语句时，这样将导致执行效率特别低，此时可以采用PreparedStatement对象来封装SQL语句。如果数据库支持预编译，它可以将SQL语句传给数据库作预编译，以后每次执行该SQL语句时，可以提高访问速度；但如果数据库不支持预编译，将在语句执行时才传给数据库，其效果类同于Statement对象。
+    另外PreparedStatement对象的SQL语句还可以接收参数，可以用不同的输入参数来多次执行编译过的语句，较Statement灵活方便（详见后文介绍）。
+1、创建PreparedStatement对象：从一个Connection对象上可以创建一个PreparedStatement对象，在创建时可以给出预编译的SQL语句。
+    PreparedStatement pstmt=con.prepareStatement("select * from DBTableName");
+2、执行SQL语句：可以调用executeQuery()来实现，但与Statement方式不同的是，它没有参数，因为在创建PreparedStatement对象时已经给出了要执行的SQL语句，系统并进行了预编译。
+    ResultSet rs=pstmt.executeQuery(); // 该条语句可以被多次执行 
+3、关闭PreparedStatement
+    pstmt.close();  //其实是调用了父类Statement类中的close()方法
+9.5.3、执行存储过程CallableStatement
+    CallableStatement类是PreparedStatement类的子类，因此可以使用在PreparedStatement类及Statement类中的方法，主要用于执行存储过程。
+1、创建CallableStatement对象：使用Connection类中的prepareCall方法可以创建一个CallableStatement对象，其参数是一个String对象，一般格式为：
+l         不带输入参数的存储过程“{call 存储过程名()}”。
+l      带输入参数的存储过程“{call存储过程名(?, ?)}”
+l         带输入参数并有返回结果参数的存储过程“{? = call 存储过程名(?, ?, ...)}”
+    CallableStatement cstmt=con.prepareCall("{call Query1()}");
+2、执行存储过程：可以调用executeQuery()方法来实现。
+    ResultSet rs=cstmt.executeQuery();  
+3、关闭CallableStatement
+    cstmt.close();  //其实是调用了父类Statement类中的close()方法
+（6）检索记录集以获得当前记录集中的某一记录的各个字段的值
+9.5.4、ResultSet对象：
+    ① 执行完毕SQL语句后，将返回一个ResultSet类的对象，它包含所有的查询结果。但对ResultSet类的对象方式依赖于光标（Cursor）的类型，而对每一行中的各个列，可以按任何顺序进行处理（当然，如果按从左到右的顺序对各列进行处理可以获得较高的执行效率）；
+ResultSet类中的Course方式主要有：
+ResultSet.TYPE_FORWARD_ONLY（为缺省设置）：光标只能前进不能后退，也就是只能从第一个一直移动到最后一个。
+ResultSet.TYPE_SCROLL_SENSITIVE：允许光标前进或后退并感应到其它ResultSet的光标的移动情形。
+ResultSet.TYPE_SCROLL_INSENSITIVE：允许光标前进或后退并不能感应到其它ResultSet的光标的移动情形。
+ResultSet类中的数据是否允许修改主要有：
+ResultSet.CONCUR_READ_ONLY（为缺省设置）：表示数据只能只读，不能更改。
+ResultSet.CONCUR_UPDATABLE：表示数据允许被修改。
+    可以在创建Statement或PreparedStatement对象时指定ResultSet的这两个特性。
+Statement stmt=con.createStatement(ResultSet.TYPE_FORWARD_ONLY,ResultSet.CONCUR_READ_ONLY);
+或
+PreparedStatement pstmt=con.PrepareStatement("insert into bookTable values (?,?,?)",ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+    ② ResultSet类的对象维持一个指向当前行的指针，利用ResultSet类的next()方法可以移动到下一行（在JDBC中，Java程序一次只能看到一行数据），如果next()的返回值为false，则说明已到记录集的尾部。另外JDBC也没有类似ODBC 的书签功能的方法。
+    ③ 利用ResultSet类的getXXX()方法可以获得某一列的结果，其中XXX代表JDBC中的Java数据类型，如 getInt()、getString()、getDate()等。访问时需要指定要检索的列（可以采用 int值作为列号（从1开始计数）或指定列（字段）名方式，但字段名不区别字母的大小写）。
+while(rs.next())
+ {  String name=rs.getString("Name"); //采用“列名”的方式访问数据
+    int age=rs.getInt("age");
+    float wage=rs.getFloat("wage");
+    String homeAddress=rs.getString(4); //采用“列号”的方式访问数据
+ }
+9.5.5、数据转换
+   利用ResultSet类的getXXX()方法可以实现将ResultSet中的SQL数据类型转换为它所返回的Java数据类型。
+9.5.6、NULL结果值
+　　要确定给定结果值是否是JDBC NULL，必须先读取该列，然后使用ResultSet.wasNull
+方法检查该次读取是否返回JDBC NULL。
+　　当使用ResultSet.getXXX方法读取JDBC NULL时，方法wasNull将返回下列值之一：
+（1）Javanull值
+　　对于返回Java对象的getXXX方法（例如getString、getBigDecimal、getBytes、getDate、getTime、getTimestamp、getAsciiStream、getUnicodeStream、getBinaryStream、getObject等）。
+（2）零值：对于getByte、getShort、getInt、getLong、getFloat和getDouble。
+（3）false值：对于getBoolean
+9.5.6、获得结果集中的结构信息：利用ResultSet类的getMetaData()方法来获得结果集中的一些结构信息（主要提供用来描述列的数量、列的名称、列的数据类型。利用ResulSetMetaData类中的方法）。
+ResultsetMetaData  rsmd=rs.getMetaData();
+rsmd.getColumnCount();   //返回结果集中的列数            
+rsmd.getColumnLabel(1); //返回第一列的列名（字段名）
+例如：
+Statement stmt=con.createStatement();
+ResultSet rs=stmt.executeQuery("select * from TableName");
+for(int i=1; i<=rs.getMetaData().getColumnCount(); i++)   //跟踪显示各个列的名称
+       {      System.out.print(rs. getColumnName (i)+"\t");
+       }
+while(rs.next())
+{  //跟踪显示各个列的值
+    for(int j=1; j<=rs.getMetaData().getColumnCount(); j++)
+       {      System.out.print(rs.getObject(j)+"\t");
+       }
+}
+.6、更新数据库
+   前面主要介绍如何实现对数据库的查询操作，但在许多应用中需要实现对数据库的更新，这主要涉及修改、插入和删除等（即SQL语句中的Insert、Update、Delete、Creat、Drap等）。仍然通过创建Statement对象来实现，但不再调用executeQuery()方法，而是使用executeUpdate()方法。
+要点F：正确区分Statement类中的executeQuery()、execute()和executeUpdate()方法的用法：（1）
+executeQuery() 执行一般的SQL查询语句（即SELECT语句）并返回Resultset对象；（2）execute()可以执行各种SQL查询语句，并可能返回多个结果集（这一般主要发生在执行了返回多个结果集的存储过程时），此时可以采用Resultset类的getResultSet()来获得当前的结果集；（3）executeUpdate()执行对数据库的更新的SQL语句或DDL语句。
+9.6.1 对表中的记录进行操作
+   对一个表中的记录可以进行修改、插入和删除等操作，分别对应SQL的Update、 Insert、Delete操作；executeUpdate()方法的输入参数仍然为一个String对象（即所要执行的SQL语句），但输出参数不是ResultSet对象，而是一个整数（它代表操作所影响的记录行数）。
+Statement stmt=con.createStatement();
+stmt.executeUpdate("Update bookTable set Title='Java2' where Author='zhang'");
+ 
+stmt.executeUpdate("Delete from bookTable where Author='zhang'");
+stmt.executeUpdate("Insert into bookTable(BookID,Author,Title) values(1,'Li Ming','Java2')");  //未给出的列，其值为NULL
+ 
+程序实例：对数据库中的表进行更新操作并显示操作前后的结果
+import java.sql.*;
+public class DBUpdateSetTest
+{     public static void main(String args[])
+        {      try
+                {  
+                    Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                    Connection con=DriverManager.getConnection("jdbc:odbc:studlist");
+                    Statement stmt=con.createStatement();
+                    ResultSet rs=stmt.executeQuery("select * from student");
+                    System.out.println("Result before executeUpdate");
+                    while(rs.next())
+                    {
+                        System.out.println(rs.getString("name"));
+                        System.out.println(rs.getString("age"));
+                    }
+                    stmt.executeUpdate("Update student set name='Yang' where id=0");
+                    stmt.executeUpdate("Delete from student where id=2");
+                    stmt.executeUpdate("Insert into student(id,name,age,sex) values(2,'zhang',30,true)");
+                    rs=stmt.executeQuery("select * from student");
+                    System.out.println("Result After executeUpdate");
+                    while(rs.next())
+                    {
+                        System.out.println(rs.getString("name"));
+                        System.out.println(rs.getString("age"));
+                    }
+                    rs.close();
+                    stmt.close();
+                    con.close();
+                    }
+                catch(Exception e)
+                {
+                    System.out.println(e);
+                }  
+       }
+}
+9.6.2  创建和删除表
+    创建和删除一个表主要对应于SQL的Create Table和Drop Table语句。这可以通过Statement对象的executeUpdate()方法来完成。
+ ① 创建表
+    Statement stmt=con.createStatement();
+    stmt.executeUpdate("create table TableName(ID integer, Name VARCHAR(20), Age integer)");
+    stmt.executeUpdate("Insert into TableName(ID, Name, Age) values(1,'Yang Ming',30)");
+ ② 删除表
+    Statement stmt=con.createStatement();
+    stmt.executeUpdate("Drop Table TableName");
+9.6.3  增加和删除表中的列
+ 对一个表的列进行更新操作主要是使用SQL的ALTER Table语句。对列所进行的更新操作会影响到表中的所有的行。
+ ① 增加表中的一列
+    Statement stmt=con.createStatement();
+    stmt.executeUpdate("Alter Table TableName add Column Address VarChar(50)");
+    stmt.executeUpdate("Update TableName set Address='Beijing,China' where ID=1");
+ ② 删除表中的一列
+    Statement stmt=con.createStatement();
+    stmt.executeUpdate("Alter Table TableName Drop Column Address");
+    stmt.executeQuery("Select * from TableName");
+9.6.4  利用PreparedStatement对象实现数据更新
+    同SQL查询语句一样，对数据更新语句时也可以在PreparedStatement对象上执行。使用PreparedStatement对象，只需传递一次SQL语句，可以多次执行它，并且可以利用数据库的预编译技术，提高执行效率。另外也可以接受参数。
+    PreparedStatement pstmt=con.prepareStatement("Update TableName set Address='Beijing,China' where ID >1");
+    pstmt.executeUpdate();
+9.7 参数的输入与输出
+    要实现使用SQL语句的输入与输出参数，必须在PreparedStatement类的对象上进行操作；同时由于CallableStatement类是PrepareStatement类的子类，所以在CallableStatemen对象上的操作也可以使用输入与输出参数；其主要的编程原理是在生成CallableStatement或PreparedStatement类的对象时，可以在SQL语句中指定输入或输出参数，在执行这个SQL语句之前，要对输入参数进行赋值。
+（1）使用PreparedStatement类的对象
+   通过prepareStatement类的对象可以实现在查询语句与数据更新语句方面都可以设置输入参数。
+    具体的方法是在SQL语句中用“？”标明参数，在执行SQL语句之前，使用setXXX方法给参数赋值，然后使用executeQuery()或executeUpdate()来执行这个SQL语句。每次执行SQL语句之前，可以给参数重新赋值。
+    setXXX方法用于给相应的输入参数进行赋值，其中XXX是JDBC的数据类型，如：Int、String等。setXXX方法有两个参数，第一个是要赋值的参数在SQL语句中的位置， SQL语句中的第一个参数的位置为1，第二个参数的位置为2；setXXX方法的第二个参数是要传递的值，如100、“Peking”等，随XXX的不同而为不同的类型。
+    PreparedStatement pstmt=con.prepareStatement("Update TableName set Name=? where ID=?");
+    pstmt.setString(1,"zhang Hua");  //设置第一个参数（Name）为 “zhang Hua”
+    for(int i=1;i<3;i++)
+    {  pstmt.setInt(2,i); //设置第二个参数（ID）为 1,2
+       pstmt.executeUpdate();
+    }
+要点：最终实现 Update TableName set Name=zhang Hua where ID=1 与Update TableName set Name=zhang Hua where ID=2的效果。
+（2）使用CallableStatement对象
+    如果要求调用数据库的存储过程，要使用CallableStatement对象。另外还有些存储过程要求用户输入参数，这可以在生成CallableStatement对象的存储过程调用语句中设置输入参数。在执行这个存储过程之前使用setXXX方法给参数赋值，然后再执行这个存储过程。
+   CallableStatement cstmt=con.prepareCall("{call Query(?)}");  //Query为存储过程名
+   cstmt.setString(1,"输入参数");  //为存储过程提供输入参数
+   ResultSet rs=cstmt.executeQuery();
+（3）接收输出参数
+   某些存储过程可能会返回输出参数，这时在执行这个存储过程之前，必须使用CallableStatement的registerOutParameter方法首先登记输出参数，在registerOutParameter方法中要给出输出参数的相应位置以及输出参数的SQL数据类型。在执行完存储过程以后，必须使用getXXX方法来获得输出参数的值。并在getXXX方法中要指出获得哪一个输出参数（通过序号来指定）的值。
+实例：存储过程getTestData有三个输入参数并返回一个输出参数，类型分别为VARCHAR。在执行完毕后，分别使用getString()方法来获得相应的值。
+CallableStatement cstmt = con.prepareCall(“{? = call getTestData (?,?,?)}”);
+cstmt.setString(1,Value);                                 //设置输入参数
+cstmt.setInt(2,Value);
+cstmt.setFloat(3,Value);
+cstmt.registerOutParameter(1,java.sql.Types.VARCHAR);   //登记输出参数
+ResultSet rs = cstmt.executeQuery();              //执行存储过程
+rs.getString(1);                                                //获得第一个字段的值
+String returnResult=cstmt.getString(1);                      //获得返回的输出参数的值
+要点：由于getXXX方法不对数据类型作任何转换，在registerOutParameter方法中指明数据库将返回的SQL数据类型，在执行完存储过程以后必须采用相应匹配的getXXX方法来获得输出参数的值。
+ Copyright ©2011 lyt. All Rights Reserved.

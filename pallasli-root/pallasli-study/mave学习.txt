@@ -1,0 +1,306 @@
+
+study
+maven
+
+一个用来把源代码构建成可发布的构件的工具
+ 一个更正式的 Apache Maven1 的定义： Maven是一个项目管理工具，它包含了一个项
+目对象模型 (Project Object Model)，一组标准集合，一个项目生命周期(Project
+Lifecycle)，一个依赖管理系统(Dependency Management System)，和用来运行定义在
+生命周期阶段(phase)中插件(plugin)目标(goal)的逻辑。 当你使用Maven的时候，你
+用一个明确定义的项目对象模型来描述你的项目，然后 Maven 可以应用横切的逻辑，
+这些逻辑来自一组共享的（或者自定义的）插件。
+Maven通过给项目提供明智的默认行为来融合这个概念。 在没有自定义的情况下，源
+代码假定是在 /usr/local/hudson/hudson-home/jobs/maven-guide-zh-to-production/
+workspace/content-zh/src/main/java，资源文件假定是在 /usr/local/hudson/hudson-home/jobs/maven-guide-zh-to-production/workspace/content-zh/src/main/resources
+。测试代码假定是在 /usr/local/hudson/hudson-home/jobs/maven-guide-zh-toproduction/
+workspace/content-zh/src/test 。项目假定会产生一个 JAR 文件。Maven
+假定你想要把编译好的字节码放到 /usr/local/hudson/hudson-home/jobs/maven-guidezh-
+to-production/workspace/content-zh/target/classes 并且在 /usr/local/hudson/
+hudson-home/jobs/maven-guide-zh-to-production/workspace/content-zh/target 创建
+一个可分发的 JAR 文件。 虽然这看起来无关紧要，但是想想大部分基于 Ant 的构建
+必须为每个子项目定义这些目录。 Maven 对约定优于配置的应用不仅仅是简单的目录
+位置，Maven 的核心插件使用了一组通用的约定，以用来编译源代码，打包可分发的
+构件，生成 web 站点，还有许多其他的过程。 Maven 的力量来自它的"武断"，它有
+一个定义好的生命周期和一组知道如何构建和装配软件的通用插件。如果你遵循这些约
+定，Maven 只需要几乎为零的工作——仅仅是将你的源代码放到正确的目录，Maven 将
+会帮你处理剩下的事情。
+虽然 Maven 有
+很多优点，包括依赖管理和通过插件重用一般的构建逻辑，但它成功的最核心原因是它
+定义了构建软件的一般的接口。每当你看到一个使用 Maven 的项目如 Apache Wicket7
+，你就可以假设你能签出它的源码然后使用 mvn install 构建它
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+j建立工程
+
+对构建生命周期 (build
+lifecycle)，Maven仓库 (repositories)，依赖管理 (dependency management)和项目
+对象模型 (Project Object Model)有一个基本的理解。
+ 例子
+项目和例子代码可以从这里下载到：http://www.sonatype.com/book/mvnexamples-
+1.0.zip或者http://www.sonatype.com/book/mvn-examples-1.0.tar.gz。
+解压存档文件到任何目录下，然后到ch03/目录。在ch03/目录你将看到一个名字
+为simple/的目录，它包含了本章的源代码。如果你希望在Web浏览器里看这些例子代
+码，访问http://www.sonatype.com/book/examples-1.0并且点击ch03/目录。
+ 开始一个新的Maven项目，在命令行使用Maven Archetype插件。
+$ mvn archetype:create -DgroupId=org.sonatype.mavenbook.ch03 -DartifactId=simple -DpackageName=org.sonatype.mavenbook
+ 想要构建打包这个应用，在包含pom.xml的目录下运行mvn install。--Building jar: /simple/target/simple-1.0-SNAPSHOT.jar
+ 在命令行运行$ java -cp target/simple-1.0-SNAPSHOT.jar org.sonatype.mavenbook.App以向你自己验证这个程序能工作。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+插件
+
+Maven Surefire 插件是负责运行单元测试的插件。项目使用 Compiler 插件进行编译，通过 Jar
+插件变成 JAR 文件
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+一个项目的概念原型
+
+Maven 维护了一个项目的模型，你不仅仅需要把源码编译成字节码，你还需要开发软
+件项目的描述信息，为项目指定一组唯一的坐标。你要描述项目的的属性。项目的许可
+证是什么？谁开发这个项目，为这个项目做贡献？这个项目依赖于其它什么项目没有？
+Maven不仅仅是一个“构建工具”，它不仅仅是在类似于 make 和 Ant 的工具的基础上
+的改进，它是包含了一组关于软件项目和软件开发的语义规则的平台。这个基于每一个
+项目定义的模型实现了如下特征：
+依赖管理
+由于项目是根据一个包含组标识符，构件标识符和版本的唯一的坐标定义的。项
+目间可以使用这些坐标来声明依赖。
+远程仓库
+和项目依赖相关的，我们可以使用定义在项目对象模型（POM）中的坐标来创建
+Maven 构件的仓库。
+全局性构建逻辑重用
+插件被编写成和项目模型对象（POM）一起工作，它们没有被设计成操作某一个
+已知位置的特定文件。一切都被抽象到模型中，插件配置和自定义行为都在模型
+中进行。
+工具可移植性/集成
+像 Eclipse，NetBeans，和 InteliJ 这样的工具现在有共同的地方来找到项目
+的信息。在 Maven 出现之前，每个 IDE 都有不同的方法来存储实际上是自定义
+项目对象模型（POM）的信息。Maven 标准化了这种描述，而虽然每个 IDE 仍然
+继续维护它的自定义项目文件，但这些文件现在可以很容易的由模型生成。
+便于搜索和过滤构件
+像 Nexus 这样的工具允许你使用存储在 POM 中的信息对仓库中的内容进行索引
+和搜索。
+Maven 为软件项目的语义一致性描述的开端提供了一个基础。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+下载
+
+你可以从Apache Maven项目的web站点下载Maven：http://maven.apache.org/
+download.html.
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+安装
+
+假设Maven安装目录是 c:\Program Files\maven-2.0.9 ，但
+是，只要你设置的正确的环境变量，把Maven安装到其它目录也一样。当你把Maven解
+压到安装目录后，你需要设置两个环境变量——PATH和M2_M2_HOME。设置这两个环境变
+量，键入下面的命令：
+C:\Users\tobrien > set M2_HOME=c:\Program Files\maven-2.0.9
+C:\Users\tobrien > set PATH=%PATH%;%M2_HOME%\bin
+在命令行设置环境变量后，你可以在当前会话使用Maven，但是，除非你通过控制面
+板把它们加入系统变量，你将需要每次登陆系统的时候运行这两行命令。你应该在
+Microsoft Windows中通过控制面板修改这两个变量。 通过在命令行运行 mvn -v。
+如果Maven装好了，你应该能看到类似于下面的输出。
+$ mvn -v
+Maven 2.0.9
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+maven结构
+
+下Maven的安装目录是什么样子。
+/usr/local/maven $ ls -p1
+LICENSE.txt
+NOTICE.txt
+README.txt
+bin/
+boot/
+conf/
+lib/
+NOTICE.txt 包含了一些Maven依赖的类库所需要
+的通告及权限。README.txt包含了一些安装指令。 bin/目录包含了运行Maven的
+mvn脚本。 boot/ 目录包含了一个负责创建Maven运行所需要的类装载器的JAR文件
+(classwords-1.1.jar)。 conf/ 目录包含了一个全局的settings.xml文件，该文件用
+来自定义你机器上Maven的一些行为。如果你需要自定义Maven，更通常的做法是覆写
+~/.m2目录下的settings.xml文件，每个用户都有对应的这个目录。lib/ 目录有了一个
+包含Maven核心的JAR文件(maven-2.0.9-uber.jar)。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+用户相关配置和仓库
+
+当你不再仅仅满足于使用Maven，还想扩展它的时候，你会注意到Maven创建了一些本地
+的用户相关的文件，还有在你home目录的本地仓库。在~/.m2目录下有：
+~/.m2/settings.xml
+该文件包含了用户相关的认证，仓库和其它信息的配置，用来自定义Maven的行
+为。
+~/.m2/repository/
+该目录是你本地的仓库。当你从远程Maven仓库下载依赖的时候，Maven在你本地
+仓库存储了这个依赖的一个副本。
+注意
+在Unix(和OSX)上，可以用 ~ 符号来表示你的home目录，（如~/bin表示/
+home/tobrien/bin）。在Windows上，我们仍然使用 ~ 来表示你的home
+目录。在Windows XP上，你的home目录是 C:\Documents and Settings
+\tobrien，在Windows Vista上，你的home目录是 C:\Users\tobrien。从现
+在开始，你应该能够理解这种路径表示，并翻译成你操作系统上的对应路
+径。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+maven help
+
+。Maven Help插件能让你列出活动的Maven Profile，显
+示一个实际POM（effective POM），打印实际settings（effective settings），或者
+列出Maven插件的属性。
+Maven Help 插件有四个目标。前三个目标是—— active-profiles, effective-pom 和
+effective-settings —— 描述一个特定的项目，它们必须在项目的目录下运行。 最后
+一个目标—— describe ——相对比较复杂，展示某个插件或者插件目标的相关信息。
+help:active-profiles
+列出当前构建中活动的Profile（项目的，用户的，全局的）。
+help:effective-pom
+显示当前构建的实际POM，包含活动的Profile。
+help:effective-settings
+打印出项目的实际settings, 包括从全局的settings和用户级别settings继承的
+配置。
+help:describe
+描述插件的属性。它不需要在项目目录下运行。但是你必须提供你想要描述插件
+的 groupId 和 artifactId。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+maven Archtype
+simple/
+simple/pom.xml
+/src/
+/src/main/
+/main/java
+/src/test/
+/test/java
+· Maven Archtype插件创建了一个与artifactId匹配的目录——simple。这是项目的
+基础目录。
+· 每个项目在文件pom.xml里有它的项目对象模型 (POM)。这个文件描述了这个项
+目，配置了插件，声明了依赖。
+· 我们项目的源码了资源文件被放在了src/main目录下面。在我们简单Java项目这
+样的情况下，这个目录包含了一下java类和一些配置文件。在其它的项目中，它
+可能是web应用的文档根目录，或者还放一些应用服务器的配置文件。在一个Java
+项目中，Java类放在src/main/java下面，而classpath资源文件放在src/main/
+resources下面。
+·  我们项目的测试用例放在src/test下。在这个目录下面，src/test/java存放像
+使用JUnit或者TestNG这样的Java测试类。目录src/test/resources下存放测试
+classpath资源文件。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+pom.xml
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-<modelVersion>4.0.0</modelVersion>
+<groupId>org.sonatype.mavenbook.ch03</groupId>
+<artifactId>simple</artifactId>
+<packaging>jar</packaging>
+<version>1.0-SNAPSHOT</version>
+<name>simple</name>
+<url>http://maven.apache.org</url>
+<dependencies>
+<dependency>
+<groupId>junit</groupId>
+<artifactId>junit</artifactId>
+<version>3.8.1</version>
+<scope>test</scope>
+</dependency>
+</dependencies>
+</project>
+$ mvn help:effective-pom
+一旦你运行了此命令，你应该能看到一个大得多的POM，它暴露了Maven的默认设置
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+运行插件语法
+
+为了运行单个的Maven插件目标，我们使用mvn archetype:create这样的语
+法，这里archetype是一个插件标识而create是目标标识。当Maven运行一个插件目标，
+它向标准输出打印出插件标识和目标标识：
+$ mvn archetype:create -DgroupId=org.sonatype.mavenbook.ch03 \
+-DartifactId=simple \
+-DpackageName=org.sonatype.mavenbook
+...
+[INFO] [archetype:create]
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+maven使用步骤
+
+1. JDK1.6.0_18
+2. eclipse 3.5或3.4
+3. subclipse
+    Eclipse update site URL: http://subclipse.tigris.org/update_1.6.x
+    具体安装帮助可参见
+4. m2eclipse
+    Eclipse update site URL: http://m2eclipse.sonatype.org/update/
+5. 设置eclipse启动项
+    m2eclipse中会有个警告，说某些功能只有在eclipse用JDK运行时才有。
+    这时候，就需要给eclipse指定JDK（默认是使用安装在C盘的JVM）;只需要在eclipse的桌面快捷方式的目标中加入“ -vm D:\Java\jdk1.6.0_18\bin” （eclipse桌面快捷方式->属性->目标） （这里假设JDK安装目录是D:\Java\jdk1.6.0_18）
+6. 基于svn创建maven项目
+    从svn检出项目，输入URL
+    选择“做为工作空间中的项目检出”
+    等检出完成，删除该项目，但不要删除项目内容
+    以上这几步也可以使用其他svn客户端(tortoisesvn， svn命令)来完成。
+    选择File -> Import -> Maven Projects导入maven项目
+7. 另外，也可以直接用命令行方式来使用maven，这里附上常用的maven命令
+    (在运行mvn命令前，可以先set MAVEN_OPTS=-Xmx256m)
+   mvn package
+   mvn install
+   mvn test
+   mvn surefire-report:report (junit report, also runs the test)
+   mvn clean
+   mvn site (all reports, including junit, code coverage, checkstyle and etc)
+   mvn jetty:run
+   mvn tomcat:run
+   mvn cobertura:cobertura  (code coverage)
+   mvn tomcat:install
+   mvn war:exploded tomcat:exploded (deploy and redeploy the web application)
+ Copyright ©2011 lyt. All Rights Reserved.

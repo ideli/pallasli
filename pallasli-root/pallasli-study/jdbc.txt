@@ -1,0 +1,326 @@
+
+study
+数据库性能
+
+1、事务（ACID）
+    原子性 --一个事务不分割的整体
+    一致性 ----同时提交或回滚
+    隔离性 ----事务之间是独立的，互不影响
+    持久性  ----和数据库保持同步。
+java中的事务处理
+1、jdbc的事务处理
+2、JTA事务处理（java Trancation API）hibernate
+3、容器的事务处理 spring
+==============================
+存储过程
+ String sql="{call exe_type(?,?)}";
+为什么要用存储过程。
+1、安全性高
+2、执行效率高
+缺点：
+移植性差
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+数据库连接
+
+1、Oracle8/8i/9i数据库（thin模式）
+　Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
+　String url="jdbc:oracle:thin:@localhost:1521:orcl";
+　//orcl为数据库的SID
+　String user="test";
+　String password="test";
+　Connection conn= DriverManager.getConnection(url,user,password);
+ 
+2、DB2数据库
+　Class.forName("com.ibm.db2.jdbc.app.DB2Driver ").newInstance();
+　String url="jdbc:db2://localhost:5000/sample";
+　//sample为你的数据库名
+　String user="admin";
+　String password="";
+　Connection conn= DriverManager.getConnection(url,user,password);
+ 
+3、Sql Server7.0/2000数据库
+　Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
+　String url="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=mydb";
+　//mydb为数据库
+　String user="sa";
+　String password="";
+　Connection conn= DriverManager.getConnection(url,user,password);
+ 
+4、Sybase数据库
+　Class.forName("com.sybase.jdbc.SybDriver").newInstance();
+　String url =" jdbc:sybase:Tds:localhost:5007/myDB";
+　//myDB为你的数据库名
+　Properties sysProps = System.getProperties();
+　SysProps.put("user","userid");
+　SysProps.put("password","user_password");
+　Connection conn= DriverManager.getConnection(url, SysProps);
+ 
+5、Informix数据库
+　Class.forName("com.informix.jdbc.IfxDriver").newInstance();
+　String url = "jdbc:informix-sqli://123.45.67.89:1533/myDB:INFORMIXSERVER=myserver;
+　user=testuser;password=testpassword";
+　//myDB为数据库名
+　Connection conn= DriverManager.getConnection(url);
+ 
+6、MySQL数据库
+　Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+　String url ="jdbc:mysql://localhost/myDB?user=softamp;password=soft1234amp;useUnicode=trueamp;characterEncoding=8859_1"
+　//myDB为数据库名
+　Connection conn= DriverManager.getConnection(url);
+ 
+7、PostgreSQL数据库
+　Class.forName("org.postgresql.Driver").newInstance();
+　String url ="jdbc:postgresql://localhost/myDB"
+　//myDB为数据库名
+　String user="myuser";
+　String password="mypassword";
+　Connection conn= DriverManager.getConnection(url,user,password);
+ 
+访问数据库所用到的工具类：
+package com.jspdev.util;
+ 
+import java.sql.*;
+import javax.naming.*;
+import javax.sql.DataSource;
+//一个用于查找数据源的工具类。
+public class DatabaseConn {
+       public  static  synchronized Connection getConnection() throws Exception
+       {
+              try
+              {               
+                     Context initCtx = new javax.naming.InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            DataSource ds = (DataSource)envCtx.lookup("jdbc/jspdev"); ;
+                     return ds.getConnection();
+              }
+              catch(SQLException e)
+              {
+                     throw e;
+              }
+              catch(NamingException e)
+              {
+                 throw e;
+              }
+       }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+调用存储过程
+
+
+import java.sql.*;
+/**
+ *
+ * @author Administrator
+ */
+public class CallStatementDemo  extends BaseDAO{
+    private Connection conn;
+    private CallableStatement cstmt;
+    public void test(){
+         try{
+           conn=super.getConn();
+           String sql="{call exe_type(?,?)}";
+           cstmt=conn.prepareCall(sql);
+           cstmt.setInt(1, 800);
+           cstmt.setString(2,"ddddddddddd");
+           cstmt.executeUpdate();
+         }catch(Exception ex){
+          ex.printStackTrace();
+         }finally{
+           super.closeAll(conn, cstmt,null);
+         }
+    }
+    public static void main(String[] args) {
+        new CallStatementDemo().test();
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+手动提交事务
+
+conn=super.getConn();
+ //手动提交事务，它把这个的sql块作为一个事务提交
+ conn.setAutoCommit(false);
+String sql1="update account set money=money+2000 where id=1002";
+String sql2="update account set money=money-2000 where id=1001";
+stmt=conn.createStatement();
+stmt.executeUpdate(sql1);
+stmt.executeUpdate(sql2);
+conn.commit();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+SQL Server数据库连接设置
+
+jdbc.driverClassName=com.microsoft.jdbc.driver.SQLServerDriver
+ 
+jdbc.url=jdbc:microsoft:sqlserver://localhost:1433;databaseName=dbname
+jdbc.username=sa
+jdbc.password=sa
+ 
+pool.initialPoolSize=1
+pool.maxPoolSize=2
+pool.testPeriod=60
+pool.testTable=c3p0_test_table
+ 
+hibernate.dialect=org.hibernate.dialect.OracleDialect
+hibernate.show_sql=false
+hibernate.cache.use_query_cache=true
+hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+hibernate.jdbc.batch_size=35
+hibernate.cache.provider_configuration_file_resource_path=/ehcache.xml
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+Oracle 数据库连接设置
+
+jdbc.driverClassName=oracle.jdbc.OracleDriver
+ 
+jdbc.url=jdbc:oracle:thin:localhost:1521:orcl
+jdbc.username=scott
+jdbc.password=oracle
+ 
+pool.initialPoolSize=1
+pool.maxPoolSize=2
+pool.testPeriod=60
+pool.testTable=c3p0_test_table
+ 
+hibernate.dialect=org.hibernate.dialect.OracleDialect
+hibernate.show_sql=false
+hibernate.cache.use_query_cache=true
+hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+hibernate.jdbc.batch_size=35
+hibernate.cache.provider_configuration_file_resource_path=/ehcache.xml
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+dbcp
+
+commons-dbcp.jar
+public class DbcpTest {
+ static ObjectPool op = null;
+ private static PoolingDriver driver = null; public DbcpTest(String poolName) {  getConnection(poolName); } /** * 设置一个数据库连接池 */
+ private static boolean setUpDriverPool(String name, String url,
+   String user, String pwd) throws SQLException {
+  if (driver == null || driver.getPoolNames().length < 2) {
+   try {
+    /**
+     * 创建一个 DriverManagerConnectionFactory对象 连接池将用它来获取一个连接
+     */
+    ConnectionFactory cf = new DriverManagerConnectionFactory(url,  user, pwd);
+    op = new GenericObjectPool();
+    PoolableConnectionFactory pcf = new PoolableConnectionFactory(cf, op, null, null, false, true);
+    /**
+     * 首先创建一个对象池来保存数据库连接
+     * 
+     * 使用 commons.pool 的 GenericObjectPool对象
+     */
+    Class.forName("org.apache.commons.dbcp.PoolingDriver");
+    driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+    driver.registerPool(name, op);
+    System.out.println(driver.getPoolNames().length);
+    System.out.println(driver.getPoolNames());
+    return true;
+   } catch (ClassNotFoundException exception) {
+    throw new RuntimeException(exception);
+   }
+  } else {
+   return false;
+  }
+ } /**
+  * 关闭所有数据库连接池
+  * 
+  */
+ public void shutDownDriver() {
+  try {
+   PoolingDriver pd = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
+   for (int i = 0; i < pd.getPoolNames().length; i++) {
+    driver.closePool("pool");
+   }
+  } catch (SQLException exception) {
+   throw new RuntimeException();
+  }
+ } /**
+  * 取得一个数据库连接对象。
+  * 因为可能使用两个不同的数据库， 所以依据report的值来确定使用那个数据库。
+  */
+ public static Connection getConnection(String poolName) {
+  Connection conn = null;
+  try {   String driver = "oracle.jdbc.driver.OracleDriver";
+   String url = "jdbc:oracle:thin:@10.10.30.150:1521/orcl";
+   String user = "wasys3_cs";
+   String pwd = "wasoft2010";
+   Class.forName(driver);
+   if (setUpDriverPool(poolName, url, user, pwd))    conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:"+ poolName, user, pwd);
+  } catch (ClassNotFoundException cnfe) {
+   throw new RuntimeException("无法装入数据库引擎");
+  } catch (SQLException sqle) {
+   throw new RuntimeException("无法打开数据库连接");
+  }
+  return conn;
+ } 
+ public static void closeAll(Connection con, Statement s, ResultSet rs) {.....}
+ public static void main(String[] args) throws Exception {
+         ObjectPool op= new DbcpTest("poolName1").op;
+     op.addObject();
+     Connection conn = (Connection) op.borrowObject();
+          ObjectPool op2= new DbcpTest("poolName2").op;
+     op2.addObject();
+     Connection conn2 = (Connection) op2.borrowObject();
+  }}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+study
+mysql 数据库连接设置
+
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost/fs?characterEncoding=utf8
+#jdbc.url=jdbc:mysql://localhost:3306/mydatabasename
+jdbc.username=root
+jdbc.password=root
+ 
+pool.initialPoolSize=1
+pool.maxPoolSize=2
+pool.testPeriod=60
+pool.testTable=c3p0_test_table
+ 
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=false
+hibernate.cache.use_query_cache=true
+hibernate.cache.provider_class=org.hibernate.cache.EhCacheProvider
+hibernate.jdbc.batch_size=35
+hibernate.cache.provider_configuration_file_resource_path=/ehcache.xml
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 

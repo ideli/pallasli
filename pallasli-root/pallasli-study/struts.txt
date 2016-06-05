@@ -1,0 +1,1659 @@
+
+java核心技术学习
+struts-config.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+ <data-sources />
+ <form-beans>
+  <form-bean name="LoginActionForm" type="com.java.LoginActionForm">
+  </form-bean>
+ </form-beans>
+ <global-exceptions />
+ <global-forwards />
+ <action-mappings>
+  <action attribute="LoginActionForm" input="/login.jsp"
+   name="LoginActionForm" path="/login" scope="request"
+   type="com.java.LoginAction" />
+ </action-mappings>
+ <message-resources
+  parameter="com.yourcompany.struts.ApplicationResources" />
+ <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+  <set-property property="pathnames"
+   value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+ </plug-in>
+</struts-config>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+validator-rules.xml
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+<!--
+  $Id: validator-rules.xml,v 1.1.2.1 2006/07/01 20:50:46 eugene-proddev Exp $
+   This file contains the default Struts Validator pluggable validator
+   definitions.  It should be placed somewhere under /WEB-INF and
+   referenced in the struts-config.xml under the plug-in element
+   for the ValidatorPlugIn.
+      <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property property="pathnames" value="/WEB-INF/validator-rules.xml,
+                                                  /WEB-INF/validation.xml"/>
+      </plug-in>
+   These are the default error messages associated with
+   each validator defined in this file.  They should be
+   added to your projects ApplicationResources.properties
+   file or you can associate new ones by modifying the
+   pluggable validators msg attributes in this file.
+   # Struts Validator Error Messages
+   errors.required={0} is required.
+   errors.minlength={0} can not be less than {1} characters.
+   errors.maxlength={0} can not be greater than {1} characters.
+   errors.invalid={0} is invalid.
+   errors.byte={0} must be a byte.
+   errors.short={0} must be a short.
+   errors.integer={0} must be an integer.
+   errors.long={0} must be a long.
+   errors.float={0} must be a float.
+   errors.double={0} must be a double.
+   errors.date={0} is not a date.
+   errors.range={0} is not in the range {1} through {2}.
+   errors.creditcard={0} is an invalid credit card number.
+   errors.email={0} is an invalid e-mail address.
+   Note: Starting in Struts 1.2.0 the default javascript definitions have
+         been consolidated to commons-validator. The default can be overridden
+         by supplying a <javascript> element with a CDATA section, just as
+         in struts 1.1.
+-->
+<form-validation>
+   <global>
+      <validator name="required"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateRequired"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+                  msg="errors.required"/>
+      <validator name="requiredif"
+                 classname="org.apache.struts.validator.FieldChecks"
+                 method="validateRequiredIf"
+                 methodParams="java.lang.Object,
+                               org.apache.commons.validator.ValidatorAction,
+                               org.apache.commons.validator.Field,
+                               org.apache.struts.action.ActionMessages,
+                               org.apache.commons.validator.Validator,
+                               javax.servlet.http.HttpServletRequest"
+                 msg="errors.required"/>
+      <validator name="validwhen"
+          msg="errors.required"
+                 classname="org.apache.struts.validator.validwhen.ValidWhen"
+                 method="validateValidWhen"
+                 methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"/>
+
+      <validator name="minlength"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateMinLength"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.minlength"
+           jsFunction="org.apache.commons.validator.javascript.validateMinLength"/>
+
+      <validator name="maxlength"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateMaxLength"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.maxlength"
+           jsFunction="org.apache.commons.validator.javascript.validateMaxLength"/>
+      <validator name="mask"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateMask"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.invalid"/>
+
+      <validator name="byte"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateByte"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.byte"
+       jsFunctionName="ByteValidations"/>
+
+      <validator name="short"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateShort"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.short"
+       jsFunctionName="ShortValidations"/>
+
+      <validator name="integer"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateInteger"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.integer"
+       jsFunctionName="IntegerValidations"/>
+      <validator name="long"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateLong"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.long"/>
+
+      <validator name="float"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateFloat"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.float"
+       jsFunctionName="FloatValidations"/>
+      <validator name="double"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateDouble"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.double"/>
+
+      <validator name="date"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateDate"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.date"
+       jsFunctionName="DateValidations"/>
+
+      <validator name="intRange"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateIntRange"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends="integer"
+                  msg="errors.range"/>
+
+      <validator name="floatRange"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateFloatRange"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends="float"
+                  msg="errors.range"/>
+      <validator name="doubleRange"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateDoubleRange"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends="double"
+                  msg="errors.range"/>
+
+      <validator name="creditCard"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateCreditCard"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.creditcard"/>
+
+      <validator name="email"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateEmail"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.email"/>
+      <validator name="url"
+            classname="org.apache.struts.validator.FieldChecks"
+               method="validateUrl"
+         methodParams="java.lang.Object,
+                       org.apache.commons.validator.ValidatorAction,
+                       org.apache.commons.validator.Field,
+                       org.apache.struts.action.ActionMessages,
+                       org.apache.commons.validator.Validator,
+                       javax.servlet.http.HttpServletRequest"
+              depends=""
+                  msg="errors.url"/>
+     <!--
+       This simply allows struts to include the validateUtilities into a page, it should
+       not be used as a validation rule.
+     -->
+     <validator name="includeJavaScriptUtilities"
+            classname=""
+               method=""
+         methodParams=""
+              depends=""
+                  msg=""
+           jsFunction="org.apache.commons.validator.javascript.validateUtilities"/>
+   </global>
+</form-validation>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+java核心技术学习
+validation.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN" "validator_1_1_3.dtd" >
+<form-validation>
+ <formset>
+  <form name="LoginActionForm">
+   <field property="name" depends="required">
+    <arg0 key="myname" />
+   </field>
+  </form>
+ </formset>
+</form-validation>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+jsp
+
+<%@ page language="java" pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%> 
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+ 
+<html> 
+ <head>
+  <title>JSP for LoginActionForm form</title>
+ </head>
+ <body>
+  <html:form action="/login">
+   password : <html:text property="password"/><html:errors property="password"/><br/>
+   name : <html:text property="name"/><html:errors property="name"/><br/>
+   <html:submit/><html:cancel/>
+  </html:form>
+ </body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+formjava
+
+package com.java;
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.ValidatorForm;
+/** 
+ * @struts.form name="LoginActionForm"
+ */
+public class LoginActionForm extends ValidatorForm {
+ 
+ private String password;
+ private String name;
+ public void reset(ActionMapping mapping, HttpServletRequest request) {
+  // TODO Auto-generated method stub
+ }
+ public String getPassword() {
+  return password;
+ }
+ public void setPassword(String password) {
+  this.password = password;
+ }
+ public String getName() {
+  return name;
+ }
+ public void setName(String name) {
+  this.name = name;
+ }
+}
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.validator.ValidatorPlugIn;
+/** 
+ * @struts.action path="/login" name="LoginActionForm" input="/login.jsp" scope="request" validate="true"
+ */
+public class LoginAction extends Action {
+ 
+ public ActionForward execute(ActionMapping mapping, ActionForm form,
+   HttpServletRequest request, HttpServletResponse response) {
+  LoginActionForm LoginActionForm = (LoginActionForm) form;// TODO Auto-generated method stub
+  return null;
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+strut关键类
+
+commons-beanutils.jar
+Commons-Beanutils 这个是jakarta commons项目中的一个子项目。这个项目开发的目的是帮助开发者动态的获取/设值Java Bean的属性，同时解决每次都要写getXXX和setXXX的麻烦。
+ 
+commons-digester.jar
+Digester本来仅仅是Jakarta Struts中的一个工具，用于处理struts-config.xml配置文件。显然，将XML文件转换成相应的Java对象是一项很通用的功能，这个 工具理应具有更广泛的用途，所以很快它就在Jakarta Commons项目(用于提供可重用的Java组件库)中有了一席之地。
+在内部， Struts 使用来自于Jakarta Commons[ASF, Commons] 项目的Digester 来解析Struts配置文件。Digester 使用struts-config DTD 来校验文档的格式，并且创建文档所描述的Java对象。如果XML文件包含了非正式文档化的元素，或者以非正式文档化的方式使用了元素，Digester 将不会处理这个文件。
+ 
+commons-fileupload.jar
+Commons-FileUpload FileUpload 使得在你可以在应用和Servlet中容易的加入强大和高性能的文件上传能力struts中上传文件要用到。
+ 
+struts的验证框架依赖以下的两个包：
+ commons-validator.jar
+(校验方法)和校验规则。支持校验规则的和错误消息的国际化。 struts使用它对表单进行验证。
+ 
+    jakarta-oro.jar
+Commons-EL Commons-Jexl Search Jakarta ORO Jakarta ORO一套文本处理工具,能提供perl5.0兼容的正则表达式,AWK-like正则表达式, glob表达式。还提供替换,分割,文件名过虑等功能。
+struts.jar
+struts核心包。
+其他的一下jar包
+commons-collections.jar
+扩展了标准的Java Collection框架，提供了额外的Map、List 和Set实现以及多个有用的工具类库。功能比java.util.*强大。
+commons-logging.jar:
+Apache Commons包中的一个，包含了日志功能。这个包本身包含了一个Simple Logger，但是功能很弱。在运行的时候它会先在CLASSPATH找log4j，如果有，就使用log4j，如果没有，就找JDK1.4带的 java.util.logging，如果也找不到就用Simple Logger。commons-logging.jar的出现是一个历史的的遗留的遗憾，当初Apache极力游说Sun把log4j加入JDK1.4， 然而JDK1.4项目小组已经接近发布JDK1.4产品的时间了，因此拒绝了Apache的要求，使用自己的java.util.logging，这个包 的功能比log4j差的很远，性能也一般。
+后来Apache就开发出来了commons-logging.jar用来兼容两个 logger。因此用commons-logging.jar写的log程序，底层的Logger是可以切换的，你可以选择 log4j，java.util.logging或者它自带的Simple Logger。不过我仍然强烈建议使用log4j，因为log4j性能很高，log输出信息时间几乎等于System.out，而处理一条log平均只需 要5us。你可以在Hibernate的src目录下找到Hibernate已经为你准备好了的log4j的配置文件，你只需要到Apache 网站去下载log4j就可以了。commons-logging.jar也是必须的jar包。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+普通Action
+ 
+     action 类必须继承Action 类里面包含excute 方法，方法里将form强转成上面的actionform类型，如：
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import com.form.LoginActionForm;
+public class LoginAction extends Action {
+   public ActionForward execute(ActionMapping mapping,
+      ActionForm form, HttpServletRequest request,
+ HttpServletResponse response) {
+      LoginActionForm LoginAction = (LoginActionForm) form;
+      return mapping.findForward("success");
+   }
+}
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+formBean
+
+actionform 类必须继承 ActionForm 类
+里面的方法执行顺序是：reset   set  validate  get
+里面的重要2个方法
+  (1)validate方法，用于用户输入验证
+  public ActionErrors validate(ActionMapping mapping,
+   HttpServletRequest request) {
+  ActionErrors errors = new ActionErrors();
+  if(username.length() < 5){
+   ActionError error = new ActionError("error1");
+   errors.add("username",error);
+  }
+  
+  return errors;
+ }
+  (2)reset方法，actionform中最先执行的方法
+ public void reset(ActionMapping mapping, HttpServletRequest request) {
+  try {
+   request.setCharacterEncoding("utf-8");
+  } catch (Exception ex) {
+   ex.printStackTrace();
+  }
+ }
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+public class LoginActionForm extends ActionForm {
+       --验证
+       public ActionErrors validate(ActionMapping mapping,
+                     HttpServletRequest request) {
+              return null;
+       }
+--重置时执行
+       public void reset(ActionMapping mapping, HttpServletRequest request) {
+       }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+预处理器
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.struts.action.RequestProcessor;
+public class MyProcessor extends RequestProcessor {
+ protected boolean processPreprocess(HttpServletRequest request,HttpServletResponse response) {
+  boolean flag = true;
+  try {
+   request.setCharacterEncoding("UTF-8");
+  } catch (Exception ex) {
+   ex.printStackTrace();
+  }
+  return flag;
+ }
+}
+
+在struts-config.xml中添加（注意换成具体类名）
+<controller processorClass="com.util.MyProcessor"></controller>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+DispatchAction
+
+一个Action中有多个方法(去掉execute方法，否则不管调用action中的什么方法，都只执行execute方法)
+Action代码如下：
+public class PersonAction extends DispatchAction {
+ public ActionForward add(ActionMapping mapping, ActionForm form,
+   HttpServletRequest request, HttpServletResponse response) {
+  PersonActionForm PersonActionForm = (PersonActionForm) form;
+  System.out.println("add");
+  return null;
+ }
+ public ActionForward update(ActionMapping mapping, ActionForm form,
+   HttpServletRequest request, HttpServletResponse response) {
+  PersonActionForm PersonActionForm = (PersonActionForm) form;
+  System.out.println("update");
+  return null;
+ }
+ public ActionForward delete(ActionMapping mapping, ActionForm form,
+   HttpServletRequest request, HttpServletResponse response) {
+  PersonActionForm PersonActionForm = (PersonActionForm) form;
+  System.out.println("delete");
+  return null;
+ }
+}
+
+struts-config.xml 代码如下：
+<action attribute="PersonActionForm" name="PersonActionForm"
+   parameter="method" path="/person" scope="request"
+   type="PersonAction" />
+页面访问具体方法时：action="person.do?method=add"  提交方式必须是post方法
+---------------------------------------------------------------------
+当在Action中添加跳转时
+配置文件Action中写
+<forward name="success" path="/index.jsp"></forward>
+在具体跳转的方法后面写：   return mapping.findForward("success");
+ DispatchAction提交方式
+Post提交方式
+  <form action="/login.do?method=add" method="post">
+   password :
+   <input type="password" name="password" />
+   <br>
+   username :
+   <input type="text" name="username" />
+   <br>
+   <input type="submit">
+  </form>
+----------
+可以用隐藏域来修改（替换）
+Get提交方式
+  <form action="login.do" method="get">
+   <input type="hidden" name="method" value="add">
+   password :
+   <input type="password" name="password" />
+   <br>
+   username :
+   <input type="text" name="username" />
+   <br>
+   <input type="submit">
+  </form>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+LookupDispatchAction
+1.继承LookupDispatchAction
+2.去掉execute方法，改成自己的方法
+3.在配置文件Action中写parameter="method"  //method自定义，用于访问时的地址
+4.Action中写上  getKeyMethodMap()  方法
+ protected Map getKeyMethodMap() {
+  Map map = new HashMap();
+  map.put("addMethod", "add");
+  map.put("deleteMethod", "delete");
+  map.put("updateMethod", "update");
+  return map;
+ }
+后面的参数是Action类中的方法名字
+前面的参数是资源文件中的键名
+5.在资源文件中写上对应的键值对
+addMethod=\u6dfb\u52a0
+deleteMethod=\u5220\u9664
+updateMethod=\u4fee\u6539    
+汉字用java自带的native2ascii.exe转
+资源文件前面的是Map中前一个参数
+后面的是页面中按钮的名字，就是按钮的value值
+6.JSP页面（name属性是Action中配置的parameter的值）
+  <form action="user.do" method="post">
+   <input type="submit" value="添加" name="method">
+   <input type="submit" value="删除" name="method">
+   <input type="submit" value="修改" name="method">
+  </form>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+
+
+java核心技术学习
+struts配置文件
+
+<struts-config>
+  <data-sources />
+    --formbean封装类映射
+  <form-beans >
+      <form-bean name="LoginAction" type="com.form.LoginActionForm" />
+  </form-beans>
+    --全局异常
+  <global-exceptions />
+    --全局跳转页面
+  <global-forwards />
+    --action配置
+  <action-mappings >
+    <action attribute="LoginAction" name="LoginAction" path="/LoginAction"
+            scope="request" type="com.action.LoginAction">
+   --局部跳转页面
+      <forward name="success" path="/success.jsp" />
+    </action>
+  </action-mappings>
+   --映射文件，stuts自动加载（猜测）
+  <message-resources parameter="com.yourcompany.struts.ApplicationResources" />
+</struts-config>
+ 
+ 
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+
+ 
+1、全局异常处理
+<global-exceptions>
+     <exception  key="myerror"          对应资源文件
+             type="java.lang.Exception" 异常类型
+             path="/error.jsp"     跳转到的页面
+             scope="session">
+     </exception>
+   </global-exceptions>
+
+资源文件中：     myerror=your soft is error!!!!!!!
+
+JSP页面中：   <html:errors property="myerror" />   
+
+显示出your soft is error!!!!!!!
+
+2、全局转发
+
+   <global-forwards>
+     <forward name="success" path="/success2.jsp"></forward>
+   </global-forwards>
+
+当和action中的name相同时，执行action中的path值，遵守局部优先原则
+
+3、配置视图层和控制层接口（form-beans元素）
+
+   <form-beans>
+<form-bean name="LoginActionForm" type="LoginActionForm" />
+   </form-beans>
+
+或者
+
+   <form-beans>
+     <form-bean name="LoginActionForm"
+        type="org.apache.struts.action.DynaActionForm">
+<form-property name="name" type="java.lang.String"></form-property>
+<form-property name="password" type="java.lang.String"></form-property>
+     </form-bean>
+   </form-beans>
+
+第二种方法省去了写ActionForm类，在Action中强制转换成 DynaActionForm类型，并通过  .get（”字段名”）方法获得值，例如：
+
+      DynaActionForm LoginActionForm = (DynaActionForm) form;
+ 
+     System.out.println(LoginActionForm.get("name"));
+     System.out.println(LoginActionForm.get("password"));
+
+4、设置映射（action-mappings）
+
+   <action-mappings>
+     <action  attribute="LoginActionForm"  
+scope="request/session"
+name="LoginActionForm"
+          path="/login"
+type="LoginAction">
+        <forward name="success" path="/success1.jsp" redirect="true"></forward>
+     </action>
+   </action-mappings>
+
+Attribute 和 scope  一起使用，scope默认为request
+
+redirect 默认为false,服务器端跳转；为true时，客户端跳转
+
+5、设置资源文件的路径
+
+<message-resources
+     parameter="com.yourcompany.struts.ApplicationResources" />
+
+6、连接数据库
+
+   <data-sources>
+     <data-source type="org.apache.commons.dbcp.BasicDataSource">
+        <set-property property="driverClassName"
+          value="com.mysql.jdbc.Driver" />
+        <set-property property="url"
+          value="jdbc:mysql://localhost:3306/mybbs" />
+        <set-property property="username" value="root" />
+        <set-property property="password" value="root" />
+     </data-source>
+   </data-sources>
+
+ 
+<struts-config>是struts的根元素，它主要有8个子元素，DTD定义如下：
+
+ 
+
+<!ELEMENT struts-config
+
+(data-sources?,form-beans?,global-exceptions?,global-forwards?,action-mappings?,controller?,message-resources*,plug-in*)
+
+> 
+
+以上8个元素，下面一一描述：
+
+1. date-sources元素
+
+　　date-sources元素用来配置应用程序所需要的数据源。java语言提供了javax.sql.DateSource接口，所有数据源必须实现该接口。如下配置：
+
+<data-sources>
+
+　　<data-source type="org.apached.commons.dbcp.BasicDataSource">
+
+　　</data-source>
+
+</data-sources>
+
+ 
+
+　 2. form-beans元素
+
+　　该元素主要用来配置表单验证的类。它包含如下属性：
+
+　　1. classname：一般用得少，指定和form-bean无素对应的配置类，默认为org.apache.struts.config.FormBeanConfig，如果自定义，则必须扩展FormBeanConfig类。可有可无。
+
+　　2. name：ActionForm Bean的惟一标识。必须。
+
+　　3. type：ActionForm的完整类名。必须。
+
+如下所示：
+
+<form-beans>
+
+　　<form-bean
+
+　　　　　name="Loign"            ActionForm的名称
+
+　　　　　　type="com.cn.login">   所在包的路径
+
+　　</form-bean>
+
+</form-beans>
+
+ 3. global-exceptions元素
+
+　　该元素主要配置异常处理，它的exception子元素代表全局的异常配置。struts采取配置的方式来处理异常。它用来设置java异常和异常处理类org.apache.struts.action.ExceptionHandler之间的映射。它有七个属性，如下所示：
+
+　　1. className：指定和exception元素对应的配置类，默认为：org.apache.struts.config.ExceptionConfig。可有可无。
+
+　　2. Handler：指定异常得理类，默认为：org.apache.struts.action.ExceptionHandler。可有可无
+
+　　3. key：指定在Resource Bundle中描述该异常的消息key
+
+　　4. path：指定当异常发生时的转发路径。
+
+　　5. scope：指定ActionMessages实例的存放范围，可选值包括：request和session，默认为request。可有可无。
+
+　　6. type：指定所需处理异常类的名字，必须。
+
+　　7. bundle：指定Resource Bundle
+
+如下所示：
+
+<global-exceptions>
+
+　　<exception
+
+　　　　　　key="global.error.invalidlogin"
+
+　　　　　　path="/error.jsp"
+
+　　　　　　scope="request"
+
+　　　　　　type="com.hn.tree"
+
+　　/>
+
+</global-exceptions>
+
+ 
+
+ 4. global-forwards元素
+
+　　该元素主要用来声明全局的转发关系，它具有以下四个属性：
+
+　　1. className：和forward元素对应的配置类，默认为：org.apache.struts.action.ActionForward。可有可无。
+
+　　2. contextRelative：此项为true时，表时path属性以＂/＂开头，相对于当前上下文的URL，默认为false．可有可无。　
+
+　　3. name：转发路径的逻辑名．必填。
+
+　　4. path：转发或重定向的URL，当contextRelative=false时，URL路径相对于当前应用（application），当为ture时，表示URL路径相对于当前上下文（context）。
+
+　　5.  redirect：当此项为ture时，表示执行重定向操作。当此项为false时表示转向操作。默认为false。
+
+如下所示：
+
+<global-forwards>
+
+　　<forward  name="forms1"  path="/a.do"/>
+
+　　<forward  name="forms2"  path="/nb.jsp"/>
+
+<global-forwards>
+
+ 
+
+ 5. action-mappings元素
+
+　　描述从特定的请求路径到相应的Action类的映射。它具有以下几个属性：
+
+　　1. attribute：设置和Action关联的ActionForm Bean在request和session范围内的key。如：Form Bean存在于request范围内，此项设为“myBenas”，则在request.getAttribute("myBenas")就可以返回该Bean的实例。
+
+　　2. classsName：和action元素对应的配置元素，默认为：org.apache.struts.action.ActionMapping.
+
+　　3. forward：转发的URL路径。
+
+　　4. include：指定包含的URL路径。
+
+　　5. input：输入表单的URL路径，当表单验证失败时，将把请求转发到该URL。
+
+　　6. name：指定和Action关联的Action FormBean的名字，该名字必须在Form-Bean定义过。
+
+　　7. path：指定访问Action的路径，以“/”开头，无扩展名。
+
+　　8. parameter：指定Actgion的配置参数，在Action类的execute()方法中，可以调用ActionMapping对象的getParameter()方法来读取该配置参数。
+
+　　9. roles：指定允许调用该Action的安全角色，多个角色之间用，隔开，在处理请求时，RequestProcessor会根据该配置项来决定用户是否有权限调用Action权限。
+
+　　10. scope：指定ActionForm Bean的存在范围，可选取为request和session，默认为session。
+
+　　11. type：指定Action类的完整类名。
+
+　　12. unknown：如果此项为true，表示可以处理用户发出的所有无效的Action URL，默认为false；
+
+　　13. validate：指定是否要调用Action FormBean的validate方法，默认值为ture.
+
+注：forward、include、type属性只能选中其中一项。
+
+如下：
+
+<action path="/search"       /Action的相对路径
+
+　　　　type="zxj.okBean"    连接到映射的全路径
+
+　　　　name="a1"          Acyion的名称
+
+　　　　scope="request"   指定ActionForm Bean的存在范围，可选取为request和session，默                      认为session。  
+
+　　　　validate="true"   指定是否要调用Action FormBean的validate方法，默认值为ture.
+
+　　　　input="/b.jsp">   输入表单的URL路径，当表单验证失败时，将把请求转发到该URL。
+
+　　<forward name="tig" path="/aa.jsp"/>  tig字符  根据 tig  跳转 页面  到/aa.jsp
+
+</action>
+
+注：此中的forward是指局部的转发路径。global-forwards表示全局的转发路径。
+
+ 
+
+ 6. controller元素  KEN CHU LE
+
+　　该元素用于配置ActionServlet。它具有以下属性。
+
+　　1. bufferSize：指定上载文件的输入缓冲大小，可选，默认为4096
+
+　　2. className：指定和controller元素对应的配置类，默认为org.apache.struts.config.ControllerConfig
+
+　　3. conentType：字符编码，如果在Action和JSP网页中设置了，则覆盖该设置。
+
+　　4. locale：指定是否把Locale对象保存到当前用户的session中，默认值为false.
+
+　　5. processorClass：指定负责请求的java类完整路径。
+
+　　6. tempDir：指定处理文件的临时工作目录，如果此项没有设置，将采用Servlet容器为web应用分配的临时工作目录。
+
+　　7. nochache：如果为true：在响应结果中将加入特定的头参数：Pragma,Cache-Control和Expise，防止页面被保存在客户端的浏览器中，默认为false
+
+如下：
+
+<controller
+
+　　contentType="text/html;charset="UTF-8""
+
+　　locale="true"
+
+　　processorClass="con.ok"/>
+
+ 
+
+ 7. message-resources元素
+
+　　主要配置本地化消息文本，它具有以下属性。
+
+　　1. className：和message-resources元素对应的配置类，默认为org.apache.struts.config.MessageResourcesConfig。
+
+　　2. factory：指定消息资源的工厂类，默认为：org.apache.struts.util.PropertyMessageResourcesFactory类
+
+　　3. key：指定Resource Bundle存放的ServletContext对象中时采用的属性Key，默认由Globals.MESSAGES_KEY定义的字符串常量，只允许一个Resource Bundle采用默认的属性Key。
+
+　　4. null：指定MessageSources类如何处理未知消息的key，如果为true，则返回空字符串，如果为false，则返回相关字串，默认为false
+
+　　5. prameter：指定MessageSources的资源文件名，如果为：a.b.ApplicationResources，则实际对应的文件路径为：WEB-INF/classes/a/b/ApplicationResources.properties.
+
+如：
+
+<message-resources null="false" parameter="defaultResource"/>
+
+<message-resources key="num1" null="false" parameter="test"/>
+
+访问为：
+
+<bean:message  key="zxj"/>
+
+<bean:message  key="zxj"  bundle="num1"/>
+
+其中，zxj表法，messagesource资源文件中的一个字符串。
+
+ 
+
+ 8. plugin-in元素
+
+　　配置Struts的插件，属性如下：
+
+　　1. className：指定的Struts插件类，必须实现org.apache.struts.action.PlugiIn接口。如：
+
+<plug-in
+
+　　className="a.b.c.">
+
+　　<set-property property="xxx" value="/WEB-INF/aa.xml"  />
+
+</plug-in>
+
+Struts配置文件详细讲解
+
+Struts应用采用两个基于XML的配置文件来配置,分别是web.xml和struts-cofig.xml文件.web.xml文件是配置所有web应用的而struts-config.xml文件是struts专用的配置文件,事实上也是可以根据需要给这个配置文件起其他名称的.       Web应用的发布描述文件:
+   web应用发布描述文件可以在应用开着者,发布者和组装者之间传递配置信息,Web容器在启动的时候从该文件中读取配置信息,根据它来装载和配置web应用.文档类型定义DTD对XML文档的格式做了定义,DTD吧XML文档划分为元素,属性,实体每一种XML文档都有独自的DTD文件.可以从网上下载.<web-app>元素是web.xml的根元素,其他元素必须嵌入在<web-app>元素之内.要注意的是子元素也是有顺序的比如必须是首先<servlet>,然后<servlet-mapping>最后<taglib>.
+      为Struts应用配置Web.xml文件:
+       首先最重要的一步是配置ActionServlet,这个用<servlet>标签的servlet-name属性起一个名字叫action,然后用servlet-class属性指定ActionServlet的类.
+   然后用<servlet-mapping>标签的servlet-name属性指定action,在用url-pattern指定接收范围是*.do的请求.不管应用中包含了多少子应用,都只需要配置一个ActionServlet,类来出来应用中的不同的功能,其实者就是不必要的,因为Servlet本身就是多线程的,而且目前Struts只允许配置一个ActionServlet.声明ActionServlet的初始化参数:<servlet>的<init-param>子元素用来配置Servlet的初始化参数.param-name设置config参数名.param-value设置struts-config.xml的路径参数值.
+      配置欢迎使用清单:
+   如果客户访问Web的时候值是访问了WEB应用的根目录URL.没有具体的指定文件,Web会自动调用Web的欢迎文件.<welcome-file-list>元素来配置的.通过其中的<welcome-file>欢迎页面</welcome-file>来配置.
+      配置错误处理:
+   尽管Struts框架功能强大的错误处理机制,但是不能保证处理所有的错误或者异常.当错误发生时,如果框架不能处理这种错误,把错误抛弃给Web容器,在默认的情况下web容器会想客户端返回错误信息.如果想避免让客户看到原始的错误信息,可以在Web应用发布描述文件中配置<error-page>元素.通过<error-code>404来定义错误的类型.然后通过<location>要处理错误的JSP页面来对错误进行处理.还可以用<exception-type>来设置异常,然后通过<location>来处理异常的JSP页面来处理异常.
+      配置Struts标签库:
+   这个就和以前学到的JSP自定义标签类似,配置元素为<taglib>来配置.<taglib-uri>这个指定标签库的uri,类似起一个名称.<taglib-location>这个是标签库的位置也就是实际所在的路径.通过这样的方法引入一个标签库,然后在前台JSP页面就可以通过自己定义的URI来调用标签.
+      Struts配置文件:
+      struts-config.xml文件.
+   首先研讨一下org.apache.struts.config包,在struts应用启动的时候会把Struts配置文件信息读取到内存中,并把它们存放在config包中相关的JavaBean类的实例中.包中的每一个类都和struts配置文件中特定的配置元素对应,ModuleConfig在Struts框架中扮演了十分重要的角色,它是整个config包的核心,在Struts运行时来存放整个应用的配置信息.如果有多个子应用都会有一个ModuleConfig对象,它和Struts文件根元素的<struts-config>对应.根元素中包含<form-bean><action><forward>等元素.
+      <struts-config>元素:时Struts配置文件的根元素,和它对应的配置类ModuleConfig类,<struts-config>元素有8个子元素.他们的DTD定义是data-sources?form-bean?global-exception?global-forwards?action-mapping?controller?message-resources?plug-in*在Struts配置文件中,必须按照DTD指定的先手顺序来配置<struts-config>元素的各个子元素,如果颠倒了这些子元素的顺序,会产生错误.
+      <data-sources>元素:用来配置应用所需要的数据源,数据源负责创建和特定的数据库的连接.许多数据源采用连接池的机制实现.以便提高数据库访问的性能.JAVA语言提供了javax.sql.DataSource接口,所有的数据源都必须实现这个接口.许多应用服务器和Web服务器都提供了数据源组件.很多数据库厂商也提供了数据源的实现.<data-sources>元素包含多个<data-source>子元素永远配置特定的数据源.他们可以包含多个<set-property>子元素用于设置数据源的各种属性.配置了数据源以后,就可以在Action类中访问数据源,在Action中定义了getDataSource(HttpRequest)方法,用于获取数据源对象的引用.然后可以利用DataSource对象调用getConnection获取一个连接对象对数据库进行操作.在配置文件中声明多个数据源的时候需要为每一个数据源分配唯一的Key值,通过这个来表示特定的数据源.获取特定的数据源的时候可以用dataSource = getDataSource(reqeust,”A”);
+      <form-beans>元素:用来配置多个ActionForm,包含一个或者N个<form-bean>子元素.每个<form-bean>元素都包含多个属性.className指定和<form-bean>匹配的类.name指定该ActionForm的唯一标识符,这个属性是必须的以后作为引用使用.type指定ActionForm类的完整类名,这个属性也是必须的.注意包名也要加上.<form-property>是指定动态的Form的元素,以后会深入了解.
+      <global-exception>元素:用于配置异常处理,元素可以包含一个或者多个<exception>元素,用来设置JAVA异常和异常处理类ExceptionHandler之间的映射.className指定和元素对应的配置类,默认的不用动.handler指定异常处理类默认是ExceptionHandler.key指定在本地资源文件中异常的消息Key,path指定当前异常发生的时候转发的路径.scope指定ActionMessages实例存放的范围.type指定需要处理异常类的名字,必须的.bundle指定Resource Bundle.
+      <global-forwards>元素:用来声明全局转发,元素可以有一个或者N个<forward>元素组成,用于把一个逻辑名映射到特定的URL,通过这种方法Action类或者JSP页面无需指定URL,只要指定逻辑名称就可以实现请求转发或者重定向.这样可以减少控制组件和视图的聚合.易于维护.className对应的配置类.contextRelative如果为true表示当path属性以/开头的时候,给出的是对应的上下文URL默认是false.name转发路径的逻辑名,必须写.path转发或者重定向的URL,必须写必须是以/开头.redirect设置为true的时候表示执行重定向操作,此项为false的时候,表示执行请求转发操作.重定向与请求转发的区别以后就是重定向是把请求生成应答给客户端然后在重新发送给定向的URL,浏览器地址栏会有显示.而转发就是直接把请求转发给本应用的另一个文件,不生成应答所以客户端IE没显示.
+      <action-mapping>元素:包含一个或者N个<action>元素,描述了从特定的请求路径到响应的Action的映射.在<action>元素中可以包含多个<exception>和<forward>子元素,他们分别配置局部异常处理和局部转发.attribute设置Action关联的ActionForm在request或者session范围内的key.就是在request或者session共享内的名称.className对应配置元素的类.默认的是ActionMapping.forward指定转发URL路径include指定包含URL路径.input指定包含表单的URL,当表单验证失败的时候发送的URL.name,指定和该Action关联的Form名字.该名字必须是在form-bean中定义过的,可写可不写.path必须/开头的方位Action的路径.parameter指定Action配置参数.在Action的execute()方法中可以调用ActionMapping的getParameter()方法来读取匹配的参数.roles指定允许调用该Action的安全角色,多个角色之间逗号格开.scope指定Form的存在范围.默认是session.tyep指定Action的完整类名.unknown如果是true表示可以处理用户发出的所有的无效的ActionURL默认是false.validate指定是否调用ActionForm的validate方法.
+   <controller>元素:用于配置ActionServlet.buffreSize指定上载文件的输入缓冲大小.该属性为可选默认4096.className指定元素对应的配置类,ControllerConfig.然后是contentType指定响应结果内容类型和字符编码,该属性为可选,默认是text/html如果在Action或者JSP网页也设置了类型内容,会覆盖这个.locale指定是否把Locale对象保存到当前用户的session中默认false.tempDir指定处理文件上载的临时工作目录.nochache如果是true在响应结果中加入特定的头参数.
+      <message-resources>元素:用来配置ResourceBundle.用于存放本地文本消息文件.className元素对应的配置类.MessageResourcesConfig.factory指定消息的工厂类.key指定文件存放的Servlet对象中采用的属性Key.null指定如何处理未知消息.parameter指定消息的文件名.
+   <plug-in>元素:用于配置Struts插件.
+   配置多应用模块:所有的子应用都可以共享同一个ActionServlet实例,但是每个子应用都有单独的配置文件.把应用划分为多个子应用模块.首先为每个应用创建单独的Struts配置文件,在web.xml的ActionServlet配置代码中添加几个子应用信息.采用<forward>元素来实现应用之间的切换.
+      Digester组件:是一个Apache的另一个开源代码项目.当Struts被初始化的时候,首先会读取并解析配置文件,框架采用Digester组件来且西配置文件.然后创建config包中的对象.者对象用于存放配置信息.
+       其实配置文件不难,只要都理其中的原理就OK了.真正实际的项目开发中,采用的工具例如Eclipse系列,提供了相应的插件,在创建一个Struts工程的时候配置文件的标签都是自动生成的,而我们只需要往里面填写属性就OK了.
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+多模块跳转SwitchAction
+
+多模块编程
+1.建一个文件夹(zhangsan)在 WebRoot下面
+2.建一个struts-config-zhangsan.xml在WEB-INF下面
+ <forward name="success1" path="/success.jsp" contextRelative="true"></forward>
+3.在web.xml中添加
+  <init-param>
+   <param-name>config</param-name>
+   <param-value>
+    /WEB-INF/struts-config.xml
+   </param-value>
+  </init-param>
+   <init-param>
+   <param-name>config/zhangsan</param-name>
+   <param-value>
+    /WEB-INF/struts-config-zhangsan.xml
+   </param-value>
+  </init-param>
+==============================
+访问时
+Switch.do?prefix=/zhangsan&page=/register.do
+----------------------------
+struts-config.xml：<forward name="success1" path="/success.jsp"module="/zhangsan"></forward>
+跳转时，在<forword 里添加属性   contentRelative="true"  来指定允许在模块间转发
+path="zhangsan/LoginAction.do"  path属性用来指定模块名（60页）
+modul="zhangsan"    "/"指定模块
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+国际化
+
+ApplicationResources.properties：name=handson
+ApplicationResources_en_US.properties：name=handson
+ApplicationResources_zh_CN.properties：name=\u5f20\u4e09
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+strut基础
+
+Struts 培训教程
+1 Struts主要技术介绍
+1.1.1 反射和内省
+· 反射机制是一种决定一个对象哪些成员域和成员方法被采用的过程。内省技术是反射机制的一种特殊机制,Structs使用内省技术转换HTTP参数为JavaBean的属性，读取JavaBean属性装配HTML字段。 
+1.1.2 属性文件和ResourceBundles
+1.1.2.1 属性文件
+属性文件主要用来设置程序属性，属性文件的后缀名为.properties,属性文件的格式类似于以下内容：
+book=my  computer book  
+pages=120
+authors=zhf
+seminar=12
+1.1.2.2 使用属性文件
+java.util包中Properties类用来管理一个Key/value对，Properties类提供了以下方法：
+load()方法：Loading  key/value pairs into a  Properties object  form a Stream 从一个输入流中加载
+getProperty()方法:Retrieving a value from its key   通过关键字来获得值
+list()方法：Listing the keys and their values  列举
+Save()方法：Saving the properties to a stream  保存属性
+具体例子如下
+import java.util.*;
+import java.io.*;
+public class useProperties
+{
+    public static void main(String[] args)
+{
+try{
+Properties defaultProps=new Properties();
+         FileInputStream  file=new FileInputStream("test.properties");
+defaultProps.load(file);
+         file.close();
+defaultProps.list(System.out);
+        System.out.println("getProperty(String key,Stringdefault)= " 
++defaultProps.getProperty("book"));
+FileOutputStream out=new FileOutputStream("appProperties");
+       defaultProps.store(out,"-----no comment--");
+       out.close();
+}catch(Exception e)
+{
+e.printStackTrace();
+}
+}
+}
+1.1.2.3 使用本地化数据
+使用本地化数据,需要建立多个属性文件，假设我们系统中需要支持德文和法文，我们的默认属性文件为LabelsBundle.properties文件，那么我们需要建立德文和法文所对应的属性文件：
+LabelBundle_de.properties
+LabelBundle_fr.properties
+1.1.2.4 ResoureBundle和Locale　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+通过ResourceBundle结合Locale对象可以选择属性文件：
+下面我们给一个具体的例子
+import java.util.*;
+import java.io.*;
+public class ResourceBundleDemo{
+    public static void main(String[] args)
+    {
+//采用了德国设置
+Locale  currentLocal=Locale.GERMAN;
+ResourceBundle labels=ResourceBundle.getBundle("LabelsBundle",currentLocal);
+String myValue=labels.getString("s2");
+     System.out.println("  Local=GERMAN ; S2= "+myValue);
+//采用了法国设置
+currentLocal=Locale.FRENCH;
+        labels=ResourceBundle.getBundle("LabelsBundle",currentLocal);
+        myValue=labels.getString("s2");
+System.out.println("  Local= FRENCH ; S2= "+myValue);
+}
+}
+运行Javac ResourceBundleDemo.java；Java ResourceBundleDemo查看结果
+1.1.3 JSP和JSP标签库
+Jsp中提供了一些标准的标签：
+useBean,setProperty/getProperty,include,forward,plugin。
+使用例子如：
+<jsp:useBean  id=”bookname”  scope=”page”  class=”test.book”/>
+这些标准的标签，为操作JavaBean和相应请求等提供便利，除此之外，JSP技术允许我们自己封装特有的标签，来简化应用程序开发。有经验的开发者可以利用标签处理表单，访问数据库或其他企业服务（如e-mail或目录服务等）。
+1.1.3.1 标签的主要技术
+可以在JSP页面中设置标签的参数。
+可以访问JSP页面中所有的对象。
+可以获得JSP页面的Response对象。
+标签之间互相通讯。
+标签可以被嵌套，实现标签的多层使用。
+1.1.3.2 标签的使用
+为了能够在jsp页面中使用一个标签，我们需要变现一个实现了TagSupport类的java程序，然后通过tld文件，定义该标签的属性，然后通过web.xml声明这个tld文件，最后才可以在JSP页面中使用标签的。
+下面我还是根据例子来简单讲一下
+详细代码下src/taguse目录下。
+1.1.3.2.1 定制标签类
+package com.zhfelva.tag;
+import javax.servlet.jsp.*;
+import javax.servlet.jsp.tagext.*;
+import java.io.*;
+/**
+ * 一个显示当前时间的标签
+*/
+public class CurrentTimeTag extends TagSupport {
+  public int doStartTag() {
+    try {
+      JspWriter out = pageContext.getOut();
+      java.util.Date dt = new java.util.Date(System.currentTimeMillis());
+      out.print(dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds());
+    } catch(IOException ioe) {
+      System.out.println("Error in CurrentTimeTag: " + ioe);
+    }
+    return(SKIP_BODY);
+  }
+}
+1.1.3.2.2 编写标签定义文件
+放于\WEB-INF\taglib\mytaglib.tld
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib  PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+"http://java.sun.com/j2ee/dtds/Web-jsptaglibrary_1_1.dtd">
+<!-- a tag library descriptor -->
+<taglib>
+  <tlibversion>1.0</tlibversion>
+  <jspversion>1.1</jspversion>
+  <shortname>current time</shortname>
+  <uri></uri>
+  <info>
+A tag library for show current time
+  </info>
+  <tag>
+    <name>CurrentTime</name>
+    <tagclass>com.zhfelva.tag.CurrentTimeTag</tagclass>
+    <bodycontent>EMPTY</bodycontent>
+    <info>show current time</info>
+  </tag>
+</taglib>
+1.1.3.2.3 在web.xml中进行配置
+一个网页应用程序要在web.xml中声明他要使用的标签库：
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE web-app      PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.3.dtd">
+<web-app>
+    <taglib>
+        <taglib-uri>
+             my-taglib
+        </taglib-uri>
+        <taglib-location>
+           /WEB-INF/taglib/mytaglib.tld
+        </taglib-location>
+    </taglib>
+</web-app>
+1.1.3.2.4 简单标签的使用
+以上配置做好之后，就可以在JSP页面中使用标签了：
+currenttime.jsp
+<%@ page contentType="text/html;charset=gb2312" %>
+<%@ taglib uri="my-taglib" prefix="mytag" %>
+<HTML>
+<HEAD>
+<TITLE>显示当前时间 - JSP/TagLib</TITLE>
+</HEAD>
+<BODY>
+<H1>显示当前时间 - JSP/TagLib</H1>
+<mytag:CurrentTime />
+</BODY>
+</HTML>
+1.1.4 XML相关技术
+这里，相关的内容非常多，而且很重要，相信大家也都熟悉XML技术，由于时间关系，这里就不做讲述了。
+1.1 主要技术
+1.1.1 Struts体系结构
+控制：通过Struts体系图大家可以看到有一个XML文件Struts-config.xml，与之相关联的是Controller，在Struts中，承担MVC中Controller角色的是一个Servlet，叫ActionServlet。ActionServlet是一个通用的控制组件。这个控制组件提供了处理所有发送到Struts的HTTP请求的入口点。它截取和分发这些请求到相应的动作类（这些动作类都是Action类的子类）。另外控制组件也负责用相应的请求参数填充 Action From（通常称之为FromBean）,并传给动作类（通常称之为ActionBean）。动作类实现核心商业逻辑，它可以访问java bean 或调用EJB。最后动作类把控制权传给后续的JSP 文件，后者生成视图。所有这些控制逻辑利用Struts-config.xml文件来配置。
+视图：主要由JSP生成页面完成视图，Struts提供丰富的JSP 标签库： Html，Bean，Logic，Template等，这有利于分开表现逻辑和程序逻辑。
+模型：模型以一个或多个java bean的形式存在。这些bean分为三类：Action Form、Action、JavaBean or EJB。Action Form通常称之为FormBean，封装了来自于Client的用户请求信息，如表单信息。Action通常称之为ActionBean，获取从ActionSevlet传来的FormBean，取出FormBean中的相关信息，并做出相关的处理，一般是调用Java Bean或EJB等。
+流程：在Struts中，用户的请求一般以*.do作为请求服务名，所有的*.do请求均被指向ActionSevlet，ActionSevlet根据Struts-config.xml中的配置信息，将用户请求封装成一个指定名称的FormBean，并将此FormBean传至指定名称的ActionBean，由ActionBean完成相应的业务操作，如文件操作，数据库操作等。每一个*.do均有对应的FormBean名称和ActionBean名称，这些在Struts-config.xml中配置。
+1.1.2 Struts的基本组件包
+整个struts大约有15包，近200个类所组成，而且数量还在不断的扩展。在此我们不能一一介绍，只能列举几个主要的简要的介绍一下。下表说明了目前struts api中基本的几个组件包，包括action,actions,taglib。图片（5）则显现了这几个组件包之间的关系。其中action是整个struts framework的核心
+Org.apache.struts.action:基本上，控制整个struts framework的运行的核心类、组件都在这个包中，比如我们上面提到的控制器ActionServlet,Action,ActionForm,ActionMapping等等。struts1.1比1.0多了 DynaActionForm 类。增加了动态扩展生成FormBean功能
+Org.apache.struts.actions:这个包是主要作用是提供客户的http请求和业务逻辑处理之间的特定适配器转换功能，而1.0版本中的部分动态增删FromBean的类，也在struts1.1中被Action包的DynaActionForm组件所取代
+Org.apache.struts.taglib:这不是一个包，而是是一个客户标签类的集合。下面包括Bean Tags，HTML Tags，Logic Tags，Nested Tags，Template Tags这几个用于构建用户界面的标签类。
+对于Struts 如何控制、处理客户请求，让我们通过对struts的四个核心组件介绍来具体说明。这几个组件就是：ActionServlet。Action Classes，Action Mapping（此处包括ActionForward），ActionFrom Bean。
+1.1.3 Struts ActionServlet
+ActionServlet继承自javax.servlet.http.HttpServlet类，其在Struts framework中扮演的角色是控制器，参看上面的“Struts体系图”。控制器ActionServlet主要负责将客户的HTTP请求信息组装后，根据配置文件的指定描述，转发到适当的处理器。 按照Servelt的标准，所有得Servlet必须在web配置文件（web.xml）声明。同样，ActoinServlet必须在Web Application配置文件（web.xml）中描述，有关配置信息，后面将会介绍。
+当用户向服务器端提交请求的时候，实际上信息是首先发送到控制器ActionServlet，一旦控制器获得了请求，其就会将请求信息传交给一些辅助类（help classes）处理。这些辅助类知道如何去处理与请求信息所对应的业务操作。在Struts中，这个辅助类就是org.apache.struts.action.Action。通常开发者需要自己继承Aciton类，从而实现自己的Action实例。
+1.1.4 Struts Action Classes 
+  Action类所作的工作，正如它的名称一样，就是具体的业务操作。Action类中最为常用的是execute（）方法。
+当Controller收到客户的请求的时候，就会将请求转移到一个Action实例，然后会调用这个Action实例的execute（）方法。Struts Framework为应用系统中的每一个Action类只创建一个实例。所有的用户都使用这一个实例， Action 类运行在一个多线程的环境中。
+注意，客户自己继承的Action子类，必须重写execute（）方法，因为Action类在默认情况下是返回null的。
+1.1.5 Struts Action Mapping
+上面讲到了一个客户请求是如何被控制器转发和处理的，但是，控制器如何知道什么样的信息转发到什么样的Action类呢？这就需要一些与动作和请求信息相对应的映射配置说明。在struts 中，这些配置映射信息是存储在特定的XML文件（struts-config.xml）。  
+这些配置信息在系统启动的时候被读入内存，供struts framework在运行期间使用。在内存中，每一个<action>元素都与org.apache.struts.action.ActionMapping类的一个实例对应。下表就显示了一个登陆的配置映射。
+Path：这个属性用来和JSP页面中，调用<html:form>时的action属性相对应，它将JSP页面和处理这个JSP页面的Action对象对应起来。
+Type: 对应的Action子类的完整类名。
+Name: 对应的ActionForm的名称。他与下面将描述的<form-bean>元素的name属性相应。
+Scope:这个属性表示相对应的ActionForm bean 的scope属性。它的值可以是“page”、“request”、“session”和“application”。分别对应java bean的“page”、“request”、“session”和“application”属性。
+Input:这个属性表示如果对应的ActionForm的validate方法返回值的ActionErrors非空，即ActionForm的属性没有通过校验，则跳转到当前的页面。
+Validate: 是否调用FormBean的validate()方法来验证，关闭它之后就不会报出错误信
+息了。True表示需要调用validate方法；false表示不需要调用validate方法。
+    forward:定义可能的跳转路径。Name属性表示Action类的execute方法中，生成的返回结果时的参数；path表示将要跳转到的页面的路径。
+上面的配置表示：当可以通过/logonAction.do提交请求信息的时候，控制器将信息委托com.test.LogonAction处理。调用LogonAction实例的execute()方法。同时将Mapping实例和所对应的LogonForm Bean信息传入。其中name=LogonForm，使用的form-bean元素所声明的ActionForm Bean。有关form-bean的声明如下显示。
+<form-bean>有两个属性：
+   name ：这个ActionForm的名字，他与被ＪＳＰ页面中的<HTML:form>元素的name属性应该是相同的。比如，如果在一个ＪＳＰ页面中需要生成一个ActionForm对象，这个对象的名字（就是name属性）是“LoginForm”，则ＪＳＰ页面中的<HTML:form>元素的name属性也应该是“LoginForm”。
+　 Type　：这个ActionForm对象的完整类名。这个属性和ＪＳＰ页面中的<HTML:form>元素的type属性是相对应的。
+在此稍稍说一下有关global-forwards的概念。其在配置文件中描述了整个应用系统可以使用的ActionForward，而不是仅仅是一个特定的Action。
+<global-forwards>元素用来表示全局的跳转页面。和<action>元素一样，他有无数个<forward>元素。当一个Action对象的execute方法执行完毕以后，如果他返回的ActionForward对象没有在这个<action>元素的<forward>子元素中有对应值的话，他将要查找<global-forwards>中的<forward>元素，并跳转到相应页面。
+前面我们讲过Struts采用属性文件来保存应用程序的信息，那么，Struts如何知道属性文件的路径呢，也在struts-config.xml文件来配置：
+<message-resource>元素用来表示ApplicationResources.properties文件的位置。这个元素有一个属性――parameter，这个属性用来表示ApplicationResources.properties文件的存放地点，但有意思的是，他是用一个类名来来表示存放路径的。比如“com. ApplicationResources”是表示存放在WEB-INF／classes / com 路径下面的ApplicationResources.properties文件。上图表示的文件路径为WEB-INF／classes /test/ApplicationResources.properties。
+注意：以上所述的这些元素在struts-config.xml文件中的位置也是有先后顺序的。它们的顺序是：
+<form-beans>
+< global-forwards >
+<actions>
+< message-resources >
+1.1.6 Struts ActionForm Bean
+在上面讲解ActionServlet，Action Classes和Action Mapping的时候，我们都提到了ActionForm Bean的概念。ActionForm的主要功能就是为Action的操作提供提交表单相映射的数据。
+对于每一个客户请求，Struts framework在处理ActionForm的时候，一般需要经历如下几个步骤：
+（１）检查Action的映射，确定Action中已经配置了对ActionForm的映射
+（２）根据name属性，查找form bean的配置信息
+（３）检查Action的formbean的使用范围，确定在此范围下，是否已经有此form bean的实例。
+（４）假如当前范围下，已经存在了此form bean的实例，而是对当前请求来说，是同一种类型的话，那么就重用。
+（５）否则，就重新构建一个form bean的实例
+（６）form bean的reset()方法备调用
+（７）调用对应的setter方法，对状态属性赋值
+（８）如果validatede的属性北设置为true，那么就调用form bean的validate()方法。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+struts运行流程
+
+1.form表单
+<html:form action="HelloWorld.do" focus=userName"">
+next1: 根据你提交表单的申请JSP服务器容器把HelloWorld.do映射到<servlet-mapping>
+2.web.xml
+<servlet-mapping>
+<servlet-name>action</servlet-name>
+<url-pattern>*.do</url-pattern>
+</servlet-mapping>
+next2: JSP服务器容器把<servlet-mapping>的HelloWorld.do指到<action-mappings>的path="/HelloWorld";
+3.struts-config.xml
+<form-beans>
+<form-bean name="HelloForm" type="hello.HelloForm"/>
+</form-beans>
+<action-mapping>
+<action path="/HelloForm" type="hello.HelloAction" name="HelloForm" scope="request" validate="true" input="/hello.jsp" >
+<forward name="SayHello" path="/hello.jsp" />
+</action
+</action-mapping>
+
+next3: struts控制器根据name="HelloForm"找<form-beans>中对应的<form-bean>
+next4: <form-bean>调用指定的type类
+            关联: 如果validate是"true"那么调用type类的validate();
+next5:  struts控制器在HelloForm bean处理结束会根据<action-mappings>的type调用指定的HelloAction类
+            关联: mapping.findForward()方法调用<action-mappings>的<forward>
+4.public final class HelloForm extends ActionForm{
+      reset();
+      validate();
+}
+5.public final class HelloAction extends Action{
+     execute(){
+           return (mapping.findForward("SayHello"));
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+struts与mvc
+
+struts是一个完全遵照MVC模型设计的，web层的框架。在struts中，使用到了jsp、javabean、taglib和servlet技术。struts框架的应用请求的执行
+过程大体可以被分成5个基本步骤：
+1 view发起一个请求
+2 ActionServlet（servlet技术实现）接受这个请求，它根据一份xml文件来得到处理这个请求的Action对象，并将请求发送给这个Action对象。
+3 Action对象接受这个请求，并调用model（EJB）去处理这个请求,并将处理结果返回给ActionServlet。
+4 ActionServlet根据Action 的返回结果中的信息，决定将处理结果返回给对应的view。
+5 view得到处理结果，并将他显示给用户。
+1.1       THE MODEL
+Struts框架提供Action作为model的一种实现。Action 是继承org.apache.struts.action. Action的类，他用来处理用户的请求，并将处理结果封装在HttpServletRequest中，返回给ActionServlet。
+1.2       THE VIEW
+Struts用JSP、taglib和javabean技术去实现view。JSP用来显示视图；struts通过使用自己定义的一组taglib来控制请求的流程、辅助处理结果的显示；javabean用来保存用户在JSP页面中的输入数据，他用来方便的向Action传递用户输入数据。
+1.3       THE CONTROLLER
+ Struts用org.apache.struts.action.ActionServlet去实现controller的功能。这个servlet接收所有JSP页面发送的请求，根据一份配置文件得到处理相应用户请求的Action,并调用Action去处理用户的请求。当Action处理结束后，ActionServlet接受处理结果，并根据同样的配置文件将处理结果发送当相应的JSP页面。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+validate(验证用户输入)
+
+1.修改ActionForm中的validate方法
+注：页面中用户名文本框name为username
+页面中为：
+ <body>
+  <html:form action="login">
+   password : <html:text property="password"/><html:errors property="password"/><br/>
+   username : <html:text property="username"/><html:errors property="username"/><br/>
+   <html:submit/><html:cancel/>
+  </html:form>
+ </body>
+——————————————————————————————————
+ public ActionErrors validate(ActionMapping mapping,
+   HttpServletRequest request) {
+  // TODO Auto-generated method stub
+  ActionErrors errors = new ActionErrors();
+  if(username.length() < 5){
+   ActionError error = new ActionError("error1");
+   errors.add("username",error);
+  }
+  
+  return errors;
+ }
+ 
+2.在资源文件中添加键值对
+ error1=name can't less than 5 char!
+
+3.在struts-config.xml中修改action
+     <action
+      attribute="login"
+      input="/login.jsp"
+      name="login"
+      path="/login"
+      scope="request"
+      type="com.action.LoginAction" />
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+validator验证框架
+
+下面的例子实现用户名（name）不能为空的检验
+页面内容为：
+ <body>
+  <html:form action="/login">
+   password : <html:text property="password"/><html:errors property="password"/><br/>
+   name : <html:text property="name"/><html:errors property="name"/><br/>
+   <html:submit/><html:cancel/>
+  </html:form>
+ </body>
+——————————————————————————————————
+1.在struts-config.xml中添加插件
+ <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+  <set-property property="pathnames"
+   value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+ </plug-in>
+2.在资源文件中添加
+errors.required={0} is required.
+myname=username
+
+3.  ActionForm 不再继承ActionForm 改成 ValidatorForm 
+    并去掉validate方法
+4.在WEB-INF下添加validation.xml文件
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN" "validator_1_1_3.dtd" >
+<form-validation>
+ <formset>
+  <form name="LoginActionForm">
+   <field property="name" depends="required">
+    <arg0 key="myname" />
+   </field>
+  </form>
+ </formset>
+</form-validation>
+-------------------------------------------------------------------------------
+注：action中必须有 input  属性
+ <action-mappings>
+  <action attribute="LoginActionForm" input="/login.jsp"
+   name="LoginActionForm" path="/login" scope="request"
+   type="LoginAction" />
+ </action-mappings>
+
+当继承ValidatorForm 时，validation.xml 中  form中的name属性必须于 action 中的 name相同
+当继承ValidatorActionForm 时，validation.xml 中  form中的name属性必须于 action 中的 path相同(书的116页)
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+struts框架验证
+
+首先说Struts中验证框架的使用 
+1，建一个Web Project用Struts包围，这个就不多说了，注意最好用struts1.2及以上版本 
+2，手动配置FormBean和Action 
+A,手动配置FormBean 
+    在此之前新建一个Jsp页面，如下： 
+    index.jsp  
+<%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%> 
+<%@ taglib uri="strutsHtml" prefix="html" %> 
+<%@ taglib uri="strutsBean" prefix="bean" %> 
+<%@ taglib uri="strutsLogic" prefix="logic" %> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html> 
+<head>  
+   <title>Demo</title> 
+</head> 
+  
+<body> 
+    <logic:messagesPresent> 
+       <ul> 
+       <html:messages id="error"> 
+          <li><bean:write name="error"/></li> 
+       </html:messages> 
+       </ul><hr /> 
+    </logic:messagesPresent> 
+  <center> 
+    <form action="check.do" method="post" > 
+       UserID:<input type="text" name="userID" /> 
+       Password:<input type="password" name="userpass" /> 
+       <input type="submit" name="cmd" value="login" /> 
+    </form> 
+    </center> 
+</body> 
+</html> 
+在这里使用了struts中的自定义标签，就不介绍了，在web.xml中加入以下代码即可：(加在servlet元素上边比较好)
+<jsp-config> 
+  <taglib> 
+       <taglib-uri>strutsHtml</taglib-uri> 
+       <taglib-location>/WEB-INF/struts-html.tld</taglib-location> 
+  </taglib> 
+  <taglib> 
+       <taglib-uri>strutsBean</taglib-uri> 
+       <taglib-location>/WEB-INF/struts-bean.tld</taglib-location> 
+  </taglib> 
+  <taglib> 
+       <taglib-uri>strutsLogic</taglib-uri> 
+       <taglib-location>/WEB-INF/struts-logic.tld</taglib-location> 
+  </taglib> 
+</jsp-config> 
+然后在my包下新建一个类，如下： 
+        注意：要使用验证框架必须让类继承ValidatorForm
+在FormBean中只需声明跟他相关联的JSP页面里<form>中的属性，和属性的get/set方法即可，本例中只需声明index.jsp中的userID,userpass。注意，属姓名一定要与jsp中的名字相同。代码如下：
+package my; 
+  
+import org.apache.struts.validator.ValidatorForm; 
+  
+@SuppressWarnings("serial") 
+publicclass TestForm extends ValidatorForm { 
+  
+    private String userID; 
+    private String userpass; 
+    
+    public String getUserID() { 
+       returnuserID; 
+    } 
+    
+    publicvoid setUserID(String userID) { 
+       this.userID = userID; 
+    } 
+    
+    public String getUserpass() { 
+       returnuserpass; 
+    } 
+    
+    publicvoid setUserpass(String userpass) { 
+       this.userpass = userpass; 
+    } 
+} 
+在struts-config.xml中添加<form-bean>,如下： 
+注：type的值要与建立的FormBean的名字相同，而且必须标明类所在的包，在此我就不把FormBean和Action分包了，都放在my包下。 
+<form-beans> 
+  <form-bean name="testForm" type="my.TestForm"></form-bean> 
+</form-beans> 
+
+B.配置Action 
+    同样，在my包下新建一个类：名叫TestAction 如下： 
+    注意，此类继承自Action
+
+在此类中实现execute方法。暂时把返回值设置成null 
+    代码如下： 
+package my; 
+  
+import javax.servlet.http.HttpServletRequest; 
+import javax.servlet.http.HttpServletResponse; 
+  
+import org.apache.struts.action.Action; 
+import org.apache.struts.action.ActionForm; 
+import org.apache.struts.action.ActionForward; 
+import org.apache.struts.action.ActionMapping; 
+  
+publicclass TestAction extends Action { 
+  
+    public ActionForward execute(ActionMapping mapping, ActionForm form, 
+           HttpServletRequest request, HttpServletResponse response) 
+           throws Exception { 
+       return mapping.findForward("ok"); 
+    } 
+  
+} 
+    在struts-config.xml中配置Action： 
+    其中path是jsp表单中action的值，name,attribute关联的是FormBean的名字， type是Action完整的类名,scope为作用域，validate在这里要设置成true，因为要做验证，input为当验证出发时，显示错误的页面 
+<forward>中 name为Action转发的名称，path为转发的路径，此时我们要把Action中刚才返回null的地方替换成：return mapping.findForward("ok");让Action跳转到ok.jsp
+代码： 
+<action-mappings> 
+  <action path="/check" name="testForm" attribute="testForm" 
+          type="my.TestAction" scope="request" validate="true" 
+          input="/index.jsp"> 
+       <forward name="ok" path="/ok.jsp"></forward> 
+  </action> 
+</action-mappings> 
+1，开始添加验证框架。 
+验证框架其实就是一个struts得插件，它依赖于validator-rules.xml和validation.xml以及项目本身的资源文件(ApplicationResources.properties) 
+       
+       所以我们第一步先要在struts-config.xml中添加这个插件： 
+           将validator-rules.xml的这段话： 
+<plug-in className="org.apache.struts.validator.ValidatorPlugIn"> 
+        <set-property property="pathnames" value="/WEB-INF/validator-rules.xml, /WEB-INF/validation.xml"/> 
+</plug-in> 
+       Copy到struts-config.xml中。即可完成添加，注意，插件要复制到文件的最后，当然要包含在根元素下. 
+       Values里边有两个值，说明它需要这两个文件来完成验证。 
+validator-rules.xml我们已经有了，下面我们需要新建一个validation.xml 
+在WEB-INF下新建一个xml文件。 
+建好之后把validator-rules.xml这段话： 
+<!DOCTYPE form-validation PUBLIC 
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN" 
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd"> 
+copy到validation.xml中。 
+注：validator_1_1_3.dtd 是validator-rules.xml和validation.xml文件约束文件。约束在xml文件中都有哪些元素和属性及它们之间的包含关系
+
+Ok，暂时先不管它了，我们关注下ApplicationResources.properties 这个文件 
+它是整个项目的资源文件，说简单了就是起一个让你可以一劳永逸的作用，我们这里不多做解释了 
+Ok，我们在validator-rules.xml中找到被注释的部分中如以下标记： 
+# Struts Validator Error Messages 
+   errors.required={0} is required. 
+   errors.minlength={0} can not be less than {1} characters. 
+   errors.maxlength={0} can not be greater than {1} characters. 
+   errors.invalid={0} is invalid. 
+  
+   errors.byte={0} must be a byte. 
+   errors.short={0} must be a short. 
+   errors.integer={0} must be an integer. 
+   errors.long={0} must be a long. 
+   errors.float={0} must be a float. 
+   errors.double={0} must be a double. 
+  
+   errors.date={0} is not a date. 
+   errors.range={0} is not in the range {1} through {2}. 
+   errors.creditcard={0} is an invalid credit card number. 
+   errors.email={0} is an invalid e-mail address. 
+这些是用来保存验证框架所提示的错误信息的，将他们copy到ApplicationResources.properties中 
+关于错误信息的注释： 
+1， 验证非空 
+2， 最小长度 
+3， 最大长度 
+4， 挂钩正则表达式的验证，(mask) 
+5， 验证为byte类型 
+6， 验证为short类型 
+7， 验证为integer类型 
+8， 验证为long类型 
+9， 验证为float类型 
+10，              验证为时间类型 
+11，              验证在xx-xx范围之内 
+12，              验证creditcard格式 
+13，              验证email格式 
+
+注意，ApplicationResources文件要选择打开方法的，用文本编辑器或者properties file editor 打开都可以。
+
+好了，这里搞定，我们跳回到validation.xml文件，开始手写validation.xml： 
+(程序员么，要有跳跃性思维……)：
+    1．写根元素 <form-validation> 
+    2．写 <formset> : 包含所有要被验证框架进行验证的表单 
+    3．写 <form name="testForm" > : name属性对应的值一定要是struts-config.xml的form-bean中声明 
+4．写 <field property="user" depends="required,mask" > property一定要是form中的属性 
+         property="user" ：属性名 
+         depends="required,mask" ：套用的验证标准这个验证标准必须是在validator-rules.xml的validator元素下声明的，套用两个验证标准，就用逗号将两个标准隔开。 
+       5．写需要传入提示信息的参数 
+           写法一：<arg key="user.name" position="0" /> 
+           这里key属性里面的”user.name”需要在ApplicationResources文件里边定义一下。 
+           举个例子： 
+              我们要验证表单中用户ID这个输入框不能为空。 
+              第一步要在validation.xml关联，设定参数。如下：
+<form-validation> 
+    <formset> 
+       <form name="testForm"> 
+           <field property="userID" depends="required"> 
+              <arg key="user.id" position="0" /> 
+           </field> 
+       </form> 
+    </formset> 
+</form-validation> 
+             
+第二步要在ApplicationResources文件中定义一个参数： 
+user.id = User’s ID    这里需要注意，变量名要与validation.xml下的key值相同，User’s ID是要显示在页面上的内容。
+发布，运行后的效果：
+ApplicationResources文件中显示中文很麻烦，就不在这里介绍了。
+           再举个例子，假如我们要验证密码不能为空且长度不能小于6位： 
+           我们所涉及的表单项为userpass，验证标准为minlength和required 
+errors. minlength={0} can not be greater than {1} characters. 
+           正如我们所见，这个验证标准需要两个参数。Ok，我们分两种方法来做一下： 
+1， 在ApplicationResources中定义参数1： 
+<field property="userpass" depends="required,minlength"> 
+              <arg key="user.pass" position="0"/> 
+              <arg key="pass.length" position="1"/> 
+           </field> 
+              然后要在ApplicationResources中声明参数0，参数1： 
+user.pass = User''sPassword 
+    pass.length = 6    //定义参数1 
+2， 在validation.xml中定义参数1： 
+<field property="userpass" depends="required,minlength"> 
+              <arg key="user.pass" position="0"/> 
+              <arg key="${var:minlength}" position="1" resource="false"/> 
+                  <var> 
+                     <var-name>minlength</var-name> 
+                     <var-value>6</var-value> 
+                  </var> 
+           </field> 
+用EL表达式将key的值传到ApplicationResources文件中，并且告诉ApplicationResources不用在那边声明变量了(resource="false")
+ Copyright ©2011 lyt. All Rights Reserved.
+
+

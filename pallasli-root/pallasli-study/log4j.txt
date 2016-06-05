@@ -1,0 +1,98 @@
+
+java核心技术学习
+logrootProperties
+
+log4j.rootLogger=DEBUG,CONSOLE,DATABASE,FILE
+log4j.addivity.org.apache=true
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+consoleProperties
+
+#控制台输出
+
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.Threshold=INFO
+log4j.appender.CONSOLE.Target=System.out
+log4j.appender.CONSOLE.Encoding=GBK
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+dailyProperties
+
+#按日创建文件
+
+log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.A1.File=E:/log4j/log
+log4j.appender.A1.Threshold=INFO
+log4j.appender.A1.DatePattern='.'yyyy-MM-dd
+log4j.appender.A1.Encoding=GBK
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+log4j.appender.A1.layout.ConversionPattern=[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+databaseProperties
+
+#数据库存储
+
+log4j.appender.DATABASE=org.apache.log4j.jdbc.JDBCAppender
+log4j.appender.DATABASE.URL=jdbc:mysql://localhost:3306/logtest
+log4j.appender.DATABASE.driver=com.mysql.jdbc.Driver
+log4j.appender.DATABASE.user=root
+log4j.appender.DATABASE.password=root
+log4j.appender.DATABASE.Threshold=INFO
+log4j.appender.DATABASE.sql=INSERI INTO LOG4J(stamp,message) VALUES ('%d{yyyy-MM-dd HH:mm:ss}','[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n')
+log4j.appender.DATABASE.layout=org.apache.log4j.PatternLayout
+log4j.appender.DATABASE.layout.ConversionPattern=[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+fileProperties
+
+#文件存储
+
+log4j.appender.FILE=org.apache.log4j.FileAppender
+log4j.appender.FILE.File=E:/log4j/file.log
+log4j.appender.FILE.Appender=false
+log4j.appender.FILE.Threshold=INFO
+log4j.appender.FILE.Encoding=GBK
+log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.FILE.layout.ConversionPattern=[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+rollingProperties
+
+#文件自动重写
+
+log4j.appender.ROLLING_FILE=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.ROLLING_FILE.File=rolling.log
+log4j.appender.ROLLING_FIL.Appender=true
+log4j.appender.ROLLING_FILE.Threshold=INFO
+log4j.appender.ROLLING_FILE.Encoding=GBK
+log4j.appender.ROLLING_FILE.MaxFileize=10KB
+log4j.appender.ROLLING_FILE.MaxBackupIndex=1
+log4j.appender.ROLLING_FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.ROLLING_FILE.layout.ConversionPattern=[framework] %d - %c -%-%4r [%t] %-5p %c %x - %m%n
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 

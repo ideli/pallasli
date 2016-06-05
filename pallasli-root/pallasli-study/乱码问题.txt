@@ -1,0 +1,457 @@
+
+study
+filter乱码处理
+
+我们编写一个EncodingFilter.java，来批量设置请求编码。
+package anni;
+import java.io.IOException;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+public class EncodingFilter implements Filter {
+    public void init(FilterConfig config) throws ServletException {}
+    public void destroy() {}
+    public void doFilter(ServletRequest request,
+            ServletResponse response,
+            FilterChain chain)
+            throws IOException, ServletException {
+        request.setCharacterEncoding("gb2312");
+        chain.doFilter(request, response);
+    }
+}
+        
+在此EncodingFilter实现了Filter接口，Filter接口中定义的三个方法都要在EncodingFilter中实现，其中doFilter()的代码实现主要的功能：为请求设置gb2312编码并执行chain.doFilter()继续下面的操作。
+与servlet相似，为了让filter发挥作用还需要在web.xml进行配置。
+<filter>
+    <filter-name>EncodingFilter</filter-name>
+    <filter-class>anni.EncodingFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>EncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+        
+filter标签部分定义使用的过滤器，filter-mapping标签告诉服务器把哪些请求交给过滤器处理。这里的/*表示所有请求，/表示根路径，*（星号）代表所有请求，加在一起就变成了根路径下的所有请求。
+这样，所有的请求都会先被EncodingFilter拦截，并在请求里设置上指定的gb2312编码。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+jsp页面乱码处理
+
+post方法在jsp页面加上
+<%
+    request.setCharacterEncoding("UTF-8");
+%>
+GET乱码
+直接点击超链接，form的默认提交方式都是GET。
+POST方式下的解决方式还算简单，因为POST方式下提交的数据都是以二进制的方式附加在http请求的body部分发送，只需要在后台指定编码格式就足矣解决。
+GET方式下会将参数直接附加到url后面，这部分参数无法使用request.setCharacterEncoding()处理，结果就是get形式的所有中文都变成了乱码。
+
+这时再也没有简便方法了，只能对这些中文一个一个进行转换，使用new String(bytes, "gb2312")进行转码。
+<%
+    String username = request.getParameter("username");
+    byte[] bytes = username.getBytes("iso-8859-1");
+    String result = new String(bytes, "gb2312");
+    out.print(result);
+%>
+     
+
+如我们所见，先从request中获得参数，接着把字符串按照iso-8859-1编码打散成byte数组，然后用gb2312编码组合成新字符串，最后打印出来就是正常的中文了。
+写在一起就变成了：
+<%=new String(new String(request.getParameter("username").getBytes("iso-8859-1"), "gb2312")%>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+struts中乱码解决
+
+方法一：在ActionForm 类中的reset()方法中添加
+  try {
+   request.setCharacterEncoding("utf-8");
+  } catch (Exception ex) {
+   ex.printStackTrace();
+  }
+方法二 
+1.数据库编码 
+2.中文参数表单<form method="post"> 
+3.页面编码解决方法:
+写一个自己的ActionServlet
+public class MyActionServlet extends ActionServlet {
+ /* （非 Javadoc）
+  * @see org.apache.struts.action.ActionServlet#process(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+  */
+ protected void process(HttpServletRequest request, HttpServletResponse response)
+   throws IOException, ServletException {
+  // TODO 自动生成方法存根
+  request.setCharacterEncoding("GB2312");//设置编码为GB2312
+  response.setCharacterEncoding("GB2312");
+  System.out.println("设置成功");
+  super.process(request, response);
+ }
+}
+在web.xml中配置一下
+        <servlet>
+  <servlet-name>actionServlet</servlet-name>
+  <servlet-class>newsBean.MyActionServlet</servlet-class>
+ </servlet>
+ 4.数据源那的编码问题,在struts_config.xml那设置数据库编码
+<set-property property="url"
+value="jdbc:mysql://localhost:3306/sample?useUnicode=true&characterEncoding=GB2312"/>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+中文解决方式
+
+中文问题的分类及其建议最优解决办法
+    了解以上JAVA处理文件的原理之后，我们就可以提出了一套建议最优的解决汉字问题的办法。
+    我们的目标是：我们在中文系统中编辑的含有中文字符串或进行中文处理的JAVA源程序经编译后可以移值到任何其它的操作系统中正确运行，或拿到其它操作系统中编译后能正确运行，能正确地传递中文和英文参数，能正确地和数据库交流中英文字符串。
+    我们的具体思路是：在JAVA程序转码的入口和出口及JAVA程序同用户有输入输出转换的地方限制编码方法使之正确即可。
+    具体解决办法如下：
+    1、 针对直接在console上运行的类
+    对于这种情况，我们建议在程序编写时，如果需要从用户端接收用户的可能含有中文的输入或含有中文的输出，程序中应该采用字符流来处理输入和输出，具体来说，应用以下面向字符型节点流类型：
+    对文件：FileReader，FileWrieter 
+        其字节型节点流类型为：FileInputStream，FileOutputStream
+    对内存（数组）：CharArrayReader，CharArrayWriter
+        其字节型节点流类型为：ByteArrayInputStream，ByteArrayOutputStream
+    对内存（字符串）：StringReader，StringWriter
+    对管道：PipedReader，PipedWriter
+        其字节型节点流类型为：PipedInputStream，PipedOutputStream
+    同时，应该用以下面向字符型处理流来处理输入和输出：
+    BufferedWriter，BufferedReader
+        其字节型的处理流为：BufferedInputeStream，BufferedOutputStream
+    InputStreamReader，OutputStreamWriter
+    其字节型的处理流为：DataInputStream，DataOutputStream
+    其中InputStreamReader和InputStreamWriter用于将字节流按照指定的字符编码集转换到字符流，如：
+    InputStreamReader in = new InputStreamReader(System.in，"GB2312")；
+    OutputStreamWriter out = new OutputStreamWriter (System.out，"GB2312")；
+    例如：采用如下的示例JAVA编码就达到了要求：
+//Read.java
+    import java.io.*;
+    public class Read {
+    public static void main(String[] args) throws IOException {
+    String str = "\n中文测试，这是内部硬编码的串"+"\ntest english character";
+    String strin= "";
+    BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in,"gb2312")); //设置输入接口按中文编码
+    BufferedWriter stdout = new BufferedWriter(new OutputStreamWriter(System.out,"gb2312")); //设置输出接口按中文编码
+    stdout.write("请输入:");
+    stdout.flush();
+    strin = stdin.readLine();
+    stdout.write("这是从用户输入的串："+strin);
+    stdout.write(str);
+    stdout.flush();
+    }}
+    同时，在编译程序时，我们用以下方式来进行：
+    javac -encoding gb2312 Read.java
+Java  Read
+   
+
+2、 针对EJB类和不可以直接运行的支持类(如JavaBean类)
+    由于这种类它们本身被其它的类调用，不直接与用户交互，故对这种类来说，我们的建议的处理方式是内部程序中应该采用字符流来处理程序内部的中文字符串（具体如上面一节中一样），同时，在编译类时用-encoding gb2312参数指示源文件是中文格式编码的即可。
+
+    3、 针对Servlet类
+    针对Servlet，我们建议用以下方法：
+    在编译Servlet类的源程序时，用-encoding指定编码为GBK或GB2312，且在向用户输出时的编码部分用response对象的setContentType("text/html;charset=GBK");或gb2312来设置输出编码格式，同样在接收用户输入时，我们用request.setCharacterEncoding("GB2312")；这样无论我们的servlet类移植到什么操作系统中，只有客户端的浏览器支持中文显示，就可以正确显示。如下是一个正确的示例：
+    //HelloWorld.java
+    package hello;
+    import java.io.*;
+    import javax.servlet.*;
+    import javax.servlet.http.*;
+    public class HelloWorld extends HttpServlet
+    {
+    public void init() throws ServletException { }
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+    {
+    request.setCharacterEncoding("GB2312"); //设置输入编码格式
+    response.setContentType("text/html;charset=GB2312"); //设置输出编码格式
+    PrintWriter out = response.getWriter(); //建议使用PrintWriter输出
+    out.println("<hr>");
+    out.println("Hello World! This is created by Servlet!测试中文!");
+    out.println("<hr>");
+    }
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+    {
+    request.setCharacterEncoding("GB2312"); //设置输入编码格式
+    response.setContentType("text/html;charset=GB2312"); //设置输出编码格式
+    String name = request.getParameter("name");
+    String id = request.getParameter("id");
+    if(name==null) name="";
+    if(id==null) id="";
+    PrintWriter out = response.getWriter(); //建议使用PrintWriter输出
+    out.println("<hr>");
+    out.println("你传入的中文字串是：" + name);
+    out.println("<hr>你输入的id是：" + id);
+    out.println("<hr>");
+    }
+    public void destroy() { }
+    }
+        请用javac -encoding gb2312 HelloWorld.java来编译此程序。
+        测试此Servlet的程序如下所示：
+    <%@page contentType="text/html; charset=gb2312"%>
+    <%request.setCharacterEncoding("GB2312");%>
+    <html><head><title></title>
+    <Script language="JavaScript">
+    function Submit() {
+    //通过URL传递中文字符串值给Servlet
+    document.base.action = "./HelloWorld?name=中文";
+    document.base.method = "POST";
+    document.base.submit();
+    }
+    </Script>
+    </head>
+<body bgcolor="#FFFFFF" text="#000000" topmargin="5">
+    <form name="base" method = "POST" target="_self">
+    <input name="id" type="text" value="" size="30">
+    <a href = "JavaScript:Submit()">传给Servlet</a>
+    </form></body></html>
+   4、 JAVA程序和数据库之间
+    为避免JAVA程序和数据库之间数据传递出现乱码现象，我们建议采用以下最优方法来处理：
+    1、 对于JAVA程序的处理方法按我们指定的方法处理。
+    2、 把数据库默认支持的编码格式改为GBK或GB2312的。
+    如：在mysql中，我们可以在配置文件my.ini中加入以下语句实现：
+    在[mysqld]区增加：
+    default-character-set=gbk
+    并增加：
+    [client]
+    default-character-set=gbk
+    在SQL Server2K中，我们可以将数据库默认的语言设置为Simplified Chinese来达到目的。
+    5、 针对JSP代码
+    由于JSP是在运行时，由WEB容器进行动态编译的，如果我们没有指定JSP源文件的编码格式，则JSP编译器会获得服务器操作系统的file.encoding值来对JSP文件编译的，它在移植时最容易出问题，如在中文win2k中可以很好运行的jsp文件拿到英文linux中就不行，尽管客户端都是一样的，那是因为容器在编译JSP文件时获取的操作系统的编码不同造成的（在中文wink中的file.encoding和在英文Linux中file.encoding是不同的，且英文Linux的file.encoding对中文不支持，所以编译出来的JSP类就会有问题）。网络上讨论的大多数是此类问题，多是因为JSP文件移植平台时不能正确显示的问题，对于这类问题，我们了解了JAVA中程序编码转换的原理，解决起来就容易多了。我们建议的解决办法如下：
+    1、我们要保证JSP向客户端输出时是采用中文编码方式输出的，即无论如何我们首先在我们的JSP源代编中加入以下一行：
+    <%@page contentType="text/html; charset=gb2312"%>
+    2、为了让JSP能正确获得传入的参数，我们在JSP源文件头加入下面一句：
+    <%request.setCharacterEncoding("GB2312");%>
+    3、为了让JSP编译器能正确地解码我们的含有中文字符的JSP文件，我们需要在JSP源文件中指定我们的JSP源文件的编码格式，具体来说，我们在JSP源文件头上加入下面的一句即可：
+    <%@page pageEncoding="GB2312"%>或<%@page pageEncoding="GBK"%>
+    这是JSP规范2.0新增加的指令。
+    我们建议使用此方法来解JSP文件中的中文问题，下面的代码是一个正确做法的JSP文件的测试程序：
+//testchinese.jsp
+    <%@page pageEncoding="GB2312"%>
+    <%@page contentType="text/html; charset=gb2312"%>
+    <%request.setCharacterEncoding("GB2312");%>
+    <%
+    String action = request.getParameter("ACTION");
+    String name = "";
+    String str = "";
+    if(action!=null && action.equals("SENT"))
+    {
+    name = request.getParameter("name");
+    str = request.getParameter("str");
+    }
+    %>
+    <html>
+    <head>
+    <title></title>
+    <Script language="JavaScript">
+    function Submit()
+    {
+    document.base.action = "?ACTION=SENT&str=传入的中文";
+    document.base.method = "POST";
+    document.base.submit();
+    }
+    </Script>
+    </head>
+    <body bgcolor="#FFFFFF" text="#000000" topmargin="5">
+    <form name="base" method = "POST" target="_self">
+    <input type="text" name="name" value="" size="30">
+    <a href = "JavaScript:Submit()">提交</a>
+    </form>
+    <%
+    if(action!=null && action.equals("SENT"))
+    {
+    out.println("<br>你输入的字符为："+name);
+    out.println("<br>你通过URL传入的字符为："+str);
+    }
+    %>
+    </body>
+    </html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+java中文问题
+
+中文问题的分类及其建议最优解决办法 
+    了解JAVA处理文件的原理之后，我们就可以提出了一套建议最优的解决汉字问题的办法。
+    我们的目标是：我们在中文系统中编辑的含有中文字符串或进行中文处理的JAVA源程序经编译后可以移值到任何其它
+的操作系统中正确运行，或拿到其它操作系统中编译后能正确运行，能正确地传递中文和英文参数，能正确地和数据库交
+流中英文字符串。
+    我们的具体思路是：在JAVA程序转码的入口和出口及JAVA程序同用户有输入输出转换的地方限制编码方法使之正确即
+可。
+    具体解决办法如下：
+    1、 针对直接在console上运行的类
+    对于这种情况，我们建议在程序编写时，如果需要从用户端接收用户的可能含有中文的输入或含有中文的输出，程序
+中应该采用字符流来处理输入和输出，具体来说，应用以下面向字符型节点流类型：
+    对文件：FileReader，FileWrieter 
+        其字节型节点流类型为：FileInputStream，FileOutputStream
+    对内存（数组）：CharArrayReader，CharArrayWriter
+        其字节型节点流类型为：ByteArrayInputStream，ByteArrayOutputStream
+    对内存（字符串）：StringReader，StringWriter
+    对管道：PipedReader，PipedWriter
+        其字节型节点流类型为：PipedInputStream，PipedOutputStream
+    同时，应该用以下面向字符型处理流来处理输入和输出：
+BufferedWriter，BufferedReader
+        其字节型的处理流为：BufferedInputeStream，BufferedOutputStream
+    InputStreamReader，OutputStreamWriter
+    其字节型的处理流为：DataInputStream，DataOutputStream
+    其中InputStreamReader和InputStreamWriter用于将字节流按照指定的字符编码集转换到字符流，如：
+    InputStreamReader in = new InputStreamReader(System.in，"GB2312")；
+    OutputStreamWriter out = new OutputStreamWriter (System.out，"GB2312")；
+    例如：采用如下的示例JAVA编码就达到了要求：
+    //Read.java
+    import java.io.*;
+    public class Read {
+    public static void main(String[] args) throws IOException {
+    String str = "\n中文测试，这是内部硬编码的串"+"\ntest english character";
+    String strin= "";
+    BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in,"gb2312")); //设置输入接口按中文编码
+    BufferedWriter stdout = new BufferedWriter(new OutputStreamWriter(System.out,"gb2312")); //设置输出接口按中文编码
+    stdout.write("请输入:");
+    stdout.flush();
+    strin = stdin.readLine();
+    stdout.write("这是从用户输入的串："+strin);
+    stdout.write(str);
+    stdout.flush();
+    }}
+    同时，在编译程序时，我们用以下方式来进行：
+    javac -encoding gb2312 Read.java
+2、 针对EJB类和不可以直接运行的支持类(如JavaBean类)
+    由于这种类它们本身被其它的类调用，不直接与用户交互，故对这种类来说，我们的建议的处理方式是内部程序中应该采用字符流来处理程序内部的中文字符串（具体如上面一节中一样），同时，在编译类时用-encoding gb2312参数指示源文件是中文格式编码的即可。
+    3、 针对Servlet类
+    针对Servlet，我们建议用以下方法：
+    在编译Servlet类的源程序时，用-encoding指定编码为GBK或GB2312，且在向用户输出时的编码部分用response对象的setContentType("text/html;charset=GBK");或gb2312来设置输出编码格式，同样在接收用户输入时，我们用request.setCharacterEncoding("GB2312")；这样无论我们的servlet类移植到什么操作系统中，只有客户端的浏览器支持中文显示，就可以正确显示。如下是一个正确的示例：
+    //HelloWorld.java
+    package hello;
+    import java.io.*;
+    import javax.servlet.*;
+    import javax.servlet.http.*;
+    public class HelloWorld extends HttpServlet
+    {
+    public void init() throws ServletException { }
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+ {
+    request.setCharacterEncoding("GB2312"); //设置输入编码格式
+    response.setContentType("text/html;charset=GB2312"); //设置输出编码格式
+    PrintWriter out = response.getWriter(); //建议使用PrintWriter输出
+    out.println("<hr>");
+    out.println("Hello World! This is created by Servlet!测试中文!");
+    out.println("<hr>");
+    }
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+    {
+    request.setCharacterEncoding("GB2312"); //设置输入编码格式
+    response.setContentType("text/html;charset=GB2312"); //设置输出编码格式
+    String name = request.getParameter("name");
+    String id = request.getParameter("id");
+    if(name==null) name="";
+    if(id==null) id="";
+    PrintWriter out = response.getWriter(); //建议使用PrintWriter输出
+    out.println("<hr>");
+    out.println("你传入的中文字串是：" + name);
+    out.println("<hr>你输入的id是：" + id);
+    out.println("<hr>");
+    }
+    public void destroy() { }
+    }
+        请用javac -encoding gb2312 HelloWorld.java来编译此程序。
+        测试此Servlet的程序如下所示：
+    <%@page contentType="text/html; charset=gb2312"%>
+    <%request.setCharacterEncoding("GB2312");%>
+    <html><head><title></title>
+    <Script language="JavaScript">
+    function Submit() {
+    //通过URL传递中文字符串值给Servlet
+document.base.action = "./HelloWorld?name=中文";
+    document.base.method = "POST";
+    document.base.submit();
+    }
+    </Script>
+    </head>
+<body bgcolor="#FFFFFF" text="#000000" topmargin="5">
+    <form name="base" method = "POST" target="_self">
+    <input name="id" type="text" value="" size="30">
+    <a href = "JavaScript:Submit()">传给Servlet</a>
+    </form></body></html>
+4、 JAVA程序和数据库之间
+    为避免JAVA程序和数据库之间数据传递出现乱码现象，我们建议采用以下最优方法来处理：
+    1、 对于JAVA程序的处理方法按我们指定的方法处理。
+    2、 把数据库默认支持的编码格式改为GBK或GB2312的。
+如：在mysql中，我们可以在配置文件my.ini中加入以下语句实现：
+    在[mysqld]区增加：
+    default-character-set=gbk
+    并增加：
+    [client]
+    default-character-set=gbk
+    在SQL Server2K中，我们可以将数据库默认的语言设置为Simplified Chinese来达到目的。
+ 
+
+  5、 针对JSP代码
+    由于JSP是在运行时，由WEB容器进行动态编译的，如果我们没有指定JSP源文件的编码格式，则JSP编译器会获得服务器操作系统的file.encoding值来对JSP文件编译的，它在移植时最容易出问题，如在中文win2k中可以很好运行的jsp文件拿到英文linux中就不行，尽管客户端都是一样的，那是因为容器在编译JSP文件时获取的操作系统的编码不同造成的（在中文wink中的file.encoding和在英文Linux中file.encoding是不同的，且英文Linux的file.encoding对中文不支持，所以编译出来的JSP类就会有问题）。网络上讨论的大多数是此类问题，多是因为JSP文件移植平台时不能正确显示的问题，对于这类问题，我们了解了JAVA中程序编码转换的原理，解决起来就容易多了。我们建议的解决办法如下：
+    1、我们要保证JSP向客户端输出时是采用中文编码方式输出的，即无论如何我们首先在我们的JSP源代编中加入以下一行：
+    <%@page contentType="text/html; charset=gb2312"%>
+    2、为了让JSP能正确获得传入的参数，我们在JSP源文件头加入下面一句：
+    <%request.setCharacterEncoding("GB2312");%>
+    3、为了让JSP编译器能正确地解码我们的含有中文字符的JSP文件，我们需要在JSP源文件中指定我们的JSP源文件的编码格式，具体来说，我们在JSP源文件头上加入下面的一句即可：
+    <%@page pageEncoding="GB2312"%>或<%@page pageEncoding="GBK"%>
+    这是JSP规范2.0新增加的指令。
+    我们建议使用此方法来解JSP文件中的中文问题，下面的代码是一个正确做法的JSP文件的测试程序：
+//testchinese.jsp
+    <%@page pageEncoding="GB2312"%>
+    <%@page contentType="text/html; charset=gb2312"%>
+    <%request.setCharacterEncoding("GB2312");%>
+    <%String action = request.getParameter("ACTION");
+    String name = "";
+    String str = "";
+    if(action!=null && action.equals("SENT"))
+    {
+    name = request.getParameter("name");
+    str = request.getParameter("str");
+    }
+    %>
+    <html>
+    <head>
+    <title></title>
+    <Script language="JavaScript">
+    function Submit()
+    {
+    document.base.action = "?ACTION=SENT&str=传入的中文";
+    document.base.method = "POST";
+    document.base.submit();
+    }
+    </Script>
+    </head>
+    <body bgcolor="#FFFFFF" text="#000000" topmargin="5">
+    <form name="base" method = "POST" target="_self">
+    <input type="text" name="name" value="" size="30">
+    <a href = "JavaScript:Submit()">提交</a>
+    </form>
+    <%
+    if(action!=null && action.equals("SENT"))
+    {
+    out.println("<br>你输入的字符为："+name);
+    out.println("<br>你通过URL传入的字符为："+str);
+    }
+    %>
+ </body>
+    </html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 

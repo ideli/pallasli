@@ -1,0 +1,3961 @@
+
+java核心技术学习
+jbpm基础
+
+jBpm是一个灵活可扩展的工作流管理系统。作为 jBpm运行时server输入的业务流程使用简单强大的语言表达并打包在流程档案中。jBmp将工作流应用开发的便利性和杰出的企业应用集成（EAI）能力结合了起来。jBmp包括一个Web应用程序和一个日程安排程序。jBmp是一组J2SE组件，可以作为J2EE应用集群部署。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+jpdl学习
+
+概述:
+jBPM（JBoss Business Process Management业务流程管理），它是覆盖了业务流程管理、工作流、服务协作等领域的一个开源的、灵活的、易扩展的可执行流程语言框架。
+jPDL是构建于jBPM框架上的流程语言之一。在jPDL中提供了任务（tasks）、待处理状态（wait states）、计时器（timers）、自动处理（automated actions）…等术语，并通过图型化的流程定义，很直观地描述业务流程。
+jPDL可以部署于Java语言的任何应用环境下，JavaSE Application(Swing/SWT)、JavaEE Application(Application Server)
+jPDL分发包组成
+目前jPDL的最新版本是3.2.2，您可以在以下地址：http://labs.jboss.com/jbossjbpm/jpdl_downloads/ 
+获得官方下载包。下载包分为两种，一种是标准包(jbpm-jpdl-3.2.2.zip)只有20M左右；一种是套件包(jbpm-jpdl-suite-3.2.2.zip)将近80M。两者最大的区别是套装包自带一个已经配置好的jboss服务，下载解压缩后，可直接运行。
+jPDL的核心程序包(jbpm-jpdl.jar) 
+它是一个典型的jar文件，它涵盖对流程定义和运行时流程实例上下文环境的操作API。在最简化的业务流程样例中，jPDL将流程定义存储与XML格式的定义文件中，在运行时载入内存，在内存里记录完整的业务实例和执行过程的环境变量，并完成全部操作。显然，在实际应用中，流程信息必须被持久化的存储于数据库中。jPDL使用了Hibernate作为其对象持久化的API。
+Graphical Process Designer插件(jbpm-jpdl-designer-3.1.2.zip) 
+它是一个基于Eclipse的图型编辑插件。使用它可以对业务流程进行可视化的定制，而无须手动编辑XML文件。该插件还提供了流程定义上传功能，可以将新定义的流程发布到在线运行的jPDL系统上。
+jPDL身份包(jbpm-identity.jar)
+它是jPDL的一个轻量级扩展包，简单实现了组Group、用户User、许可权Permission等用户身份认证和鉴权机制。如果您的应用环境只需要简单的用户认证鉴权管理，那么它十分适合您。
+jPDL Web控制台(jbpm-console.war)
+它是一个标准Web应用（使用了JSF技术），提供了对jPDL平台执行情况的监控程序（对jPDL数据库的监控）。管理员可以通过该程序方便的维护jPDL的数据库，管理流程定义和流程实例的执行情况。同时，它还提供了一个简单的Getting started DEMO，方便初学者了解jPDL。
+其他相关目录        
+在解压后的目录中，还有一些文件是很有用的
+/config 该目录存放了jPDL的默认配置文件，包括hibernate.cfg.xml 、jbpm.cfg.xml（jPDL的主配置文件，默认是空的）、jbpm.mail.templates.xml（邮件模板配置文件）、log4j.properties（日志配置文件）
+/db 该目录存放了jPDL针对不同数据库的表初始化sql文件。这里要说的是，jbpm.jpdl.mysql.sql在MySql下批量运行时，会出现错误提示，原因是语句后缺少”;”号，需要修订后才能使用。
+/ designer（套件包中才有） 该目录存放了Graphical Process Designer插件
+/examples 该目录存放了jPDL的简单范例
+/doc 该目录存放jPDL 的相关说明文档，包括用户指南、Java API文档等
+/server （套件包中才有） 该目录存放了配置好的jBoss和控制台程序，Windows下双击start.bat可立即执行。数据库使用HSQL，存放于/server/server/jbpm/data下。 
+jPDL业务流程模型
+ 
+ 
+静态的流程定义模型
+编号
+
+PD-001
+
+对象
+
+流程定义实体（Process Definition）
+
+描述
+
+流程定义实体是对一个流程抽象的对象化定义，如图-002。一套系统中，用户可以定义保存多个流程定义实体，如：报销流程定义、请假流程定义、人事录用流程定义等。每个流程定义还可以有多个不同的版本，如:针对同样的报销流程可以有修订前和修订后的两个流程定义，同时存储于jPDL数库中。用户可以通过流程名称和版本号获取相应的流程定义。在默认请况下，系统启用最新的流程定义。
+
+Java对象
+
+org.jbpm.graph.def.ProcessDefinition
+
+数据库表
+
+JBPM_PROCESSDEFINITION该表存储流程定义的通用信息，如：流程名称、版本号
+
+表关联说明
+
+JBPM_PROCESSDEFINITION表中，每条记录有自己的数据库流水号ID_JBPM_PROCESSDEFINITION的外键（Foreign Keys）：
+
+·         startstate_ 同JBPM_NODE（流程结点）表关联。此外键指向流程定义中的起始结点ID
+
+ 
+
+ 编号
+
+PD-002
+
+对象
+
+流程结点（Node）
+
+描述
+
+流程结点是对流程中的过程环节/行为的抽象对象化定义，如图-002中的每个方框即代表一个结点。结点有两个主要职责：一，实现某个指定行为，这在jBPM中就是执行一段制定的Java代码；二，转递、维持流程的延续，直至达到最终结点。在jPDL的结点设计中，系统开放了充分的用户行为模型，程序员可以基于这些行为接口，实现自定义的业务功能。在jPDL中，系统预定义了一系列的Node类型，同时也允许程序员开发定义自己的Node类型。
+
+Java对象
+
+org.jbpm.graph.def.Node
+
+数据库表
+
+JBPM_NODE该表存储结点的定义信息。
+
+表关联说明
+
+JBPM_NODE表中，每条记录有自己的数据库流水号
+
+ID_JBPM_NODE的外键（Foreign Keys）：
+
+·         processdefinition_ - 此外键说明该Node从属的流程定义对象ID
+
+·         subprocessdefinition_- 此外键指定了一个由该Node发起的子流程。在主流程离开当前结点之前，该子流程必须完成执行过程。action_ - 此外键指定该结点动作类的ID
+
+·         superstate_ - 该外键是一个自关联键，指向结点的上级父结点ID。一个子流程中的多个结点从属于同一个父流程结点。
+
+·         decisiondelegation_ – 该外键指定了结点委派的判定类ID（所谓委派判定类是指根据用户的业务逻辑，判定流程的下一个流向的Java Class）
+
+ 
+
+Node类型祥解：
+任务结点（task-node）任务结点是代表由人介入的一个或多个任务。因此当流程运行到一个任务结点时，会生成“任务实例对象（task instances）”，并添加到参与人的任务列表中，之后结点会处于等待状态，直到参与人完成他们的任务，并激活流程继续向下执行。
+状态结点（state）
+状态结点是一个典型的等待状态。同任务结点不同的是，状态结点不会向任务列表添加任务实例。当业务进程需要等待外部系统的干预时，这种结点是很有用的。假设如下情况：在进入该结点时，通过node-enter事件向外部系统发送一个消息，然后结点进入等待状态；当外部系统完成处理，并回送一个消息，这将导致触发一个token.signal()方法的运行，该方法重新激活正在等待的流程继续下行。
+判定结点（decision）判定节点的作用就同它的命名一样，用来决定业务流程的走向。有两个不同裁决模式，两者的区别在“谁”来做决定：是由流程内部的变量，还是由外部实体来提供决定的依据。当需要对流程执行方向做判定时，就要使用“判定结点（decision）”。有两种方法来指定判定条件。最简单的是在转向（transitions）中添加条件元素，条件可以是能返回boolean值的EL表达式或者beanshell脚本。在运行过程中，判定结点将首先轮训有条件设定的转向（leaving transitions），轮训的顺序是按照XML文件中指定的。当找到第一个条件返回为true的转向时，该出口将被选中。如果所有的表换中的条件判定都是false，则选择XML文件中排在第一位的转向作为出口。还有一种途径是在判定结点上定义一个返回转向名称的表达式，通过表达式计算返回的名称，决定选择哪个transition.另一方式是在结点上设定“处理（handle）”元素。在结点上指定一个实现了DecisionHandler接口的Java处理类，该类通过返回选定的transition的名称来决定流程的出口方向。
+当判定结点的出口是由外部程序来给出的时候，建议使用多个transition或者具有等待状态的结点。可以通过外部的触发器结束一个等待状态并提供一个transition的判定。
+分支结点（fork）
+分支结点的作用是将单个执行流程分裂成多个并发的执行流程。默认的行为是为每个子流程生成一个子令牌，并建立子令牌和主流程根令牌之间的父子关系。
+合并结点（join）
+相对于fork结点的分支，join结点将分支收拢。默认的行为模式是当所有的分支（由同一个fork衍生出来的分支）都到达该结点的时候，join结点将结束这些分支上的子token，并通过token上的父子关系找到上一级流程的token，将此token通过唯一的transition传播下去。如果只有分支中的部分token到达时，join结点将处于等待状态。
+普通结点（node）普通类结点主要用于提供用户定制自己的程序代码。普通结点拥有一个action子元素，当流程到达该结点时，这个action就会被执行。可以通过实现ActionHandler接口来执行你想要的任何代码。此外普通结点也一样要负责流程的延续。
+在流程图上，普通结点用来表达一个用户关心的、与业务相关的处理逻辑；相比而言Action（下文中将会提到）则允许添加业务逻辑以外的程序处理，这些程序处理在流程图上是不可见的，也是业务流程分析所不用关心的。
+编号
+
+PD-003
+
+对象
+
+流程转向（Transitions）
+
+描述
+
+流程转向是描述流程中从一个结点到另一个结点的状态转换过程，因此一个转向一定有一个源结点和一个目标结点。 在jPDL中transition的命名是通产是唯一的，结点依靠transition的命名来区别到下一结点的路径，当一个Node中存在有多个同名的transition的时候，第一个transition将会被选中。结点转向的过程中，排在transition列表第一位置的即是默认的transition。
+
+Java对象
+
+org.jbpm.graph.def.Transition
+
+数据库表
+
+JBPM_TRANSITION该表存储流程定义中的转向对象。
+
+表关联说明
+
+JBPM_TRANSITION表中，每条记录有自己的数据库流水号
+
+ID_JBPM_TRANSITION的外键（Foreign Keys）：
+
+·         processdefinition_ - 该外键指向transition所属的流程定义对象ID
+
+·         from_ - 该外键指向transition的源结点ID
+
+·         to_ -该外键指向transition的目标结点ID
+
+ 
+
+ 编号
+
+PD-004
+
+对象
+
+动作（Actions）
+
+描述
+
+Actions是指一系列的在流程事件中运行的Java代码。流程图是软件需求的传达的重要手段，但它只是软件需求的一个投影，隐藏了很多技术实现的细节。Actions则是向流程图添加技术实现细节的一种机制，它可以很好的补充和修饰流程图。这意味着在不改变流程图结构的情况下，可以将Java的代码与之关联。Actions通过事件（Events）同流程绑定，常用的主要事件包括：进入结点、离开结点、进行转向。请注意，同Events关联的Actions和处于Node中的Actions是有不同的。处于Events中的Actions是通过事件触发执行的，它是典型的观察者模式，是无法影响流程控制的流向。而处于Node中的Action则要承担起流程传递的责任。此外，Actions是可以命名的。可以通过Actions的命名在任何地方引用该Actions。命名的Actions可以作为主流程定义的公用子元素。这个功能可以提高对Actions定义的复用。
+
+Java对象
+
+org.jbpm.graph.def.Action
+
+数据库表
+
+JBPM_ACTION该表存储流程定义中的动作对象。
+
+表关联说明
+
+JBPM_ACTION表中，每条记录有自己的数据库流水号ID_
+
+JBPM_ACTION的外键（Foreign Keys）：
+
+·         processdefinition_ - 指明action所属的流程定义ID
+
+·         event_ - 指明action绑定的event ID
+
+·         actiondelegation_ - 指明action的委派对象ID
+
+·         exceptionhandler_ - 指定action的异常处理ID
+
+·         referencedaction_ - 指向当前action引用的action的ID
+
+·         timeraction_ - 指向当前action引用的计时器action
+
+ 
+
+ 编号
+
+PD-005
+
+对象
+
+事件（Events）
+
+描述
+
+事件表示流程执行中的某个特定的时刻。在流程执行的过程中，通过jBPM的引擎触发事件，这通常发生在jbpm计算后续状态的时候。事件总是和流程中的元素绑定，这些元素包括：流程定义（process definition）、流程结点（node）、流程转向（transition）和任务（task）。不同的元素会触发不同的事件，拿node元素来说，有 node-enter事件和node-leave事件。事件是action的钩子，一个事件可以回调一系列的action。当jBPM引擎触发事件的时候，事件中绑定的action就会被执行。在jBPM中，事件模型是可传播的。一个子元素触发的事件，将逐层向上传播到顶层的流程定义元素。这样的设计使得事件可以被集中化处理。
+
+Java对象
+
+org.jbpm.graph.def. Event
+
+数据库表
+
+JBPM_EVENT该表存储流程定义中的事件对象，这些事件与相关的action绑定。
+
+表关联说明
+
+JBPM_EVENT表中，每条记录有自己的数据库流水号ID_
+
+·         JBPM_EVENT的外键（Foreign Keys）：
+
+·         processdefinition_  - 指向event所属的流程定义ID
+
+·         node_  - 指向event所属的node ID
+
+·         transition_  - 指向event所属的transition ID
+
+·         task_  -  指向event所属的任务ID
+
+ 
+
+ 
+编号
+
+PD-006
+
+对象
+
+任务（Task）
+
+描述
+
+任务作为流程定义中的一部分，定义了如何创建任务实例（Task instances）以及任务分配。任务可以在任务结点（Task-Node）和流程定义（process-definition）两个地方定义。通常会在一个任务结点中定义一个或多个的任务。在这种情况下，任务结点表示在流程中等待用户处理的交互操作。业务流程会停留在任务处，等待用户完成相应的操作之后继续。任务也可在流程定义中声明。通过任务名，可以找到相应的任务定义，并引用他们。实际上任何有命名的任务都可以通过名字被引用。在整个的流程定义中，任务名必须是唯一的。此外，还可以给任务设定优先级，这些优先级属性将成为任务实例化时的默认设置。任务实例可以在之后的运行中改变优先级。.
+
+Java对象
+
+org.jbpm.taskmgmt.def.Task
+
+数据库表
+
+JBPM_TASK该表存储流程定义中声明的任务对象。
+
+表关联说明
+
+JBPM_TASK表中，每条记录有自己的数据库流水号ID_
+
+JBPM_TASK的外键（Foreign Keys）：
+
+·         processdefinition_  -指向task所属的流程定义ID
+
+·         taskmgmtdefinition_ -指向task引用的TaskMgmtDefintion对象ID
+
+·         tasknode_ -指向task所属的任务结点ID
+
+·         startstate_ -指向task所属流程的起始结点ID
+
+·         assignmentdelegation_ -指定task委派处理的class对象的ID
+
+·         swimlane_ -指定task要授权的swimlane（角色）ID
+
+·         taskcontroller_ -指定一个task赋值的委托类
+
+ 
+
+上述我们剖析了jPDL业务流程定义中最重要的几个静态对象，说明了它们的概念、作用、行为特征及关联关系。在正式的运行环境中，这些对象定义被jPDL持久化于数据库中，当用户发起一个业务流程时，被系统实例化。在下面的小节中，我们要讲述流程被实例化后的数据模型。
+具体化的流程实例模型
+本章节介绍流程实例中最重要的三个对象：流程实例（Process Instance）、令牌（Token）、任务实例（Task Instance）.
+编号
+
+PI-001
+
+对象
+
+流程实例（Process Instance）
+
+描述
+
+流程实例是流程定义的运行时状态，它记录了一个流程运行的起始时间、结束时间等状态信息
+
+Java对象
+
+org.jbpm.graph.exe.ProcessInstance
+
+数据库表
+
+JBPM_PROCESSINSTANCE该表存储运行时的流程对象信息。
+
+表关联说明
+
+JBPM_PROCESSINSTANCE表中，每条记录有自己的数据库流水号
+
+ID_JBPM_PROCESSINSTANCE的外键（Foreign Keys）：
+
+·         processdefinition_ -该流程实例对应的流程定义的ID
+
+·         roottoken_ -该流程实例引用的跟令牌
+
+·         superprocesstoken_ -如果当前流程是某个流程实例的子流程，则指向该父流程的ID
+
+ 
+
+ 编号
+
+PI-002
+
+对象
+
+令牌（Token）
+
+描述
+
+令牌代表一个流程执行的路径，它维护着流程定义中各个结点的指针，同时记录了流程当前执行的位置。
+
+Java对象
+
+org.jbpm.graph.exe.Token
+
+数据库表
+
+JBPM_TOKEN该表存储运行时令牌对象信息，它表示当前流程执行到的位置。
+
+表关联说明
+
+JBPM_TOKEN表中，每条记录有自己的数据库流水号ID_
+
+JBPM_TOKEN的外键（Foreign Keys）：
+
+·         processinstance_  -  指向该令牌所属的流程实例的ID。
+
+·         subprocessinstance_ -指向该令牌所属的子流程实例ID。
+
+·         node_  -令牌所在（所指向的）的当前节点ID.
+
+·         parent_ -如果当前令牌是一个分支流程或子流程的令牌，则该值指向其父令牌ID。
+
+ 
+
+ 编号
+
+PI-003
+
+对象
+
+任务实例（Task Instance）
+
+描述
+
+一个任务实例对象可以分配给指定的操作者处理，当任务完成后，将触发流程继续下行。任务实例的生命周期很简单，生成实例-->开始处理-->任务结束。从弹性设计考虑出发，任务的分配不属于实例生命周期的一部分，任务是否被分配是不会影响其生命周期过程的。当流程进入一个任务结点的时候，结点上任务被实例化；用户通过访问系统的界面组件，获取自己的任务列表，可以进行任务委派、处理或直接结束任务。任务实例记录着任务创建的时间、结束时间，这些信息可以通过TaskInstance对象中的getter方法获取。一个任务实例的结束时间标识它的完成，在后绪的任务查询中，该实例不会被取出，但实例的记录仍保留于数据库中。
+
+Java对象
+
+org.jbpm.taskmgmt.exe.TaskInstance
+
+数据库表
+
+JBPM_ TASKINSTANCE该表存储运行时任务实例信息。
+
+表关联说明
+
+JBPM_ TASKINSTANCE表中，每条记录有自己的数据库流水号ID_
+
+JBPM_ TASKINSTANCE的外键（Foreign Keys）：
+
+·         task_ -指向定义该实例的任务ID
+
+·         token_ -指向任务实例对应的令牌ID
+
+·         swimlaneinstatnce_  - swimlane实例，表示处理该任务的角色
+
+·         taskmgmtinstance_  -  管理该任务的模块实例ID
+
+ 
+
+jPDL语言主要XML元素大纲
+本章节将介绍jPDL语言中，主要几个XML元素的属性及相关描述。
+<process-definition>(流程定义)
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+可选
+
+流程的名称
+
+swimlane
+
+元素
+
+[0..*]
+
+在流程中使用的swimlanes。 swimlanes是过程中的用户角色，可以用于任务的委派分配
+
+start-state
+
+元素
+
+[0..1]
+
+流程的起始状态结点
+
+{end-state|state|node| task-node|process-state| super-state|fork|join|decision}
+
+元素
+
+[0..*]
+
+流程定义中出现的各类结点
+
+event
+
+元素
+
+[0..*]
+
+流程中的事件，可看成是action的容器
+
+{action|script|create-timer |cancel-timer}
+
+元素
+
+[0..*]
+
+全局定义的action，可以在 events和transitions中通过命名引用
+
+task
+
+元素
+
+[0..*]
+
+全局定义的task，可以在action中使用命名来引用.
+
+exception-handler
+
+元素
+
+[0..*]
+
+异常处理类，用来处理委派类抛出的异常.
+
+<node>(节点)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+{action|script|create-timer |cancel-timer}
+
+元素
+
+1
+
+定制的结点动作
+
+common node elements
+
+ 
+
+ 
+
+参考common node elements
+
+<common node elements>(通用结点元素)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+必须
+
+结点名称
+
+async
+
+属性
+
+{ true | false }, false is the default
+
+设置成true，则结点以异步方式运行
+
+transition
+
+元素
+
+[0..*]
+
+离开结点的转向.每个转向必须有一个可区别的名字。最多只允许一个转向是没有命名。第一个转向指定为默认的转向，当没有给结点指定转向时，将使用默认转向。
+
+event
+
+元素
+
+[0..*]
+
+支持的事件类型（node-enter | node-leave）
+
+exception-handler
+
+元素
+
+[0..*]
+
+针对委派类抛出异常的处理
+
+timer
+
+元素
+
+[0..*]
+
+指定一个计数器监视结点上的执行过程
+
+ 
+
+ 
+
+ 
+
+ 
+
+<start-state>(起始状态结点)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+可选
+
+起始结点名称
+
+task
+
+元素
+
+[0..1]
+
+此任务会创建一个流程实例或者捕获流程的初始化者
+
+event
+
+元素
+
+[0..*]
+
+支持结点的事件：{node-leave}
+
+transition
+
+元素
+
+[0..*]
+
+流程转向，必须有唯一命名
+
+exception-handler
+
+元素
+
+[0..*]
+
+对委派类异常的处理者
+
+<end-state>(终止状态结点)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+必须
+
+终止结点名称
+
+event
+
+元素
+
+[0..*]
+
+支持的结点事件：{node-enter}
+
+exception-handler
+
+元素
+
+[0..*]
+
+对委派类异常的处理者
+
+<task-node>(任务结点)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+signal
+
+属性
+
+可选
+
+值类型有：{unsynchronized|never|first|first-wait|last|last-wait},默认为last.该属性定义了任务完成对流程延续的效果。
+
+create-tasks
+
+属性
+
+可选
+
+值类型有：{yes|no|true|false},默认值为true，也可以设置为false。用户可以在结点的node-enter事件中定义自己action，由action来生成任务，并且将此属性设置为false。
+
+end-tasks
+
+属性
+
+可选
+
+值类型有：{yes|no|true|false},默认值为false.当设置为true的时候，所有未结束任务在node-leave 事件中会被关闭。
+
+task
+
+属性
+
+[0..*]
+
+当流程执行到当前结点时，将生成任务列表中的任务。
+
+common node elements
+
+ 
+
+ 
+
+参考common node elements
+
+<fork>(分叉)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+common node elements
+
+ 
+
+ 
+
+参考 common node elements
+
+<join>(合并)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+common node elements
+
+ 
+
+ 
+
+参考 common node elements
+
+<decision>(判定结点)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+handler
+
+元素
+
+handler或者transition conditions二者必选其一
+
+实现org.jbpm.jpdl.Def.DecisionHandler接口的Java类名
+
+transition conditions
+
+ 
+
+handler或者transition conditions二者必选其一
+
+判定结点将按顺序遍历每个leaving transitions中的条件判定。找到的第一个判定为true的leaving transitions将被选中。如果所有leaving transitions中的判定均为false，则选择第一个默认的leaving transitions.
+
+common node elements
+
+ 
+
+ 
+
+See common node elements
+
+<event>(事件)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+type
+
+属性
+
+必须
+
+事件的类型表明事件在元素中发生的位置。
+
+{action|script| create-timer|cancel-timer}
+
+元素
+
+[0..*]
+
+与事件绑定的动作列表。
+
+<transition>(转向)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+可选
+
+转向的名称，每个转向必须有一个可区分的名字。
+
+to
+
+属性
+
+required
+
+目标节点的带层次的名称。如：
+phase one/invitemurphy
+
+condition
+
+属性/元素
+
+optional
+
+条件表达式或条件属性
+
+{action|script| create-timer| cancel-timer}
+
+元素
+
+[0..*]
+
+进行转向时执行的动作。动作不需要放置于事件中，因为在转向（transition）中只有一个地方可以运行动作。
+
+exception-handler
+
+元素
+
+[0..*]
+
+对委派类异常的处理者
+
+<action>(动作)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+可选
+
+动作的名称。当动作被赋予名称的时候，它可以从流程定义中查找获取。这对运行时action和action的一次性声明是很有用的。
+
+class
+
+属性
+
+此属性同 ref-name属性及expression属性，三者只能选其一
+
+实现了org.jbpm.graph.def.ActionHandler 接口的Java类名
+
+ref-name
+
+属性
+
+此属性同 class属性及expression属性，三者只能选其一
+
+所引用的action的名称。当该属性被指定的时候，action标签中的内容将被忽略。
+
+expression
+
+属性
+
+此属性同 class属性及ref-name属性，三者只能选其一
+
+jPDL表达式，代替相应的处理方法。
+
+accept-propagated-events
+
+属性
+
+可选
+
+可选值：{yes|no|true|false}.默认值为 yes | true.是否接受来至action绑定元素的子元素提交的触发事件。设为false | no，表示只接受action绑定的元素自身的事件
+
+config-type
+
+属性
+
+可选
+
+对ActionHandler实现类的初始化方式，可选值有：
+{field|bean|constructor|configuration-property}.
+
+async
+
+属性
+
+true |false
+
+默认为false，它意味着action与流程在同一线程中执行。如果设为true，将向命令执行器发送一则消息，并且action会以异步的方式在分离的事务（另一线程）中处理。
+
+ 
+
+{内容}
+
+optional
+
+action标签体中的内容，作为初始化参数用来初始化ActionHandler的实现类.
+
+<variable>(变量)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+必须
+
+过程变量名
+
+access
+
+属性
+
+可选
+
+访问约束。可选值为：read,write andrequired.默认是read,write该属性使用逗号分隔访问修饰列表。
+
+mapped-name
+
+属性
+
+可选
+
+变量映射名，默认同变量名。
+
+<handler>(处理器)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+expression
+
+属性
+
+此属性同class属性互斥
+
+jPDL表达式。该表达式返回字符串结果，与leaving transitions的命名相匹配
+
+class
+
+属性
+
+此属性同expression属性互斥
+
+实现接口org.jbpm.graph.node.DecisionHandler的Java类的完整类名.
+
+config-type
+
+属性
+
+可选
+
+对DecisionHandler实现类的初始化方式，可选值有：
+{field|bean|constructor|configuration-property}.
+
+ 
+
+{内容}
+
+可选
+
+handler标签体中的内容，作为初始化参数用来初始化DecisionHandler的实现类.
+
+<task>(任务)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+name
+
+属性
+
+可选
+
+task的名称。该名称可以被查找和引用task对象。
+
+blocking
+
+属性
+
+可选
+
+可选值为：{yes|no|true|false},默认值为false.如果该属性被设置为true，则在没有完成任务前，流程不能离开此结点如果是true，那么token对象的signal方法将促使流程向下继续。大多情况下，强制中断流程会有客户操作界面发起。
+
+signalling
+
+属性
+
+可选
+
+可选值为：{yes|no|true|false},默认值为true.如果设置为false，则任务将失去触发流程继续下行的能力。
+
+duedate
+
+属性
+
+可选
+
+任务的持续时间。可以用绝对时间或工作日两种计量方式表示。
+
+swimlane
+
+属性
+
+可选
+
+对swimlane的引用.当一个swimlane被赋予任务的时候， assignment属性将被忽略。
+
+priority
+
+属性
+
+可选
+
+优先级。可选值：{highest, high, normal, low, lowest}.另一种表达方式可以用整数，如：{highest=1, lowest=5)
+
+assignment
+
+元素
+
+可选
+
+为task委派一个参与者。
+
+event
+
+元素
+
+[0..*]
+
+支持的事件类型有：
+ {task-create|task-start|task-assign|task-end}. 特别要指出的是，我们在task-assign 事件上为任务实例添加了一个非持久化的属性previousActorId
+
+exception-handler
+
+元素
+
+[0..*]
+
+对委派类异常的处理者
+
+timer
+
+元素
+
+[0..*]
+
+为任务的执行过程指定一个计时器，监视任务的执行。这里我们可以利用cancel-event 同计时器挂钩来做一些特定的事。默认情况下，cancel-event会结束任务，但我们可以将它定制为任务分配或者任务开始。
+
+controller
+
+元素
+
+[0..1]
+
+指定如果将过程变量转换成任务表单参数以提供给用户交互界面
+
+<assignment>(分配)
+
+名称
+
+类型
+
+多样性
+
+描述
+
+expression
+
+属性
+
+可选
+
+由于历史原因，这里的expression不是指jPDL表达式，而是指jBPM身份组件中的表达式，详细参考Section 11.11.2, “Assignment expressions”.注意，该属性必须依赖于jbpm身份组件
+
+actor-id
+
+属性
+
+可选
+
+参与者ID.该属性可以与pooled-actors属性联合使用。可以设计一个表达式来替代；也可以设定一个固定值； 又或者指定一个属性或方法，返回一个诸如actor-id="myVar.actorId"的字符窜,这里 myVar是一个任务实例对象，它将调用方法getActorId返回真实的actor-id
+
+pooled-actors
+
+属性
+
+可选
+
+一个由逗号分隔的参与者ID列表.一个固定的列表，诸如： pooled-actors="chicagobulls, pointersisters".又或者使用表达式返回。还可以引用一个属性或方法，返回字符串数组变量、集合变量以及用逗号分隔的字窜来表达参与者集合。
+
+class
+
+属性
+
+可选
+
+实现 org.jbpm.taskmgmt.def.AssignmentHandler接口的Java类全名
+
+config-type
+
+属性
+
+可选
+
+对AssignmentHandler实现类的初始化方式，可选值有：
+{field|bean|constructor|configuration-property}.
+
+ 
+
+{内容}
+
+可选
+
+作为初始化参数用来初始化AssignmentHandler的实现类.
+
+任务结点<task-node> 
+任务结点是一个需要人工参与的结点类型。当流程进入结点时，会生成相应的任务实例(TaskInstatnce)，并通过委派接口AssignmentHandler或jBPM表达式将任务委派给一个或多个特定的角色或参与者。结点自身进入等待状态，直到任务被参与者完成或者跳过，流程继续。 
+
+判定结点<decision> 
+判定结点的设计目标是根据上下文环境和程序逻辑，判定流程转向。通过指定一个实现DecisionHandlder接口的Java委派类或jBPM表达式，来返回转向（transition）的字符窜类型的名称（可以是中文哦），来达到决定流程方向的功能。 
+
+普通结点<node> 
+普通结点也可以定义相应的处理任务，通过定义相应的ActioinHandler类。同任务结点不同的是，普通结点定义的任务是由流程自动执行的，无须人工干预。 
+
+三种结点都可定义结点事件（event）： 
+node-enter，该事件在流程进入结点时触发 
+node-leave，该事件在流程离开节点是触发 
+可以在事件上挂接ActioinHandler接口的实现类来完成一些特定的功能。 
+
+三种节点都可以定义异步处理方式（async属性）： 
+异步处理意味着每个结点的事务处理是通过消息机制分离的，不再同一线程中统一调用执行。而是由消息监听线程从消息队列中取得消息体来运行相应得程序。 
+此外我们定义了结点间的转向（transition），用来记录和处理状态的变迁。每个转向中，可以委派一个或多个的ActioinHandler接口实现类，负责处理节点变迁时的上下文状态变更及回调用户定义的处理程序。 
+
+流程的程序接口说明 
+
+动作处理接口（ActioinHandler） 
+接口方法：void execute( ExecutionContext executionContext ) throws Exception 
+该接口是jPDL中最常用的一个回调接口。从它的接口方法可以发现，它仅仅暴露了流程执行上下文变量ExecutionContext。用户程序通过ExecutionContext来了解流程的执行状态，并通过改变ExecutionContext中的属性值来影响流程的执行。 
+ActioinHandler接口可以在所有能包含事件(event)、动作(action)元素的地方被回调。 
+
+判定处理接口（DecisionHandlder） 
+接口方法：String decide(ExecutionContext executionContext) throws Exception 
+判定接口仅适用于判定节点(decision)中。从它的接口方法可以看出，方法要返回一个字符串型的结果，这个结果必须和判定节点拥有的转向(transition)集合中的一条转向名称相匹配。 
+在DecisionHandlder的接口方法中一样能访问到ExecutionContext变量，这为判定提供了执行上下文的根据。当然，如果有必要，用户也可以在该接口中改变ExecutionContext中的变量值。 
+
+委派处理接口（AssignmentHandler） 
+接口方法：void assign(Assignable assignable, ExecutionContext executionContext) throws Exception; 
+委派处理接口被用户任务元素(task)的委派(assignment)子元素中，它的职责很明确，就是将任务分配给指定的人员或角色。 
+在AssignmentHandler接口的方法中，Assignable变量通常指任务实例(TaskInstance)。通过将ExecutionContext和TaskInstance两个变量都暴露给接口方法，用户就可以根据流程上下文情况，来决定要将指定的任务分配个谁。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+jbpm4.3视频教程
+
+jbpm 官网 jbpm 4.3
+eclipse 官网 Eclipse ide for java ee developers 插件 jbpm-gpd-site.zip//jbpm-4.3\install\src\gpd\ 配置运行环境：点开JBoss jBP—jBPM4—Runtime Locations，点击“Add”，location选择jbpm4.3目录 添加依赖 jbpm-4.3\下jbpm.jar,lib下所有jar jbpm-4.3\examples\src下5个配置文件流程定义：gpd可视化编写流程定义发布：
+ ProcessEngine pro=Configuration.getProcessEngine();//单例模式
+ RepositoryService rep=pro.getRepositoryService();//流程定义管理
+ String deployId=rep.createDeployment().addResourceFromClasspath("***.jpdl.xml").deploy();
+流程定义查看：
+List<ProcessDefinition> list=rep.createProcessDefinitionQuery().list();
+流程定义删除：
+rep.deleteDeployment(deployId);//有子流程定义时无法删除
+ rep.deleteDeploymentCascade(deployId);//级联删除子流程定义 
+ 流程实例管理类：
+ExecutionService service=pro.getExecutionService();
+流程实例启动：
+//ProcessInstance instance=service.startProcessInstanceById(deployId);//根据id启动
+ProcessInstance instance=service.startProcessInstanceByKey("***");//根据key启动
+  流程执行到下一环节：
+instance=service.signalExecutionById(instance.getId());
+instance=service.signalExecutionById(exec.getId(),"to state1");
+ 流程实例终结：
+ service.endProcessInstance(instance.getId(), "cancel");//结束
+ service.deleteProcessInstance(instance.getId());//结束并删除
+ service.deleteProcessInstanceCascade(instance.getId());//结束并级联删除
+流程实例查看：
+List<ProcessInstance> listin=service.createProcessInstanceQuery().list();
+ 
+  乱码问题解决： eclipse.ini 中末尾配置   -Dfile.encoding=UTF-8 任务处理：
+ ProcessEngine pro = Configuration.getProcessEngine();
+  TaskService ts = pro.getTaskService();// 任务管理对象
+  List<Task> tasklist = ts.findPersonalTasks("user");// 获取个人待办任务
+  List<Task> tasklist2 = ts.findGroupTasks("user");// 获取组待办任务
+  Task task = ts.takeTask("taskid", "userid");//
+  Task task2 = ts.getTask("taskid");// 获取任务
+  String result = "result";
+  ts.completeTask(task.getId(), result);// 根据result值选择处理结果分支
+  task.getFormResourceName();// 任务绑定的表单配置form属性
+   组织机构：//使用过程中从原有系统中读取组织机构进行处理
+            IdentityService is=pro.getIdentityService();//管理
+           用户：is.createUser("userid","","");//创建用户
+           用户组：is.createGroup("groupname");//创建组
+          成员关系：  is.createMembership("userid", "groupname");//设置成员关系
+    事件监听器：
+         配置：全局、局部都可配
+         <on event="start"> 
+             <event-listener class="监听类" />
+         </on>
+         <on event="end"> 
+             <event-listener class="监听类" /> 
+        </on>
+  监听类：
+        public class JbpmListener implements EventListener{ 
+              public void notify(EventListenerExecution arg0) throws Exception {
+  
+  
+               } 
+      }
+流程图发布：将流程定义文件.jpdl.xml文件和流程图文件.png文件打包成.zip文件一起发布
+            ZipInputStream zip = new ZipInputStream(this.getClass() .getResourceAsStream("/***.zip"));
+            pro.getRepositoryService().createDeployment().addResourcesFromZipInputStream(zip).deploy();
+流程图跟踪：
+ 流程图：***.jsp
+ String prodefinitionid=pro.getExecutionService().findProcessInstanceById("").getProcessDefinitionId();
+ ProcessDefinition prodef=pro.getRepositoryService().createProcessDefinitionQuery().processDefinitionId(prodefinitionid).uniqueResult();
+ InputStream ins=pro.getRepositoryService().getResourceAsStream(prodef.getDeploymentId(), "**.png");//获取图片
+ byte[] b=new byte[1024];
+ int len=-1;
+ while ( (len=ins.read(b, 0, 1024))!=-1){
+  
+      response.getOutputStream().write(b,0,len);
+  
+ }
+当前流程坐标： 
+  ProcessInstance instance=pro.getExecutionService().findProcessInstanceById();
+ Set<String> setnames=instance.findActiveActivityNames();
+ ActivityCoordinates ac=pro.getRepositoryService().getActivityCoordinates(instance.getProcessDefinitionId(), setnames.iterator().next());
+ 
+流程页面显示：
+  <img src="aaa.jsp?instanceid=<%=instanceid%>"></img>///////获取流程图<div  style="position:absolute;border-color:red;border-style:solid;border-width:1px ;left:<%=ac.getX() %>px;top:<%=ac.getY() %>px;width:<%=ac.getWidth() %>px;;height:<%=ac.getHeight() %>px;"></div>
+在流程图指定位置加红色边框
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+jBPM PVM 架构
+
+jBPM PVM 架构
+这里,我们看下jBPM-PVM概念和架构,这也是jBPM整个项目的核心所在.
+PVM (Process Virtual Machine), 主要是想作为一个开发平台,在这个平台上,可以很方便的开发工作流,服务编制(orchestration),BPM等等.就比如 说jPDL这套语法的内部实现就是基于PVM的.将来基于PVM可以开发一个符合WS-BPEL 2.0的模块. PVM可以简单的看成是一个状态机. 我们接下去看下jBPM里面的几个重要概念.
+2.1. Environment
+Environment的概念,主要有以下的作用.
+   1. 使process能在不同的环境下之行,比如可以在标准的Java, 企业级Java,Seam 或者 Spring 环境下运行.
+   2. 他可以存放着不同的context对象,比如我们之前所看到的配置文件中的process-engine的Context, transaction的Context等.
+在代码中,我们想获得其他的组件时,或者变量时,我们总是使用Environment的API, 我们可以看下它的API的几个重要方法.
+      public abstract <T> T get(Class<T> type); 
+   /** searches an object based on type.  The search doesn take superclasses of the context elements 
+    * into account.
+    * @return the first object of the given type or null in case no such element was found.  
+    */
+   public abstract <T> T get(Class<T> type, String[] searchOrder);
+    
+Environment内部是使用Map来保存不同的Context对象, Environment对象的创建主要是有EnvironmentFactory来负责. Environment是被保存在ThreadLocal中,如果有多个Environment,那么是选择把Environment(s)放在一个堆栈中,然后再存放在ThreadLocal里.
+2.2. Service
+Service就是PVM对外发布的服务,包括RepositoryService(比如部署jpdl文件),ExecutionService(负责管理执行),TaskService,ManagementService等等.可以说这是给用户调用的API.比如我们看下他们的一些方法. RepositoryService接口的一些方法:
+public interface RepositoryService {
+  NewDeployment createDeployment();
+  ProcessDefinitionQuery createProcessDefinitionQuery();
+  ...
+}
+ 
+ExecutionService的一些方法:
+public interface ExecutionService {
+  ProcessInstance startProcessInstanceById(String processDefinitionId);
+  ProcessInstance signalExecutionById(String executionId); 
+  ...
+}
+ 
+ManagementService的接口:
+public interface ManagementService {
+  void executeJob(long jobDbid);
+  JobQuery createJobQuery();
+}
+ 
+2.3. Command and Command Service
+Command概念的引入,主要是想对所有的操作做一个封装. 可以说上面每个Service的方法的实现都是通过实现一个Command来操作,然后通过CommandService调用到后面具体的实现. 我们先来看下Command的接口.
+public interface Command<T> extends Serializable {
+  T execute(Environment environment) throws Exception;
+}
+ 
+很简单,很典型的Command模式.
+我们接下来看CommandService接口,顾名思义,他主要是负责来执行Command(s)的操作.所以其他Service的实现都是通过CommandService来调用到后面的实现,可以把CommandService 看做一个桥梁的作用.看一下CommandService的接口.
+public interface CommandService {
+  /**
+   * @throws JbpmException if command throws an exception.
+   */
+  <T> T execute(Command<T> command);
+} 
+ 
+CommandService还有一个特性,就是可以配置Interceptor,比如事务就是在这一Service中来配置.看下CommandService的配置.
+    <command-service>
+      <retry-interceptor />
+      <environment-interceptor />
+      <standard-transaction-interceptor />
+    </command-service> 
+ 
+这里,在执行真正的CommandServiceImpl之前,会先之前retry-Interceptor,environment-interceptor等等.这里的Interceptor的顺序是跟配置的顺序一致的. 比如这样的配置,那就是retry-interceptor在environment-interceptor之前执行. 我们看下面这个图.
+Tip
+可以说CommandService是最适合处理横截面(cross-cutting)的问题,比如事务,安全等的. CommandService默认下是DefaultCommandService,如果是在使用ejb的情况下, 它的实现类就是EjbLocalCommandService和EjbRemoteCommandService类. 所以,这里是远程调用,还是本地调用,对用户而言,都是透明的.
+   1. retry-interceptor的主要作用当碰到StaleObjectException(也就是optimistic locking失败)时,过一定的时间后再尝试.
+   2. environment-interceptor的主要作用就是,保证command是在Environment范围内执行,也就是在执行command之前,openEnvironment,执行之后,closeEnvironment.
+   3. standard-transaction-interceptor的主要作用就是处理事务.
+   4. authorization-interceptor,主要是处理权限校验.
+2.4. PVM Models: ProcessDefinition, ActivityBehaviour, Transition, Event
+ProcessDefinition是一个定义好的工作流程. OpenProcessDefinition里面包含了启始的Activity. 流程的走向是通过Activity的流向来组成的. Transition就是用来连接Activity而后来构成一个流程的. 一个工作流的工作引擎,最基本的两个功能:一个是设计好当前的工作流程.第二个是有个东西需要来体现当前走到流程的哪一步,那么PVM中的Execution API就是这个作用. 至于最后一个Event,就是你可以定义一些事件,比如当流程进入到某一个Activity的时候,促发email. Event和Activity最大的区别在于Event本身不会构成对流程走向的改变.
+我们先看下ActivityBehaviour的接口.
+public interface ActivityBehaviour extends Serializable {
+  void execute(ActivityExecution execution) throws Exception;
+} 
+ 
+就是到这个Activity,需要执行的操作都在execute方法里. 还有一种ActivityBehaviour,就是属于wait state,也就是会停留在这个节点上, 需要外部的一些触发,才会继续执行下去,这种情况,需要实现的接口就是ExternalActivityBehaviour, 接口如下.
+public interface ExternalActivityBehaviour extends ActivityBehaviour { 
+  //handles an external trigger.  
+  void signal(ActivityExecution execution, String signalName, Map<String, ?> parameters) throws Exception;
+}
+ 
+Wait State (也就是实现ExternalActivityBehaviour)的促发,是通过Transition来完成的,来看下Transition这个接口.
+public interface Transition extends ObservableElement {
+  /** the activity from which this transition leaves. */
+  Activity getSource();
+  /** the activity in which this transition arrives. */ 
+  Activity getDestination();
+}
+   
+在pvm中,也包括了对event的支持,event的接口如下.
+public interface EventListener extends Serializable { 
+  void notify(EventListenerExecution execution) throws Exception;
+}
+ 
+如我们之前所说的, ProcessDefinition是由Activity,Transition以及Event组成的,ProcessDefinition是由ProcessDefinitionBuilder 的API来创建.我们稍微看下这个API的使用.
+  ClientProcessDefinition definition = ProcessDefinitionBuilder.startProcess("jeffProcess")
+            .startActivity("initial", new AutomaticActivity())
+            .initial()
+            .transition("first")
+            .endActivity()
+            .startActivity("first", new WaitStateActivity())
+            .transition("end", "endSignal")
+            .endActivity()
+            .startActivity("end", new AutomaticActivity())
+            .endActivity()
+            .endProcess();
+   
+Tip
+这里,我们注意到返回的是ClientProcessDefinition,那么他和ProcessDefinition的区别在哪儿呢? ClientProcessDefinition是继承ProcessDefinition,他还包括了一些负责创建和启动ProcessInstance的方法. 类似的,你会发现有ClientProcessInstance和ProcessInstance接口,他们的区别也是ClientProcessInstance多了负责启动的start方法.
+2.5. API整体架构图
+我们最后从整体上来看下这些API之间的联系,我觉得Developer Guide上的这个图片很清楚的描述了他的架构思路. 这里需要注意的是,本身PVM内部的流程定义模型是POJO的,所以如果你只是想测试流程的正确性,你只需要直接使用Client的API,比如ClientProcessDefinition, ClientProcessInstance等的API. 不需要去调用RepositoryService, ProcessEngineService. 这些Service是针对你把ProcessDefinition在保存在数据库的情况下才需要用的.
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+jBPM PVM Model(模型)解析
+
+
+jBPM PVM Model(模型)解析
+这里,我们将利用PVM所提供的Model,来实现一个基本的工作流引擎.
+3.1. ActivityBehaviour(内部节点)
+正如我们之前所说的,ActivityBehaviour是整个流程的定义核心所在,我们再看下它的API.
+public interface ActivityBehaviour extends Serializable {    
+  void execute(ActivityExecution execution) throws Exception;
+}
+当之行到ActivityBehaviour的时候,整个流程的走向完全是由他的execute()方法来决定. 比如你可以调用execution.end()来结束这个流程,或者调用execution.waitForSignal()进入一个等待状态. 我们接下去来实现一个很简单的ActivityBehaviour.
+public class Display implements ActivityBehaviour {
+  String message;
+  public Display(String message) {
+    this.message = message;
+  }
+  public void execute(ActivityExecution execution) {
+    System.out.println(message);
+  }   
+}
+隐式(implicit)的execute方法执行顺序
+如果我们在execute()方法中,没有显示的调用execution中的方法,比如waitForSignal(),take(transition)等方法,那么默认的顺序是这样的.
+   1. 如果当前的节点有默认的outgoing transition,那么就调用这个默认的transition.
+   2. 如果当前的节点有父节点,那么就调用到父节点.
+   3. 最后,如果都没有,那就调用execution.end()方法.
+我们先用这个Display,来创建下面的process.
+Display example process
+Figure 1. Display example process
+
+ClientProcessDefinition processDefinition = ProcessDefinitionBuilder.startProcess("helloworld")
+        .startActivity("a", new Display("Hello"))
+        .initial()
+        .transition("b")
+        .endActivity()
+        .startActivity("b", new Display("World"))
+        .endActivity()
+        .endProcess();
+然后,你调用
+processDefinition.startProcessInstance();
+就会得到如下的结果
+Hello
+World
+我们这个Display的节点就是采用的隐式execution执行方法.
+Tip
+细心的你会发现,我们在定义Process Defintion的时候,总是要在调用一个initial()方法. 这是设定当前这个节点为流程的启始节点.
+3.2. ExternalActivityBehaviour(外部节点)
+外部节点就是代表着,这个活动还需要系统外部的配合,比如说人工的配合才能使得这个流程继续下去.我们一般称这种的节点为 Wait State. 因为他需要一直等待,直至外部活动的促发,然后流程才继续. 这种的节点需要实现ExternalActivityBehaviour的API.
+public interface ExternalActivityBehaviour extends ActivityBehaviour { 
+  //handles an external trigger.  
+  void signal(ActivityExecution execution, String signalName, Map<String, ?> parameters) throws Exception;
+}
+跟内部节点类似,执行到ExternalActivityBehaviour的时候,也是执行它的execute()方法,但是一般来说,在外部活动的execute()方法中, 会调用execution.waitForSignal()方法,使得activity进入一个等待状态. 直到外部调用signal()方法来使得流程再次从等待状态变成激活.一般来说在signal()方法中,会调用execution.take(signalName)根据signalName(也就是transition name)去找到下一个节点,然后把整个流程走到下一个节点.
+很简单的一个例子是,比如说一个申请审批的流程,员工递交一份申请上去,然后继续就进入一个wait state的状态,因为他需要经理的审批(也就是一个人工的活动),那么经理可以选择一个ok的signalName,使得整个流程进入到下一个节点,这里就好比如是结束的节点,又或者使得整个流程直接结束.
+我们接下来实现一个简单的WaitState,实现ExternalActivityBehaviour的接口.
+public class WaitState implements ExternalActivityBehaviour {
+  public void execute(ActivityExecution execution) {
+    execution.waitForSignal();
+  }
+  public void signal(ActivityExecution execution, 
+                     String signalName, 
+                     Map<String, Object> parameters) {
+    execution.take(signalName);
+  }
+} 
+一样的,我们来看一个简单的从a->b的流程.这次不同的是,a和b都是wait state.
+The external activity example process
+Figure 2. The external activity example process
+
+ProcessDefinition的定义
+ClientProcessDefinition pd = ProcessDefinitionBuilder.startProcess("helloworld")
+        .startActivity("a", new WaitState())
+        .initial()
+        .transition("b", "b-transition")
+        .endActivity()
+        .startActivity("b", new WaitState())
+        .endActivity()
+        .endProcess();
+启动这个ProcessDefinition
+ClientProcessInstance instance = pd.startProcessInstance();
+instance.isActive("a")
+在启动之后,因为执行到a的时候,是一个wait state,所以,当前的流程活动应该是指向a. 如果要到b这个activity,那么就需要调用
+instance.signal("b-transition");
+instance.isActive("b")
+那么,你就会发现,经过我们调用signal方法,instance根据所提供的transitionName (b-transition),找到下一个节点,也就是b. 但因为b也是一个wait state,所以此刻,整个流程就停留在了b节点身上.
+3.3. 基本流程的实现
+接下来,我们基于前面两种节点的实现,来实现一个稍微比较正式的流程(loan process).
+The loan process
+Figure 3. The loan process
+
+ProcessDefinition的定义
+ ClientProcessDefinition pd = ProcessDefinitionBuilder.startProcess("loanprocess")
+         .startActivity("submit loan request", new Display("submit a loan request"))
+         .initial()
+         .transition("evaluate", "evaluate-transition")
+         .endActivity()
+         .startActivity("evaluate", new WaitState())
+         .transition("wiremoney", "approve")
+         .transition("end", "reject")
+         .endActivity()
+         .startActivity("wiremoney", new Display("wire the money"))
+         .transition("archive")
+         .endActivity()
+         .startActivity("archive", new WaitState())
+         .transition("end", "done")
+         .endActivity()
+         .startActivity("end", new WaitState())
+         .endActivity()
+         .endProcess();  
+启动这个processInstance
+instance = pd.startProcessInstance();
+启动这个processInstance后,它开始点在submit loan request这个节点,后面经过Display这个节点,默认走到了evaluate这个节点. 因为evaluate是个wait state,所以流程停在了evaluate.
+Execution positioned in the 'evaluate' activity
+Figure 4. Execution positioned in the 'evaluate' activity
+
+现在呢, evaluate这个节点有两条支路,一个是approve,指向wiremoney节点;另外一个是reject,直接走向end. 假设我们选择approve这条支路.
+instance.signal("approve");
+那么,我们就走向了wiremoney这个节点,因为wiremoney是个Display节点,所以它显示完后,默认的走向下一个节点,archive.
+Execution positioned in 'archive' activity
+Figure 5. Execution positioned in 'archive' activity
+
+同样的,因为archive节点是个wait state,所以需要再一次的signal,才能走到end这个节点.
+instance.signal("done");
+这样的话,整个流程就会走向了end节点.
+Execution positioned in the 'end' activity
+Figure 6. Execution positioned in the 'end' activity
+
+3.4. 事件机制 (Event and EventListener)
+事件的订阅可以通过实现EventListener来实现.
+public interface EventListener extends Serializable {
+  void notify(EventListenerExecution execution) throws Exception;
+}
+Event概念的引入,主要是为了弥补分析员(Business Analyst)和开发人员(Developer)之间的不同需求. developer可以使用Event在一些节点上来做一些操作(比如说操作数据库),这样呢,也不会影响整个流程,所以分析员不用去关心这些具体的Event, 他们只需要看流程是否跟他们所期望的是一致的.
+具体的Event是由ObservableElement和EventName来构成的.
+public interface EventListenerExecution extends OpenExecution {
+void fire(String eventName, ObservableElement eventSource);
+}
+我们来实现一个简单的EventListener, 叫PrintLn
+public class PrintLn implements EventListener {
+ 
+ String message;
+ 
+ public PrintLn(String message) {
+  this.message = message;
+ }
+ 
+ public void notify(EventListenerExecution execution) throws Exception {
+  System.out.println(message);
+ }
+}
+The PrintLn listener process
+Figure 7. The PrintLn listener process
+
+我们看下是怎么来定义一个具备有Events的ProcessDefinition:
+ClientProcessDefinition pd = ProcessDefinitionBuilder.startProcess("ab")
+        .startActivity("a", new Display("Testing Event"))
+        .initial()
+        .transition("b")
+        .startEvent(Event.END)
+        .listener(new PrintLn("leaving a"))
+        .listener(new PrintLn("second message while leaving a"))
+        .endEvent()
+        .startEvent(Event.TAKE)
+        .listener(new PrintLn("taking transition"))
+        .endEvent()
+        .endActivity()
+        .startActivity("b", new WaitState())
+        .startEvent(Event.START)
+        .listener(new PrintLn("entering b"))
+        .endEvent()
+        .endActivity()
+        .endProcess();
+我们可以看到,一个事件可以有无穷多个的Listener(s).
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+保持你的JBPM executionContext整洁
+
+保持你的JBPM executionContext整洁
+在 我曾经见过的正式的第一个JBPM项目中，我注意到开发人员有时使用executionContext来放置很多流程的变量。为了控制执行流，向 executionContext中增加变量是基本的法则，但是不管如何，不要被它诱惑的往里面放任何东西！例如：假设你正在设计一个复杂的售票系统：你可能需要存储一些关于执行者的附加信息，例如：名，姓，邮件。因此在执行上下文中你混合了既有模型变量和流程变量！
+在一个EJB中构造这些字段，并且在你的executionContext中仅保持一个ticketid。下面是一个使用Seam与业务流程进行交互的EJB的例子：
+Java代码
+   @Stateful    
+   @Name("TicketingSystem")        
+    public class TicketBean implements TicketBeanItf {    
+    @PersistenceContext(type=PersistenceContextType.EXTENDED)    
+   EntityManager em;    
+   @In(create = true)    
+  @Out    
+   private Ticket ticket;    
+   // We make this available to the business process    
+  @Out(scope=ScopeType.BUSINESS_PROCESS, required=false)    
+  long ticketId;    
+  @CreateProcess(definition="TroubleTicketing")    
+   public void createTicket() {    
+      em.persist(ticket);    
+       // Keep a reference to the ticketId in your biz process    
+       ticketId = ticket.getTicketId();    
+    }    
+   }   
+@Stateful  
+@Name("TicketingSystem")  
+   
+public class TicketBean implements TicketBeanItf {  
+   
+@PersistenceContext(type=PersistenceContextType.EXTENDED)  
+EntityManager em;  
+   
+@In(create = true)  
+@Out  
+private Ticket ticket;  
+   
+// We make this available to the business process  
+@Out(scope=ScopeType.BUSINESS_PROCESS, required=false)  
+long ticketId;  
+   
+@CreateProcess(definition="TroubleTicketing")  
+ public void createTicket() {  
+    em.persist(ticket);  
+    // Keep a reference to the ticketId in your biz process  
+    ticketId = ticket.getTicketId();  
+ }  
+    
+} 
+ 记住这执行上下文中添加领域变量，除了被当作一个差的设计选择外，而且也会很大程度上降低你流程的性能。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+使用异常处理器
+
+使用异常处理器，仅用来设置变量或者做错误通知
+JBPM有一个内建的异常处理器，能够被应用在单一节点或者整个流程。
+
+Java代码
+    <exception-handler exception-class="java.lang.Exception">    
+        <action class="com.sample.handlers.BPMExceptionHandler"></action>          
+   </exception-handler>   
+<exception-handler exception-class="java.lang.Exception">  
+    <action class="com.sample.handlers.BPMExceptionHandler"></action>        
+</exception-handler> 
+
+你或许曾经被诱惑在JBPM中使用异常处理机制来决策执行流：不要这样做!JBPM的机制并不完全与java的异常处理相似，在java中，一个捕获的异常能够对控制流产生影响。而在jBPM的案例中，控制流不能被jBPM的异常处理机制改变。异常可以被捕获或不捕获。不捕获的异常被扔给客户端（例如，调用 token.signal()方法的客户端）或者这个异常被jBPM异常处理器捕获。对于捕获的异常，graph execution会当作没有异常发生继续执行。
+使用异常处理器的最佳实践是，执行那些相关的action（设置变量，发生邮件，jms消息等）然后或者继续graph的执行（你期望的行为）或者因为事务失败而重新扔出异常，并且结束当前节点回到开始的状态。
+依赖于被扔出的异常，在你的Action中捕获业务异常并且设置一些流程变量也是一个好的设计。然后你可以在流程中构造一个决策节点，用来选择一个特定的执行路径。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+JBPM做失败转发
+
+需要JBPM做失败转发？在一个集群的SLSB(无状态session bean)中封装JBPM的调用
+jBPM 是一个状态机：流程描述和运行时的状态被持久化到数据库中，但是在一个集群环境中，他们不会自动失败转发。如果一个集群节点失败了，这时正在执行的一些外部触发器（ui，jms，重复执行的计时器）需要停止执行并且不得不重新启动。依赖于你所处的事务上下文，这些动作能够被自动执行（重新传递jms消息，重新执行计时器）或者请求UI交互（如果集群节点down机需要重启时，显示错误消息给用户）。
+因此，当流程描述是持久化时，工作流的失败转发必须被手动执行。jBPM能够被用来构建一个完整的失败保护，可集群的支持失败转发的工作流解决方案，但是它不支持开箱即用。
+那么，在你的工作流中增加这些特性的最简单的方式是什么？对于大多数的案例，最佳的解决方案是在你的应用中用一个无状态的会话bean来封装jBPM API的调用，并且在最后构建集群。
+给你的EJB增加集群能力一点也不复杂，参考下面的方案：
+http://www.mastertheboss.com/en/jboss-application-server/49-jboss-ejb3-in-a-cluster.html
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+Superstate
+
+在尽可能的地方使用superstates
+一个Superstate是一组节点：它是一种将节点组合成相关集合的方便的方式，是在流程中实例阶段的表示。例如，一个应用程序能够分阶段组合流程中的所有节点。动作可以被关联到superstate事件上。一个重要的意义就是一个令牌能够在给定的时间上被多层嵌套。这可以方便地来检查一个流程是否被执行了，例如在开始阶段。
+ 
+因此，当每个状态都代表着一个流程的阶段时，将流程拆分为superstates是一种好的设计，但是为什么我提倡对superstates的使用有更多的理由：JBPM是一个状态机并且本身没有交付一个内建的图形化环境。有个实际的Eclipse插件，可以让你来图形化的流程建模，但是它不是在市场上最好的BPM前端工具：图标太大，太丑陋，并且你不能够自己为不同的节点类型（至少它能够马上实现）来定制图标。如果你曾经用JBPM画一个有100个节点的流程，你可能也做我所做的事情了：因为流程的图片很大并且完全杂乱，我从JBPM中自己设计了一个前端展现层。
+如果你不希望为JBPM设计一个新的前端，那么尽可能广泛地使用superstates，它将使你的流程（jpg图）更可读并且当你展现一个5页的流程图时你的老板不会晕。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+扩展JBPM的Api
+
+扩展JBPM的Api而不是搞乱复杂的流程建模
+有时候开发人员（我也是）不去寻找更简单的解决方案：或许用jbpm内建的节点来建模流程而导致一个不必要的复杂流程。想更简单…jBPM是非常易扩展的（actionhandlers，定制节点类型）并且有时比用存在的节点做简单的建模还要容易，这可以使得事情没有那么复杂。
+例如：假设你有这样一个需求，在一个依赖于地理定位的特定泳道内指派一个任务。（如果一个任务发生在纽约，它指派给用户A，如果它发生在芝加哥那么指派给用户B）
+拿到org.jbpm.taskmgmt.def.Task.java这个类并且增加下述的字段和方法：
+Java代码
+   private String taskLocation;  
+       
+   public String getTaskLocation() {  
+      return taskLocation;  
+   }  
+    public void setTaskLocation(String taskLocation){  
+      this.taskLocation = taskLocation;  
+   } 
+private String taskLocation;
+ 
+public String getTaskLocation() {
+   return taskLocation;
+}
+public void setTaskLocation(String taskLocation){
+   this.taskLocation = taskLocation;
+}
+现在为Task.java修改hibernate配置文件，在Task.hbm.xml中：
+Java代码
+ <property name="taskLocation" column="TASKLOCATION_" ></property> 
+<property name="taskLocation" column="TASKLOCATION_" ></property>
+最后修改JpdlXmlReader.java以使得当流程从数据库中读入时新的属性被注入到Task类中。
+Java代码
+   String taskLocation = taskElement.attributeValue("taskLocation");  
+      
+    if (taskLocation==null) {  
+             taskLocation = taskElement.attributeValue("taskLocation");  
+    }  
+       
+    if (taskLocation != null){  
+             task.setLocation(taskLocation);  
+    } 
+String taskLocation = taskElement.attributeValue("taskLocation");
+if (taskLocation==null) {
+         taskLocation = taskElement.attributeValue("taskLocation");
+}
+    
+if (taskLocation != null){
+          task.setLocation(taskLocation);
+}
+
+ 
+另一个定制的例子可以应用到你的查询中：假设你想用很多规则来过滤你的任务：考虑一个用JSF来做渲染的任务列表和一个任务过滤窗口，这个窗口中你可以按照优先级，日期，执行人，任务名称等来过滤任务。
+一个不会使得事情更复杂的，实现它的方式是，给任务实例增加过滤器：仅仅是打开任务实例的hibernate文件并且添加一些hibernate过滤器：
+Java代码
+ <filter name="filterPriority"  condition=":paramPriority = PRIORITY_"/>      
+       <filter name="filterDesc"      condition=":paramDesc = DESCRIPTION_"/>          
+       <filter name="filterId"        condition="str(ID_) LIKE (:paramId) "/>      
+        <filter name="filterCreate"    condition="CREATE_ BETWEEN :paramFrom and :paramTo"/>   
+<filter name="filterPriority"  condition=":paramPriority = PRIORITY_"/>    
+    <filter name="filterDesc"      condition=":paramDesc = DESCRIPTION_"/>        
+    <filter name="filterId"        condition="str(ID_) LIKE (:paramId) "/>    
+    <filter name="filterCreate"    condition="CREATE_ BETWEEN :paramFrom and :paramTo"/> 
+注意，传递给过滤器的参数以“ ： ”开始，而其它的字段（像_ID）属于TaskInstance。然后当你填充你的数据库时，使被选择的过滤器生效：
+Java代码
+    String sql  = "from org.jbpm.taskmgmt.exe.TaskInstance";  
+    session.enableFilter("filterPriority").setParameter("paramPriority","2");  
+   Query queryParent = session.createQuery(sql);     
+   List list = queryParent.list();  
+   Iterator iter = list.iterator();  
+    while (iter.hasNext()) {     
+     TaskInstance taskInstance = (TaskInstance)iter.next();  
+    } 
+String sql  = "from org.jbpm.taskmgmt.exe.TaskInstance";
+session.enableFilter("filterPriority").setParameter("paramPriority","2");
+Query queryParent = session.createQuery(sql);   
+List list = queryParent.list();
+Iterator iter = list.iterator();
+ while (iter.hasNext()) {   
+  TaskInstance taskInstance = (TaskInstance)iter.next();
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+Drool
+
+如果你有复杂的规则，雇用一个Drool的开发人员
+一个工作流引擎（或者传统的面向图的编程）是关于制定一个代表执行的图。节点可以展现为等待状态。一个规则引擎是关于指定一套规则然后为指定的一套事实库应用一个推理算法。Drools怎样同JBPM相配合呢？一个最佳的实践是用JBPM来使一个规则引擎中的Handlers中的全部或部分逻辑具体化。换句话说，JBPM引擎能够由Drools规则引擎来驱动。
+结合其它观点，这一做法也并非适用于所有情况：问问自己几件事：
+我的java Action Handlers有多复杂？如果你仅仅需要从数据库中读取一些数据，而不需要更多的，这可能不适合用一个规则引擎。然而，在用java来实现一个适量处理的场合，当实现你的JBPM处理器时是值得考虑用Drools的。这是因为大多数的应用开发随着时间会越来越复杂，而Drools会让你轻松地应付这些，特别是如果你的应用的剩余时间是在中期或更长。更进一步，Drools通过在一个或多个很容易配置的XML文件中指定业务规则可以帮助你对付将来的变化。
+Drools的另一个得分点是，Drools指导开发人员正确地编写代码来做正确的事情。同时规则更容易阅读然后编码，因此你的职员将会更适合于它。
+更进一步，正确地使用，Drools能记住的不仅仅是信息，而且还有使用这些信息的以前的测试的结果，给整个应用一个快速的提升。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+BPEL
+
+用还是不用BPEL
+BPEL是一个XML语言，用来描述长期运行的web服务的交互。它主要被用来集中地编排消息交换，因此在SOA中是一个关键的要素。
+BPEL与JPDL有什么共同点呢？
+两个语言都有一个过程标记
+同外部代理交互
+对于活动的调度
+异常处理
+错误恢复
+即使他们有一些共同点，这些元素的具体表达式导致不同的听众：例如讨论过程标记：
+JPDL用简单的含义来反应组织过程
+BPEL用复杂的场景来描述结构化的组成
+而与外部代理的交互也被不同地利用：
+BPEL是面向文档的，因此主要在公司边界上使用
+JPDL是面向对象的，因此它是公司组件的主干
+BPEL将人之间的交互代理给partner service
+jPDL提供集成的任务管理
+因此我应该什么时候使用BPEL?
+当 你需要你的流程很轻便的伸展到java平台之外。BPEL流程能够在基于java平台的编排的服务器上被执行或者在任何其它的软件平台上（例如.NET）。这一点在使用不同平台的不同的合作伙伴之间进行商业交互的场景中是特别重要的。当没有直接的人员涉及，你可能更需要对长期运行的业务流程的支持。
+当你需要以一个相对简单的方式取得事务补偿时。在已经完全成功的业务流程中的补偿，或者取消步骤是业务流程中最重要的概念。补偿的目标是撤销，作为一个已经被放弃的业务流程的一部分已经被执行的前续节点的影响。
+当这些条件不满足时使用JPDL。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+简介
+
+
+JBoss jBPM 新手工具箱
+新手工具箱是包含了jBPM所有组件包在一个可下载的包里.
+这个包包括: 
+jbpm-server , 预先配置的jboss 应用服务器.
+jbpm-designer , jBPM流程图形化设计器的eclipse 插件  .
+jbpm-db , jBPM 数据库兼容包 (参看下面).
+jbpm , 核心jbpm组件包括库和本手册.
+jbpm-bpel , JBoss jBPM BPEL 扩展参考.
+预配置的JBoss 应用服务器有下列安装组件:
+核心jBPM 组件 , 打包作为JBoss服务档案
+一个包括所有jBPM 表格的完整数据库 : 默认的 hypersonic 数据库包含所有的jBPM 表格和已经定义的流程.
+jBPM 控制台web应用程序 这个可以用来为jBPM管理员.
+jBPM调度程序 所有定时器的执行. 调度程序在新手工具箱里配置成了一个servlet.这个Servlet会为产生一个线程来监视每个定时器的执行.
+一个流程例子 已经发布进了jBPM 数据库.
+ JBoss jBPM 图形化流程设计器
+JBoss jBPM 也包括一个图形化的流程设计工具. 这个设计器是用来创作商业流程的
+JBoss jBPM 图形设计器是一个Eclipse插件. 独立安装版本的设计器工具已经在开发路线图里了.
+图形化设计工具最重要的特性是它同时支持业务分析员和技术开发人员. 这样就可以在业务流程建模和实际执行之间平滑转换.
+插件可用做为本地的update site(Eclipse 纯粹的zip文件),用做符合Eclipse软件更新机制的安装包. 当然你也可以把它展开到你的Eclipse的安装目录.
+JBoss jBPM核心组件
+JBoss jBPM 核心组件是纯粹的Java(J2SE)软件,来处理流程定义和运行时的流程实例执行.
+JBoss jBPM 是一个Java库. 因此,它可以用在任何java环境比如web 应用程序,Swing应用程序,EJB,Web Service等等. jBPM 库可以被打包作为sateless session EJB(无状态会话EJB). 这可以用做集群的发布具有极高的吞吐量可伸缩性. 无状态会话EJB根据J2EE 1.3规范重新写过所以可以发布到任何应用服务器上.
+JBoss jBPM 核心组件被打包成一个简单的Java库文件.依赖你所使用的功能性, 库 jbpm-3.0.jar及一些相关的第三方的库比如. hibernate, dom4j 等等. 
+永久性方面, jBPM内部使用hibernate. 除了传统的O/R 映射外, hibernate也分析不同数据库系统的SQL方言 ,这使jBPM在当前所有的数据库上都可以移植.
+JBoss jBPM API 可以从项目中任意编写的Java软件访问,比如Web应用程序,EJB,或web Service组件,消息bean或其他java组件.
+JBoss jBPM控制台web应用程序
+jBPM 控制台web应用程序是为两个目的服务的.首先,它作为流程执行运行时间任务生成的中央用户接口. 其次, 它也是一个管理和监视控制台允许检查和操作运行中的流程实例.
+JBoss jBPM 身份组件
+JBoss jBPM可以集成进任何包含公司用户和组织信息的目录. 对项目来说从那里得到组织信息组件不是容易得到的, JBoss jBPM就包含这个组件. 身份组件使用的模型比通常的servlet,ejb和门户模型跟富有.
+JBoss jBPM 调度程序
+JBoss jBPM 调度程序是用来监视和运行已经计划到时执行流程的定时器的组件.
+定时器组件被打包在核心jbpm库中, 但是它需要被发布到下面的任一环境中: 要不你把调度程序Servlet来产生监视线程或者就必须用独立的JVM来调用调度程序的main方法.
+JBoss jBPM 数据库兼容包
+JBoss jBPM 数据库兼容包包括所有支持数据库的相关信息,JDBC驱动程序和数据库初始化脚本.
+JBoss jBPM BPEL扩展
+JBoss jBPM BPEL扩展是独立的扩展包用来支持BPEL(Business Process Execution Language 商业流程执行语言). BPEL的基本要素是 xml Scripting语言用来写其他web server的web services.
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+实例
+
+eclipse 用户注意:下载jbpm-3.0-[version].zip并且解压缩到系统. 然后从菜单 "File" --> "Import..." --> "Existing Project into Workspace". 点 "Next" 然后浏览jBPM 根目录然后点击 "Finish". 现在你的有了jbpm 3 project了. 你可以发现这个讲座目录在目录 src/java.examples/... . 你打开这些例子后,可以运行它们"Run" --> "Run As..." --> "JUnit Test"
+Hello World例子
+public void testHelloWorldProcess() {
+    // 这个方法展现流程定义和流程执行的定义流程定义有3个节点. 
+    // 一个未命名的开始状态start-state,一个状态 's'  一个结束状态名字为'end'.
+    // 下面行解析一个xml text为一个ProcessDefinition对象(流程定义)
+    // ProcessDefinition 把流程定义形式描述为java对象 
+  ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+    "<process-definition>" +
+    "  <start-state>" +
+    "    <transition to='s' />" +
+    "  </start-state>" +
+    "  <state name='s'>" +
+    "    <transition to='end' />" +
+    "  </state>" +
+    "  <end-state name='end' />" +
+    "</process-definition>"
+  );  
+    // 下一行建立了一个流程执行定义.在构造后,流程执行有一个主要的执行路径(=    root token 根令牌) 此时位置在start-state处
+  ProcessInstance processInstance =  new ProcessInstance(processDefinition);
+  // 在构造后流程执行有一个主要的执行路径(=   roottoken 根令牌) .
+  Token token = processInstance.getRootToken();
+   // 构造后, 位置处于流程定义执行路径start-state的位置
+  assertSame(processDefinition.getStartState(), token.getNode());
+   // 现在开始流程执行,离开start-state 结束默认的转换(transition) 
+  token.signal();
+   // 这个signal方法将会阻塞直到流程执行进入 wait 状态 流程执行在状态's' 进入第一个 等待状态因此执行主路径现在位置在 状态's' 
+  assertSame(processDefinition.getNode("s"), token.getNode());
+   // 我们再送另外一个信号signal. 这将继续执行离开状态's' 结束默认的转换(transition) 
+  token.signal();
+   // 现在信号signal方法将返回,因为流程实例到达了end-state 结束状态  
+  assertSame(processDefinition.getNode("end"), token.getNode());
+}
+数据库例子
+public class HelloWorldDbTest extends TestCase {
+  // 我们在每个应用程序中需要一个JbpmSessionFactory. 因此我们把它放在一个静态变量中 
+  // JbpmSessionFactory 在test 方法中来建立一个 JbpmSession's.
+  static JbpmSessionFactory jbpmSessionFactory =  JbpmSessionFactory.buildJbpmSessionFactory();
+  static {
+    // 因为HSQLDBin-memory数据库是干净的数据库, 在我们开始测试前,我们需要建立table.
+    // The next line creates the database tables and foreign key constraints. 
+    jbpmSessionFactory.getJbpmSchema().createSchema();
+  }
+
+  public void testSimplePersistence() {
+     // 在3个方法调用下面方法中间,所有数据被写入数据库 在单元测试中,这3个方法被正确执行在每个方法之后
+     // 因为我们想完成测试流程场景但在实际中这些方法代表着server不同的请求 
+     // 因为我们开始的数据库是个干净的数据库,我们需要首先发布流程在里面在真实中,这个是由流程开发人员完成的 
+    deployProcessDefinition();
+     // 假定我们想开始流程实例(= 流程执行) 当用户提交一个Web表单的时候.
+    processInstanceIsCreatedWhenUserSubmitsWebappForm();
+    // 然后,到达的异步消息将继续执行 
+    theProcessInstanceContinuesWhenAnAsyncMessageIsReceived();
+  }
+
+  public void deployProcessDefinition() {
+     //定义一个流程,包括三个及点,一个未命名的start-state,一个状态's'一个结束状态 end-state名字'end'.
+    ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+      "<process-definition name='hello world'> +
+      "  <start-state name='start'> +
+      "    <transition to='s' /> +
+      "  </start-state> +
+      "  <state name='s'> +
+      "    <transition to='end' /> +
+      "  </state> +
+      "  <end-state name='end' /> +
+      "</process-definition>
+    );    
+      // 打开新的永久层会话
+    JbpmSession jbpmSession = jbpmSessionFactory.openJbpmSession();
+      // 并且在永久层会话上开启事务
+    jbpmSession.beginTransaction();
+      // 保存流程定义到数据库中 
+    jbpmSession.getGraphSession().saveProcessDefinition(processDefinition);
+      // 提交事务
+    jbpmSession.commitTransaction();
+      // 关闭会话.
+    jbpmSession.close();
+  }
+
+  public void processInstanceIsCreatedWhenUserSubmitsWebappForm() {
+      // 这个方法里的代码可以放在structs action或JSF管理bean 里 打开一个新的永久层会话
+    JbpmSession jbpmSession = jbpmSessionFactory.openJbpmSession();
+      // 启动事务.
+    jbpmSession.beginTransaction();
+      // 查询数据库得到我们在上面步骤发布的流程定义 
+    ProcessDefinition processDefinition = jbpmSession.getGraphSession().findLatestProcessDefinition("hello world");
+      // 有了从数据库中的得到的processDefinition, 我们就可以建立流程执行定义比如hello world 例子(它没有永久化).
+    ProcessInstance processInstance =  new ProcessInstance(processDefinition);    
+    Token token = processInstance.getRootToken(); 
+    assertEquals("start", token.getNode().getName());
+      // 开始流程执行
+    token.signal();
+      // 流程在状态's'.
+    assertEquals("s", token.getNode().getName());   
+      // 流程实例被保存在数据库  所以当前流程执行的状态被保存进数据库      .  
+    jbpmSession.getGraphSession().saveProcessInstance(processInstance);
+     // The method below will get the process instance back out 
+     // of the database and resume execution by providing another 
+     // external signal.web应用程序动作结束出,事务被提交.
+    jbpmSession.commitTransaction();
+     // 关闭jbpmSession.
+    jbpmSession.close();
+  }
+
+  public void theProcessInstanceContinuesWhenAnAsyncMessageIsReceived() {
+      // 这个代码可以包含在message driven bean中. 打开新的永久性的会话.
+    JbpmSession jbpmSession = jbpmSessionFactory.openJbpmSession();
+      // 永久化会话上开始事务说明它也可能使用应用服务器的DataSource的JDBC连接 
+    jbpmSession.beginTransaction();
+    GraphSession graphSession = jbpmSession.getGraphSession();
+    // First, we need to get the process instance back out of the database.
+    // There are several options to know what process instance we are dealing 
+    // with here.  The easiest in this simple test case is just to look for 
+    // the full list of process instances.  That should give us only one 
+    // result.  So let's look up the process definition.
+    ProcessDefinition processDefinition = graphSession.findLatestProcessDefinition("hello world");
+     // 现在,我们搜索这个流程定义的所有流程实例.
+    List processInstances = graphSession.findProcessInstances(processDefinition.getId());    
+    // We know that in the context of this unit test there is 
+    // only one execution.  In real life, the processInstanceId can be 
+    // extracted from the content of the message that arrived or from 
+    // the user making a choice.
+    ProcessInstance processInstance = (ProcessInstance) processInstances.get(0);    
+    // 我们可以继续执行. 说明流程实例委托信号到执行主路径(= the root token)
+    processInstance.signal();
+    // 在singal后, 我们知道流程执行应该到 end-state 
+    assertTrue(processInstance.hasEnded());  
+    // 现在我们可以更新执行状态到数据库中
+    graphSession.saveProcessInstance(processInstance);
+    // MDB结束, 事务被提交.
+    jbpmSession.commitTransaction();
+    // jbpmSession被关闭.
+    jbpmSession.close();
+  }
+}
+上下文例子: 流程变量
+// 这个例子也是从hello world 流程开始.甚至没有修改.
+ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+  "<process-definition>" +
+  "  <start-state>" +
+  "    <transition to='s' />" +
+  "  </start-state>" +
+  "  <state name='s'>" +
+  "    <transition to='end' />" +
+  "  </state>" +
+  "  <end-state name='end' />" +
+  "</process-definition>"
+);
+
+ProcessInstance processInstance = new ProcessInstance(processDefinition);
+  // 从流程实例中为流程变量获得上下文实例 
+ContextInstance contextInstance = processInstance.getContextInstance();
+  // 在开始之前流程离开了start-state, 我们准备设置一些流程变量在流程实例上下文中 
+contextInstance.setVariable("amount", new Integer(500));
+contextInstance.setVariable("reason", "i met my deadline");
+  // 从现在开始,这些变量同流程实例关联 流程变量可以从用户代码中通过下面展示的API来访问 
+  // 可可以在动作Action和节点的实现中访问 流程变量也作为流程实例的一部分保存进数据库  
+processInstance.signal();
+ // 访问变量通过contextInstance. 
+assertEquals(new Integer(500), contextInstance.getVariable("amount"));
+assertEquals("i met my deadline", contextInstance.getVariable("reason"));
+任务分派例子
+public void testTaskAssignment() {
+   // 这个流程展示基于hello world 流程. 状态节点被task-node代替.task-node在JPDL中是表示一个等待状态并且  产生一个在流程继续执行前要完成的任务 
+  ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+    "<process-definition name='the baby process'>" +
+    "  <start-state>" +
+    "    <transition name='baby cries' to='t' />" +
+    "  </start-state>" +
+    "  <task-node name='t'>" +
+    "    <task name='change nappy'>" +
+    "      <assignment class='org.jbpm.tutorial.taskmgmt.NappyAssignmentHandler' />" +
+    "    </task>" +
+    "    <transition to='end' />" +
+    "  </task-node>" +
+    "  <end-state name='end' />" +
+    "</process-definition>"
+  );
+  
+     // 产生一个流程执行定义.
+  ProcessInstance processInstance = new ProcessInstance(processDefinition);
+  Token token = processInstance.getRootToken();  
+     // 开始流程执行,完整默认的转换后离开start-state 
+  token.signal();
+     // signal 方法将被阻塞知道流程执行进入等待状态.  在这个case中是指task-node.
+  assertSame(processDefinition.getNode("t"), token.getNode());
+     // 当执行到达task-node, 任务'change nappy'被建立并且NappyAssignmentHandler 被调用来决定任务将分派给睡
+      //NappyAssignmentHandler 返回'papa' 在真实环境中, 任务将会从数据库中获取,通过org.jbpm.db.TaskMgmtSession.
+     // 因此这个例子中我们不想包括复杂的永久化 我们只是得到这个流程实例的第一个task-实例 (we know there is only one in this test
+     // 我们知道在这个测试场景中这里只有一个).
+  TaskInstance taskInstance = (TaskInstance)processInstance.getTaskMgmtInstance().getTaskInstances().iterator().next();
+     // 现在,我们检查taskInstance实际分配给了'papa'.
+  assertEquals("papa", taskInstance.getActorId() );  
+     //现在,我们期望'papa'完成了他的任务并且标记任务是完成的 
+  taskInstance.end();
+     // 因为这是最后(唯一的)要做的任务,这个任务的完成触发流程实例的继续执行.
+  assertSame(processDefinition.getNode("end"), token.getNode());
+}
+客户化动作例子
+ // MyActionHandler 就是一个class可以在jBPM流程执行时候在某些用户代码里被执行 
+public class MyActionHandler implements ActionHandler {
+  // 在测试之前, isExecuted 被设置为 false.
+  public static boolean isExecuted = false;  
+  // 动作将设置true 因此 当动作被执行 unit test 将会展示
+  public void execute(ExecutionContext executionContext) {
+    isExecuted = true;
+  }
+}
+  // 每次测试开始都要设置MyActionHandler 的成员static isExecuted 为 false.
+  public void setUp() {
+    MyActionHandler.isExecuted = false;
+  }
+ 
+  //我们将要在转换时开始一个动作
+public void testTransitionAction() {
+  // The next process is a variant of the hello world process.We have added an action on the transition from state 's' 
+  // to the end-state.  The purpose of this test is to show how easy it is to integrate java code in a jBPM process.
+  ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+      "<process-definition>" +
+      "  <start-state>" +
+      "    <transition to='s' />" +
+      "  </start-state>" +
+      "  <state name='s'>" +
+      "    <transition to='end'>" +
+      "      <action class='org.jbpm.tutorial.action.MyActionHandler' />" +
+      "    </transition>" +
+      "  </state>" +
+      "  <end-state name='end' />" +
+      "</process-definition>"
+    );    
+    // Let's start a new execution for the process definition.
+   ProcessInstance processInstance = new ProcessInstance(processDefinition);  
+    // The next signal will cause the execution to leave the start state and enter the state 's'
+    processInstance.signal();
+    // 这里将显示 MyActionHandler还没有被执行 
+    assertFalse(MyActionHandler.isExecuted);
+    // ... and that the main path of execution is positioned in the state 's'
+    assertSame(processDefinition.getNode("s"),  processInstance.getRootToken().getNode());    
+    // The next signal will trigger the execution of the root token.  The token will take the transition with the
+    // action and the action will be executed during the call to the signal method.
+    processInstance.signal();    
+    // Here we can see that MyActionHandler was executed during the call to the signal method.
+    assertTrue(MyActionHandler.isExecuted);
+  }
+//实现方式2
+ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+  "<process-definition>" +
+  "  <start-state>" +
+  "    <transition to='s' />" +
+  "  </start-state>" +
+  "  <state name='s'>" +
+  "    <event type='node-enter'>" +
+  "      <action class='org.jbpm.tutorial.action.MyActionHandler' />" +
+  "    </event>" +
+  "    <event type='node-leave'>" +
+  "      <action class='org.jbpm.tutorial.action.MyActionHandler' />" +
+  "    </event>" +
+  "    <transition to='end'/>" +
+  "  </state>" +
+  "  <end-state name='end' />" +
+  "</process-definition>"
+);
+
+ProcessInstance processInstance = new ProcessInstance(processDefinition);
+
+assertFalse(MyActionHandler.isExecuted);
+// The next signal will cause the execution to leave the start state and enter the state 's'.  So the state 's' is entered 
+// and hence the action is executed. 
+processInstance.signal();
+assertTrue(MyActionHandler.isExecuted);
+// Let's reset the MyActionHandler.isExecuted  
+MyActionHandler.isExecuted = false;
+// The next signal will trigger execution to leave the  
+// state 's'.  So the action will be executed again. 
+processInstance.signal();
+// Voila.  
+assertTrue(MyActionHandler.isExecuted);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+发布
+
+运行相关
+1. Java运行环境
+jBPM 3 requires J2SE 1.4.2+
+2. jBPM 库
+jbpm-[version].jar 包含核心jbmp功能.
+jbpm-identity-[version].jar   (可选) 库包含身份组件 
+3. 运行时间库
+核心jBPM代码唯一相关的库是commons logging. 其他的库都是可选的. 当然, xml解析和永久化依赖其他的库.
+大多数的jBPM的发布依赖hibernate 3.0 库来做永久化.
+表格 5.1. 
+库	用法	描述	目录
+commons-logging-1.0.4.jar	logging in jbpm and hibernate	The jBPM code logs to commons logging. The commons logging library can be configured to dispatch the logs to e.g. java 1.4 logging, log4j, ... See the apache commons user guide for more information on how to configure commons logging. if you're used to log4j, the easiest way is to put the log4j lib and a log4j.properties in the classpath. commons logging will automatically detect this and use that configuration.	lib/hibernate
+dom4j-1.6.jar	流程定义和hibernate 永久化	xml解析	lib/hibernate
+jaxen-1.1-beta-4.jar	流程定义和hibernate 永久化	xml解析(这个库是dom4j要使用)	lib/hibernate
+antlr-2.7.4.jar	hibernate 永久化	hibernate查询解析的时候要用来生成解析	lib/hibernate
+c3p0-0.8.5.jar	hibernate 永久化 (默认的配置)	连接池. When configuring a different connection pooling (e.g. an appserver datasource), this library is not required.	lib/hibernate
+cglib-full-2.0.2.jar	hibernate 永久化	code generation library	lib/hibernate
+commons-collections-2.1.1.jar	hibernate 永久化	 	lib/hibernate
+ehcache-1.1.jar	hibernate 永久化 (in the default configuration)	second level cache implementation. When configuring a different cache provider for hibernate, this library is not required.	lib/hibernate
+hibernate3-rc1.jar	hibernate 永久化	the best O/R mapper	lib/hibernate
+jdbc2_0-stdext.jar	hibernate 永久化	 	lib/hibernate
+jta.jar	hibernate 永久化	 	lib/hibernate
+bsh-2.0b2.jar	beanshell script interpretion	Only used in the script's and decision's. When you don't use these process elements, the beanshell lib can be removed, but then you have to comment out the Script.hbm.xml mapping line in the hibernate.cfg.xml	lib/bsh
+配置文件
+JBoss jBPM requires various configuration files. For your convenience the jbpm library jbpm-3.*.jar includes default configuration files that are packaged in the library. When jBPM loads a configuration file, it will always look first in the root directory. If the configuration file is not found in the root directory, it will look in the package directory that contains the default configuration file. So you can overwrite the default configurations by putting a modified configuration file in the root of the classpath.
+1. jbpm.properties
+下列属性都是在配置文件jbpm.properties中使用的
+Table 5.2. 
+属性	默认值	Description
+jbpm.session.factory.jndi.name	 	if specified, the JbpmSessionFactory.getInstance() method will fetch the singleton instance from the given JNDI location. Otherwise a new JbpmSessionFactory will be created upon initialization of the singleton instance.
+jbpm.hibernate.cfg.xml	hibernate.cfg.xml	the resource location of the hibernate.cfg.xml configuration file
+jbpm.hibernate.properties	 	if specified, it will overrde *ALL* properties that are specified in the hibernate.cfg.xml file.
+jbpm.authenticator	org.jbpm.security.authenticator.JbpmDefaultAuthenticator	a fully qualified classname of a class that implements the org.jbpm.security.authenticator.Authenticator interface.
+jbpm.authorizer	no default (means no authorization is enforced)	a fully qualified classname of a class that implements the org.jbpm.security.authorizer.Authorizer interface.
+jbpm.task.instance.class	org.jbpm.taskmgmt.exe.TaskInstance	the fully qualified classname to use for task instances. this allows for customizations of the task list entries.
+2. Hibernate cfg xml file
+This file contains hibernate configurations and references to the hibernate mapping resource files.
+Location: hibernate.cfg.xml unless specified otherwise in the jbpm.hibernate.cfg.xml property in the jbpm.properties file. In the jbpm project the default hibernate cfg xml file is located in directory src/config.files/hibernate.cfg.xml
+3. Business calendar configuration file
+Contains the definition of business hours and free time.
+Location: org/jbpm/calendar/jbpm.business.calendar.properties
+4. Variable mapping configuration file
+Specifies how the values of the process variables (java objects) are converted to variable instances for storage in the jbpm database.
+Location: org/jbpm/context/exe/jbpm.varmapping.properties
+5. Converter configuration file
+Specifies the id-to-classname mappings. The id's are stored in the database. The org.jbpm.db.hibernate.ConverterEnumType is used to map the ids to the singleton objects.
+Location: org/jbpm/db/hibernate/jbpm.converter.properties
+6. Default modules configuration file
+specifies which modules are added to a new ProcessDefinition by default.
+Location: org/jbpm/graph/def/jbpm.default.modules.properties
+7. Process archive parsers configuration file
+specifies the phases of process archive parsing
+Location: org/jbpm/jpdl/par/jbpm.parsers.xml
+jBPM in a web application
+Simply put the runtime libraries in the WEB-INF/lib folder of your web application archive (.war).
+jBPM 在EJB容器中
+JBoss jBPM 可被发布到任何应用服务器. 虽然当前只是在JBOSS应用服务器上测试过.
+最简单的方式是把所有 运行时间库 放到你的应用服务器的全局的classpath里.
+另外一个办法是, 你可以把 运行时间库 放在 application.xml 并且它们作为库引用.
+包含jBPM的新手工具箱作为服务文档.
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+永久化
+
+
+高级的特性比如独立的数据For advanced features such as 脱管对象(detached objects)或乐观锁定, 参看hibernate文档.
+public class PersistenceApiTest extends TestCase {
+
+  static JbpmSessionFactory jbpmSessionFactory = JbpmSessionFactory.buildJbpmSessionFactory();
+
+  public void testStartProcessInstance() {
+    // obtain a session
+    JbpmSession jbpmSession = jbpmSessionFactory.openJbpmSession();
+    try {
+      // start a user managed transaction
+      jbpmSession.beginTransaction();
+
+      // load information from the database 
+      // (note that process definitions will be cached in memory
+      // in the second level cache of hibernate)
+      ProcessDefinition auctionProcess = 
+        jbpmSession.getGraphSession().findLatestProcessDefinition("auction");
+
+      // perform a POJO workflow operation on the plain object model.
+      ProcessInstance auctionInstance = new ProcessInstance(auctionProcess);
+      auctionInstance.signal();
+      
+      // store the result in the database
+      jbpmSession.getGraphSession().saveProcessInstance(auctionInstance);
+      
+      // commit the user transaction
+      jbpmSession.commitTransaction();
+
+    } finally {
+      // close the session.
+      jbpmSession.close();      
+    }
+  }
+}
+数据库配置
+最容易的配置the hibernate SessionFactory 的方式是把 hibernate.cfg.xml 放到根classpath里.  hibernate.cfg.xml 包含了如何获得jdbc jdbc connections 和定位hibernate mapping 文件. 你可以在目录test/java发现比如mapping文件的例子.
+更多关于配置hibernate的信息可以参看 hibernate 参考手册l, 配置章节.
+管理事务
+jBPM 基本方式是平衡 hibernate 关于事务分界的能力. 这有两个最常见的场景来解释:
+用户事务管理, JbpmSession 有方法
+JbpmSession.beginTransaction()
+JbpmSession.commitTransaction()
+JbpmSession.rollbackTransaction()
+这些方法的行为依赖hibernate的有关事务的配置.
+如果你配置了hibernate 管理她自己的JDBC connections (比如 C3P0连接池), 那么事务操作的结果同JDBC connection一致. hibernate配置文件中(hibernate.cfg.xml) 配置要求你指明JDBC connection属性. 可选的, 你可以通过c3p0连接池的属性来配置连接池.
+当你配置了hibernate 获得connection从应用服务器中的DataSource,那么事务的方法将同包容器中的UserTransaction object的方法保持一致.
+更多有关配置事务的细节参看  hibernate 参考手册, 事务策略章节.
+jBPM 数据库
+jBPM 数据库包含流程定义,流程执行和日志数据. 流程定义数据是静态的不能改变(参看 章节13.1.2, “流程版本 . 流程执行是流程定义的参考数据. 流程日志包含了所有在流程执行中的变化信息.
+Hibernate 整合
+jBPM 使用 hibernate 3.0  作为它的 O/R映射. 这就意味着hibernate 有负责jBPM java object和这些对象在关系数据库中永久化对象的变换. 注意你开始使用jBPM不必了解Hibernate . Hibernate用于jBPM内部. 但是理解基本的hibernate, 会帮助你更好理解jBPM API的语义.
+让我们看看一些例子和得到一些hibernate的功能了解:
+发布流程档案 : 发布流程档案按照几个步骤, 在第一个步骤, 档案被解析并且相应的java object模型也被建立. 对象图将被hibernate处理. Hibernate将产生必要的相关SQL数据库插入语句 .
+更新流程实例 : 另外一个功能是hibernate 脏数据检查功能. hibernate 在两个对象图中间计算不同并产生必要的对应数据库的update语句 (和插入及删除) 使java object和数据库保持一致. 因此当你想继续流程执行实例, 你使用 ProcessInstance JbpmSession.getGraphSession().loadProcessInstance(Long pid) , jBPM将委托这个调用到 hibernate. Hibernate将从数据库载入这个流程实例数据并且结构化成jBPM java objects. 在这之后,你可以自由的修改流程实例java objects就好象其他java objects一样.当你完成 (比如在在执行进入等待状态之后)后 你可以保存修改过的流程实例到数据库,通过调用 JbpmSession.getGraphSession().saveProcessInstance(ProcessInstance processInstance) . jBPM 同样委过这个任务到hibernate , hibernate 将计算给顶的processInstance和 原始从数据库中载入的processInstance .这叫做脏数据检查. Hibernate 会计算所有的不同并且产生必要的SQL语句来保证数据库和java object的同步.
+执行这个任务, hibernate 需要一组mapping文件和配置文件. mapping 文件说明了java object 同数据库table之间的映射. jBPM 包括所有的jBPMdomain class的 mapping 文件.
+hibernate配置文件中的主要信息是描述数据库连接的配置属性. 包括jdbc连接和数据库方言. SQL方言是重要的hibernate特性 : 数据库无关. 数据库每个类型一般说来都有同样的SQL, 但不同的数据库有稍微不同的SQL语法. Hibernate 知道这些区别并通过方言属性来建立正确的SQL. 可以参考hibernate文档查看支持的数据库清单.
+开发数据库是hsqldb
+hypersonic数据库是理想的包含关系数据库的java软件的数据库. 尤其是 hypersonic in-memory 模型是非常便于编写包含数据操作的test unit . hypersonic in-memory 数据库保持所有的数据在内存中而不是保存在磁盘里. jBPM的单元测试将开始一个干净的空的in-memory数据库. 然后hibernate schema 生成工具将建立jBPM table. 我们提供的jBPM类mapping文件作为hibernate schema生成器的输入. 然后hibernate schema 生成器根据信息生成数据库schema (DDL)脚本. 这些DDL 语句将在hypersonic in-memory数据库上执行用来建立新的,空的jBPM 数据库.
+其他数据库支持
+为了支持除了hypersonic in-memory 数据库而提供了jbpm 数据库扩展包: jbpm-<version>-db.zip . 参看 章节2.1, “可下载一览” . 这个包报案ant 脚本来测试jBPM是否为支持的不同的数据库产生数据库的DDL脚本 (create, drop和clean)
+在展开 jbpm-<version>-db.zip , 更新 build.properties并且设置 jbpm.3.location 到安装jbpm的主目录(相对路径或绝对路径)
+数据包扩展包包括一个ant建造script (build.xml ) 在根目录下. 这个脚本包括建立jBPM支持的数据库生成脚本和测试脚本.运行 ant -p 得到关于建造目标更多的信息.  readme.html文件介绍了更多的有关不同数据库实现的信息及状态.
+生成的脚本是默认的脚本.如果想为特定的使用定制或优化 , 你必须询问你的DBA 先查看数据库脚本. 通常的定制是额外的索引或增加text字段的最大值.
+如果你的数据库不被支持,你可以用我们介绍的方法在你的数据库上来测试jBPM . 我们希望支持所有的数据库,所以可以把你的数据库的下列信息让我们知道.:
+ jbpm.test.hibernate.properties 配置文件
+那里可以下载数据库驱动和数据库版本
+你碰到的任何问题
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+jBPM 配置文件
+
+jBPM 配置文件 (IOC)
+Abstract
+配置文件是jBPM里面很关键的一步,同时Configuration API可以看做是jBPM里的一个入口API,因为其他很多重要的Service,都是通过这个API,然后生成的,于是我们需要先看一下这个模块.
+在默认情况下,jBPM包里有个jbpm.cfg.xml,这个就是他的配置文件,我们先看下它的内容.
+
+ <jbpm-configuration>
+  <import resource="jbpm.default.cfg.xml" />
+  <import resource="jbpm.tx.jta.cfg.xml" />
+  <import resource="jbpm.jpdl.cfg.xml" />
+  <import resource="jbpm.identity.cfg.xml" /> 
+  <import resource="jbpm.jobexecutor.cfg.xml" /> 
+</jbpm-configuration>
+ 
+ 
+这里,我们再继续看下jbpm.default.cfg.xml,看下配置文件到底是长啥样.
+
+  <process-engine-context> 
+    <repository-service />
+    <repository-cache />
+    <execution-service />
+    <history-service />
+    <management-service />
+    <identity-service />
+    <task-service />
+    <hibernate-configuration>
+      <cfg resource="jbpm.hibernate.cfg.xml" />     
+    </hibernate-configuration>
+ ...........
+  </process-engine-context>
+  
+  <transaction-context>
+    <repository-session />
+    <db-session />   
+    <message-session />
+    <timer-session />
+    <history-session />
+    <mail-session>
+      <mail-server>
+        <session-properties resource="jbpm.mail.properties" />
+      </mail-server>
+    </mail-session>
+  </transaction-context>
+ 
+ 
+这个配置文件主要包含了"process-engine-context'和 'transaction-context'的配置.
+我们知道,现在都是讲究Dependency Inject (Inversion of Control),那么,我们这里到底是哪个类来实现repository-service呢?那配置mail-session又是怎么实例化的呢? 我们先来看下jBPM的IOC实现机制.
+首先是Context接口,你可以从这里存储,获得对象.它的接口很简单.
+  Object get(String key);
+  <T> T get(Class<T> type);
+  Object set(String key, Object value);
+ 
+你看可以从Context中获取到组件,对于IOC容器来说，一般情况下都会提供一种加载的方式，比如从xml文件进行加载、从资源文件进行加载。
+Jbpm4是通过WireParser来解析xml,然后创建并把对象存放在WireContext. WireContext这个类负责存放,提取对象,内部用一个Map来存储已经创建的对象实例,可以简单得把他看成是IOC的一个实现类. 从WireContext的javadoc,我们可以看出,他主要是跟WireDefinition, Descriptor打交道. WireContext里面包含了一个WireDefinition,而WireDefinition里面包含了一系列的Descriptor.每个Descriptor负责创建和初始化该对象. 比如我们可以看到IntegerDescriptor, FloatDescriptor, ObjectDescriptor等等. 我们来看下Descriptor的接口:
+
+  /**
+   * constructs the object.
+   * @param wireContext {@link WireContext} in which the object is created. This is also the {@link WireContext} 
+   * where the object will search for other object that may be needed during the initialization phase.
+   * @return the constructed object.
+   */
+  Object construct(WireContext wireContext);
+  
+  /**
+   *called by the WireContext to initialize the specified object.
+   */
+  void initialize(Object object, WireContext wireContext);
+ 
+Descriptor对象的创建可以直接通过Java对象的实例化,比如(new IntegerDescriptor(..)),也可以通过xml的配置文件来实现.可以说我们更经常用xml来配置,所以就有了Binding的概念. Binding类最主要的任务就是把XML DOM 到Java对象的转换. Bindings是把Binding归类了一下而已. 以下是Binding的接口.
+
+public interface Binding { 
+  String getCategory();
+  /** does this binding apply to the given element? */
+  boolean matches(Element element);
+  /** translates the given element into a domain model java object.
+   * Use the parse to report problems. 
+   */
+  Object parse(Element element, Parse parse, Parser parser);
+}
+如果想看实现,我们可以看下IdentityServiceBinding, RepositoryServiceBinding等等.这里注意下,在jBPM的实现当中,WireDescriptorBinding是根据tagName来解析的. 所以,从jBPM的xml配置文件,到ProcessEngine对象的构建,是这样的一个流程.
+ jbpm.cfg.xml –>  jBPMConfigurationParser ->  Binding –>  Descriptor --> WireContext
+或者更清楚的,我们可以看下下面这张图[1].
+我们不妨也看下ConfigurationTest测试.
+
+  public void testConfigurationServices() {
+    ProcessEngine processEngine = new Configuration()
+        .setXmlString(
+            "<jbpm-configuration>" +
+            "  <process-engine-context>" +
+            "    <repository-service />" +
+            "    <execution-service />" +
+            "    <management-service />" +
+            "  </process-engine-context>" +
+            "</jbpm-configuration>"
+        )
+        .buildProcessEngine();
+    assertNotNull(processEngine);
+    assertNotNull(processEngine.getExecutionService());
+    assertNotNull(processEngine.getManagementService());
+  }
+ 
+Configuration类是jBPM的入口,你可以从 Configuration类中创建ProcessEngine,而从ProcessEngine中获取到RepositoryService, ExecutionService, TaskService等等. Configuration类里有两个实现类,一个是JbpmConfiguration,这是默认的jBPM自带的Configuration解析器, 另外一个是SpringConfiguration,这个是jBPM和Spring的集成. 在这里,我们就只看下JbpmConfiguration的实现,在JbpmConfiguration类里,我们可以看到他是这么去调用Parser来解析xml的.
+
+ protected void parse(StreamInput streamSource) {
+   isConfigured = true;
+   JbpmConfigurationParser.getInstance()
+     .createParse()
+     .pushObject(this)
+     .setStreamSource(streamSource)
+     .execute()
+     .checkErrors("jbpm configuration " + streamSource);
+ }
+ 
+在这里,我们可以看到,jbpm的配置文件是有两个元素组成的,一个是process-engine-context,另外一个是transaction-context. 其中process-engine-context里面的元素是包括了对外发布的服务, 比如repository-service, execution-service等等. 而transaction-context则包括了他的内部真正实现,比如repository-service对应repository-session. 也可以简单的把repository-servie看做是API, repository-session看做是SPI. 这样做的好处是,SPI的实现,对API一点影响都没有,很大程度上提供了一个容易集成的特性.
+说到这里,应该对jBPM的IOC介绍的差不多了.我自己在用JBoss IDM project[2]来实现jBPM的Identity module时.需要增加如下的配置.
+
+<jbpm-configuration>
+  <process-engine-context>
+    <jboss-idm-identity-session-factory jndi="java:/IdentitySessionFactory" />
+  </process-engine-context>
+  <transaction-context>
+    <jboss-idm-identity-session realm="realm://JBossIdentity" />
+  </transaction-context>
+</jbpm-configuration>
+ 
+于是,我需要增加以下的类来完成对象的创建和实例化. JbossIdmIdentitySessionFactoryBinding,JbossIdmIdentitySessionFactoryDescriptor,JbossIdmIdentitySessionBinding, JbossIdmIdentitySessionDescriptor 然后,在jbpm.wire.bindings.xml里面注册我们新加的Binding. 从上面我们所说的,不难看出本身这个IOC的实现机制也是很简单的,而且也很容易扩展,如果说到时候和Spring, JBoss MC等IOC容器的集成也是很方便的.
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+jpdl流程定义的元素
+
+jPDL的流程定义元素
+jPDL的流程定义元素 
+第一层级:GraphElement 
+
+这个容易理解,因为在画流程定义时,每个拖拉的对象都是一个graph的元素. 
+
+GraphElement有四个属性:1)processDefine 表示当前元素属于哪个流程定义 
+
+2)events 表示可以接收哪些event 
+
+3)name 名字 
+
+4)exceptionHandlers 异常处理类集合(List) 
+
+第二层级:node;processDefinition;Transition;Task 它们都inherited from GraphElement 
+
+1)processDefinition表示流程定义(implements NodeCollection),它有下面的属性:name,version,nodes,startState nodes表示流程中所有的node,startState用于启动流程时找到首节点 
+
+2)Transition表示转移,它有三个属性:from(Node),to(Node),supportedEventTypes表示支持的event类型 
+
+3)node表示节点,它有四个属性:leaving transitions;arriving transitions;action;superState 
+
+4)Task 定义任务 
+
+第三层级:各种不同的node,它们都inherited from node decision;EndState;Fork;Join;Merge;Milestone; InterleaveEnd;InterleaveStart;ProcessState;State 这些都是见名知义,和xpdl差不多. 
+jbpm的Token 
+jbpm中最重要的概念,应该是令牌(Token)和信令(Signal) 
+
+在整个流程实例运行过程中,我们可以迅速的利用token得到其当前的current state。在解决“并行”等（比如Fork）问题时，jBpm让Token对象维护了父子关系，这种关系在涉及到Fork的时候会产生。 jBpm让Token这个对象身兼了多种使命：（1）快速定位current state （2）用于fork,join算法 （3）用于告知任务执行者的任务索引。 
+
+如下代码: 
+
+//pd是process definition,pi是process instance ProcessInstance 
+
+pi = new ProcessInstance( pd ); 
+
+//得到根令牌 
+
+Token token = pi.getRootToken(); 
+
+//发信令 
+
+token.signal(); 
+
+Token的signal方法也可以传入transition参数,这个方法把信令发送给Token,这样,令牌将被激活,并沿指定的transition离开当前的状态(如果没有指定transition,将沿缺省的transition 离开当前状态). 
+
+jbpm是怎么实现的呢?其实很简单: 
+
+1)Token记录了当前的状态（current state）,只有当前的状态(或称节点)拥有该令牌 
+
+2)向TOKEN发signal后,当前状态收到该signal 
+
+3)当前状态把令牌传给signal中指定的transition 
+
+4)transition收到令牌后,不强占,马上把令牌传给下个状态. 
+
+5)根据令牌的位置,流程的状态已经发生改变. 
+
+
+1、process definition 
+一个process definition代表了一个正式的业务流程，它以一个流程图为基础。这个流程图由 许多node和transition组成。每个node在这个流程图里都有着各自特殊的类型，这些不同的类型决定了node在运行时的不同行为。一个process definition只有一个start state 。 
+2、token 
+一个token代表了一条执行路径，它包含了这条执行路径的当前的执行状态（current state）。 
+3、process instance 
+一个process instance（流程实例）即一个process definition（流程定义）的流程执行实例。一个process definition可以对应多个process instance。当一个process instance被创建的时候，一个主执行路径token同时被创建，这个token叫做root token，它指向流程定义的start state（processDefinition.getStartState()==token.getNode()）。 
+4、signal 
+一个signal 发送给token通知token 继续流程的执行。如果signal 没有指定transition，token将沿缺省的transition离开当前状态,如果signal 指定transition，token将沿指定的transition离开当前的状态。看源代码可以看到发给process instance的signal 其实都是发送给了root token。 
+5、Actions 
+jbpm提供了灵活的action ，当流程执行，token 进入node和transition时，会触发相应的一些event（事件）。在这些event上附上我们自己写的action，就会带动action 的执行。action里是我们自己的相关java操作代码，非常方便。注意的是event（事件）是内置的，无法扩展。另外，action也可以直接挂在node上，而不依赖于event（事件）的触发，这个很重要！ 
+Node 
+
+
+一个流程图由许多node和transition组成。每个node都有一种类型，这个类型决定了当流程执行到这个node时的不同行为。jbpm有一组node type可以供你选择，当然你可以定制自己node 。 
+node的作用 
+node有两个主要的作用： 
+1）执行java代码，比如说创建task instance（任务实例）、发出通知、更新数据库等等。很典型的就是在node 上挂上我们的action
+2) 控制流程的执行： 
+A、等待状态 
+流程进入到这个node时将处于等待状态，直到一个signal 的发出 
+B、流程将沿着一个leaving transition越过这个node 
+这种情况特殊一点，需要有个action挂在这个node上（注意这个action不是event触发的！），action中将会调用到API里 
+executionContext.leaveNode(String transitionName)，transitionName即这里的leaving transition名字。 
+C、创建新的执行路径 
+很典型的就是fork node。流程在这里会分叉，产生新的执行路径。这样就创建了新的token，每个新的token代表一个新的执行路径。注意的是，这些新的token和产生前的token是父子关系！ 
+D、结束执行路径 
+一个node可以结束一条执行路径，这同样意味着相应的token的结束和流程的结束。
+流程图中的node type 
+
+
+1、task-node 
+一个task-node可以包含一个或多个task，这些task分配给特定的user。当流程执行到task-node时，task instance将会被创建，一个task对应一个task instance。task instances 创建后，task-node就处于等待状态。当所有的task instances被特定的user执行完毕后，将会发出一个新的signal 到token，即流程继续执行。 
+2、state 
+state是一个纯粹的wait state(等待状态）。它和task-node的区别就是它不会创建task instances。很典型的用法是，当进入这个节点时（通过绑定一个action到node-enter event），发送一条消息到外部的系统，然后流程就处于等待状态。外部系统完成一些操作后返回一条消息，这个消息触发一个signal 到token，然后流程继续执行。（不常用） 
+3、decision 
+当需要在流程中根据不同条件来判断执行不同路径时，就可以用decision节点。两种方法：最简单的是在transitions里增加condition elements（条件），condition是beanshell script写的，它返回一个boolean。当运行的时候，decision节点将会在它的 leaving transitions里循环，同时比较 leaving transitions里的condition，最先返回'true'的condition，那个leaving transitions将会被执行；作为选择，你可以实现DecisionHandler接口，它有一个decide()方法，该方法返回一个String(leaving transition的名字）。 
+4、fork 
+fork节点把一条执行路径分离成多条同时进行（并发）的执行路径，每条离开fork节点的路径产生一个子token。 
+5、join 
+默认情况下，join节点会认为所有到达该节点的token都有着相同的父token。join 节点会结束每一个到达该节点的token,当所有的子token都到达该节点后，父token会激活。当仍然有子token处于活动状态时，join 节点是wait state(等待状态）。 
+6、node 
+node节点就是让你挂自己的action用的（注意：不是event触发！！），当流程到达该节点时，action会被执行。你的action要实现ActionHandler接口。同样，在你的action里要控制流程！
+Actions的说明 
+
+
+存在两种action，一种是 event触发的action，一种是挂在node 节点的action。要注意它们的区别，event触发的action无法控制流程，也就是说它无法决定流程经过这个节点后下一步将到哪一个leaving transition；而挂在node 节点的action就不同，它可以控制流程。不管是哪一种action都要实现ActionHandler接口。 
+variable的管理 
+
+
+流程实例中,存有contextInstance来管理token和variable. 
+contextInstance是通过一个map来进行管理的,这个map的key是token,value是一个TokenVariableMap的对象. 
+
+TokenVariableMap本身并不是个map,而是一个普通的Object 
+
+TokenVariableMap有三个属性,一个是contextInstance,一个是Token对象本身,还有一个是 
+一个Map,用来放variableInstance,这个Map的名称为variableInstances. 
+
+variableInstances是一个map,它的key是variable的名称,如"a",value是一个VariableInstance对象,VariableInstance对象放了四个属性,一个是token对象本身,一个是variable的名称,一个是TokenVariableMap对象，还有一个是processInsance,你可能会奇怪：variable的value放到哪里呢？实际上VariableInstance是一个抽象类，具体的实现是它根据value的class类型选择它的子类，子类中有个属性叫value。这个variable的value,如 new Integer(3). 
+
+一个流程实例可以有多个Token,Token间是有父子关系的: 
+Token tokenAB=new Token(tokenA,"ab"); 
+上行代码的意思是在tokenA下面建立一个TokenAB,该新建的 
+Token的名字是"ab". 
+
+ci.createVariable(tokenA, "a", new Integer(3)); 
+表示在tokenA范围内建立一个variable,它的名称为"a", 
+值为new Integer(3) 
+建立这个variable后,tokenA下面的token都可以看到该 
+variable,而上面的token则看不到. 
+
+只有createVariable可以在某个token上建立variable,其它的 
+方法只可以在rootToken上建立variable. 
+如:ci.setVariable(tokenA, "a", new Integer(3)); 
+其实是在rootToken上建立了一个名称为"a"的variable 
+Map variables = new HashMap(); 
+variables.put("a", new Integer(3)); 
+variables.put("b", new Integer(4)); 
+ci.addVariables(variables); 
+上面四行代码在rootToken上建立了两个variable. 
+实际上在ExecutionContext中只有两个方法： 
+public void setVariable(String name, Object value) { 
+getContextInstance().setVariable(name, value, token); 
+} 
+public Object getVariable(String name) { 
+return getContextInstance().getVariable(name, token); 
+} 
+可以在子token中修改父token中建立的variable.
+Task（任务） 
+
+
+jbpm一个相当重要的功能就是对任务进行管理。 
+Task（任务）是流程定义里的一部分，它决定了task instance的创建和分配。 
+Task（任务）可以在task-node节点下定义，也可以挂在process-definition节点下。最普遍的方式是在task-node节点下定义一个或多个任务。默认情况下，流程在task-node节点会处于等待状态，直到所有的任务被执行完毕。任务的名称在整个流程中必须是唯一的。 
+
+一个TaskNode对应多个Task 
+对于这样的流程定义： 
+<task-node > 
+<task /> 
+<task /> 
+<task nappy' /> 
+<transition to='b' /> 
+</task-node> 
+只有当节点中的三个任务都完成后，流程才进入后面的节点 
+
+对于这样的流程定义： 
+<task-node signal='first'>> 
+<task /> 
+<task /> 
+<task nappy' /> 
+<transition to='b' /> 
+</task-node> 
+当第一个任务完成后，token就指向后面的节点 
+
+对于这样的流程定义： 
+<task-node signal='never'>> 
+<task /> 
+<task /> 
+<task nappy' /> 
+<transition to='b' /> 
+</task-node> 
+三个任务都完成后，token仍然不会指向后面的节点；需要自己手动调用 
+
+processInstance.signal()才会驱动流程到下面的节点 
+
+对于这样的流程定义： 
+<task-node signal='unsynchronized'>> 
+<task /> 
+<task /> 
+<task nappy' /> 
+<transition to='b' /> 
+</task-node> 
+token不会在本节点停留，而是直接到后面的节点
+jbpm的任务管理实现 
+一个Task instance（任务实例）可以被分配给一个actorId (java.lang.String)。所有的Task instance都被保存在数据库中的表jbpm_taskinstance里。当你想得到特定用户的任务清单时，你就可以通过一个与用户关联的actorId来查询这张表。 
+
+一个流程定义有一个TaskMgmtDefinition；一个TaskMgmtDefinition对应多个swimlane,同时对应多个task;一个swimlane有多个task,可以从TaskMgmtDefinition中通过task的名称直接获取相应的task; 
+
+swimlane对象有四个属性，分别是name（名字）、assignmentDelegation（分配代理类）、taskMgmtDefinition、tasks（Set 对应多个task),可以增加task 
+
+task对象主要的属性：taskMgmtDefinition、swimlane、assignmentDelegation、taskNode，需要注意的是swimlane和assignmentDelegation中间只是可以一个属性有值，因为它们都和任务的分配有关系。 
+
+一个流程实例有一个TaskMgmtInstance；一个TaskMgmtInstance对应多个swimlaneInstance,同时对应多个taskInstance;一个swimlaneInstance有多个taskInstance,可以从TaskMgmtInstance中直接获取相应的taskInstance; 
+
+swimlaneInstance对象主要有五个属性，分别是name、actorId、pooledActors（Set）、swimlane、taskMgmtInstance。 
+taskInstance对象的主要属性：name、actorId、task、swimlaneInstance、taskMgmtInstance、pooledActors。 
+
+当对任务进行分配时，一般需要实现AssignmentHandler这个接口，这个接口的方法只有一个： 
+void assign( Assignable assignable, ExecutionContext executionContext ) throws Exception; 
+一个典型的实现（把名字是'change nappy'的任务交给NappyAssignmentHandler这个类来分配） 
+<task nappy'> 
+<assignment class='org.jbpm.tutorial.taskmgmt.NappyAssignmentHandler' /> 
+</task> 
+NappyAssignmentHandler类： 
+public void assign(Assignable assignable, ExecutionContext executionContext) { 
+assignable.setActorId("papa"); 
+} 
+同样，Assignable只是一个接口，它有两个方法：setActorId()和setPooledActors()，Assignable的具体实现类也是两个 
+swimlaneInstancehe和taskInstance。这样就不不难理解整个任务分配流程了： 
+1、流程进入TaskNode节点，执行TaskNode类的execute()方法，该方法首先获得TaskMgmtInstance实例，然后通过它来创建TaskInstance。taskMgmtInstance.createTaskInstance(task, executionContext); 
+2、在上面的createTaskInstance(task, executionContext)里，该方法调用了taskInstance.assign(executionContext)对taskInstance进行分配。 
+3、在assign(executionContext)方法里，首先会判断task属性里是否存在swimlane，如果有的话，这个taskInstance就会分配给swimlane指定的ActorId或 PooledActors；如果不存在，再去找task属性里 assignmentDelegation（分配代理类）通过代理类（即我们自己写的实现AssignmentHandler这个接口的类）指定ActorId或 PooledActors。 
+jbpm的用户角色管理 
+
+
+jbpm在用户角色管理上共设计了四个类：Entity、 Membership、 Group、 User 
+Entity类是其他三个类的父类，它包含了两个属性：name(String)、 permissions(Set) 
+User类继承Entity类，包含三个属性：password(String)、 email(String)、 memberships(Set) 
+Group类继承Entity类，包含四个属性: type(String) 、parent(Group)、 children(Set)、 memberships(Set) 
+Membership类继承Entity类，包含三个属性:role(String)、 user(User)、 group(Group) 
+很明显，一个user对应一个用户，一个group对应一个用户组，它们之间通过membership关联，并且一个user可以属于多个不同类型（type)的group，user和 group之间是多对多的关系。 
+Membership类的role属性个人感觉用途不大，反倒是name属性代表了user在group里的role（角色）！
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+jbpm开发
+
+Helloworld
+package org.jbpm.tutorial.helloworld;
+import junit.framework.TestCase;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.exe.Token;
+public class HelloWorldTest extends TestCase {
+public void testHelloWorldProcess() {
+/*
+这个段测试方法演示了一个流程的在代码中以字符串形式定义和这个流程定义的具体执行。
+这个流程定义包含三个节点：一个未命名的开始状态（start-state），
+一个名字为's'的状态（state）和一个名字为'end'的结束状态（end-state）。
+下一行的功能是把一段xml文本解析为一个ProcessDefinition，
+一个ProcessDefinition是一个java对象的形式对流程的正式的描述。
+*/
+ProcessDefinition processDefinition = ProcessDefinition.parseXmlString(
+"<process-definition>" +
+" <start-state>" +
+" <transition to='s' />" +
+" </start-state>" +
+" <state name='s'>" +
+" <transition to='end' />" +
+" </state>" +
+" <end-state name='end' />" +
+"</process-definition>"
+);
+/*
+下边的一行根据流程定义构造了的一个具体的执行实例。 构造以后，执行的流程就有了一个被定位在开始状态（start-state）上的主要的执行路径
+*/
+ProcessInstance processInstance =
+new ProcessInstance(processDefinition);
+/*
+构造以后，执行的流程就有了一个主要的执行路径（root token）
+*/
+Token token = processInstance.getRootToken();
+/*
+当然，构造以后，流程定义的主要的执行路径被定位在开始状态（start-state）
+*/
+assertSame(processDefinition.getStartState(), token.getNode());
+/*
+开始流程执行，通过默认的转换（transition）离开开始状态（start-state）
+*/
+token.signal();
+/*
+直到运行的流程进入一个等待状态，signal方法将一直被阻塞，运行的流程将要进入第一个等待状态：状态‘s’.因此现在主要的执行路径,定位到了状态‘s’上。
+*/
+assertSame(processDefinition.getNode("s"), token.getNode());
+/*
+执行signal，流程将继续执行，将通过默认的转换（transition）离开状态‘s’
+*/
+token.signal();
+/*
+流程实例已经到达了结束状态。
+*/
+assertSame(processDefinition.getNode("end"), token.getNode());
+}
+运行测试，我们看到流程和我们预想的结果完全符合。
+在这里我们的流程定义是写在一个代码中，XML的定义方式是以通过拼字符串的方式完成的，这种方式给我们带来的结果是不直观，同时流程定义起来也很不方便。除了这种定义方式之外我们可以把刚才那段写在代码里的流程定义信息搬到我们的XML文件里，同样可以达到相同的效果。接下来我们就来看一下这种做法。
+流程定义文件：helloWorld.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<process-definition xmlns="urn:jbpm.org:jpdl-3.1" name="Helloworld">
+<start-state>
+<transition to='s' />
+</start-state>
+<state name='s'>
+<transition to='end' />
+</state>
+<end-state name='end' />
+</process-definition>
+测试代码：HelloWorldTest.java
+package org.jbpm.tutorial.helloworld;
+import junit.framework.TestCase;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.exe.Token;
+public class HelloWorldTest extends TestCase {
+public void testHelloWorldProcess() {
+ProcessDefinition processDefinition = ProcessDefinition.parseXmlResource("helloWorld.xml");
+/*
+从这里可以看出，与上面那段代码唯一不同之处就是没有字符串形式的流程定义信息了，取而代之的是对流程定义的XML进行解析
+*/
+ProcessInstance processInstance =
+new ProcessInstance(processDefinition);
+Token token = processInstance.getRootToken();
+assertSame(processDefinition.getStartState(), token.getNode());
+token.signal();
+assertSame(processDefinition.getNode("s"), token.getNode());
+token.signal();
+assertSame(processDefinition.getNode("end"), token.getNode());
+}
+运行测试，得到的结果同上例完全相同。
+到这里为止，我们已经做了一个非常简单的流程示例，对JBPM的流程定义及使用方法也有了初步的概念，在下面的内容中我们将着重来讨论JBPM的流程定义方法，及各个节点的主要含义及使用方法。
+ 
+三、学习JPDL
+3.1 、简介
+JPDL（JBPM Process Definition Language）是JBPM流程定义语言。JPDL详细定义了这个状态图的每个部分，如: 开始、结束状态，状态之间的转换等。这种语言的定义对于用户来说比较容易理解，也比较容易对其进行扩展。
+上海锐道信息技术有限公司 高杰 9JBPM 工作流开发指南
+一个JBPM的流程定义XML文件中包含一个< process-definition>元素，而一个< process-definition>元素又包含零个或一个< description>元素，零个或多个的< swimlane>元素，一个< start-state>元素，零个或多个的< state>元素或< decision>元素或< fork>元素或< join>元素，以及零个或多个的< action>元素，零个或多个<task-node>和<node>元素，一个< end-state>元素等等。此外，< process definition>元素有一个标示符，以“name”属性来表示，这个属性必须存在，用来表示该流程的名称。
+3.2 、流程版本（Version）
+我们的流程XML文件定义完成之后，接下来的工作就是要将其发布到对应的数据库中，当我们每次将我们的流程定义部署到数据库时，部署时流程的名称就是前面提高的<process definition>里定义的name”属性的值。
+JBPM的版本机制允许在数据库中多个同名流程定义共存，流程实例以当时的最新版本来启动，并且在它的整个生命周期中将保持以相同的流程定义执行。当一个新的版本被部署，新的流程实例以新版本启动，而老的流程实例则以老的流程定义继续执行。
+在部署的时候，jbpm 安排一个版本（version）号码（数字）给流程定义。为了实现安排version号码，如果它是第一个版本（version），JBPM采取1+或者1。从ProcessDefinition pd=JbpmContext.getGraphSession()
+.findLatestProcessDefinition("processName")
+中可以通过一个给定的processName查找最近的流程定义，这里的processName就是前面我们在定义流程的时候在<process definition>里定义的name”属性的值，这个属性就是用来表示该流程的名称。如我们的下列代码就是要列出JBPM数据库里的有所有最后一次发布的流程定义的版本：
+JbpmContext context=JbpmContext.getCurrentJbpmContext();
+List ls=context.getGraphSession().findLatestProcessDefinitions();
+/*
+这里返回的List是ProcessDefinition的集合
+*/
+3.3 、流程定义
+3.3.1 process-definition(流程定义)
+流程定义的根节点，是所有节点的父节点
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+流程的名称。
+swimlane
+元素
+[0..*]
+流程中使用的泳道。泳道表示流程角色，它们被用于任务分配。
+start-state
+元素
+[0..1]
+流程起始状态。注意，没有起始状态的流程是合法的，但是不能被执行。
+end-state|state|node|task-node|process-state|super-state|fork|join|decision
+元素
+[0..*]
+流程定义的节点。注意，没有节点的流程是合法的，但是不能被执行。
+event
+元素
+[0..*]
+作为一个容器服务于动作的流程事件。
+action|script|create-timer|cancel-timer
+元素
+[0..*]
+全局定义的的动作，可以在事件和转换中引用。注意，为了被引用，这些动作必须指定名称。
+task
+元素
+[0..*]
+全局定义的任务，可以在动作中使用。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程定义中的委托类所抛出的所有异常。
+ 
+3.3.2 node(自动节点)
+这种节点和State相反，也称自动节点。当业务程序实例执行到这个节点，不会停止执行。而是会继续往下执行。如果该节点存在多个离开转向。那么，就会执行其中的第一个离开转向，在Node状态中，不需要外部参与者的参与，业务流程的这个部分是自动的、即时
+完成的。
+名称
+类型
+数量
+描述
+action|script|create-timer|cancel-timer
+事件
+1
+用于表示这个节点行为的定制动作。
+普通节点元素
+请参考普通节点元素。
+ 
+3.3.3 start-state(开始状态)
+start-state是我们整个流程的开始节点，所有的流程实例从这里开始。
+名称
+类型
+数量
+描述
+Name
+属性
+可选的
+节点的名称。
+Task
+元素
+[0..1]
+起始一个流程实例的任务，或者用来捕获流程发起者
+Event
+元素
+[0..*]
+支持的事件类型：｛node-leave｝。
+transition
+元素
+[0..*]
+离开转换，每个离开节点的转换必须有一个不同的名称。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+3.3.4 end-state(结束节点)
+对于每一个流程定义都会有一个结束节点，与开始节点对应
+名称
+类型
+数量
+描述
+Name
+属性
+必需的
+结束状态的名称。
+event
+元素
+[0..*]
+支持的事件类型：｛node-enter｝。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+ 
+3.3.5 state(状态)
+State节点也叫手工节点，进入到这种节点，整个流程的执行就会中断。直到系统外参与者发起继续执行的命令，即调用signal或end方法，业务程序实例的执行才能够继续下去。
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+节点的名称。
+async
+属性
+{true|false}，默认是false
+如果设置为true，这个节点将会异步执行。请参考”异步执行”章节。
+transition
+元素
+[0..*]
+离开转换。每个离开节点的转换必须有一个不同的名称，最多只允许所有离开转换中的一个没有名称。第一个转换被指定为默认转换，当离开节点而没有指定转换时，默认转换发生。
+event
+元素
+[0..*]
+支持的事件类型：｛node-enter|node-leave｝。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+timer
+元素
+[0..*]
+指定一个定时器，用来监视节点中的一个执行所持续的时间。
+ 
+3.3.6 task-node (任务节点)
+其性质和node节点一样，在没有task的时候，也都是自动执行，不等待。task-node被归类为一个等待节点，是指在task-node中的task列表中的task没有全部执行完之前，它会一直等待。Task可以在task-node节点下定义，也可以挂在process-definition节点下。最普遍的方式是在task-node节点下定义一个或多个任务。默认情况下，流程在task-node节点会处于等待状态，直到所有的任务被执行完毕。Task的执行是按顺序执行的，任务都完成后，token仍然不会指向后面的节点；需要自己手动调用processInstance.signal()才会驱动流程到下面的节点。
+名称
+类型
+数量
+描述
+signal
+属性
+可选的
+{unsynchronized|never|first|first-wait|last|last-wait}，默认是last。signal指定了任务的完成对流程执行继续的影响。
+create-tasks
+属性
+可选的
+{yes|no|true|false}，默认是true。当需要在运行时通过计算来决定哪个任务将被创建时，可以设置为false，如果这样的话，在node-enter事件上加一个动作，在动作中创建任务，并且把create-tasks设置为false。
+end-tasks
+属性
+可选的
+{yes|no|true|false}，默认是false。如果设置end-tasks为true，在离开节点时，所有打开的任务将被结束。
+task
+元素
+[0..*]
+当执行到达本节点时所应被创建的任务。
+普通节点元素
+请参考普通节点元素
+ 
+为了帮助读者理解task-node节点的signal属性，这里举例如下：
+对于这样的流程定义：
+<task-node name='a'>
+<task name='laundry' />
+<task name='dishes' />
+<task name='change nappy' />
+<transition to='b' />
+</task-node>
+a) 这里没有定义signal属性的值，这就表明当节点中的三个任务都完成后，流程才进入后面的节点
+ 
+b) 当<task-node name='a' signal='unsynchronized'>表明token不会在本节点停留，而是直
+ 
+接到后面的节点
+ 
+c) 当<task-node name='a' signal='never'>表明三个任务都完成后，token仍然不会指向后面的节点；需要自己手动调用processInstance.signal()才会驱动流程到下面的节点
+ 
+d) 当<task-node name='a' signal='first'>表明只要有一个任务完成后，token就指向后面的节点
+ 
+e) 当<task-node name='a' signal='first-wait'>表明当第一个任务实例完成时继续执行；当在a节点入口处没有任务创建时，token在a任务节点处等待，直到任务被创建或完成。
+ 
+f) 当<task-node name='a' signal='last'>时，这是默认值，和不设置signal属性的情况相同。
+ 
+g) 当<task-node name='a' signal='last-wait'>时，当最后一个任务实例完成时候继续执行下去。 当a这个任务节点没有任务被建立时,任务节点等待直到任务被建立。
+3.3.7 fork(分支)
+一个fork把一个执行路线分割成多个执行路线. 默认分支的行为是为每个离开分支转换建立一个子令牌,在令牌要到达的分支之间建立一个父母-子女关系
+名称
+类型
+数量
+描述
+ 
+name
+属性
+必需的
+节点的名称。
+ 
+async
+属性
+{true|false}，默认是false
+如果设置为true，这个节点将会异步执行。请参考”异步执行”章节。
+ 
+transition
+元素
+[0..*]
+离开转换。每个离开节点的转换必须有一个不同的名称，最多只允许所有离开转换中的一个没有名称。第一个转换被指定为默认转换，当离开节点而没有指定转换时，默认转换发生。
+ 
+event
+元素
+[0..*]
+支持的事件类型：｛node-enter|node-leave｝。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+timer
+元素
+[0..*]
+指定一个定时器，用来监视节点中的一个执行所持续的时间。
+ 
+3.3.8 join(联合)
+默认联合(join)假设所有来自同一个父母的子令牌联合，当在上使用fork(分支)这个情形就出现了并且所有令牌分支建立，并且到达同一个联合(join)。当全部令牌都进入联合的时候联合就结束了， 然后联合将检查父母-子女， 当所有兄弟令牌到达联合(join)，父母令牌将传播(唯一的)离开转换，当还有兄弟令牌活动时，联合的行为将作为等待状态。
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+节点的名称。
+async
+属性
+{true|false}，默认是false
+如果设置为true，这个节点将会异步执行。
+transition
+元素
+[0..*]
+离开转换。每个离开节点的转换必须有一个不同的名称，最多只允许所有离开转换中的一个没有名称。第一个转换被指定为默认转换，当离开节点而没有指定转换时，默认转换发生。
+event
+元素
+[0..*]
+支持的事件类型：｛node-enter|node-leave｝。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+timer
+元素
+[0..*]
+指定一个定时器，用来监视节点中的一个执行所持续的时间。
+ 
+对于Join节点，我们知道默认是要等到所有分支都到了流程才能往下继续走，要改变这一情况，我们可以通过给该节点加Action的方法改变该Join节点的Discriminator，就可以使只要有一个分支到达流程就可以继续执行的效果了，如下面的Action:
+package workflow.test.action;
+//这里通过设置Discriminator可以实现只要有一个分支到达流程就可以继续了，
+//它的默认值是false
+import org.jbpm.graph.def.ActionHandler;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.node.Join;
+public class JoinAction implements ActionHandler{
+public void execute(ExecutionContext arg0) throws Exception {
+Join join=(Join)arg0.getNode();
+join.setDiscriminator(true);
+}
+}
+3.3.9 decision(决策)
+一个decision用以决定在多个执行路径中哪个才可以被执行。如果你是一个程序员，把它可以理解成switch case结构即可，一个decision能够具有许多离开的transition。
+名称
+类型
+数量
+描述
+handler
+元素
+要么指定“handler”元素，或者在转换上指定条件。
+一个org.jbpm.jpdl.Def.DecisionHandler的实现名称。
+transition
+元素
+[0..*]
+离开转换。决策的离开转换可以被扩展为拥有一个条件，决策会查找条件计算为true的第一个转换，没有条件的转换被认为计算为true（为了建模“otherwise”分支）。请参考condition元素。
+普通节点元素
+请参考普通节点元素。
+ 
+Handler所指定的DecisionHandler的实现类里的decide方法返回一个字符串，表示要执行哪个transition，如下例：
+package workflow.qingjia.shenpi.common;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.node.DecisionHandler;
+public class ForkDecision implements DecisionHandler{
+public String decide(ExecutionContext arg0) throws Exception {
+String dayCount=(String)arg0.getVariable("dayCount");
+String go="to boss approve";
+if(Integer.parseInt(dayCount)>10){
+go="to join";
+}
+return go;
+}
+}
+3.3.10 transition(转换)
+转换用来指定节点之间的连接。transition元素放在node里面，那么这个transition就会从这个节点出离开。
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+转换的名称。注意，每个节点的离开转换必须有一个不同的名称。
+to
+属性
+必需的
+目标节点的分级名称，表示将要达到的那个节点名称.
+action|script
+|create-timer
+|cancel-timer
+元素
+[0..*]
+发生转换时将要执行的动作。注意，转换的动作无需放入事件（因为只有一个事件）。
+exception-handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+ 
+3.3.11 event(事件)
+JBPM定义了一系列与工作流节点元素相关联的事件，例如，流程实例运行过程中，可以触发节点进入（node-enter)、节点离开 （node-leave）、流程启动（process-start）、流程结束（process-end）、任务创建（task-create）、 任务分派（task-assign）、任务启动（task-start）等事件。
+在流程定义时，JBPM的事件均与action绑定。事件的触发将导致相应actions的执行。
+名称
+类型
+数量
+描述
+type
+属性
+必需的
+表示相对于事件要放置的元素事件类型。
+action|script|create-timer|
+cancel-timer
+元素
+[0..*]
+在这个事件上将要执行的动作列表。
+ 
+3.3.12 action(动作)
+一个action是一段java代码。在流程执行期间在一些事件之上定义，这样会在相关事件触发时自动在工作流引擎上执行。
+名称
+类型
+数量
+描述
+ 
+name
+属性
+必需的
+动作的名称。当动作被指定名称后，它们可以在流程定义中被查出，这对于运行时动作以及仅一次声明动作是有用的。
+ 
+class
+属性
+或者用ref-name，或
+者用expression。
+ 
+实现org.jbpm.graph.def.ActionHandler接口的类的全名。
+ 
+ref-name
+属性
+或者用class。
+所引用动作的名称。如果指定一个引用动作，则本动作不需要再做处理。
+ 
+expression
+属性
+或者指定一个class，或者ref-name。
+一个解决一个方法的jPDL表达式。
+ 
+accept-
+propagated-events
+属性
+可选的
+{yes|no|true|false}，默认是yes|true。如果设置为false，则动作仅在本动作元素的触发事件上被执行。更多信息，请参考“第9.5.4 事件传播”。
+ 
+config-type
+属性
+可选的
+{field|bean|constructor|configuration-property}。指定动作对象将被怎样创建以及本元素的内容怎样象配置信息那样被动作对象所使用。
+ 
+async
+属性
+{true|false}
+默认false，这意味着动作将在当前执行的线程中被执行。如果设置为true，一个消息将被发送到命令执行器，并且执行器组件将在一个独立的事务中同步执行动作。请参考”异步执行”章节。
+ 
+ 
+{内容}
+可选的
+action的内容可以被作为你定制动作实现的配置信息，这是考虑到可重用的委托类的创建。有关委托配置的更多信息，请参考“第16.2.3节委托配置”。
+ 
+3.3.13 script(脚本)
+Script里是动作执行的beanshell脚本. 更多有关beanshell的的信息请参考Beanshell的网站： http://www.beanshell.org 。如下所示
+<process-definition>
+<event type="node-enter">
+<script>
+System.out.println("this script is entering node "+node);
+</script>
+</event>
+...
+</process-definition>
+ 
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+脚本动作的名称。当动作被指定名称后，它们可以在流程定义中被查出，这对于运行时动作以及仅一次声明动作是有用的。
+Accept
+-propagated
+-events
+属性
+可选的[0..*]
+{yes|no|true|false}，默认是yes|true。如果设置为false，则动作仅在本动作元素的触发事件上被执行.
+expression
+元素
+[0..1]
+beanshell脚本。如果你没有指定variable元素，可以写表达式作为脚本元素的内容（忽略expression元素标签）。
+variable
+元素
+[0..*]
+脚本所需变量。如果没有指定变量，则当前令牌的所有变量将被装载到脚本，当你想要限制装载到脚本中的变量数量时使用variable。
+ 
+3.3.14 expression（表达式）
+Expression里可书写Beanshell脚本
+名称
+类型
+数量
+描述
+ 
+3.3.15 variable(变量)
+一个是变量是一种key-value对。它与过程实例（一次过程执行）相关联。Key是java.lang.string，value是任何java类型的任何pojo。所以任何是java类型，即使不给jbpm知道也能被应用到变量中。JBPM的流程变量在尽量模仿java.util.map的语义。这一点可以通过JBPM的API来了解。也就是说一个变量只能当它被插入时被赋值，任何java类型都可以作为变量中的value。
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+流程变量的名称。
+access
+属性
+可选的
+默认是read,write，用逗号分割的一个访问列表。迄今为止，使用的访问仅为read，write和required。
+mapped-name
+属性
+可选的
+默认是变量的名称。用来指定变量名称被映射的名称，mapped-name的含义依赖于这个元素所被使用的上下文。对于一个脚本，将是一个脚本变量名称；对于一个任务控制器，将是任务表单参数的标签；对于一个process-state，将是在子流程中使用的变量名称。
+ 
+3.3.16 handler(句柄)
+Handler是在定义一个decision时需要为其定义一个DecisionHandler时采用。
+名称
+类型
+数量
+描述
+expression
+属性
+或者用class
+一个jPDL表达式，返回结果被用toString()方法转换为字符串，结果字符串应该与某个离开转换匹配。
+class
+属性
+或者用ref-name
+实现了org.jbpm.graph.node.DecisionHandler接口的类的全名。
+Config
+-type
+属性
+可选的
+{field|bean|constructor|configuration-property}。指定动作对象将被怎样创建以及本元素的内容怎样象配置信息那样被动作对象所使用。
+{内容}
+可选的
+Action里的内容可以用来帮助结合我们的业务来处理我们的流程,同时我们可以在Action里加上业务处理逻辑,以更好的利用流程.
+ 
+3.3.17 timer(定时器)
+定时器timer可以被用于decision fork join node process-state state super-state task-node，可以设置开始时间duedate和频率repeat，定时器动作可以是所支持的任何动作元素，如action或script。
+timer 还有一个很重要的属性cancel-event，这个是timer和task结合时使用的，任务定时器的cancel-event可以被定制。默认情况 下，当任务被结束时（=完成）任务上的定时器将被取消，这是通过在定时器上使用cancel-event属性，流程开发者可以定制诸如task- assign或task-start。cancel-event支持多个事件，通过在属性中指定一个用逗号分割的列表，可以组合cancel-event 的类型。
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+定时器的名称。如果没有指定名称，则采用外部的节点名称。注意，每个定时器应该有一个唯一的名称。
+duedate
+属性
+必需的
+所指定的定时器创建到定时器执行之间的期限（可以用业务时间来表示）。
+repeat
+属性
+可选的
+{duration|yes|true}当一个定时器在预期时间执行后，“repeat”可选项指定了在离开节点之前重复的执行定时器之间的期限。如果指定为true或false，则与duedate相同的期限被使用。
+transition
+属性
+可选的
+当定时器执行、定时器事件触发后以及执行动作时时所使用的转换名称。
+cancel-event
+属性
+可选的
+这个属性只用在任务的定时器中，它指定了定时器将被取消的事件。默认是task-end事件，但是也可以被设置为如task-assign或task-start。cancel-event的类型也可以通过指定一个用逗号分割的列表被组合。
+action|script|
+create-timer|
+cancel-timer
+元素
+[0..*]
+当定时器被触发时所应被执行的动作。
+ 
+3.3.18 create-timer(创建定时器)
+Create-timer是定时器的创建
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+定时器的名称。这个名称可被用于用一个cancel-timer动作取消定时器。
+duedate
+属性
+必需的
+所指定的定时器创建到定时器执行之间的期限（可以用业务时间来表示）。请参考“第14.1节期限”中的语法。
+repeat
+属性
+可选的
+{duration|’yes’|’true’}当一个定时器在预期时间执行后，“repeat”可选项指定了在离开节点之前重复的执行定时器之间的期限。如果指定为true或yese，则与duedate相同的期限被使用。请参考“第14.1节期限”的语法。
+transition
+属性
+可选的
+当定时器执行、定时器事件触发后以及执行动作时时（如果要）所获取的转换名称。
+ 
+3.3.19 cancel-timer(取消定时器)
+Cancel-timer是定时器的取消
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+要被取消的定时器的名称。
+ 
+3.3.20 task(任务)
+Task 是是流程定义里的一部分，它决定了task instance的创建和分配
+ 
+名称
+类型
+数量
+描述
+name
+属性
+可选的
+任务的名称。命名的任可以被引用并且可以通过TaskMgmtDefinition被查出。
+blocking
+属性
+可选的
+{yes|no|true|false} 如果blocking设置为true，当任务没有结束时节点不能被离开（必须要通过taskInstance.end()方法离开节点）；如果设置为false（默认），允许用户通过signal继续执行和离开节点。默认设置为false，因为通常是由用户接口来强制阻塞。
+signalling
+属性
+可选的
+{yes|no|true|false}，默认是true。如果设置signalling为false，则任务没有触发令牌继续的能力。
+duedate
+属性
+可选的
+延迟时间（任务执行的的延迟时间）。请见业务日历中的解释。
+swimlane
+属性
+可选的
+引用一个swimlane，如果在任务上指定了一个swimlane，则assignment将被忽略。
+priority
+属性
+可选的
+{highest,high,normal,low,lowest}之一。作为选择，可以为priority指定任何整数，供参考：(highest=1,lowest=5)。
+assignment
+元
+素
+ 
+可选的
+个参与者。
+ 
+描写一个委托，该委托将在任务被创建时把任务分配给一
+event
+元素
+[0..*]
+支持的事件类型：｛task-create|task-start|task-assign|task-end｝。为了任务分配，我们特别的为TaskInstance添加了一个非持久化的属性previousActorId。
+exception -handler
+元素
+[0..*]
+一个异常处理器列表，用于这个流程节点中的委托类所抛出的所有异常。
+timer
+元素
+[0..*]
+指定一个监视本任务执行期限的一个定时器。对于任务定时器特殊的是可以指定cancel-event，cancel-event默认是task-end，但是它可以被自定义如task-assign或task-start。
+controller
+元素
+[0..1]
+指定流程变量怎样被转换为任务表单参数。任务表单参数有用户界面使用，用力向用户表现一个任务表单。
+ 
+3.3.21 swimlane(泳道)
+实际应用中，一个人是一个流程中多个Task的参与者(actor)的情况是很常见的。在jbpm中通过创建一个swimlane并且把swimlane赋给一个task的方式来设置当前task的参与者（actor）。一个业务流程中的swimlane可以被看做为一个参与者的参与者对象的名称，当然它不一定是固定的某个人，它可以是一个用户组，一个特定用户的角色等。首次执行到达一个Task，赋给该Task的一个swimlane就会算出参与者(actor)。
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+泳道的名称。泳道可以被引用并且可以通过TaskMgmtDefinition被查出。
+assignment
+元素
+[1..1]
+指定泳道的分配。这个分配在本泳道中的第一个任务实例被创建时完成。
+ 
+3.3.22 assignment(委派)
+当流程执行到某个Task的时候，引时流程引挚要调用相应的swimlane或assignment将当前的task分配（委派）给某个参与者，外部参与者可以是一个人也可以是某个系统等。
+名称
+类型
+数量
+描述
+expression
+属性
+可选的
+由于历史原因，这个属性的表达式不是jPDL表达式，而是对jBPM身份组件的一个分配表达式。
+actor-id
+属性
+可选的
+一个actorId，可以与pooled-actors协同使用。actor-id被作为一个表达式，因此你可以引用一个固定的actorId，如actor-id=”bobthebuiler”；或者你可以引用一个可以返回一个字符串的属性或方法，如actor-id=”myVar.actorId”，这将调用任务实例变量“myVar”上的getActorId方法。
+Pooled
+-actors
+属性
+可选的
+一个逗号分割的actorId列表，可以与actor-id协同使用。一个固定的参与者池可以指定如下：pooled-actors=”chicagobulls,pointersisters”。 pooled-actors被作为一个表达式，因此你可以引用一个返回String[]、Collection、或一个逗号分割的池中的参与者列表的属性或方法。
+class
+属性
+可选的
+一个实现org.jbpm.taskmgmt.def.AssignmentHandler接口的类的全名称。
+config-type
+属性
+可选的
+{field|bean|constructor|configuration-property}。指定分配处理器对象（assignment-handler-object）对象将被怎样创建以及本元素的内容怎样象配置信息那样被分配处理器对象所使用。
+{内容}
+可选的
+assignment元素的内容可以被作为分配处理器（AssignmentHandler）实现的配置信息，这是考虑到可重用的委托类的创建。
+ 
+3.3.23 controller(控制器)
+在任务执行时，可能需要读、写流程变量；在任务完成并提交时，可能需要写流程变量。为此，jBPM提供了"任务变量"的概念。在某些情况下，任务变量和流 程变量并非简单的一一对应关系，例如，三个流程变量代表三个月的销售额，任务变量只需要它们的平均值。为实现任务与流程实例之间的信息交流，jBPM设置 了任务控制器机制。该机制也采用递进模式：首先，jBPM提供基本（默认）的任务控制器；如果不敷使用，二次开发人员可以使用自定义的任务控制器。 jBPM的任务控制器机制在流程变量和任务变量之间架起了一座桥梁。
+名称
+类型
+数量
+描述
+class
+属性
+可选的
+一个实现org.jbpm.taskmgmt.def.TaskControllerHandler接口的类的全名称。
+Config
+-type
+属性
+可选的
+{field|bean|constructor|configuration-property}。指定分配处理器对象（assignment-handler-object）对象将被怎样创建以及本元素的内容怎样象配置信息那样被分配处理器对象所使用。
+{内容}
+controller元素的内容要么是指定的任务控制处理器的配置信息（如果指定了class属性），要么必须是一个variable元素列表（如果没有指定任务控制器）。
+variable
+元素
+[0..*]
+如果没有通过class属性指定任务控制处理器，则controller元素的内容必须是变量列表。
+ 
+3.3.24 process-state 子流程
+process-state是JBPM提供的用来处理子流程的节点，一个process-state只能对应一个子流程，究竟指到哪个子流程可以在process-state的action里指定，当token执行到指定的子流程时，子流程就已经启动，不用像启动主流程一样手工启动子流程。其它部分的处理就和普通的流程没有区别了。
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+名称。
+Sub-process
+元素
+只能定义一个
+子流程
+variable
+变量
+[0…*]
+Variable是用来指定如何把数据从父流程copy到子流程
+ 
+3.3.25 sub-process 子流程
+名称
+类型
+数量
+描述
+name
+属性
+必需的
+子流程的名称
+version
+属性
+可选
+子流程的版本。如果没有指定该属性，默认将会采且该子流程的最后一个版本
+ 
+3.3.26 condition 条件
+名称
+类型
+数量
+描述
+{内容}或属性
+表达式
+必需的
+condition元素的内容是一个计算结果为布尔值的jPDL表达式。决策采用第一个表达式处理结果为true的转换（按在processdefinition.xml中的顺序），如果没有条件处理结果为true，则采用默认离开转换（也就是第一个）。
+ 
+3.3.27 exception-handler 异常处理
+Jbpm的异常处理机制仅仅集中于java异常，流程定义本身的执行不会导致什么异常，只有在执行委托类时才会导致异常。 在流程定义（process-definitions）添加的exception-handler对整个流程起作用、节点（nodes）上添加异常只对当前的节点起作用（同时如果在process-definitions里也设置了exception-handler那么将不会再执行process-definitions里的exception-handler），和转换（transitions）添加exception-handler只对当前的transitions起作用（同时如果在process-definitions里也设置了exception-handler那么将不会再执行process-definitions里的exception-handler），可以指定一个异常处理（exception-handlers）清单，每个异常处理（exception-handler）有一个动作列表，当在委托类中发生异常时，会在流程元素的父层次搜索一个适当的异常处理（exception-handler），当它被搜索到，则异常处理（exception-handler）的动作将被执行。 注意，Jbpm的异常处理机制与java异常处理不完全相似。在java中，一个捕获的异常可以影响控制流，而在Jbpm中，流程不会被Jbpm异常处理机制所改变。异常要么被捕获，要么不捕获，没有被捕获的异常被抛向客户端（例如客户端调用token.signal()），而被捕获的异常则是通过Jbpm的exception-handler，对于被捕获的异常，图执行仍会继续，就像没有异常发生一样。 在处理异常的动作中，可以使用Token.setNode(Node node)把令牌放入图中的任何节点。
+名称
+类型
+数量
+描述
+exception-class
+属性
+可选的
+指定与本异常处理器所匹配的java throwable类，如果这个没有指定这个属性，则它匹配所有异常（java.lang.Throwable）。
+action
+元素
+[1..*]
+当异常被异常处理器捕获时将要执行的动作列表。
+ 
+<?xml version="1.0" encoding="UTF-8"?>
+<process-definition
+xmlns="urn:jbpm.org:jpdl-3.1" name="test">
+<!—这里的exception-handler对整个processInstance起作用-->
+<exception-handler>
+<action class="gj.action.ProcessException"/>
+</exception-handler>
+<start-state name="start">
+<transition name="to state" to="state1"></transition>
+</start-state>
+<state name="state1">
+<event type="node-leave">
+<action name="enter node action" class="gj.action.EnterStateNodeAction"></action>
+</event>
+<transition name="to end" to="end1">
+<action name="action1" class="gj.action.ProcessStateAction"></action>
+</transition>
+</state>
+<end-state name="end1"></end-state>
+</process-definition>
+ 
+ProcessException类的代码如下：
+package gj.action;
+import org.jbpm.graph.def.ActionHandler;
+import org.jbpm.graph.exe.ExecutionContext;
+public class ProcessException implements ActionHandler{
+public void execute(ExecutionContext executionContext) throws Exception {
+String errorMsg=executionContext.getException().getMessage();
+System.out.println("异常类型"+executionContext.getException().toString()+" 异常消息："+errorMsg);
+}
+}
+这个类就可以用来处理整个ProcessInstance中发生的异常。其它在各种类型node里和在transition里定义的exception-handler的处理方式类似，只不过其作用范围仅限制为当前的node或transition。
+小结
+看到这里，我们已经对JPDL的流程定义语言有了较深的理解，接下来我们可以自己动手写一些流程定义的文件，以此加深对JPDL的理解。我们来看一下下面的流程定义文件内容：
+<?xml version="1.0" encoding="UTF-8"?>
+<process-definition xmlns="" name="test">
+<!—定义一个开始结点，名为start，指向fork1-->
+<start-state name="start">
+<transition name="" to="fork1"></transition>
+</start-state>
+<!—在fork1分支结点上，我们定义了两个走向（transition）tr1和tr2，其中tr1指向top-state节点,tr2指向一个process-state，当token到达for1时会自动形成两个child token，沿着tr1和tr2的指向继续向执行-->
+<fork name="fork1">
+<transition name="tr1" to="top-state"></transition>
+<transition name="tr2" to="test-sub-process"></transition>
+</fork>
+<!—top-state是一个state类型的节点，也就是前面提到的手工节点-->
+<state name="top-state">
+<transition name="to test-task" to="test-task"></transition>
+</state>
+<!—test-task是一个task-node类型的节点，它可以有多个task节点，生成我们的taskInstance，这里我们定义了三个节点-->
+<task-node name="test-task" signal="first">
+<task name="task-a"></task>
+<task name="task-b"></task>
+<task name="task-c"></task>
+<transition name="to buttom-node" to="buttom-node"></transition>
+</task-node>
+<!-- buttom-node 是一个node节点，可以自动执行，不用人工干预处理-->
+<node name="buttom-node">
+<transition name="" to="join1"></transition>
+</node>
+<!—在test-sub-process里我们加上了一个子流程处理，子流程定义我们写在了里面定义的enter-sub-process-action 里-->
+<process-state name="test-sub-process">
+<event type="node-enter">
+<action name="enter-sub-process-action" class="gaojie.process.action.EnterSubProcessAction"></action>
+</event>
+<transition name="" to="join1"></transition>
+</process-state>
+<!—join1是一个join节点，与fork节点对应，从fork分支出发的所有child token汇集到join后继续向下执行-->
+<join name="join1">
+<transition name="" to="end"></transition>
+</join>
+<!—最后是结束结点，流程执行到此就宣告结束了-->
+<end-state name="end"></end-state>
+</process-definition>
+四、流程中任务的分配
+JBPM中任何一个task都必须指定一个任务的接收者，这个接收者可以是一个用户，也可以是一个用户组。如果指定给一个用户那么可以用这个用户的ID得到当前的task。如果是一个用户组那么这个组的任何一个用户都可以看到这个task，当这个组中的任何一个用户处理该任务后那么这个task对这个组中的其它用户就不再可见。
+JBPM中任务的分配方式有两种：一种是为task指定一个assignment-handler，既一个实现了AssignmentHandler接口的类；另外一种是为task指定一个swimlane(泳道)，swimlane可以在流程中定义好，一个流程中可以定义若干个swimlane，在定义一个swimlane时同样也是指定了个实现了AssignmentHandler接口的类，当我们的task指定了一个swimlane后，其效果同我们指定一个assignment-handler效果是一样的，只不过可以简化我们任务的分配工作。一个典型的实现了AssignmentHandler接口的类如下： package test.assignment;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.taskmgmt.def.AssignmentHandler;
+import org.jbpm.taskmgmt.exe.Assignable;
+public class ManagerAssignment implements AssignmentHandler{
+public void assign(Assignable arg0, ExecutionContext arg1) throws Exception {
+String[] s=new String[5];
+for (int i = 0; i < 5; i++) {
+s[i]="manager"+i;
+}
+//arg0.setActorId("manager0");//将任务分配给单个用户
+arg0.setPooledActors(s);//将任务分配给一个用户组
+}
+}
+4.1 assignment-handler方式的任务分配
+在JBPM中可以在start-node中添加一个task，在一个task-node中添加若干个task。每一个task我们都必须为其指定一个assignment-handler或一个swimlane，二者只能选其一。...
+<start-state name="start">
+<task name="start task">
+<controller>
+<variable name="dayCount" access="read,write,required" mapped-name="请假天数"></variable>
+</controller>
+<assignment class="test.assignment.IssuePersonAssignment"></assignment>
+</task>
+<transition name="to manager approve" to="manager approve task"></transition>
+</start-state>
+...
+ 
+上面的代码中start节点中我们添加了一个start task的task，同时为其指定了一个assignment，所对应的class为test.assignment.IssuePersonAssignment ，该类的代码如下： package test.assignment;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.taskmgmt.def.AssignmentHandler;
+import org.jbpm.taskmgmt.exe.Assignable;
+import test.common.Constants;
+public class IssuePersonAssignment implements AssignmentHandler {
+public void assign(Assignable arg0, ExecutionContext arg1) throws Exception {
+String issuePerson = arg1.getVariable(Constants.ISSUE_PERSON)
+.toString();
+arg0.setActorId(issuePerson);
+}
+}
+在该类中，我们从整个流程中的取出一个名为Constants.ISSUE_PERSON的流程变量，并将其赋给当前的task，这里采用的是Assignable的setActorId的方法。这样当用户登录时就可以用JbpmContext context=JbpmConfiguration.getInstance().createJbpmContext();
+List ls=context.getTaskList(session.getAttribute("username").toString());
+方法来取出对应的任务列表。
+4.2 swimlane方式的任务分配
+该种方式的任务分配实际上是对assignment-handler方式任务分配的简化。首先用户需要在流程中定义好若干个swimlane，接下来只需要在task中指定一个swimlane就可以完成任务的分配工作。 ...
+<swimlane name="manager">
+<assignment class="test.assignment.ManagerAssignment"></assignment>
+</swimlane>
+...
+<task-node name="manager approve task">
+<task name="manager approve" swimlane="manager">
+<controller>
+<variable name="dayCount" access="read" mapped-name="员工请假天数"></variable>
+<variable name="managerApprove" access="read,write,required" mapped-name="经理意见"></variable>
+</controller>
+</task>
+<transition name="to user try" to="user try"></transition>
+<transition name="to fork" to="fork1"></transition>
+</task-node>
+ 
+ 
+上面的代码中我们指定了一个叫manager的swimlane，然后我们在一个名为manager approve的task里将该task指定给该swimlane，这样就完成了任务的分配。从这里我们可以看到与assignment-handler方式分配最大不同之处是该种分配任务的方式简单、明了。我们只需要预先定义好若干个swimlane之后就可以在task里重复使用了。test.assignment.ManagerAssignment类的代码如下： package test.assignment;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.taskmgmt.def.AssignmentHandler;
+import org.jbpm.taskmgmt.exe.Assignable;
+public class ManagerAssignment implements AssignmentHandler{
+public void assign(Assignable arg0, ExecutionContext arg1) throws Exception {
+String[] s=new String[5];
+for (int i = 0; i < 5; i++) {
+s[i]="manager"+i;
+}
+arg0.setPooledActors(s);//将任务分配给一个用户组
+}
+}
+在这个类当中我们把任务分配给一个用户组（一个由用户ID组成的数组），这样该组中的每个用户登录后都可以采用以下方法看到任务列表： JbpmContext context=JbpmConfiguration.getInstance().createJbpmContext();
+List list=context.getTaskMgmtSession().findPooledTaskInstances(session.getAttribute("username").toString());
+用这种方法，用户可以看到所有尚未处理的分配到该用户所在用户组中的task列表。一旦该组中有一个用户处理了该任务，那么这个任务对于其它用户就不再可见了。
+五、JBPM持久化
+JBPM采用Hibernate持久化到数据库，和其它一些工作流引擎一样，它的流程定义信息也要持久化到数据库中。由于JBPM采用Hibernate来和数据库打交道，理论上来说只要Hibernate支持的数据库JBPM都支持。在下面的篇幅里我们将介绍一下如何将JBPM的流程定义信息发布到数据库中，以及如何在Tomcat中进行流程的调用与处理。
+5.1 特殊数据库支持
+1) 在DB2上运行JBPM，我们首先需要运行类似下面的命令，以更改DB2的配置，然后才能开始我们JBPM的建表工作。
+create bufferpool jbpm immediate size 1000 pagesize 32K
+create tablespace jbpm pagesize 32K managed by database using (file '/db2inst1/db2inst1/NODE0000/JBPM' 10M) AUTORESIZE YES bufferpool jbpm
+create temporary tablespace jbpmtemp pagesize 32K managed by database using (file '/db2inst1/db2inst1/NODE0000/JBPM_TMP' 10M) AUTORESIZE YES bufferpool jbpm
+5.2 JBPM数据库的安装
+我们以MSSQL2000为例和大家一起来看一下如何完成JBPM数据库的安装(其它数据库大家可以照葫芦画瓢完成)。
+a) 在MSSQL里新建一数据库，名为jbpmtest(这里是我所用的数据库名，大家可以根据喜好，自己随意命名)。
+b) 找到我们开始部分下载的jbpm-starters-kit-3.1.2文件夹，找到其中的jbpm文件夹。
+c) 将MSSQL的JDBC驱动copy到jbpm文件夹的lib目录下(我这里采用的是sourceforge的jtds驱动)
+d) 在jbpm文件夹里在其中的src/resources下新建一文件夹名为mssql，将src/resources/hssqldb文件夹下的create.db.hibernate.properties和identity.db.xml文件copy到mssql目录下。
+e) 修改create.db.hibernate.properties文件（这个文件里配置的是目标数据库的连接属性信息），修改内容如下：
+# these properties are used by the build script to create
+# a hypersonic database in the build/db directory that contains
+# the jbpm tables and a process deployed in there
+hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+hibernate.connection.driver_class=net.sourceforge.jtds.jdbc.Driver
+hibernate.connection.url=jdbc:jtds:sqlserver://localhost:1433/jbpmtest
+hibernate.connection.username=sa
+hibernate.connection.password=gj
+hibernate.show_sql=true
+ 
+ 
+f) 在jbpm文件夹下，找到src\config.files\hibernate.cfg.xml.（此文件主要是系统运行时数据库连接属性配置），需要修改的内容如下：
+<!-- jdbc connection properties -->
+<property name="hibernate.dialect">
+org.hibernate.dialect.SQLServerDialect</property>
+<property name="hibernate.connection.driver_class">
+net.sourceforge.jtds.jdbc.Driver</property>
+<property name="hibernate.connection.url">
+jdbc:jtds:sqlserver://localhost:1433/jbpmtest</property>
+<property name="hibernate.connection.username">sa</property>
+<property name="hibernate.connection.password">gj</property>
+ 
+g) 在Jbpm根目录下，打开build.deploy.xml文件，找到其中的create.db并做如下
+修改，create.db节点修改好的内容如下：
+<!-- ============== -->
+<!-- === SERVER === -->
+<!-- ============== -->
+<target name="create.db" depends="declare.jbpm.tasks, db.clean, db.start" description="creates a hypersonic database with the jbpm tables and loads the processes in there">
+<jbpmschema actions="create"
+cfg="${basedir}/src/config.files/hibernate.cfg.xml"
+properties="${basedir}/src/resources/mssql/create.db.hibernate.properties"/>
+<loadidentities file="${basedir}/src/resources/mssql/identity.db.xml"
+cfg="${basedir}/src/config.files/hibernate.cfg.xml"
+properties="${basedir}/src/resources/mssql/create.db.hibernate.properties"/>
+<ant antfile="build.xml" target="build.processes" inheritall="false" />
+<deployprocess cfg="${basedir}/src/config.files/hibernate.cfg.xml"
+properties="${basedir}/src/resources/mssql/create.db.hibernate.properties">
+<fileset dir="build" includes="*.process" />
+</deployprocess>
+<antcall target="db.stop" />
+</target>
+ 
+h) 配置好ant工具，将ant/bin目录加上系统的path环境变量。
+i) 在命令行模式下进入jbpm目录，输入ant create.db -buildfile build.deploy.xml ，构建JBPM所需要的table。这里大家可以观察屏幕输出，如果没有意外那就表明建表成功了！
+j) 打开MSSQL的企业管理器，我们可以看到一系列以“JBPM_”开头的table了，
+ 
+k) 至此，JBPM的建表工作完成。
+5.2 JBPM流程发布
+上一章节，我们已完成了对JBPM 的table的建立，接下来我们将继续探讨如何将我们的流程定义文件发布到JBPM数据库当中。
+我们这里采用WEB应用的形式将流程定义文件发布到数据库当中。我们采用Tomcat
+5.5.15做为我们的web server进行。
+5.2.1 搭建JBPM的WEB应用
+在JBPM的发布包中，已经为我们准备了一个JSF架构的WEB应用，我们可以在这个应用基础之上来搭建我们的发布工具。
+a) 在命令行模式下，进入jbpm目录，运行ant命令编译打包JBPM工程。打包完成后进行jbpm/build目录，找到jbpm.war.dir文件夹，将其copy到tomcat 5.5.15的webapps目录下（由于我们前面在做JBPM建表工作的时候已经配置好JBPM的数据库连接信息，所以jbpm.war.dir的web应用里我们就不用再操心数据库的连接问题了）。
+b) 将webapps下的jbpm.war.dir改名为jbpm（目的是为了简单）
+c) 打开jbpm目录，我们知道Hibernate运行时需要一些第三方jar包支持，但我们的jbpm目录里只有hibernate自己的jar包，如果这样运行tomcat5.5.15我们可以很明显地看到jbpm应用发布失败，如何解决这个问题呢，方法很简单。我们下载一个hibernate3的工程文件，将其中必须的第三方jar文件copy到我们的jbpm工程里就OK了，下图是我copy完成后的jbpm/WEB-INF/ lib目录下的jar包列表，供参考:
+运行tomcat5.5.15
+打开IE，在地址栏里输入:http://localhost:8080/jbpm，这时如果我们操作正确的话，应该可以看到如下信息了：
+这个JBPM的示例里已经有了一个流程示例，我们看到的便是这个应用的主窗口，大家可以用一下，体验一下JBPM工作流带来的乐趣。
+5.2.2 发布第一个流程
+JBPM里的那个流程示例这里不介绍了，有兴趣的可以自己研究一下。接下来我们来写一个servlet来发布我们的第一个流程。
+启动Eclipse，编写发布的JSP页面deploy.jsp ，并将其copy到我们的jbpm应用的根目录下。
+<%@ page language="java" contentType="text/html; charset=GB18030"
+pageEncoding="GB18030"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GB18030">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="deplyWorkflow.servlet" method="post" enctype="multipart/form-data" name="form1">
+<table width="100%" border="0">
+<tr>
+<td colspan="2">&nbsp;</td>
+</tr>
+<tr>
+<td>请选择要发布的流程定义文件：</td>
+<td><input name="workflowfile" type="file" id="workflowfile"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="2" align="center"><input type="submit" name="Submit" value=" 提 交 "></td>
+</tr>
+</table>
+</form>
+</body>
+</html>
+编写我们的流程发布Servlet，代码内容如下：
+ package servlet;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.jbpm.JbpmConfiguration;
+import org.jbpm.JbpmContext;
+import org.jbpm.graph.def.ProcessDefinition;
+import common.UploadFile;
+public class DeployWorkflowServlet extends HttpServlet{
+protected void doPost(HttpServletRequest arg0, HttpServletResponse arg1) throws ServletException, IOException {
+<!-- UploadFile 是我这边为了方便对上传文件处理而写的一个apache的common-file的简单封装-->
+UploadFile upload=new UploadFile(arg0);
+FileItem fileItem=upload.getFile("workflowfile");
+InputStream fin=fileItem.getInputStream();
+<!—通过JbpmConfiguration 创建一个JbpmContext 实例-->
+JbpmConfiguration config=JbpmConfiguration.getInstance();
+JbpmContext context=config.createJbpmContext();
+ProcessDefinition pd=ProcessDefinition.parseXmlInputStream(fin);
+context.deployProcessDefinition(pd);//发布上传过来的流程
+context.close();
+PrintWriter write=arg1.getWriter();
+arg1.setContentType("text/html");
+write.write("WorkFlow deploy success..........");//显示发布成功信息
+write.close();
+}
+}
+ 
+编译将DeployWorkflowServlet.java，并将编译好的class其放入jbpm应用的classes目录下。配置到web.xml中，配置代码如下：
+<servlet>
+<servlet-name>deplyWorkflow</servlet-name>
+<servlet-class>servlet.DeployWorkflowServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>deplyWorkflow</servlet-name>
+<url-pattern>/deplyWorkflow.servlet</url-pattern>
+</servlet-mapping>
+启动Tomcat5.5.15，访问http://localhost:8080/jbpm/deploy.jsp
+ 
+六、日历(Scheduler)
+JBPM的Scheduler可以实现在JBPM流程中定时触发某一动作。在流程中JPBM提供了timer节点供我们使用，通过这个节点我们可以实现节点动作的定时触发。定时器timer可以被用于decision、fork、join、node、process-state、state、super-state、task-node，可以设置开始时间duedate和频率repeat，定时器动作可以是所支持的任何动作元素，如action、script、create-timer、cancel-timer，来执行我们设置的商务动作。我们可以把Scheduler理解成是一个后台线程在不停的监听着timer(jbpm_timer表)，如果有需要触发的timer生成了，就按照timer的属性定时或者循环触发它。
+jbpm提供了2种调用scheduler的方法：
+一种是用在web应用的，采用org.jbpm.scheduler.impl.SchedulerServlet，具体的使用方法在JBPM提供的javadoc里有很好的示例，我们只需在web.xml中加载它就行了；
+另一种是针对的C/S程序，jbpm提供了一个很好的示例org.jbpm.scheduler.impl.SchedulerMain，我们可以参照它编写我们自己的Scheduler。
+6.1 Scheduler在C/S程序上的应用
+下面我就编写一个cs程序来实现Scheduler，并调用一个最简单的timer。这个timer从第5秒开始每隔3秒执行script中的内容
+<process-definition xmlns="" name="test">
+<start-state name="start">
+<transition name="" to="a">transition>
+</start-state>
+<state name="a">
+<timer name=”reminder” duedate=”5 seconds”
+repeat=”3 seconds”>
+<script>System.out.println("node enter");</script>
+</timer>
+<transition name="" to="end">transition>
+</state>
+<end-state name="end">end-state>
+</process-definition>
+package test;
+import org.jbpm.*;
+import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.exe.*;
+import org.jbpm.scheduler.impl.Scheduler;
+public class Test {
+static JbpmConfiguration jbpmConfiguration = JbpmConfiguration.getInstance();
+static ProcessDefinition processDefinition = null;
+static ProcessInstance processInstance = null;
+static Scheduler scheduler = null;
+public static void initSchedular() {//设置Schedular的属性
+scheduler = new Scheduler();
+int interval = 5000;
+scheduler.setInterval(interval);
+int historyMaxSize = 0;
+scheduler.setHistoryMaxSize(historyMaxSize);
+scheduler.start();
+}
+public static void destroy() {//这个例子没用到
+scheduler.stop();
+}
+static class MySchedularThread extends Thread{//实际业务处理线程
+public void run(){
+JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+try {
+long processInstanceId =1;
+processInstance = jbpmContext.loadProcessInstance(processInstanceId);
+Token token = processInstance.getRootToken();
+System.out.println(token.getNode());
+//一定要运行到有timer生成，触发
+token.signal();
+System.out.println(token.getNode());
+jbpmContext.save(processInstance);
+//如果这里程序到这里退出的话可以看到jbpm_timer表里有一条数据
+Thread.sleep(30*1000);//为模拟效果，此线程停止30秒
+//节点跳过，timer结束，jbpm_timer表该数据清空
+token.signal();
+System.out.println(token.getNode());
+jbpmContext.save(processInstance);
+}catch(Exception e){
+e.printStackTrace();
+}finally {
+jbpmContext.close();
+}
+}
+}
+public static void main(String[] args) {
+initSchedular ();
+MySchedularThread mst=new MySchedularThread();
+mst.start();
+}
+}
+运行结果：
+StartState(start) State(a) node enter node enter node enter node enter node enter EndState(end)
+从上面的例子的运行结果当中我们可以看到，当流程开始后进入名为“a”的state节点，进入名为“a”的state节点五秒后开始启动名为reminder的timer，该timer每隔3秒运行一次，直到token离开当前节点。
+6.2 Scheduler 在Web上的应用
+Scheduler在Web上的应用相对来说比较简单，我们只需把org.jbpm.scheduler.impl.SchedulerServlet配置到我们的web.xml中，然后在我们的流程中配置好timer就可以完成我们的流程的调度。
+……
+<servlet>
+<servlet-name>SchedulerServlet</servlet-name>
+<servlet-class>
+org.jbpm.scheduler.impl.SchedulerServlet
+</servlet-class>
+<init-param>
+<param-name>interval</param-name>
+<param-value>5000</param-value>
+</init-param>
+<init-param>
+<param-name>historyMaxSize</param-name>
+<param-value>50</param-value>
+</init-param>
+<load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+<servlet-name>SchedulerServlet</servlet-name>
+<url-pattern>/jbpmscheduler</url-pattern>
+</servlet-mapping>
+流程配置示例： <?xml version="1.0" encoding="UTF-8"?>
+<process-definition
+xmlns="" name="test">
+<start-state name="start">
+<transition name="" to="state1"></transition>
+</start-state>
+<state name="state1">
+<timer name="reminder" duedate="5 seconds" repeat="6 seconds">
+<script>
+System.out.println("reminder start ***"+new Date());
+</script>
+</timer>
+<timer name="endReminder" duedate="30 seconds" transition="tr2">
+<script>
+System.out.println("endReminder start ***"+new Date());
+</script>
+<cancel-timer name="reminder"/>
+</timer>
+<transition name="tr1" to="end1"></transition>
+<transition name="tr2" to="node1"></transition>
+</state>
+<node name="node1">
+<event type="node-enter">
+<script>
+System.out.println("enter node1 ***"+new Date());
+</script>
+</event>
+<transition name="" to="end1"></transition>
+</node>
+<end-state name="end1"></end-state>
+</process-definition>
+启动流程代码：
+JbpmConfiguration config=JbpmConfiguration.getInstance();
+JbpmContext context=config.getCurrentJbpmContext();
+ProcessDefinition pd=context.getGraphSession().findLatestProcessDefinition(“test”);
+ProcessInstance pi=pd.createProcessInstance();
+pi.getContextInstance().setVariable("reminderTestDueDate", arg1.getParameter("reminderTestDueDate"));
+pi.getContextInstance().setVariable("taskuser", arg1.getParameter("taskuser"));
+pi.signal();
+在上面的示例流程中，一旦我们在代码中启动流程，流程就开始进入state1节点，进入该节点后5秒开始reminder这个timer ，reminder会每隔6秒钟触发一次，在进入state1后的30秒后触发endReminder这个timer，该timer只会触发一次，触发的时候会启动其内部的script和cancel-timer，cancel-timer可以用来取消其name属性所指定的timer。我们这里指定的是前面的reminder，所以当endReminder启动后会结束掉前面的reminder这个timer。同时当endReminder执行完成后，流程会按endReminder的transition属性所指定的transition离开当前的state节点进入tr2所指定的路线进入node1节点，同时执行node1节点的script动作，运行结果如下：
+ reminder start ***Sun Jun 24 14:15:16 CST 2007
+reminder start ***Sun Jun 24 14:15:22 CST 2007
+reminder start ***Sun Jun 24 14:15:28 CST 2007
+reminder start ***Sun Jun 24 14:15:34 CST 2007
+reminder start ***Sun Jun 24 14:15:40 CST 2007
+endReminder start ***Sun Jun 24 14:15:45 CST 2007
+enter node1 ***Sun Jun 24 14:15:45 CST 2007
+6.3 Scheduler时间的分类
+关于duedate的格式，可以分为两种。一种是我们上面所用到的可以把它叫做绝对时间，比如5 seconds,5 days,5 months…(5秒，5天，5个月…)，可以使用的有second，seconds，minute，minutes，hour，hours，day，days，week，weeks，month，months，year，years；第二种叫业务时间格式，就是在绝对时间里加上business，也就是说加了business就叫业务时间。具体的业务时间怎么去界定呢？我们可以打开jbpm*.jar里的文件org/jbpm/calendar/jbpm.business.calendar.properties指定了什么是业务时间hour.format=HH:mm
+#weekday ::= [<daypart> [& <daypart>]*]
+#daypart ::= <start-hour>-<to-hour>
+#start-hour and to-hour must be in the hour.format
+#dayparts have to be ordered
+weekday.monday= 9:00-12:00 & 12:30-17:00
+weekday.thuesday= 9:00-12:00 & 12:30-17:00
+weekday.wednesday= 9:00-12:00 & 12:30-17:00
+weekday.thursday= 9:00-12:00 & 12:30-17:00
+weekday.friday= 9:00-12:00 & 12:30-17:00
+weekday.saturday=
+weekday.sunday=
+day.format=dd/MM/yyyy
+# holiday syntax: <holiday>
+# holiday period syntax: <start-day>-<end-day>
+# below are the belgian official holidays
+holiday.1= 01/01/2005 # nieuwjaar
+holiday.2= 27/3/2005 # pasen
+holiday.3= 28/3/2005 # paasmaandag
+holiday.4= 1/5/2005 # feest van de arbeid
+holiday.5= 5/5/2005 # hemelvaart
+holiday.6= 15/5/2005 # pinksteren
+holiday.7= 16/5/2005 # pinkstermaandag
+holiday.8= 21/7/2005 # my birthday
+holiday.9= 15/8/2005 # moederkesdag
+holiday.10= 1/11/2005 # allerheiligen
+holiday.11= 11/11/2005 # wapenstilstand
+holiday.12= 25/12/2005 # kerstmis
+business.day.expressed.in.hours= 8
+business.week.expressed.in.hours= 40
+business.month.expressed.in.business.days= 21
+business.year.expressed.in.business.days= 220
+上面定义通俗的理解就是它归定了从星期一到星期五的9:00-12:00 & 12:30-17:00 这段时间为上班时间也就是业务时间，星期六和星期日没有定义也就是放假的时间，再往下就是定义了12个节假日，最后是一些工作时长的统计如一天8小时，一个星期40小时等。
+下面我们定义一个定时器： <state name='catch crooks'>
+<timer name='reminder' duedate='3 business day'
+repeat='2 business day'
+transition='time-out-transition' >
+<action class='the-remainder-action-class-name' />
+</timer>
+<state>
+ 
+这里的定时器（timer）的名字是reminder，它的duedate定义的是3 business day,repeat定义的是2 business day。也就是说从定时器启动开始在3个业务日的时间后每隔两个业务日执行一次action的方法，直到timer结束。现在就可以来区别业务时间和绝对时间了，假设我是在星期五的早上10点启动了这个timer,那它第一次执行action的方法是在什么时候呢？因为这里的定义是有加上business的所以要结束工作日历的定义来算了。工作日历中定义了星期六和星期天是不上班的（没有定义），所以在计算时间时就跳过，要到星期三到早上10点（这时只是执行完duedate的时间也就是第一次触发action的时间），到星期五早上10点第二次触发action,到下个星期二早上第二次触发action(因为星期六和星期日没定义不是业务时间)，以此类推。如果在timer定义时没有加上business的话，就以绝对时间进行计算，也就是在星期一的10点第一次触发action,到星期三10点第二次触发action，以此类推。
+七、异步执行
+从前面的JPDL流程定义语言里我们知道了很多节点都有async属性，当该属性设置为true时表示是异步执行，否则表示同步执行，其默认值为false。通常在同步状态下，在JBPM流程中节点总是在令牌(Token)进入之后被执行，因此，节点在客户端线程中被执行。同步执行要把所有的业务代码执行完成，和流程离开当前节点后进入下面的节点后代码全部执行完成后才能完成整个一个操作过程，所以如果流程中的逻辑比较复杂的话，给我们的感觉就是时间较久，如果是异步则恰恰相反。
+在jBPM中，异步执行通过使用一个异步通知系统来实现。当流程执行到达需要异步执行的节点时，jBPM将挂起执行，产生一个命令消息并发送该命令消息到命令执行器，命令执行器是一个单独的组件，在收到的消息之上它将在流程挂起的地方恢复流程执行。事务因此也将由一个被分裂为两个独立的事务，每个事务对应于一部分。这样对于一些在流程中在节点里或Action里需要花费较长时间执行的逻辑代码可以把节点或Action的async的属性打开，设置成异步执行。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+常见错误
+
+
+java.lang.LinkageError
+解决办法
+
+juel.jar
+juel-engine.jar
+juel-impl.jar
+拷贝到 tomcat lib 下面
+
+在把这三个jar删除
+
+并把tomcat lib下面的 el-api.jar 删除
+ Copyright ©2011 lyt. All Rights Reserved.
+ 

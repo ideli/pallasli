@@ -1,0 +1,77 @@
+
+study
+用JNI调用C或C++动态联接库原来如此简单
+
+用JNI调用C或C++动态联接库原来如此简单
+因工作的缘故，有机会接触了Java本地方法调用（JNI）。本文中记下了初试JNI的过程和一点点体会。
+使用Java的JNI调用C/C++的动态联结库有个固定的步骤，下面将以一个最简单的HelloWorld例子程序来说明调用过程。这个HelloWorld的例子只是简单的显示HelloWorld消息。
+  
+第一步 编写Java类
+首先，我们创建一个名为jnitest的Eclipse工程，并新建一个src源代码目录。
+这里我们编写两个Java类，一个命名为HelloWorld，一个命名为TestDLL。HelloWorld类包含一个本地方法displayHelloWorld()，TestDLL用于测试这个本地方法。HelloWorld的源码清单如下：
+ 
+List1. HelloWorld.java源码
+ 
+public class HelloWorld {
+    public native void displayHelloWorld();①
+    static{
+        System.loadLibrary("HelloWorld");  ②
+    }
+}
+ 
+TestDLL源码如下：
+ 
+List2. TestDLL.java源码
+ 
+public class TestDLL {
+    public static void main(String[] args){
+        HelloWorld helloWorld = new HelloWorld();
+        helloWorld.displayHelloWorld();
+    }
+}
+说明：①是java本地方法申明；②装入动态链接库，"HelloWorld"是要装入的动态链接库名称。
+  
+第二步 编译Java类
+在Eclipse工具中编译Java类。编译后的class文件会自动放入工程目录下的bin目录中。
+
+第三步 生成C/C++头文件
+在windows中打开一个命令窗口，进入jnitest工程所在目录下的bin目录如：D:\workspace\jnitest\bin。键入javah -classpath D:\workspace\jnitest\bin HelloWorld命令生成头文件HelloWorld.h。内容如下：
+ 
+List3. HelloWorld.h源码
+ 
+#include <jni.h>
+#ifndef _Included_HelloWorld
+#define _Included_HelloWorld
+#ifdef __cplusplus
+extern "C" {
+#endif
+JNIEXPORT void JNICALL Java_HelloWorld_displayHelloWorld
+  (JNIEnv *, jobject);
+ 
+#ifdef __cplusplus
+}
+#endif
+#endif
+ 
+注意，不要修改这个头文件。
+第四步 编写本地方法实现
+用VC6创建HelloWorld Win32动态链接库工程。将上述生成的头文件HelloWorld.h拷贝到
+D:\Program Files\Microsoft Visual Studio\MyProjects\HelloWorld目录下面。
+将D:\j2sdk1.4.2\include目录下的jni.h和D:\j2sdk1.4.2\include\win32\jni_md.h两个头文件拷贝到VC安装目录下的D:\Program Files\Microsoft Visual Studio\VC98\Include目录下面。在VC IDE中新建HelloWorld.cpp文件，实现头文件中声明的方法并编译生成DLL。
+ 
+List4. HelloWorld.cpp源码
+ 
+#include "HelloWorld.h"
+#include <stdio.h>
+ 
+JNIEXPORT void JNICALL Java_HelloWorld_displayHelloWorld
+  (JNIEnv *, jobject)
+ {
+    printf("Hello World!\n");
+    return;
+}
+第五部 运行测试程序
+先将生成的DLL拷贝到jnitest工程的D:\workspace\jnitest\bin下面，然后设置DLL搜索路径（环境变量PATH）为D:\workspace\jnitest\bin（JNI并没有规定必须将dll放在与class文件相同的目录，只要确保JVM能搜索到DLL即可）③。重新启动Elipse后，运行测试程序，将看到控制台输出“Hello World！”
+ 
+注意，③必须设置好DLL搜索路径，或者将dll拷贝到C:\WINDOWS\system32下面。这里，我折腾了不少时间，才搞定。
+ Copyright ©2011 lyt. All Rights Reserved.

@@ -1,0 +1,4341 @@
+
+study
+socket
+
+网络概述
+n       Java语言取得成功的领域之一就是网络 [ (其他语言)数页代码---->(Java)一条语句]
+n       TCP/IP(传输控制协议/网间协议)是internet的主要协议,定义了计算机和外设进行通信所使用的规则(应用层,传输层,网络层,链路层).
+n       大多数基于internet的应用程序被看作TCP/IP协议的上一层. 如 : ftp, http, smtp, pop3, telnet, nntp等
+n       IP地址:TCP/IP网络中的每台计算机都有唯一的地址--IP地址.
+n       在Java中,有一个用来存储internet地址的类叫InetAddress.例:获取本机的IP地址
+import java.net.*;
+public class getLocalHostTest
+{  public static void main()
+   {   InetAddress myIP=null;
+        try {myIP=InetAddress.getLocalHost();}
+       catch{UnknowHostException e){}
+       System.out.println(myIP);
+   }
+}
+n       Java提供的网络功能有四大类:
+¨      InetAddress 在网络层，用于标识网络上的硬件资源
+¨      URL与URLConnection是三大功能中最高级的一种,通过URL Java程序可以直接送出或读入网络上的数据.
+¨      Socket是传统网络程序最常用的方式,可以想象为两个不同的程序通过网络的通信信道.
+¨      Datagram是更低级的网络传输方式,它把数据的目的记录在数据包中,然后直接放在网络上.
+URL类：创建URL时，常见异常：MalformedURLException 非运行时异常，必须在程序中捕获并处理
+URLConnection类：
+n       URL双向通信(URLConection)
+n       URLConnection是一个一http为中心的类
+    1.  建立连接
+       URL url=new URL(“http://www.yahoo.com/”);
+       URLConnection con=url.openConnection();
+    2.  向服务器端送数据
+       PrintStream outStream=new     
+               PrintStream(con.getOutputStream());
+       outStream.println(string_data);
+3. 从服务器读数据
+    DataInputStream inStream=new          
+           DataInputStream(con.getInputStream());
+    inStream.readLine();
+n       从URL中得到的输出流通常与一个CGI程序结合一起工作
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+c专门记录socket的通讯程序
+
+网三工作狂停止更新以后，虽然外挂仍能使用，可是很多功能都已无效，当时无聊想自己分析一下数据包，所以做了一个专门记录socket通讯的程序。
+def文件
+LIBRARY wsock32
+EXPORTS
+    accept=hook_accept                                    @1
+    AcceptEx=hook_AcceptEx                                @1141    
+    bind=hook_bind                                        @2
+    closesocket=hook_closesocket                        @3
+    connect=hook_connect                                @4
+    EnumProtocolsA=hook_EnumProtocolsA                    @1111
+    EnumProtocolsW=hook_EnumProtocolsW                    @1112
+    GetAcceptExSockAddrs=hook_GetAcceptExSockaddrs        @1142
+    GetAddressByNameA=hook_GetAddressByNameA            @1109
+    GetAddressByNameW=hook_GetAddressByNameW            @1110
+    gethostbyaddr=hook_gethostbyaddr                    @51
+    gethostbyname=hook_gethostbyname                    @52
+    gethostname=hook_gethostname                        @57
+    GetNameByTypeA=hook_GetNameByTypeA                    @1115
+    GetNameByTypeW=hook_GetNameByTypeW                    @1116
+    getpeername=hook_getpeername                        @5
+    getprotobyname=hook_getprotobyname                    @53
+    getprotobynumber=hook_getprotobynumber                @54
+    getservbyname=hook_getservbyname                    @55
+    getservbyport=hook_getservbyport                    @56
+    GetServiceA=hook_GetServiceA                        @1119
+    GetServiceW=hook_GetServiceW                        @1120
+    getsockname=hook_getsockname                        @6
+    getsockopt=hook_getsockopt                            @7
+    GetTypeByNameA=hook_GetTypeByNameA                    @1113
+    GetTypeByNameW=hook_GetTypeByNameW                    @1114
+    htonl=hook_htonl                                    @8
+    htons=hook_htons                                    @9
+    inet_addr=hook_inet_addr                            @11
+    inet_ntoa=hook_inet_ntoa                            @12
+    ioctlsocket=hook_ioctlsocket                        @10
+    listen=hook_listen                                    @13
+    ntohl=hook_ntohl                                    @14
+    ntohs=hook_ntohs                                    @15
+    recv=hook_recv                                        @16
+    recvfrom=hook_recvfrom                                @17
+    select=hook_select                                    @18
+    send=hook_send                                        @19
+    sendto=hook_sendto                                    @20
+    SetServiceA=hook_SetServiceA                        @1117
+    SetServiceW=hook_SetServiceW                        @1118
+    setsockopt=hook_setsockopt                            @21
+    shutdown=hook_shutdown                                @22
+    socket=hook_socket                                    @23
+    TransmitFile=hook_TransmitFile                        @1140
+    WSAAccept=hook_WSAAccept                            @26
+    WSAAddressToStringA=hook_WSAAddressToStringA        @27
+    WSAAddressToStringW=hook_WSAAddressToStringW        @28
+    WSAAsyncGetHostByAddr=hook_WSAAsyncGetHostByAddr    @102
+    WSAAsyncGetHostByName=hook_WSAAsyncGetHostByName    @103
+    WSAAsyncGetProtoByName=hook_WSAAsyncGetProtoByName        @105
+    WSAAsyncGetProtoByNumber=hook_WSAAsyncGetProtoByNumber    @104
+    WSAAsyncGetServByName=hook_WSAAsyncGetServByName    @107
+    WSAAsyncGetServByPort=hook_WSAAsyncGetServByPort    @106
+    WSAAsyncSelect=hook_WSAAsyncSelect                    @101
+    WSACancelAsyncRequest=hook_WSACancelAsyncRequest    @108
+    WSACleanup=hook_WSACleanup                            @116
+    WSACloseEvent=hook_WSACloseEvent                    @29
+    WSAConnect=hook_WSAConnect                            @30
+    WSACreateEvent=hook_WSACreateEvent                    @31
+    WSADuplicateSocketA=hook_WSADuplicateSocketA        @32        
+    WSADuplicateSocketW=hook_WSADuplicateSocketW        @33        
+    WSAEnumNameSpaceProvidersA=hook_WSAEnumNameSpaceProvidersA    @34
+    WSAEnumNameSpaceProvidersW=hook_WSAEnumNameSpaceProvidersW    @35
+    WSAEnumNetworkEvents=hook_WSAEnumNetworkEvents        @36
+    WSAEnumProtocolsA=hook_WSAEnumProtocolsA            @37
+    WSAEnumProtocolsW=hook_WSAEnumProtocolsW            @38
+    WSAEventSelect=hook_WSAEventSelect                    @39
+    WSAGetLastError=hook_WSAGetLastError                @111
+    WSAGetOverlappedResult=hook_WSAGetOverlappedResult    @40
+    WSAGetQOSByName=hook_WSAGetQOSByName                @41
+    WSAGetServiceClassInfoA=hook_WSAGetServiceClassInfoA    @42
+    WSAGetServiceClassInfoW=hook_WSAGetServiceClassInfoW    @43
+    WSAGetServiceClassNameByClassIdA=hook_WSAGetServiceClassNameByClassIdA    @44
+    WSAGetServiceClassNameByClassIdW=hook_WSAGetServiceClassNameByClassIdW    @45
+    WSAHtonl=hook_WSAHtonl                                @46
+    WSAHtons=hook_WSAHtons                                @47
+    WSAInstallServiceClassA=hook_WSAInstallServiceClassA    @48
+    WSAInstallServiceClassW=hook_WSAInstallServiceClassW    @49
+    WSAIoctl=hook_WSAIoctl                                @50
+    WSAJoinLeaf=hook_WSAJoinLeaf                        @58
+    WSALookupServiceBeginA=hook_WSALookupServiceBeginA    @59
+    WSALookupServiceBeginW=hook_WSALookupServiceBeginW    @60
+    WSALookupServiceEnd=hook_WSALookupServiceEnd        @61
+    WSALookupServiceNextA=hook_WSALookupServiceNextA    @62
+    WSALookupServiceNextW=hook_WSALookupServiceNextW    @63
+    WSANtohl=hook_WSANtohl                                @64
+    WSANtohs=hook_WSANtohs                                @65
+    WSAProviderConfigChange=hook_WSAProviderConfigChange        @66
+    WSARecv=hook_WSARecv                                @67
+    WSARecvDisconnect=hook_WSARecvDisconnect            @68
+    WSARecvEx=hook_WSARecvEx                                    
+    WSARecvFrom=hook_WSARecvFrom                        @69
+    WSARemoveServiceClass=hook_WSARemoveServiceClass    @70
+    WSAResetEvent=hook_WSAResetEvent                    @71
+    WSASend=hook_WSASend                                @72
+    WSASendDisconnect=hook_WSASendDisconnect            @73
+    WSASendTo=hook_WSASendTo                            @74
+    WSASetEvent=hook_WSASetEvent                        @75
+    WSASetLastError=hook_WSASetLastError                @112
+    WSASetServiceA=hook_WSASetServiceA                    @76
+    WSASetServiceW=hook_WSASetServiceW                    @77
+    WSASocketA=hook_WSASocketA                            @78
+    WSASocketW=hook_WSASocketW                            @79
+    WSAStartup=hook_WSAStartup                            @115
+    WSAStringToAddressA=hook_WSAStringToAddressA        @80
+    WSAStringToAddressW=hook_WSAStringToAddressW        @81
+    WSAWaitForMultipleEvents=hook_WSAWaitForMultipleEvents    @82
+
+    WSCDeinstallProvider=hook_WSCDeinstallProvider        @83
+    WSCEnableNSProvider=hook_WSCEnableNSProvider        @84 
+    WSCEnumProtocols=hook_WSCEnumProtocols                @85
+    WSCGetProviderPath=hook_WSCGetProviderPath            @86
+    WSCInstallNameSpace=hook_WSCInstallNameSpace        @87
+    WSCInstallProvider=hook_WSCInstallProvider            @88
+    WSCUnInstallNameSpace=hook_WSCUnInstallNameSpace    @89
+    WSCWriteNameSpaceOrder=hook_WSCWriteNameSpaceOrder    @90
+    WSCWriteProviderOrder=hook_WSCWriteProviderOrder    @91
+    __WSAFDIsSet=hook_WPUFDIsSet                        @151
+
+    WSAIsBlocking=hook_WSAIsBlocking                    @114
+    WSACancelBlockingCall=hook_WSACancelBlockingCall    @113
+    WSASetBlockingHook=hook_WSASetBlockingHook            @109
+    WSAUnhookBlockingHook=hook_WSAUnhookBlockingHook    @110
+    
+ 
+c++头文件
+#ifndef    __SOCK_FUNC__
+#define __SOCK_FUNC__
+#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <Ws2spi.h>
+#include <Sporder.h>
+#include <shlwapi.h>
+#include <Nspapi.h>
+#include "SOCK_HOOK.h"
+#include "SOCK_DECODE.h"
+#include "SOCK_ENCODE.h"
+#include "SOCK_CMD.h"
+extern "C"
+{
+    SOCKET    __stdcall hook_accept(    SOCKET s,
+                                    struct sockaddr FAR *addr,
+                                    int FAR *addrlen  );
+   
+    BOOL    __stdcall hook_AcceptEx(    SOCKET    sListenSocket,      
+                                        SOCKET    sAcceptSocket,
+                                        PVOID    lpOutputBuffer,
+                                        DWORD    dwReceiveDataLength,
+                                        DWORD    dwLocalAddressLength,
+                                        DWORD    dwRemoteAddressLength,
+                                        LPDWORD lpdwBytesReceived,
+                                        LPOVERLAPPED lpOverlapped);
+    int        __stdcall hook_bind(    SOCKET s,                          
+                                    const struct sockaddr FAR *name,
+                                    int namelen);
+   
+    int        __stdcall hook_closesocket(    SOCKET s);
+
+    int        __stdcall hook_connect(    SOCKET s,
+                                    const struct sockaddr FAR *name,
+                                    int namelen);
+   
+    INT        __stdcall hook_EnumProtocolsA(    LPINT    lpiProtocols,       
+                                            LPVOID    lpProtocolBuffer,
+                                            LPDWORD lpdwBufferLength);
+                           
+    INT        __stdcall hook_EnumProtocolsW(    LPINT    lpiProtocols,       
+                                            LPVOID    lpProtocolBuffer,
+                                            LPDWORD lpdwBufferLength);
+   
+    VOID    __stdcall hook_GetAcceptExSockaddrs(    PVOID    lpOutputBuffer,
+                                                    DWORD    dwReceiveDataLength,
+                                                    DWORD    dwLocalAddressLength,
+                                                    DWORD    dwRemoteAddressLength,
+                                                    LPSOCKADDR *LocalSockaddr,
+                                                    LPINT    LocalSockaddrLength,
+                                                    LPSOCKADDR *RemoteSockaddr,  
+                                                    LPINT    RemoteSockaddrLength);
+    INT        __stdcall    hook_GetAddressByNameA(    DWORD    dwNameSpace,     
+                                                LPGUID    lpServiceType,  
+                                                LPSTR    lpServiceName,  
+                                                LPINT    lpiProtocols,    
+                                                DWORD    dwResolution,    
+                                                void*    lpServiceAsyncInfo,
+                                                LPVOID    lpCsaddrBuffer, 
+                                                LPDWORD    lpdwBufferLength,
+                                                LPSTR    lpAliasBuffer,
+                                                LPDWORD lpdwAliasBufferLength);
+    
+    INT        __stdcall    hook_GetAddressByNameW(    DWORD    dwNameSpace,     
+                                                LPGUID    lpServiceType,  
+                                                LPWSTR    lpServiceName,  
+                                                LPINT    lpiProtocols,    
+                                                DWORD    dwResolution,    
+                                                void*    lpServiceAsyncInfo,
+                                                LPVOID    lpCsaddrBuffer, 
+                                                LPDWORD    lpdwBufferLength,
+                                                LPWSTR    lpAliasBuffer,
+                                                LPDWORD lpdwAliasBufferLength);
+    HOSTENT*    __stdcall    hook_gethostbyaddr(    const char FAR *addr,
+                                                            int len,
+                                                            int type);
+    struct hostent FAR *    __stdcall    hook_gethostbyname(    const char FAR *name);
+   
+    int        __stdcall    hook_gethostname(char FAR *name, int namelen);
+   
+    INT        __stdcall    hook_GetNameByTypeA(LPGUID lpServiceType,
+                                            LPSTR lpServiceName,
+                                            DWORD dwNameLength);
+    INT        __stdcall    hook_GetNameByTypeW(LPGUID lpServiceType,
+                                            LPWSTR lpServiceName,
+                                            DWORD dwNameLength);
+
+    int        __stdcall    hook_getpeername(    SOCKET s,
+                                            struct sockaddr FAR *name,
+                                            int FAR *namelen);
+   
+    PROTOENT*    __stdcall    hook_getprotobyname(const char FAR *name);
+   
+    PROTOENT*    __stdcall    hook_getprotobynumber(int number);
+
+    servent*    __stdcall    hook_getservbyname(    const char FAR *name,
+                                                const char FAR *proto);
+
+    servent*    __stdcall    hook_getservbyport(    int port,
+                                                const char FAR *proto);
+   
+    INT            __stdcall    hook_GetServiceA(    DWORD dwNameSpace,
+                                                LPGUID lpGuid,
+                                                LPSTR lpServiceName,
+                                                DWORD dwProperties,
+                                                LPVOID lpBuffer,
+                                                LPDWORD lpdwBufferSize,
+                                                LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo);
+   
+    INT            __stdcall    hook_GetServiceW(    DWORD dwNameSpace,
+                                                LPGUID lpGuid,
+                                                LPWSTR lpServiceName,
+                                                DWORD dwProperties,
+                                                LPVOID lpBuffer,
+                                                LPDWORD lpdwBufferSize,
+                                                LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo);
+   
+    int        __stdcall    hook_getsockname(    SOCKET s,
+                                            struct sockaddr FAR *name,
+                                            int FAR *namelen);
+
+    int        __stdcall    hook_getsockopt(    SOCKET s,
+                                            int level,
+                                            int optname,
+                                            char FAR *optval,
+                                            int FAR *optlen);
+
+    INT        __stdcall    hook_GetTypeByNameA(LPSTR lpServiceName,
+                                            LPGUID lpServiceType);
+    INT        __stdcall    hook_GetTypeByNameW(LPWSTR lpServiceName,
+                                            LPGUID lpServiceType);
+    u_long    __stdcall    hook_htonl(u_long hostlong);
+
+    u_short __stdcall    hook_htons(u_short hostshort);
+    unsigned long    __stdcall    hook_inet_addr(const char   FAR *cp);
+
+    char FAR *    __stdcall    hook_inet_ntoa(struct   in_addr in);
+   
+    int    __stdcall    hook_ioctlsocket(    SOCKET s,         
+                                        long cmd,
+                                        u_long FAR *argp);
+   
+    int __stdcall    hook_listen(    SOCKET s,    
+                                    int backlog);
+
+    u_long    __stdcall    hook_ntohl(u_long netlong);
+
+    u_short    __stdcall    hook_ntohs(u_short netshort);
+
+    int        __stdcall    hook_recv(    SOCKET s,       
+                                    char FAR *buf,
+                                    int len,
+                                    int flags);
+   
+    int        __stdcall    hook_recvfrom(    SOCKET s,
+                                        char FAR* buf,              
+                                        int len,
+                                        int flags,
+                                        struct sockaddr FAR *from,
+                                        int FAR *fromlen);
+   
+    int        __stdcall    hook_select(    int nfds,
+                                        fd_set FAR *readfds,
+                                        fd_set FAR *writefds,
+                                        fd_set FAR *exceptfds,
+                                        const struct timeval FAR *timeout);
+
+    int        __stdcall    hook_send(    SOCKET s,
+                                    const char FAR *buf,
+                                    int len,
+                                    int flags);
+
+    int        __stdcall    hook_sendto(SOCKET s,
+                                    const char FAR *buf,
+                                    int len,
+                                    int flags,
+                                    const struct sockaddr FAR *to,
+                                    int tolen);
+    INT        __stdcall    hook_SetServiceA(    DWORD dwNameSpace,
+                                            DWORD dwOperation,
+                                            DWORD dwFlags,
+                                            LPSERVICE_INFOA lpServiceInfo,
+                                            LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo,
+                                            LPDWORD lpdwStatusFlags);
+    INT        __stdcall    hook_SetServiceW(    DWORD dwNameSpace,
+                                            DWORD dwOperation,
+                                            DWORD dwFlags,
+                                            LPSERVICE_INFOW lpServiceInfo,
+                                            LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo,
+                                            LPDWORD lpdwStatusFlags);
+    int        __stdcall    hook_setsockopt(    SOCKET s,
+                                            int level,
+                                            int optname,
+                                            const char FAR *optval,
+                                            int optlen);
+
+    int        __stdcall    hook_shutdown(    SOCKET s,
+                                        int how);
+
+    SOCKET    __stdcall    hook_socket(    int af,
+                                        int type,
+                                        int protocol);
+
+    BOOL    __stdcall    hook_TransmitFile(    SOCKET hSocket,
+                                            HANDLE hFile,
+                                            DWORD nNumberOfBytesToWrite,
+                                            DWORD nNumberOfBytesPerSend,
+                                            LPOVERLAPPED lpOverlapped,
+                                            void* lpTransmitBuffers,
+                                            DWORD dwFlags);
+    
+    SOCKET    __stdcall    hook_WSAAccept(    SOCKET s,
+                                        struct sockaddr FAR *addr,
+                                        LPINT addrlen,
+                                        LPCONDITIONPROC lpfnCondition,
+                                        DWORD dwCallbackData);
+    
+    INT        __stdcall    hook_WSAAddressToStringA(    LPSOCKADDR lpsaAddress,
+                                                    DWORD dwAddressLength,
+                                                    LPWSAPROTOCOL_INFO lpProtocolInfo,
+                                                    OUT LPSTR lpszAddressString,
+                                                    IN OUT LPDWORD lpdwAddressStringLength);
+    
+    INT        __stdcall    hook_WSAAddressToStringW(    LPSOCKADDR lpsaAddress,
+                                                    DWORD dwAddressLength,
+                                                    LPWSAPROTOCOL_INFO lpProtocolInfo,
+                                                    OUT LPWSTR lpszAddressString,
+                                                    IN OUT LPDWORD lpdwAddressStringLength);
+    HANDLE    __stdcall    hook_WSAAsyncGetHostByAddr(    HWND hWnd,
+                                                    unsigned int wMsg,
+                                                    const char FAR *addr,
+                                                    int len,
+                                                    int type,
+                                                    char FAR *buf,
+                                                    int buflen);
+    HANDLE    __stdcall    hook_WSAAsyncGetHostByName(    HWND hWnd,
+                                                    unsigned int wMsg,
+                                                    const char FAR *name,
+                                                    char FAR *buf,
+                                                    int buflen);
+    
+    HANDLE    __stdcall    hook_WSAAsyncGetProtoByName(    HWND hWnd,
+                                                        unsigned int wMsg,
+                                                        const char FAR *name,
+                                                        char FAR *buf,
+                                                        int buflen);
+    HANDLE    __stdcall    hook_WSAAsyncGetProtoByNumber(    HWND hWnd,
+                                                        unsigned int wMsg,
+                                                        int number,
+                                                        char FAR *buf,
+                                                        int buflen);
+    HANDLE    __stdcall    hook_WSAAsyncGetServByName(    HWND hWnd,
+                                                    unsigned int wMsg,
+                                                    const char FAR *name,
+                                                    const char FAR *proto,
+                                                    char FAR *buf,
+                                                    int buflen);
+    
+    HANDLE    __stdcall    hook_WSAAsyncGetServByPort(    HWND hWnd,               
+                                                    unsigned int wMsg,       
+                                                    int port,                
+                                                    const char FAR *proto,  
+                                                    char FAR *buf,          
+                                                    int buflen);
+
+    int        __stdcall    hook_WSAAsyncSelect(    SOCKET s,           
+                                                HWND hWnd,          
+                                                unsigned int wMsg,  
+                                                long lEvent);
+   
+    int        __stdcall    hook_WSACancelAsyncRequest(HANDLE hAsyncTaskHandle);
+    int        __stdcall    hook_WSACleanup (void);
+    BOOL    __stdcall    hook_WSACloseEvent(WSAEVENT hEvent);
+    int        __stdcall    hook_WSAConnect(    SOCKET s,                          
+                                            const struct sockaddr FAR *name,  
+                                            int namelen,                       
+                                            LPWSABUF lpCallerData,             
+                                            LPWSABUF lpCalleeData,             
+                                            LPQOS lpSQOS,                      
+                                            LPQOS lpGQOS);
+    WSAEVENT    __stdcall    hook_WSACreateEvent (void);
+    int        __stdcall    hook_WSADuplicateSocketA(    SOCKET s,                          
+                                                    DWORD dwProcessId,                 
+                                                    LPWSAPROTOCOL_INFOA lpProtocolInfo);
+    
+    int        __stdcall    hook_WSADuplicateSocketW(    SOCKET s,                          
+                                                    DWORD dwProcessId,                 
+                                                    LPWSAPROTOCOL_INFOW lpProtocolInfo);
+
+    INT        __stdcall    hook_WSAEnumNameSpaceProvidersA(IN OUT LPDWORD lpdwBufferLength,  
+                                                        OUT LPWSANAMESPACE_INFOA lpnspBuffer);
+    
+    INT        __stdcall    hook_WSAEnumNameSpaceProvidersW(IN OUT LPDWORD lpdwBufferLength,  
+                                                        OUT LPWSANAMESPACE_INFOW lpnspBuffer);
+    int        __stdcall    hook_WSAEnumNetworkEvents(    SOCKET s,                           
+                                                    WSAEVENT hEventObject,              
+                                                    LPWSANETWORKEVENTS lpNetworkEvents);
+    
+    int        __stdcall    hook_WSAEnumProtocolsA(    LPINT lpiProtocols,                   
+                                                LPWSAPROTOCOL_INFOA lpProtocolBuffer,  
+                                                LPDWORD lpdwBufferLength);
+    
+    int        __stdcall    hook_WSAEnumProtocolsW(    LPINT lpiProtocols,                   
+                                                LPWSAPROTOCOL_INFOW lpProtocolBuffer,  
+                                                LPDWORD lpdwBufferLength);
+    int        __stdcall    hook_WSAEventSelect(    SOCKET s,               
+                                                WSAEVENT hEventObject,  
+                                                long lNetworkEvents);
+    int        __stdcall    hook_WSAGetLastError (void);
+    BOOL    __stdcall    hook_WSAGetOverlappedResult(    SOCKET s,                      
+                                                        LPWSAOVERLAPPED lpOverlapped,  
+                                                        LPDWORD lpcbTransfer,          
+                                                        BOOL fWait,                    
+                                                        LPDWORD lpdwFlags);
+    BOOL    __stdcall    hook_WSAGetQOSByName(    SOCKET s,            
+                                                LPWSABUF lpQOSName,  
+                                                LPQOS lpQOS);
+    INT        __stdcall    hook_WSAGetServiceClassInfoA(    LPGUID lpProviderId,                      
+                                                        LPGUID lpServiceClassId,                  
+                                                        LPDWORD lpdwBufferLength,                 
+                                                        LPWSASERVICECLASSINFOA lpServiceClassInfo);
+    INT        __stdcall    hook_WSAGetServiceClassInfoW(    LPGUID lpProviderId,                      
+                                                        LPGUID lpServiceClassId,                  
+                                                        LPDWORD lpdwBufferLength,                 
+                                                        LPWSASERVICECLASSINFOW lpServiceClassInfo);
+    INT        __stdcall    hook_WSAGetServiceClassNameByClassIdA(    LPGUID lpServiceClassId,  
+                                                                LPSTR lpszServiceClassName,  
+                                                                LPDWORD lpdwBufferLength);
+    
+    INT        __stdcall    hook_WSAGetServiceClassNameByClassIdW(    LPGUID lpServiceClassId,  
+                                                                LPWSTR lpszServiceClassName,  
+                                                                LPDWORD lpdwBufferLength);
+   
+    int        __stdcall    hook_WSAHtonl(    SOCKET s,               
+                                        u_long hostlong,        
+                                        u_long FAR *lpnetlong);
+
+    int        __stdcall    hook_WSAHtons(    SOCKET s,                 
+                                        u_short hostshort,        
+                                        u_short FAR *lpnetshort);
+
+    INT        __stdcall    hook_WSAInstallServiceClassA(LPWSASERVICECLASSINFOA lpServiceClassInfo);
+    INT        __stdcall    hook_WSAInstallServiceClassW(LPWSASERVICECLASSINFOW lpServiceClassInfo);
+
+    int        __stdcall    hook_WSAIoctl(    SOCKET s,                                      
+                                        DWORD dwIoControlCode,                        
+                                        LPVOID lpvInBuffer,                            
+                                        DWORD cbInBuffer,                             
+                                        LPVOID lpvOutBuffer,                           
+                                        DWORD cbOutBuffer,                            
+                                        LPDWORD lpcbBytesReturned,                      
+                                        LPWSAOVERLAPPED lpOverlapped,                           
+                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+
+    SOCKET    __stdcall    hook_WSAJoinLeaf(    SOCKET s,                          
+                                            const struct sockaddr FAR *name,   
+                                            int namelen,                       
+                                            LPWSABUF lpCallerData,             
+                                            LPWSABUF lpCalleeData,             
+                                            LPQOS lpSQOS,                      
+                                            LPQOS lpGQOS,                      
+                                            DWORD dwFlags);
+    INT        __stdcall    hook_WSALookupServiceBeginA(LPWSAQUERYSETA lpqsRestrictions,  
+                                                    DWORD dwControlFlags,            
+                                                    LPHANDLE lphLookup);
+    INT        __stdcall    hook_WSALookupServiceBeginW(LPWSAQUERYSETW lpqsRestrictions,  
+                                                    DWORD dwControlFlags,            
+                                                    LPHANDLE lphLookup);
+    INT        __stdcall    hook_WSALookupServiceEnd(HANDLE hLookup);
+    INT        __stdcall    hook_WSALookupServiceNextA(    HANDLE hLookup,        
+                                                    DWORD dwControlFlags,  
+                                                    LPDWORD lpdwBufferLength,  
+                                                    LPWSAQUERYSETA lpqsResults);
+    INT        __stdcall    hook_WSALookupServiceNextW(    HANDLE hLookup,        
+                                                    DWORD dwControlFlags,  
+                                                    LPDWORD lpdwBufferLength,  
+                                                    LPWSAQUERYSETW lpqsResults);
+    int        __stdcall    hook_WSANtohl(    SOCKET s,                
+                                        u_long netlong,          
+                                        u_long FAR *lphostlong);
+
+    int        __stdcall    hook_WSANtohs(    SOCKET s,                  
+                                        u_short netshort,          
+                                        u_short FAR *lphostshort);
+    int        __stdcall    hook_WSAProviderConfigChange(    LPHANDLE lpNotificationHandle,
+                                                        LPWSAOVERLAPPED lpOverlapped,
+                                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+    int        __stdcall    hook_WSARecv(    SOCKET s,                                               
+                                        LPWSABUF lpBuffers,                                     
+                                        DWORD dwBufferCount,                                    
+                                        LPDWORD lpNumberOfBytesRecvd,                           
+                                        LPDWORD lpFlags,                                        
+                                        LPWSAOVERLAPPED lpOverlapped,                           
+                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+
+    int        __stdcall    hook_WSARecvDisconnect(    SOCKET s,                         
+                                                LPWSABUF lpInboundDisconnectData);
+
+    int        __stdcall    hook_WSARecvEx(    SOCKET s,         
+                                        char FAR *buf,    
+                                        int len,          
+                                        int *flags);
+
+    int        __stdcall    hook_WSARecvFrom(    SOCKET s,                                               
+                                            LPWSABUF lpBuffers,                                     
+                                            DWORD dwBufferCount,                                    
+                                            LPDWORD lpNumberOfBytesRecvd,                           
+                                            LPDWORD lpFlags,                                        
+                                            struct sockaddr FAR *lpFrom,                            
+                                            LPINT lpFromlen,                                        
+                                            LPWSAOVERLAPPED lpOverlapped,                           
+                                            LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+
+    INT        __stdcall    hook_WSARemoveServiceClass(LPGUID lpServiceClassId);
+    BOOL    __stdcall    hook_WSAResetEvent(WSAEVENT hEvent);
+
+    int        __stdcall    hook_WSASend(    SOCKET s,                                               
+                                        LPWSABUF lpBuffers,                                     
+                                        DWORD dwBufferCount,                                    
+                                        LPDWORD lpNumberOfBytesSent,                            
+                                        DWORD dwFlags,                                          
+                                        LPWSAOVERLAPPED lpOverlapped,                           
+                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+
+    int        __stdcall    hook_WSASendDisconnect(    SOCKET s,                           
+                                                LPWSABUF lpOutboundDisconnectData);
+    int        __stdcall    hook_WSASendTo(    SOCKET s,                   
+                                        LPWSABUF lpBuffers,           
+                                        DWORD dwBufferCount,       
+                                        LPDWORD lpNumberOfBytesSent, 
+                                        DWORD dwFlags,             
+                                        const struct sockaddr FAR *lpTo,               
+                                        int iToLen,              
+                                        LPWSAOVERLAPPED lpOverlapped,        
+                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+    BOOL    __stdcall    hook_WSASetEvent(WSAEVENT hEvent);
+    void    __stdcall    hook_WSASetLastError(int iError);
+    INT        __stdcall    hook_WSASetService(    LPWSAQUERYSET lpqsRegInfo,  
+                                            WSAESETSERVICEOP essOperation,  
+                                            DWORD dwControlFlags);
+    SOCKET    __stdcall    hook_WSASocketA(int af,                             
+                                        int type,                           
+                                        int protocol,                       
+                                        LPWSAPROTOCOL_INFOA lpProtocolInfo,  
+                                        GROUP g,                            
+                                        DWORD dwFlags);
+    
+    SOCKET    __stdcall    hook_WSASocketW(int af,                             
+                                        int type,                           
+                                        int protocol,                       
+                                        LPWSAPROTOCOL_INFOW lpProtocolInfo,  
+                                        GROUP g,                            
+                                        DWORD dwFlags);
+    
+    int        __stdcall    hook_WSAStartup(    WORD wVersionRequested,  
+                                            LPWSADATA lpWSAData);
+    INT        __stdcall    hook_WSAStringToAddressA(    LPSTR AddressString,               
+                                                    INT AddressFamily,                  
+                                                    LPWSAPROTOCOL_INFO lpProtocolInfo,  
+                                                    LPSOCKADDR lpAddress,               
+                                                    LPINT lpAddressLength);
+    
+    INT        __stdcall    hook_WSAStringToAddressW(    LPWSTR AddressString,               
+                                                    INT AddressFamily,                  
+                                                    LPWSAPROTOCOL_INFO lpProtocolInfo,  
+                                                    LPSOCKADDR lpAddress,               
+                                                    LPINT lpAddressLength);
+
+    DWORD    __stdcall    hook_WSAWaitForMultipleEvents(    DWORD cEvents,                  
+                                                        const WSAEVENT FAR *lphEvents,  
+                                                        BOOL fWaitAll,                  
+                                                        DWORD dwTimeout,                
+                                                        BOOL fAlertable);
+   
+
+    int        __stdcall    hook_WSCDeinstallProvider(    LPGUID lpProviderId,LPINT lpErrno);
+    int        __stdcall    hook_WSCEnableNSProvider(LPGUID lpProviderId,BOOL fEnable);
+    int        __stdcall    hook_WSCEnumProtocols (    LPINT lpiProtocols,                     
+                                                LPWSAPROTOCOL_INFOW lpProtocolBuffer,   
+                                                LPDWORD lpdwBufferLength,               
+                                                LPINT lpErrno);
+   
+    int        __stdcall    hook_WSCGetProviderPath(    LPGUID lpProviderId,         
+                                                    LPWSTR lpszProviderDllPath,  
+                                                    LPINT lpProviderDllPathLen,  
+                                                    LPINT lpErrno);
+    int        __stdcall    hook_WSCInstallNameSpace(    LPWSTR lpszIdentifier,   
+                                                    LPWSTR lpszPathName,   
+                                                    DWORD dwNameSpace,     
+                                                    DWORD dwVersion,       
+                                                    LPGUID lpProviderId);
+    int        __stdcall    hook_WSCInstallProvider (    const LPGUID lpProviderId,                      
+                                                    const LPWSTR lpszProviderDllPath,               
+                                                    const LPWSAPROTOCOL_INFOW lpProtocolInfoList,   
+                                                    DWORD dwNumberOfEntries,                        
+                                                    LPINT lpErrno);
+    int        __stdcall    hook_WSCUnInstallNameSpace (LPGUID lpProviderId);
+    int        __stdcall    hook_WSCWriteProviderOrder (LPDWORD lpwdCatalogEntryId,DWORD dwNumberOfEntries);
+    int        __stdcall    hook_WSCWriteNameSpaceOrder (    IN LPGUID lpProviderId,IN DWORD dwNumberOfEntries);
+    
+    WSAEVENT    __stdcall    hook_WPUCompleteOverlappedRequest(    SOCKET s,                      
+                                                                LPWSAOVERLAPPED lpOverlapped,  
+                                                                DWORD dwError,                 
+                                                                DWORD cbTransferred,           
+                                                                LPINT lpErrno);
+    
+    int        __stdcall    hook_WPUFDIsSet (SOCKET s,FD_SET FAR *set);
+   
+    BOOL    __stdcall    hook_WSAIsBlocking(void);
+    int        __stdcall    hook_WSACancelBlockingCall(void);
+    FARPROC    __stdcall    hook_WSASetBlockingHook(IN FARPROC lpBlockFunc);
+    int        __stdcall    hook_WSAUnhookBlockingHook(void);
+    void    __stdcall    SockSendLog(char*,void*,int,DWORD);
+    void    __stdcall    SockRecvLog(char*,void*,int,DWORD);
+    void    __stdcall    SockFuncLog(char*);
+}
+extern    HANDLE    _hSockLog;
+extern    void*    _pSockFunc[SOCK_FUNCTION_NUMBER];
+extern  char*    _pszSockFunc[];
+extern    BOOL    _bEnableHook;    
+extern    CSockEncode*    _pEncode;
+extern    CSockDecode*    _pDecode;
+#endif
+c++源文件
+#include "SOCK_FUNC.h"
+#include <stdio.h>
+//__declspec(thread) int _iCount=1;
+int _iCount=1;
+SOCKET    __stdcall hook_accept(    SOCKET s,
+                                struct sockaddr FAR *addr,
+                                int FAR *addrlen  )
+{
+    SockFuncLog(_pszSockFunc[SOCK_ACCEPT]);
+    typedef    SOCKET (__stdcall *sock_accept)(SOCKET,struct sockaddr*,int*);
+    return ((sock_accept)_pSockFunc[SOCK_ACCEPT])(s,addr,addrlen);
+}
+   
+BOOL    __stdcall hook_AcceptEx(    SOCKET    sListenSocket,      
+                                    SOCKET    sAcceptSocket,
+                                    PVOID    lpOutputBuffer,
+                                    DWORD    dwReceiveDataLength,
+                                    DWORD    dwLocalAddressLength,
+                                    DWORD    dwRemoteAddressLength,
+                                    LPDWORD lpdwBytesReceived,
+                                    LPOVERLAPPED lpOverlapped)
+{
+    SockFuncLog(_pszSockFunc[SOCK_ACCEPTEX]);
+    typedef BOOL (__stdcall *sock_AcceptEx)(SOCKET,SOCKET,PVOID,DWORD,DWORD,DWORD,LPDWORD,LPOVERLAPPED);
+    return ((sock_AcceptEx)_pSockFunc[SOCK_ACCEPTEX])(
+        sListenSocket,
+        sAcceptSocket,
+        lpOutputBuffer,
+        dwReceiveDataLength,
+        dwLocalAddressLength,
+        dwRemoteAddressLength,
+        lpdwBytesReceived,
+        lpOverlapped);
+}
+
+int        __stdcall hook_bind(    SOCKET s,                          
+                                const struct sockaddr FAR *name,
+                                int namelen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_BIND]);
+    typedef    int (__stdcall    *sock_bind)(SOCKET,const struct sockaddr*,int);
+    return ((sock_bind)_pSockFunc[SOCK_BIND])(s,name,namelen);
+}
+
+int        __stdcall hook_closesocket(    SOCKET s)
+{
+    SockFuncLog(_pszSockFunc[SOCK_CLOSESOCKET]);
+    typedef int (__stdcall *sock_closesocket)(SOCKET);
+    return ((sock_closesocket)_pSockFunc[SOCK_CLOSESOCKET])(s);
+}
+
+int        __stdcall hook_connect(    SOCKET s,
+                                const struct sockaddr FAR *name,
+                                int namelen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_CONNECT]);
+    typedef int (__stdcall *sock_connect)(SOCKET,const struct sockaddr*,int);
+    return ((sock_connect)_pSockFunc[SOCK_CONNECT])(s,name,namelen);
+}
+
+INT        __stdcall hook_EnumProtocolsA(    LPINT    lpiProtocols,       
+                                        LPVOID    lpProtocolBuffer,
+                                        LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_ENUMPROTOCOLSA]);
+    typedef INT (__stdcall *sock_EnumProtocolsA)(LPINT,LPVOID,LPDWORD);
+    return ((sock_EnumProtocolsA)_pSockFunc[SOCK_ENUMPROTOCOLSA])(lpiProtocols,lpProtocolBuffer,lpdwBufferLength);
+}
+INT        __stdcall hook_EnumProtocolsW(    LPINT    lpiProtocols,       
+                                        LPVOID    lpProtocolBuffer,
+                                        LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_ENUMPROTOCOLSW]);
+    typedef INT (__stdcall *sock_EnumProtocolsW)(LPINT,LPVOID,LPDWORD);
+    return ((sock_EnumProtocolsW)_pSockFunc[SOCK_ENUMPROTOCOLSW])(lpiProtocols,lpProtocolBuffer,lpdwBufferLength);
+}
+                       
+VOID    __stdcall hook_GetAcceptExSockaddrs(    PVOID    lpOutputBuffer,
+                                                DWORD    dwReceiveDataLength,
+                                                DWORD    dwLocalAddressLength,
+                                                DWORD    dwRemoteAddressLength,
+                                                LPSOCKADDR *LocalSockaddr,
+                                                LPINT    LocalSockaddrLength,
+                                                LPSOCKADDR *RemoteSockaddr,  
+                                                LPINT    RemoteSockaddrLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETACCEPTEXSOCKADDRS]);
+    typedef    VOID (__stdcall *sock_GetAcceptExSockaddrs)(PVOID,DWORD,DWORD,DWORD,LPSOCKADDR*,LPINT,LPSOCKADDR*,LPINT);
+    ((sock_GetAcceptExSockaddrs)_pSockFunc[SOCK_GETACCEPTEXSOCKADDRS])(
+        lpOutputBuffer,
+        dwReceiveDataLength,
+        dwLocalAddressLength,
+        dwRemoteAddressLength,
+        LocalSockaddr,
+        LocalSockaddrLength,
+        RemoteSockaddr,
+        RemoteSockaddrLength);
+}
+INT        __stdcall    hook_GetAddressByNameA(    DWORD    dwNameSpace,     
+                                            LPGUID    lpServiceType,  
+                                            LPSTR    lpServiceName,  
+                                            LPINT    lpiProtocols,    
+                                            DWORD    dwResolution,    
+                                            void*    lpServiceAsyncInfo,
+                                            LPVOID    lpCsaddrBuffer, 
+                                            LPDWORD    lpdwBufferLength,
+                                            LPSTR    lpAliasBuffer,
+                                            LPDWORD lpdwAliasBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETADDRESSBYNAMEA]);
+    typedef    INT (__stdcall *sock_GetAddressByNameA)(DWORD,LPGUID,LPSTR,LPINT,DWORD,void*,LPVOID,LPDWORD,LPSTR,LPDWORD);
+    return ((sock_GetAddressByNameA)_pSockFunc[SOCK_GETADDRESSBYNAMEA])(
+        dwNameSpace,
+        lpServiceType,
+        lpServiceName,
+        lpiProtocols,
+        dwResolution,
+        lpServiceAsyncInfo,
+        lpCsaddrBuffer,
+        lpdwBufferLength,
+        lpAliasBuffer,
+        lpdwAliasBufferLength);
+}
+
+INT        __stdcall    hook_GetAddressByNameW(    DWORD    dwNameSpace,     
+                                            LPGUID    lpServiceType,  
+                                            LPWSTR    lpServiceName,  
+                                            LPINT    lpiProtocols,    
+                                            DWORD    dwResolution,    
+                                            void*    lpServiceAsyncInfo,
+                                            LPVOID    lpCsaddrBuffer, 
+                                            LPDWORD    lpdwBufferLength,
+                                            LPWSTR    lpAliasBuffer,
+                                            LPDWORD lpdwAliasBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETADDRESSBYNAMEW]);
+    typedef    INT (__stdcall *sock_GetAddressByNameW)(DWORD,LPGUID,LPWSTR,LPINT,DWORD,void*,LPVOID,LPDWORD,LPWSTR,LPDWORD);
+    return ((sock_GetAddressByNameW)_pSockFunc[SOCK_GETADDRESSBYNAMEW])(
+        dwNameSpace,
+        lpServiceType,
+        lpServiceName,
+        lpiProtocols,
+        dwResolution,
+        lpServiceAsyncInfo,
+        lpCsaddrBuffer,
+        lpdwBufferLength,
+        lpAliasBuffer,
+        lpdwAliasBufferLength);
+}
+HOSTENT*    __stdcall    hook_gethostbyaddr(    const char FAR *addr,
+                                            int len,
+                                            int type)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETHOSTBYADDR]);
+    typedef HOSTENT* (__stdcall *sock_gethostbyaddr)(const char*,int,int);
+    return ((sock_gethostbyaddr)_pSockFunc[SOCK_GETHOSTBYADDR])(addr,len,type);
+}
+struct hostent FAR *    __stdcall    hook_gethostbyname(    const char FAR *name)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETHOSTBYNAME]);
+    typedef struct hostent* (__stdcall *sock_gethostbyname)(const char*);
+    return ((sock_gethostbyname)_pSockFunc[SOCK_GETHOSTBYNAME])(name);
+}
+
+int        __stdcall    hook_gethostname(char FAR *name, int namelen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETHOSTNAME]);
+    typedef int (__stdcall *sock_gethostname)(char*,int);
+    return ((sock_gethostname)_pSockFunc[SOCK_GETHOSTNAME])(name,namelen);
+}
+
+INT        __stdcall    hook_GetNameByTypeA(LPGUID lpServiceType,
+                                        LPSTR lpServiceName,
+                                        DWORD dwNameLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETNAMEBYTYPEA]);
+    typedef INT (__stdcall *sock_GetNameByTypeA)(LPGUID,LPSTR,DWORD);
+    return ((sock_GetNameByTypeA)_pSockFunc[SOCK_GETNAMEBYTYPEA])(lpServiceType,lpServiceName,dwNameLength);
+}
+INT        __stdcall    hook_GetNameByTypeW(LPGUID lpServiceType,
+                                        LPWSTR lpServiceName,
+                                        DWORD dwNameLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETNAMEBYTYPEW]);
+    typedef INT (__stdcall *sock_GetNameByTypeW)(LPGUID,LPWSTR,DWORD);
+    return ((sock_GetNameByTypeW)_pSockFunc[SOCK_GETNAMEBYTYPEW])(lpServiceType,lpServiceName,dwNameLength);
+}
+
+int        __stdcall    hook_getpeername(    SOCKET s,
+                                        struct sockaddr FAR *name,
+                                        int FAR *namelen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETPEERNAME]);
+    typedef int (__stdcall *sock_getpeername)(SOCKET,struct sockaddr*,int*);
+    return ((sock_getpeername)_pSockFunc[SOCK_GETPEERNAME])(s,name,namelen);
+}                                       
+
+PROTOENT*    __stdcall    hook_getprotobyname(const char FAR *name)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETPROTOBYNAME]);
+    typedef PROTOENT* (__stdcall *sock_getprotobyname)(const char*);
+    return ((sock_getprotobyname)_pSockFunc[SOCK_GETPROTOBYNAME])(name);
+}
+
+PROTOENT*    __stdcall    hook_getprotobynumber(int number)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETPROTOBYNUMBER]);
+    typedef PROTOENT* (__stdcall *sock_getprotobynumber)(int);
+    return ((sock_getprotobynumber)_pSockFunc[SOCK_GETPROTOBYNUMBER])(number);
+}
+
+servent*    __stdcall    hook_getservbyname(    const char FAR *name,
+                                            const char FAR *proto)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSERVBYNAME]);
+    typedef servent* (__stdcall *sock_getservbyname)(const char*,const char*);
+    return ((sock_getservbyname)_pSockFunc[SOCK_GETSERVBYNAME])(name,proto);
+}                                           
+
+servent*    __stdcall    hook_getservbyport(    int port,
+                                            const char FAR *proto)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSERVBYPORT]);
+    typedef servent* (__stdcall *sock_getservbyport)(int,const char*);
+    return ((sock_getservbyport)_pSockFunc[SOCK_GETSERVBYPORT])(port,proto);
+}
+
+INT            __stdcall    hook_GetServiceA(    DWORD dwNameSpace,
+                                            LPGUID lpGuid,
+                                            LPSTR lpServiceName,
+                                            DWORD dwProperties,
+                                            LPVOID lpBuffer,
+                                            LPDWORD lpdwBufferSize,
+                                            LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSERVICEA]);
+    typedef INT (__stdcall *sock_GetServiceA)(DWORD,LPGUID,LPSTR,DWORD,LPVOID,LPDWORD,LPSERVICE_ASYNC_INFO);
+    return ((sock_GetServiceA)_pSockFunc[SOCK_GETSERVICEA])(
+        dwNameSpace,
+        lpGuid,
+        lpServiceName,
+        dwProperties,
+        lpBuffer,
+        lpdwBufferSize,
+        lpServiceAsyncInfo);
+}
+
+INT            __stdcall    hook_GetServiceW(    DWORD dwNameSpace,
+                                            LPGUID lpGuid,
+                                            LPWSTR lpServiceName,
+                                            DWORD dwProperties,
+                                            LPVOID lpBuffer,
+                                            LPDWORD lpdwBufferSize,
+                                            LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSERVICEW]);
+    typedef INT (__stdcall *sock_GetServiceW)(DWORD,LPGUID,LPWSTR,DWORD,LPVOID,LPDWORD,LPSERVICE_ASYNC_INFO);
+    return ((sock_GetServiceW)_pSockFunc[SOCK_GETSERVICEW])(
+        dwNameSpace,
+        lpGuid,
+        lpServiceName,
+        dwProperties,
+        lpBuffer,
+        lpdwBufferSize,
+        lpServiceAsyncInfo);
+}
+
+int        __stdcall    hook_getsockname(    SOCKET s,
+                                        struct sockaddr FAR *name,
+                                        int FAR *namelen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSOCKNAME]);
+    typedef int (__stdcall *sock_getsockname)(SOCKET,struct sockaddr*,int*);
+    return ((sock_getsockname)_pSockFunc[SOCK_GETSOCKNAME])(s,name,namelen);
+}
+
+int        __stdcall    hook_getsockopt(    SOCKET s,
+                                        int level,
+                                        int optname,
+                                        char FAR *optval,
+                                        int FAR *optlen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETSOCKOPT]);
+    typedef int (__stdcall    *sock_getsockopt)(SOCKET,int,int,char*,int*);
+    return ((sock_getsockopt)_pSockFunc[SOCK_GETSOCKOPT])(s,level,optname,optval,optlen);
+}
+
+INT        __stdcall    hook_GetTypeByNameA(LPSTR lpServiceName,
+                                        LPGUID lpServiceType)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETTYPEBYNAMEA]);
+    typedef INT (__stdcall *sock_GetTypeByNameA)(LPSTR,LPGUID);
+    return ((sock_GetTypeByNameA)_pSockFunc[SOCK_GETTYPEBYNAMEA])(lpServiceName,lpServiceType);
+}
+
+INT        __stdcall    hook_GetTypeByNameW(LPWSTR lpServiceName,
+                                        LPGUID lpServiceType)
+{
+    SockFuncLog(_pszSockFunc[SOCK_GETTYPEBYNAMEW]);
+    typedef INT (__stdcall *sock_GetTypeByNameW)(LPWSTR,LPGUID);
+    return ((sock_GetTypeByNameW)_pSockFunc[SOCK_GETTYPEBYNAMEW])(lpServiceName,lpServiceType);
+}
+u_long    __stdcall    hook_htonl(u_long hostlong)
+{
+    SockFuncLog(_pszSockFunc[SOCK_HTONL]);
+    typedef u_long (__stdcall *sock_htonl)(u_long);
+    return ((sock_htonl)_pSockFunc[SOCK_HTONL])(hostlong);
+}
+
+u_short __stdcall    hook_htons(u_short hostshort)
+{
+    SockFuncLog(_pszSockFunc[SOCK_HTONS]);
+    typedef u_short (__stdcall *sock_htons)(u_short);
+    return ((sock_htons)_pSockFunc[SOCK_HTONS])(hostshort);
+}
+unsigned long    __stdcall    hook_inet_addr(const char   FAR *cp)
+{
+    SockFuncLog(_pszSockFunc[SOCK_INET_ADDR]);
+    typedef unsigned long (__stdcall *sock_inet_addr)(const char*);
+    return ((sock_inet_addr)_pSockFunc[SOCK_INET_ADDR])(cp);
+}
+
+char FAR *    __stdcall    hook_inet_ntoa(struct   in_addr in)
+{
+    SockFuncLog(_pszSockFunc[SOCK_INET_NTOA]);
+    typedef char* (__stdcall *sock_inet_ntoa)(struct in_addr);
+    return ((sock_inet_ntoa)_pSockFunc[SOCK_INET_NTOA])(in);
+}
+int    __stdcall    hook_ioctlsocket(    SOCKET s,         
+                                    long cmd,
+                                    u_long FAR *argp)
+{
+    SockFuncLog(_pszSockFunc[SOCK_IOCTLSOCKET]);
+    typedef int (__stdcall  *sock_ioctlsocket)(SOCKET,long,u_long*);
+    return ((sock_ioctlsocket)_pSockFunc[SOCK_IOCTLSOCKET])(s,cmd,argp);
+    //2002-12-14
+/*
+    int iSuccess=((sock_ioctlsocket)_pSockFunc[SOCK_IOCTLSOCKET])(s,cmd,argp);
+    if(_pEncode->HasSockKey() && _pDecode->HasSockKey())
+    {
+        if(cmd & FIONREAD) *argp+=_pDecode->SkillLength();
+    }
+    return iSuccess;
+*/
+}
+
+int __stdcall    hook_listen(    SOCKET s,    
+                                int backlog)
+{
+    SockFuncLog(_pszSockFunc[SOCK_LISTEN]);
+    typedef int (__stdcall *sock_listen)(SOCKET,int);
+    return ((sock_listen)_pSockFunc[SOCK_LISTEN])(s,backlog);
+}
+
+u_long    __stdcall    hook_ntohl(u_long netlong)
+{
+    SockFuncLog(_pszSockFunc[SOCK_NTOHL]);
+    typedef u_long (__stdcall *sock_ntohl)(u_long);
+    return ((sock_ntohl)_pSockFunc[SOCK_NTOHL])(netlong);
+}
+
+u_short    __stdcall    hook_ntohs(u_short netshort)
+{
+    SockFuncLog(_pszSockFunc[SOCK_NTOHS]);
+    typedef    u_short (__stdcall *sock_ntohs)(u_short);
+    return ((sock_ntohs)_pSockFunc[SOCK_NTOHS])(netshort);
+}
+
+int        __stdcall    hook_recv(    SOCKET s,       
+                                char FAR *buf,
+                                int len,
+                                int flags)
+{
+    DWORD dwEBP;
+    __asm
+    {
+        mov dwEBP,ebp
+    }
+    SockFuncLog(_pszSockFunc[SOCK_RECV]);
+    typedef int (__stdcall *sock_recv)(SOCKET,char*,int,int);
+   
+    int iSuccess=((sock_recv)_pSockFunc[SOCK_RECV])(s,buf,len,flags);
+/*
+    if(SOCKET_ERROR!=iSuccess)
+    {
+        SockRecvLog(_pszSockFunc[SOCK_RECV],buf,iSuccess,*(DWORD*)(dwEBP+4));
+        if(!_pEncode->HasSockKey() || !_pDecode->HasSockKey())
+        {
+//            HANDLE hFile=CreateFile("KEY",GENERIC_WRITE,FILE_SHARE_READ,NULL,CREATE_ALWAYS,0,NULL);
+            _pDecode->GetSockKey(buf);
+            _pEncode->GetSockKey(buf);
+//            WriteFile(hFile,buf,4,&dwEBP,NULL);
+//            CloseHandle(hFile);
+        }
+        //2002-12-14
+        else if(len>=(iSuccess+_pDecode->SkillLength()))
+        {
+            char* pDecodeData=(char*)HeapAlloc(GetProcessHeap(),HEAP_ZERO_MEMORY,len);
+            _pDecode->Decode(pDecodeData,buf,iSuccess);
+            if(0x41==pDecodeData[7])
+            {
+                _pDecode->Skill(pDecodeData,iSuccess);
+                iSuccess+=_pDecode->SkillLength();
+            }
+            _pEncode->Encode(buf,pDecodeData,iSuccess);
+            HeapFree(GetProcessHeap(),0,pDecodeData);
+        }
+    }
+*/
+    return iSuccess;
+}
+
+int        __stdcall    hook_recvfrom(    SOCKET s,
+                                    char FAR* buf,              
+                                    int len,
+                                    int flags,
+                                    struct sockaddr FAR *from,
+                                    int FAR *fromlen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_RECVFROM]);
+    typedef int(__stdcall *sock_recvfrom)(SOCKET,char*,int,int,struct sockaddr*,int*);
+    int iSuccess=((sock_recvfrom)_pSockFunc[SOCK_RECVFROM])(s,buf,len,flags,from,fromlen);
+//    if(SOCKET_ERROR!=iSuccess)    SockRecvLog(_pszSockFunc[SOCK_RECVFROM],buf,iSuccess);
+    return iSuccess;
+}
+int        __stdcall    hook_select(    int nfds,
+                                    fd_set FAR *readfds,
+                                    fd_set FAR *writefds,
+                                    fd_set FAR *exceptfds,
+                                    const struct timeval FAR *timeout)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SELECT]);
+    typedef int (__stdcall *sock_select)(int,fd_set*,fd_set*,fd_set*,const struct timeval*);
+    return ((sock_select)_pSockFunc[SOCK_SELECT])(nfds,readfds,writefds,exceptfds,timeout);
+}
+
+int        __stdcall    hook_send(    SOCKET s,
+                                const char FAR *buf,
+                                int len,
+                                int flags)
+{
+    DWORD dwEBP;
+    __asm
+    {
+        mov dwEBP,ebp
+    }
+    SockFuncLog(_pszSockFunc[SOCK_SEND]);
+    typedef int (__stdcall *sock_send)(SOCKET,const char*,int,int);
+//code ok ,but system do not accept
+/*
+    if(_bEnableHook)
+    {
+        if(_pEncode->HasSockKey() && _pDecode->HasSockKey())
+        {
+            HANDLE hFile=CreateFile("SKILL",GENERIC_WRITE,FILE_SHARE_READ,NULL,CREATE_ALWAYS,0,NULL);
+            char* pDecodeData=(char*)HeapAlloc(GetProcessHeap(),HEAP_ZERO_MEMORY,len*sizeof(char));
+            _pDecode->Decode(pDecodeData,(char*)buf,len);
+            _pDecode->BinToFile(pDecodeData,len,hFile);
+            if(CSockCmd::CheckCMD(pDecodeData))
+            {
+                _pDecode->Skill(pDecodeData,0);
+            }
+            _pEncode->Encode((char*)buf,pDecodeData,len);
+            HeapFree(GetProcessHeap(),0,pDecodeData);
+            CloseHandle(hFile);
+        }
+    }
+*/
+    int iSuccess=((sock_send)_pSockFunc[SOCK_SEND])(s,buf,len,flags);
+    if(SOCKET_ERROR!=iSuccess)    SockSendLog(_pszSockFunc[SOCK_SEND],(void*)buf,iSuccess,*(DWORD*)(dwEBP+4));
+    return iSuccess;
+}
+
+int        __stdcall    hook_sendto(SOCKET s,
+                                const char FAR *buf,
+                                int len,
+                                int flags,
+                                const struct sockaddr FAR *to,
+                                int tolen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SENDTO]);
+    typedef int (__stdcall *sock_sendto)(SOCKET,const char*,int,int,const struct sockaddr*,int);
+    int iSuccess=((sock_sendto)_pSockFunc[SOCK_SENDTO])(s,buf,len,flags,to,tolen);
+//    if(SOCKET_ERROR!=iSuccess)    SockSendLog(_pszSockFunc[SOCK_SENDTO],(void*)buf,iSuccess);
+    return iSuccess;
+}
+INT        __stdcall    hook_SetServiceA(    DWORD dwNameSpace,
+                                        DWORD dwOperation,
+                                        DWORD dwFlags,
+                                        LPSERVICE_INFOA lpServiceInfo,
+                                        LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo,
+                                        LPDWORD lpdwStatusFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SETSERVICEA]);
+    typedef INT (__stdcall *sock_SetServiceA)(DWORD,DWORD,DWORD,LPSERVICE_INFOA,LPSERVICE_ASYNC_INFO,LPDWORD);
+    return ((sock_SetServiceA)_pSockFunc[SOCK_SETSERVICEA])(
+        dwNameSpace,
+        dwOperation,
+        dwFlags,
+        lpServiceInfo,
+        lpServiceAsyncInfo,
+        lpdwStatusFlags);
+}
+INT        __stdcall    hook_SetServiceW(    DWORD dwNameSpace,
+                                        DWORD dwOperation,
+                                        DWORD dwFlags,
+                                        LPSERVICE_INFOW lpServiceInfo,
+                                        LPSERVICE_ASYNC_INFO    lpServiceAsyncInfo,
+                                        LPDWORD lpdwStatusFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SETSERVICEW]);
+    typedef INT (__stdcall *sock_SetServiceW)(DWORD,DWORD,DWORD,LPSERVICE_INFOW,LPSERVICE_ASYNC_INFO,LPDWORD);
+    return ((sock_SetServiceW)_pSockFunc[SOCK_SETSERVICEW])(
+        dwNameSpace,
+        dwOperation,
+        dwFlags,
+        lpServiceInfo,
+        lpServiceAsyncInfo,
+        lpdwStatusFlags);
+}
+
+int        __stdcall    hook_setsockopt(    SOCKET s,
+                                        int level,
+                                        int optname,
+                                        const char FAR *optval,
+                                        int optlen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SETSOCKOPT]);
+    typedef int (__stdcall    *sock_setsockopt)(SOCKET,int,int,const char*,int);
+    return ((sock_setsockopt)_pSockFunc[SOCK_SETSOCKOPT])(s,level,optname,optval,optlen);
+}
+
+int        __stdcall    hook_shutdown(    SOCKET s,
+                                    int how)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SHUTDOWN]);
+    typedef int    (__stdcall *sock_shutdown)(SOCKET,int);
+    return ((sock_shutdown)_pSockFunc[SOCK_SHUTDOWN])(s,how);
+}
+
+SOCKET    __stdcall    hook_socket(    int af,
+                                    int type,
+                                    int protocol)
+{
+    SockFuncLog(_pszSockFunc[SOCK_SOCKET]);
+    typedef SOCKET (__stdcall *sock_socket)(int,int,int);
+    return ((sock_socket)_pSockFunc[SOCK_SOCKET])(af,type,protocol);
+}
+
+BOOL    __stdcall    hook_TransmitFile(    SOCKET hSocket,
+                                        HANDLE hFile,
+                                        DWORD nNumberOfBytesToWrite,
+                                        DWORD nNumberOfBytesPerSend,
+                                        LPOVERLAPPED lpOverlapped,
+                                        void* lpTransmitBuffers,
+                                        DWORD dwFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_TRANSMITFILE]);
+    typedef BOOL (__stdcall *sock_TransmitFile)(SOCKET,HANDLE,DWORD,DWORD,LPOVERLAPPED,void*,DWORD);
+    return ((sock_TransmitFile)_pSockFunc[SOCK_TRANSMITFILE])(
+        hSocket,
+        hFile,
+        nNumberOfBytesToWrite,
+        nNumberOfBytesPerSend,
+        lpOverlapped,
+        lpTransmitBuffers,
+        dwFlags);
+}
+
+SOCKET    __stdcall    hook_WSAAccept(    SOCKET s,
+                                    struct sockaddr FAR *addr,
+                                    LPINT addrlen,
+                                    LPCONDITIONPROC lpfnCondition,
+                                    DWORD dwCallbackData)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAACCEPT]);
+    typedef SOCKET (__stdcall *sock_WSAAccept)(SOCKET,struct sockaddr*,LPINT,LPCONDITIONPROC,DWORD);
+    return ((sock_WSAAccept)_pSockFunc[SOCK_WSAACCEPT])(
+        s,
+        addr,
+        addrlen,
+        lpfnCondition,
+        dwCallbackData);
+}
+    
+INT        __stdcall    hook_WSAAddressToStringA(    LPSOCKADDR lpsaAddress,
+                                                DWORD dwAddressLength,
+                                                LPWSAPROTOCOL_INFO lpProtocolInfo,
+                                                OUT LPSTR lpszAddressString,
+                                                IN OUT LPDWORD lpdwAddressStringLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAADDRESSTOSTRINGA]);
+    typedef INT (__stdcall *sock_WSAAddressToStringA)(LPSOCKADDR,DWORD,LPWSAPROTOCOL_INFO,LPSTR,LPDWORD);
+    return ((sock_WSAAddressToStringA)_pSockFunc[SOCK_WSAADDRESSTOSTRINGA])(
+        lpsaAddress,
+        dwAddressLength,
+        lpProtocolInfo,
+        lpszAddressString,
+        lpdwAddressStringLength);
+}
+
+INT        __stdcall    hook_WSAAddressToStringW(    LPSOCKADDR lpsaAddress,
+                                                DWORD dwAddressLength,
+                                                LPWSAPROTOCOL_INFO lpProtocolInfo,
+                                                OUT LPWSTR lpszAddressString,
+                                                IN OUT LPDWORD lpdwAddressStringLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAADDRESSTOSTRINGW]);
+    typedef INT (__stdcall *sock_WSAAddressToStringW)(LPSOCKADDR,DWORD,LPWSAPROTOCOL_INFO,LPWSTR,LPDWORD);
+    return ((sock_WSAAddressToStringW)_pSockFunc[SOCK_WSAADDRESSTOSTRINGW])(
+        lpsaAddress,
+        dwAddressLength,
+        lpProtocolInfo,
+        lpszAddressString,
+        lpdwAddressStringLength);
+}
+HANDLE    __stdcall    hook_WSAAsyncGetHostByAddr(    HWND hWnd,
+                                                unsigned int wMsg,
+                                                const char FAR *addr,
+                                                int len,
+                                                int type,
+                                                char FAR *buf,
+                                                int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETHOSTBYADDR]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetHostByAddr)(HWND,unsigned int,const char*,int,int,char*,int);
+    return ((sock_WSAAsyncGetHostByAddr)_pSockFunc[SOCK_WSAASYNCGETHOSTBYADDR])(
+        hWnd,
+        wMsg,
+        addr,
+        len,
+        type,
+        buf,
+        buflen);
+}
+HANDLE    __stdcall    hook_WSAAsyncGetHostByName(    HWND hWnd,
+                                                unsigned int wMsg,
+                                                const char FAR *name,
+                                                char FAR *buf,
+                                                int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETHOSTBYNAME]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetHostByName)(HWND,unsigned int,const char*,char*,int);
+    return ((sock_WSAAsyncGetHostByName)_pSockFunc[SOCK_WSAASYNCGETHOSTBYNAME])(
+        hWnd,
+        wMsg,
+        name,
+        buf,
+        buflen);
+}
+
+HANDLE    __stdcall    hook_WSAAsyncGetProtoByName(    HWND hWnd,
+                                                    unsigned int wMsg,
+                                                    const char FAR *name,
+                                                    char FAR *buf,
+                                                    int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETPROTOBYNAME]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetProtoByName)(HWND,unsigned int,const char*,char*,int);
+    return ((sock_WSAAsyncGetProtoByName)_pSockFunc[SOCK_WSAASYNCGETPROTOBYNAME])(
+        hWnd,
+        wMsg,
+        name,
+        buf,
+        buflen);
+}
+HANDLE    __stdcall    hook_WSAAsyncGetProtoByNumber(    HWND hWnd,
+                                                    unsigned int wMsg,
+                                                    int number,
+                                                    char FAR *buf,
+                                                    int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETPROTOBYNUMBER]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetProtoByNumber)(HWND,unsigned int,int,char*,int);
+    return ((sock_WSAAsyncGetProtoByNumber)_pSockFunc[SOCK_WSAASYNCGETPROTOBYNUMBER])(
+        hWnd,
+        wMsg,
+        number,
+        buf,
+        buflen);
+}
+HANDLE    __stdcall    hook_WSAAsyncGetServByName(    HWND hWnd,
+                                                unsigned int wMsg,
+                                                const char FAR *name,
+                                                const char FAR *proto,
+                                                char FAR *buf,
+                                                int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETSERVBYNAME]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetServByName)(HWND,unsigned int,const char*,const char*,char*,int);
+    return ((sock_WSAAsyncGetServByName)_pSockFunc[SOCK_WSAASYNCGETSERVBYNAME])(
+        hWnd,
+        wMsg,
+        name,
+        proto,
+        buf,
+        buflen);
+}
+
+HANDLE    __stdcall    hook_WSAAsyncGetServByPort(    HWND hWnd,               
+                                                unsigned int wMsg,       
+                                                int port,                
+                                                const char FAR *proto,  
+                                                char FAR *buf,          
+                                                int buflen)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCGETSERVBYPORT]);
+    typedef HANDLE (__stdcall *sock_WSAAsyncGetServByPort)(HWND,unsigned int,int,const char*,char*,int);
+    return ((sock_WSAAsyncGetServByPort)_pSockFunc[SOCK_WSAASYNCGETSERVBYPORT])(
+        hWnd,
+        wMsg,
+        port,
+        proto,
+        buf,
+        buflen);
+}
+
+int        __stdcall    hook_WSAAsyncSelect(    SOCKET s,           
+                                            HWND hWnd,          
+                                            unsigned int wMsg,  
+                                            long lEvent)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAASYNCSELECT]);
+    typedef int (__stdcall *sock_WSAAsyncSelect)(SOCKET,HWND,unsigned int,long);
+    return ((sock_WSAAsyncSelect)_pSockFunc[SOCK_WSAASYNCSELECT])(s,hWnd,wMsg,lEvent);
+}
+
+int        __stdcall    hook_WSACancelAsyncRequest(HANDLE hAsyncTaskHandle)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSACANCELASYNCREQUEST]);
+    typedef int (__stdcall *sock_WSACancelAsyncRequest)(HANDLE);
+    return ((sock_WSACancelAsyncRequest)_pSockFunc[SOCK_WSACANCELASYNCREQUEST])(hAsyncTaskHandle);
+}
+int        __stdcall    hook_WSACleanup (void)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSACLEANUP]);
+    typedef int (__stdcall *sock_WSACleanup)(void);
+    return ((sock_WSACleanup)_pSockFunc[SOCK_WSACLEANUP])();
+}
+BOOL    __stdcall    hook_WSACloseEvent(WSAEVENT hEvent)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSACLOSEEVENT]);
+    typedef BOOL (__stdcall *sock_WSACloseEvent)(WSAEVENT);
+    return ((sock_WSACloseEvent)_pSockFunc[SOCK_WSACLOSEEVENT])(hEvent);
+}
+int        __stdcall    hook_WSAConnect(    SOCKET s,                          
+                                        const struct sockaddr FAR *name,  
+                                        int namelen,                       
+                                        LPWSABUF lpCallerData,             
+                                        LPWSABUF lpCalleeData,             
+                                        LPQOS lpSQOS,                      
+                                        LPQOS lpGQOS)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSACONNECT]);
+    typedef int (__stdcall *sock_WSAConnect)(SOCKET,const struct sockaddr*,int,LPWSABUF,LPWSABUF,LPQOS,LPQOS);
+    return ((sock_WSAConnect)_pSockFunc[SOCK_WSACONNECT])(
+        s,
+        name,
+        namelen,
+        lpCallerData,
+        lpCalleeData,
+        lpSQOS,
+        lpGQOS);
+}
+WSAEVENT    __stdcall    hook_WSACreateEvent (void)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSACREATEEVENT]);
+    typedef WSAEVENT (__stdcall *sock_WSACreateEvent)(void);
+    return ((sock_WSACreateEvent)_pSockFunc[SOCK_WSACREATEEVENT])();
+}
+int        __stdcall    hook_WSADuplicateSocketA(    SOCKET s,                          
+                                                DWORD dwProcessId,                 
+                                                LPWSAPROTOCOL_INFOA lpProtocolInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSADUPLICATESOCKETA]);
+    typedef int (__stdcall *sock_WSADuplicateSocketA)(SOCKET,DWORD,LPWSAPROTOCOL_INFOA);
+    return ((sock_WSADuplicateSocketA)_pSockFunc[SOCK_WSADUPLICATESOCKETA])(s,dwProcessId,lpProtocolInfo);
+}
+int        __stdcall    hook_WSADuplicateSocketW(    SOCKET s,                          
+                                                DWORD dwProcessId,                 
+                                                LPWSAPROTOCOL_INFOW lpProtocolInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSADUPLICATESOCKETW]);
+    typedef int (__stdcall *sock_WSADuplicateSocketW)(SOCKET,DWORD,LPWSAPROTOCOL_INFOW);
+    return ((sock_WSADuplicateSocketW)_pSockFunc[SOCK_WSADUPLICATESOCKETW])(s,dwProcessId,lpProtocolInfo);
+}
+
+INT        __stdcall    hook_WSAEnumNameSpaceProvidersA(IN OUT LPDWORD lpdwBufferLength,  
+                                                    OUT LPWSANAMESPACE_INFOA lpnspBuffer)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAENUMNAMESPACEPROVIDERSA]);
+    typedef INT (__stdcall *sock_WSAEnumNameSpaceProvidersA)(LPDWORD,LPWSANAMESPACE_INFOA);
+    return ((sock_WSAEnumNameSpaceProvidersA)_pSockFunc[SOCK_WSAENUMNAMESPACEPROVIDERSA])(lpdwBufferLength,lpnspBuffer);
+}
+
+INT        __stdcall    hook_WSAEnumNameSpaceProvidersW(IN OUT LPDWORD lpdwBufferLength,  
+                                                    OUT LPWSANAMESPACE_INFOW lpnspBuffer)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAENUMNAMESPACEPROVIDERSW]);
+    typedef INT (__stdcall *sock_WSAEnumNameSpaceProvidersW)(LPDWORD,LPWSANAMESPACE_INFOW);
+    return ((sock_WSAEnumNameSpaceProvidersW)_pSockFunc[SOCK_WSAENUMNAMESPACEPROVIDERSW])(lpdwBufferLength,lpnspBuffer);
+}
+
+int        __stdcall    hook_WSAEnumNetworkEvents(    SOCKET s,                           
+                                                WSAEVENT hEventObject,              
+                                                LPWSANETWORKEVENTS lpNetworkEvents)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAENUMNETWORKEVENTS]);
+    typedef int (__stdcall *sock_WSAEnumNetworkEvents)(SOCKET,WSAEVENT,LPWSANETWORKEVENTS);
+    return ((sock_WSAEnumNetworkEvents)_pSockFunc[SOCK_WSAENUMNETWORKEVENTS])(s,hEventObject,lpNetworkEvents);
+}
+
+int        __stdcall    hook_WSAEnumProtocolsA(    LPINT lpiProtocols,                   
+                                            LPWSAPROTOCOL_INFOA lpProtocolBuffer,  
+                                            LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAENUMPROTOCOLSA]);
+    typedef int (__stdcall *sock_WSAEnumProtocolsA)(LPINT,LPWSAPROTOCOL_INFOA,LPDWORD);
+    return ((sock_WSAEnumProtocolsA)_pSockFunc[SOCK_WSAENUMPROTOCOLSA])(lpiProtocols,lpProtocolBuffer,lpdwBufferLength);
+}
+
+int        __stdcall    hook_WSAEnumProtocolsW(    LPINT lpiProtocols,                   
+                                            LPWSAPROTOCOL_INFOW lpProtocolBuffer,  
+                                            LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAENUMPROTOCOLSW]);
+    typedef int (__stdcall *sock_WSAEnumProtocolsW)(LPINT,LPWSAPROTOCOL_INFOW,LPDWORD);
+    return ((sock_WSAEnumProtocolsW)_pSockFunc[SOCK_WSAENUMPROTOCOLSW])(lpiProtocols,lpProtocolBuffer,lpdwBufferLength);
+}
+int        __stdcall    hook_WSAEventSelect(    SOCKET s,               
+                                            WSAEVENT hEventObject,  
+                                            long lNetworkEvents)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAEVENTSELECT]);
+    typedef int (__stdcall *sock_WSAEventSelect)(SOCKET,WSAEVENT,long);
+    return ((sock_WSAEventSelect)_pSockFunc[SOCK_WSAEVENTSELECT])(s,hEventObject,lNetworkEvents);
+}
+int        __stdcall    hook_WSAGetLastError (void)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETLASTERROR]);
+    typedef int (__stdcall *sock_WSAGetLastError)(void);
+    return ((sock_WSAGetLastError)_pSockFunc[SOCK_WSAGETLASTERROR])();
+}
+BOOL    __stdcall    hook_WSAGetOverlappedResult(    SOCKET s,                      
+                                                    LPWSAOVERLAPPED lpOverlapped,  
+                                                    LPDWORD lpcbTransfer,          
+                                                    BOOL fWait,                    
+                                                    LPDWORD lpdwFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETOVERLAPPEDRESULT]);
+    typedef BOOL (__stdcall *sock_WSAGetOverlappedResult)(SOCKET,LPWSAOVERLAPPED,LPDWORD,BOOL,LPDWORD);
+    return ((sock_WSAGetOverlappedResult)_pSockFunc[SOCK_WSAGETOVERLAPPEDRESULT])(
+        s,
+        lpOverlapped,
+        lpcbTransfer,
+        fWait,
+        lpdwFlags);
+}
+BOOL    __stdcall    hook_WSAGetQOSByName(    SOCKET s,            
+                                            LPWSABUF lpQOSName,  
+                                            LPQOS lpQOS)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETQOSBYNAME]);
+    typedef BOOL (__stdcall *sock_WSAGetQOSByName)(SOCKET,LPWSABUF,LPQOS);
+    return ((sock_WSAGetQOSByName)_pSockFunc[SOCK_WSAGETQOSBYNAME])(s,lpQOSName,lpQOS);
+}
+INT        __stdcall    hook_WSAGetServiceClassInfoA(    LPGUID lpProviderId,                      
+                                                    LPGUID lpServiceClassId,                  
+                                                    LPDWORD lpdwBufferLength,                 
+                                                    LPWSASERVICECLASSINFOA lpServiceClassInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETSERVICECLASSINFOA]);
+    typedef INT (__stdcall *sock_WSAGetServiceClassInfoA)(LPGUID,LPGUID,LPDWORD,LPWSASERVICECLASSINFOA);
+    return ((sock_WSAGetServiceClassInfoA)_pSockFunc[SOCK_WSAGETSERVICECLASSINFOA])(
+        lpProviderId,
+        lpServiceClassId,
+        lpdwBufferLength,
+        lpServiceClassInfo);
+}
+
+INT        __stdcall    hook_WSAGetServiceClassInfoW(    LPGUID lpProviderId,                      
+                                                    LPGUID lpServiceClassId,                  
+                                                    LPDWORD lpdwBufferLength,                 
+                                                    LPWSASERVICECLASSINFOW lpServiceClassInfo)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETSERVICECLASSINFOW]);
+    typedef INT (__stdcall *sock_WSAGetServiceClassInfoW)(LPGUID,LPGUID,LPDWORD,LPWSASERVICECLASSINFOW);
+    return ((sock_WSAGetServiceClassInfoW)_pSockFunc[SOCK_WSAGETSERVICECLASSINFOW])(
+        lpProviderId,
+        lpServiceClassId,
+        lpdwBufferLength,
+        lpServiceClassInfo);
+}
+
+INT        __stdcall    hook_WSAGetServiceClassNameByClassIdA(    LPGUID lpServiceClassId,  
+                                                            LPSTR lpszServiceClassName,  
+                                                            LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETSERVICECLASSNAMEBYCLASSIDA]);
+    typedef INT (__stdcall *sock_WSAGetServiceClassNameByClassIdA)(LPGUID,LPSTR,LPDWORD);
+    return ((sock_WSAGetServiceClassNameByClassIdA)_pSockFunc[SOCK_WSAGETSERVICECLASSNAMEBYCLASSIDA])(
+        lpServiceClassId,
+        lpszServiceClassName,
+        lpdwBufferLength);
+}
+
+INT        __stdcall    hook_WSAGetServiceClassNameByClassIdW(    LPGUID lpServiceClassId,  
+                                                            LPWSTR lpszServiceClassName,  
+                                                            LPDWORD lpdwBufferLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAGETSERVICECLASSNAMEBYCLASSIDW]);
+    typedef INT (__stdcall *sock_WSAGetServiceClassNameByClassIdW)(LPGUID,LPWSTR,LPDWORD);
+    return ((sock_WSAGetServiceClassNameByClassIdW)_pSockFunc[SOCK_WSAGETSERVICECLASSNAMEBYCLASSIDW])(
+        lpServiceClassId,
+        lpszServiceClassName,
+        lpdwBufferLength);
+}
+int        __stdcall    hook_WSAHtonl(    SOCKET s,               
+                                    u_long hostlong,        
+                                    u_long FAR *lpnetlong)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAHTONL]);
+    typedef    int (__stdcall *sock_WSAHtonl)(SOCKET,u_long,u_long*);
+    return ((sock_WSAHtonl)_pSockFunc[SOCK_WSAHTONL])(s,hostlong,lpnetlong);
+}
+
+int        __stdcall    hook_WSAHtons(    SOCKET s,                 
+                                    u_short hostshort,        
+                                    u_short FAR *lpnetshort)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAHTONS]);
+    typedef int (__stdcall *sock_WSAHtons)(SOCKET,u_short,u_short*);
+    return ((sock_WSAHtons)_pSockFunc[SOCK_WSAHTONS])(s,hostshort,lpnetshort);
+}                                   
+
+INT        __stdcall    hook_WSAInstallServiceClassA(LPWSASERVICECLASSINFOA lpServiceClassInfo)
+{
+    typedef INT (__stdcall *sock_WSAInstallServiceClassA)(LPWSASERVICECLASSINFOA);
+    return ((sock_WSAInstallServiceClassA)_pSockFunc[SOCK_WSAINSTALLSERVICECLASSA])(lpServiceClassInfo);
+}
+INT        __stdcall    hook_WSAInstallServiceClassW(LPWSASERVICECLASSINFOW lpServiceClassInfo)
+{
+    typedef INT (__stdcall *sock_WSAInstallServiceClassW)(LPWSASERVICECLASSINFOW);
+    return ((sock_WSAInstallServiceClassW)_pSockFunc[SOCK_WSAINSTALLSERVICECLASSW])(lpServiceClassInfo);
+}
+
+int        __stdcall    hook_WSAIoctl(    SOCKET s,                                      
+                                    DWORD dwIoControlCode,                        
+                                    LPVOID lpvInBuffer,                            
+                                    DWORD cbInBuffer,                             
+                                    LPVOID lpvOutBuffer,                           
+                                    DWORD cbOutBuffer,                            
+                                    LPDWORD lpcbBytesReturned,                      
+                                    LPWSAOVERLAPPED lpOverlapped,                           
+                                    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAIOCTL]);
+    typedef int (__stdcall *sock_WSAIoctl)(SOCKET,DWORD,LPVOID,DWORD,LPVOID,DWORD,LPDWORD,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSAIoctl)_pSockFunc[SOCK_WSAIOCTL])(
+        s,
+        dwIoControlCode,
+        lpvInBuffer,
+        cbInBuffer,
+        lpvOutBuffer,
+        cbOutBuffer,
+        lpcbBytesReturned,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+
+SOCKET    __stdcall    hook_WSAJoinLeaf(    SOCKET s,                          
+                                        const struct sockaddr FAR *name,   
+                                        int namelen,                       
+                                        LPWSABUF lpCallerData,             
+                                        LPWSABUF lpCalleeData,             
+                                        LPQOS lpSQOS,                      
+                                        LPQOS lpGQOS,                      
+                                        DWORD dwFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAJOINLEAF]);
+    typedef SOCKET (__stdcall *sock_WSAJoinLeaf)(SOCKET,const struct sockaddr*,int,LPWSABUF,LPWSABUF,LPQOS,LPQOS,DWORD);
+    return ((sock_WSAJoinLeaf)_pSockFunc[SOCK_WSAJOINLEAF])(
+        s,
+        name,
+        namelen,
+        lpCallerData,
+        lpCalleeData,
+        lpSQOS,
+        lpGQOS,
+        dwFlags);
+}
+INT        __stdcall    hook_WSALookupServiceBeginA(LPWSAQUERYSETA lpqsRestrictions,  
+                                                DWORD dwControlFlags,            
+                                                LPHANDLE lphLookup)
+{
+    typedef INT (__stdcall *sock_WSALookupServiceBeginA)(LPWSAQUERYSETA,DWORD,LPHANDLE);
+    return ((sock_WSALookupServiceBeginA)_pSockFunc[SOCK_WSALOOKUPSERVICEBEGINA])(
+        lpqsRestrictions,
+        dwControlFlags,
+        lphLookup);
+}
+
+INT        __stdcall    hook_WSALookupServiceBeginW(LPWSAQUERYSETW lpqsRestrictions,  
+                                                DWORD dwControlFlags,            
+                                                LPHANDLE lphLookup)
+{
+    typedef INT (__stdcall *sock_WSALookupServiceBeginW)(LPWSAQUERYSETW,DWORD,LPHANDLE);
+    return ((sock_WSALookupServiceBeginW)_pSockFunc[SOCK_WSALOOKUPSERVICEBEGINW])(
+        lpqsRestrictions,
+        dwControlFlags,
+        lphLookup);
+}
+INT        __stdcall    hook_WSALookupServiceEnd(HANDLE hLookup)
+{
+    typedef INT (__stdcall *sock_WSALookupServiceEnd)(HANDLE);
+    return ((sock_WSALookupServiceEnd)_pSockFunc[SOCK_WSALOOKUPSERVICEEND])(hLookup);
+}
+INT        __stdcall    hook_WSALookupServiceNextA(    HANDLE hLookup,        
+                                                DWORD dwControlFlags,  
+                                                LPDWORD lpdwBufferLength,  
+                                                LPWSAQUERYSETA lpqsResults)
+{
+    typedef INT (__stdcall *sock_WSALookupServiceNextA)(HANDLE,DWORD,LPDWORD,LPWSAQUERYSETA);
+    return ((sock_WSALookupServiceNextA)_pSockFunc[SOCK_WSALOOKUPSERVICENEXTA])(
+        hLookup,
+        dwControlFlags,
+        lpdwBufferLength,
+        lpqsResults);
+}
+
+INT        __stdcall    hook_WSALookupServiceNextW(    HANDLE hLookup,        
+                                                DWORD dwControlFlags,  
+                                                LPDWORD lpdwBufferLength,  
+                                                LPWSAQUERYSETW lpqsResults)
+{
+    typedef INT (__stdcall *sock_WSALookupServiceNextW)(HANDLE,DWORD,LPDWORD,LPWSAQUERYSETW);
+    return ((sock_WSALookupServiceNextW)_pSockFunc[SOCK_WSALOOKUPSERVICENEXTW])(
+        hLookup,
+        dwControlFlags,
+        lpdwBufferLength,
+        lpqsResults);
+}
+int        __stdcall    hook_WSANtohl(    SOCKET s,                
+                                    u_long netlong,          
+                                    u_long FAR *lphostlong)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSANTOHL]);
+    typedef int (__stdcall *sock_WSANtohl)(SOCKET,u_long,u_long*);
+    return ((sock_WSANtohl)_pSockFunc[SOCK_WSANTOHL])(s,netlong,lphostlong);
+}
+
+int        __stdcall    hook_WSANtohs(    SOCKET s,                  
+                                    u_short netshort,          
+                                    u_short FAR *lphostshort)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSANTOHS]);
+    typedef int (__stdcall *sock_WSANtohs)(SOCKET,u_short,u_short*);
+    return ((sock_WSANtohs)_pSockFunc[SOCK_WSANTOHS])(s,netshort,lphostshort);
+}
+int        __stdcall    hook_WSAProviderConfigChange(    LPHANDLE lpNotificationHandle,
+                                                    LPWSAOVERLAPPED lpOverlapped,
+                                                    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    typedef int (__stdcall *sock_WSAProviderConfigChange)(LPHANDLE,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSAProviderConfigChange)_pSockFunc[SOCK_WSAPROVIDERCONFIGCHANGE])(
+        lpNotificationHandle,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+int        __stdcall    hook_WSARecv(    SOCKET s,                                               
+                                    LPWSABUF lpBuffers,                                     
+                                    DWORD dwBufferCount,                                    
+                                    LPDWORD lpNumberOfBytesRecvd,                           
+                                    LPDWORD lpFlags,                                        
+                                    LPWSAOVERLAPPED lpOverlapped,                           
+                                    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSARECV]);
+    typedef int (__stdcall *sock_WSARecv)(SOCKET,LPWSABUF,DWORD,LPDWORD,LPDWORD,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSARecv)_pSockFunc[SOCK_WSARECV])(
+        s,
+        lpBuffers,
+        dwBufferCount,
+        lpNumberOfBytesRecvd,
+        lpFlags,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+
+int        __stdcall    hook_WSARecvDisconnect(    SOCKET s,                         
+                                            LPWSABUF lpInboundDisconnectData)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSARECVDISCONNECT]);
+    typedef int (__stdcall *sock_WSARecvDisconnect)(SOCKET,LPWSABUF);
+    return ((sock_WSARecvDisconnect)_pSockFunc[SOCK_WSARECVDISCONNECT])(s,lpInboundDisconnectData);
+}
+
+int        __stdcall    hook_WSARecvEx(    SOCKET s,         
+                                    char FAR *buf,    
+                                    int len,          
+                                    int *flags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSARECVEX]);
+    typedef int (__stdcall *sock_WSARecvEx)(SOCKET,char*,int,int*);
+    int iSuccess=((sock_WSARecvEx)_pSockFunc[SOCK_WSARECVEX])(s,buf,len,flags);
+//    if(SOCKET_ERROR!=iSuccess) SockRecvLog(_pszSockFunc[SOCK_WSARECVEX],buf,len);
+    return iSuccess;
+}
+
+int        __stdcall    hook_WSARecvFrom(    SOCKET s,                                               
+                                        LPWSABUF lpBuffers,                                     
+                                        DWORD dwBufferCount,                                    
+                                        LPDWORD lpNumberOfBytesRecvd,                           
+                                        LPDWORD lpFlags,                                        
+                                        struct sockaddr FAR *lpFrom,                            
+                                        LPINT lpFromlen,                                        
+                                        LPWSAOVERLAPPED lpOverlapped,                           
+                                        LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSARECVFROM]);
+    typedef int (__stdcall *sock_WSARecvFrom)(SOCKET,LPWSABUF,DWORD,LPDWORD,LPDWORD,struct sockaddr*,LPINT,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSARecvFrom)_pSockFunc[SOCK_WSARECVFROM])(
+        s,
+        lpBuffers,
+        dwBufferCount,
+        lpNumberOfBytesRecvd,
+        lpFlags,
+        lpFrom,
+        lpFromlen,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+
+INT        __stdcall    hook_WSARemoveServiceClass(LPGUID lpServiceClassId)
+{
+    typedef INT (__stdcall *sock_WSARemoveServiceClass)(LPGUID);
+    return ((sock_WSARemoveServiceClass)_pSockFunc[SOCK_WSAREMOVESERVICECLASS])(lpServiceClassId);
+}
+BOOL    __stdcall    hook_WSAResetEvent(WSAEVENT hEvent)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSARESETEVENT]);
+    typedef BOOL (__stdcall *sock_WSAResetEvent)(WSAEVENT);
+    return ((sock_WSAResetEvent)_pSockFunc[SOCK_WSARESETEVENT])(hEvent);
+}
+
+int        __stdcall    hook_WSASend(    SOCKET s,                                               
+                                    LPWSABUF lpBuffers,                                     
+                                    DWORD dwBufferCount,                                    
+                                    LPDWORD lpNumberOfBytesSent,                            
+                                    DWORD dwFlags,                                          
+                                    LPWSAOVERLAPPED lpOverlapped,                           
+                                    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASEND]);
+    typedef int (__stdcall *sock_WSASend)(SOCKET,LPWSABUF,DWORD,LPDWORD,DWORD,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSASend)_pSockFunc[SOCK_WSASEND])(
+        s,
+        lpBuffers,
+        dwBufferCount,
+        lpNumberOfBytesSent,
+        dwFlags,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+
+int        __stdcall    hook_WSASendDisconnect(    SOCKET s,                           
+                                            LPWSABUF lpOutboundDisconnectData)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASENDDISCONNECT]);
+    typedef int (__stdcall *sock_WSASendDisconnect)(SOCKET,LPWSABUF);
+    return ((sock_WSASendDisconnect)_pSockFunc[SOCK_WSASENDDISCONNECT])(s,lpOutboundDisconnectData);
+}
+int        __stdcall    hook_WSASendTo(    SOCKET s,                   
+                                    LPWSABUF lpBuffers,           
+                                    DWORD dwBufferCount,       
+                                    LPDWORD lpNumberOfBytesSent, 
+                                    DWORD dwFlags,             
+                                    const struct sockaddr FAR *lpTo,               
+                                    int iToLen,              
+                                    LPWSAOVERLAPPED lpOverlapped,        
+                                    LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASENDTO]);
+    typedef int (__stdcall *sock_WSASendTo)(SOCKET,LPWSABUF,DWORD,LPDWORD,DWORD,const struct sockaddr*,int,LPWSAOVERLAPPED,LPWSAOVERLAPPED_COMPLETION_ROUTINE);
+    return ((sock_WSASendTo)_pSockFunc[SOCK_WSASENDTO])(
+        s,
+        lpBuffers,
+        dwBufferCount,
+        lpNumberOfBytesSent,
+        dwFlags,
+        lpTo,
+        iToLen,
+        lpOverlapped,
+        lpCompletionRoutine);
+}
+BOOL    __stdcall    hook_WSASetEvent(WSAEVENT hEvent)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASETEVENT]);
+    typedef BOOL (__stdcall *sock_WSASetEvent)(WSAEVENT);
+    return ((sock_WSASetEvent)_pSockFunc[SOCK_WSASETEVENT])(hEvent);
+}
+void    __stdcall    hook_WSASetLastError(int iError)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASETLASTERROR]);
+    typedef void (__stdcall *sock_WSASetLastError)(int);
+    ((sock_WSASetLastError)_pSockFunc[SOCK_WSASETLASTERROR])(iError);
+}
+INT        __stdcall    hook_WSASetServiceA(LPWSAQUERYSETA lpqsRegInfo,  
+                                        WSAESETSERVICEOP essOperation,  
+                                        DWORD dwControlFlags)
+{
+    typedef INT (__stdcall *sock_WSASetServiceA)(LPWSAQUERYSETA,WSAESETSERVICEOP,DWORD);
+    return ((sock_WSASetServiceA)_pSockFunc[SOCK_WSASETSERVICEA])(
+        lpqsRegInfo,
+        essOperation,
+        dwControlFlags);
+}
+INT        __stdcall    hook_WSASetServiceW(LPWSAQUERYSETW lpqsRegInfo,  
+                                        WSAESETSERVICEOP essOperation,  
+                                        DWORD dwControlFlags)
+{
+    typedef INT (__stdcall *sock_WSASetServiceW)(LPWSAQUERYSETW,WSAESETSERVICEOP,DWORD);
+    return ((sock_WSASetServiceW)_pSockFunc[SOCK_WSASETSERVICEW])(
+        lpqsRegInfo,
+        essOperation,
+        dwControlFlags);
+}
+
+SOCKET    __stdcall    hook_WSASocketA(int af,                             
+                                    int type,                           
+                                    int protocol,                       
+                                    LPWSAPROTOCOL_INFOA lpProtocolInfo,  
+                                    GROUP g,                            
+                                    DWORD dwFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASOCKETA]);
+    typedef SOCKET (__stdcall *sock_WSASocketA)(int,int,int,LPWSAPROTOCOL_INFOA,GROUP,DWORD);
+    return ((sock_WSASocketA)_pSockFunc[SOCK_WSASOCKETA])(
+        af,
+        type,
+        protocol,
+        lpProtocolInfo,
+        g,
+        dwFlags);
+}
+SOCKET    __stdcall    hook_WSASocketW(int af,                             
+                                    int type,                           
+                                    int protocol,                       
+                                    LPWSAPROTOCOL_INFOW lpProtocolInfo,  
+                                    GROUP g,                            
+                                    DWORD dwFlags)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASOCKETW]);
+    typedef SOCKET (__stdcall *sock_WSASocketW)(int,int,int,LPWSAPROTOCOL_INFOW,GROUP,DWORD);
+    return ((sock_WSASocketW)_pSockFunc[SOCK_WSASOCKETW])(
+        af,
+        type,
+        protocol,
+        lpProtocolInfo,
+        g,
+        dwFlags);
+}
+int        __stdcall    hook_WSAStartup(    WORD wVersionRequested,  
+                                        LPWSADATA lpWSAData)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASTARTUP]);
+    typedef int (__stdcall *sock_WSAStartup)(WORD,LPWSADATA);
+    return ((sock_WSAStartup)_pSockFunc[SOCK_WSASTARTUP])(wVersionRequested,lpWSAData);
+}
+INT        __stdcall    hook_WSAStringToAddressA(    LPSTR AddressString,               
+                                                INT AddressFamily,                  
+                                                LPWSAPROTOCOL_INFO lpProtocolInfo,  
+                                                LPSOCKADDR lpAddress,               
+                                                LPINT lpAddressLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASTRINGTOADDRESSA]);
+    typedef INT (__stdcall *sock_WSAStringToAddressA)(LPSTR,INT,LPWSAPROTOCOL_INFO,LPSOCKADDR,LPINT);
+    return ((sock_WSAStringToAddressA)_pSockFunc[SOCK_WSASTRINGTOADDRESSA])(
+        AddressString,
+        AddressFamily,
+        lpProtocolInfo,
+        lpAddress,
+        lpAddressLength);
+}
+INT        __stdcall    hook_WSAStringToAddressW(    LPWSTR AddressString,               
+                                                INT AddressFamily,                  
+                                                LPWSAPROTOCOL_INFO lpProtocolInfo,  
+                                                LPSOCKADDR lpAddress,               
+                                                LPINT lpAddressLength)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSASTRINGTOADDRESSW]);
+    typedef INT (__stdcall *sock_WSAStringToAddressW)(LPWSTR,INT,LPWSAPROTOCOL_INFO,LPSOCKADDR,LPINT);
+    return ((sock_WSAStringToAddressW)_pSockFunc[SOCK_WSASTRINGTOADDRESSW])(
+        AddressString,
+        AddressFamily,
+        lpProtocolInfo,
+        lpAddress,
+        lpAddressLength);
+}
+DWORD    __stdcall    hook_WSAWaitForMultipleEvents(    DWORD cEvents,                  
+                                                    const WSAEVENT FAR *lphEvents,  
+                                                    BOOL fWaitAll,                  
+                                                    DWORD dwTimeout,                
+                                                    BOOL fAlertable)
+{
+    SockFuncLog(_pszSockFunc[SOCK_WSAWAITFORMULTIPLEEVENTS]);
+    typedef DWORD (__stdcall *sock_WSAWaitForMultipleEvents)(DWORD,const WSAEVENT*,BOOL,DWORD,BOOL);
+    return ((sock_WSAWaitForMultipleEvents)_pSockFunc[SOCK_WSAWAITFORMULTIPLEEVENTS])(
+        cEvents,
+        lphEvents,
+        fWaitAll,
+        dwTimeout,
+        fAlertable);
+}
+int        __stdcall    hook_WSCDeinstallProvider(LPGUID lpProviderId,LPINT lpErrno)
+{
+    typedef int (__stdcall *sock_WSCDeinstallProvider)(LPGUID,LPINT);
+    return ((sock_WSCDeinstallProvider)_pSockFunc[SOCK_WSCDEINSTALLPROVIDER])(lpProviderId,lpErrno);
+}
+int        __stdcall    hook_WSCEnableNSProvider(LPGUID lpProviderId,BOOL fEnable)
+{
+    typedef int (__stdcall *sock_WSCEnableNSProvider)(LPGUID,BOOL);
+    return ((sock_WSCEnableNSProvider)_pSockFunc[SOCK_WSCENABLENSPROVIDER])(lpProviderId,fEnable);
+}
+int        __stdcall    hook_WSCEnumProtocols (    LPINT lpiProtocols,                     
+                                            LPWSAPROTOCOL_INFOW lpProtocolBuffer,   
+                                            LPDWORD lpdwBufferLength,               
+                                            LPINT lpErrno)
+{
+    typedef int (__stdcall *sock_WSCEnumProtocols)(LPINT,LPWSAPROTOCOL_INFOW,LPDWORD,LPINT);
+    return ((sock_WSCEnumProtocols)_pSockFunc[SOCK_WSCENUMPROTOCOLS])(
+        lpiProtocols,
+        lpProtocolBuffer,
+        lpdwBufferLength,
+        lpErrno);
+}
+   
+int        __stdcall    hook_WSCGetProviderPath(    LPGUID lpProviderId,         
+                                                LPWSTR lpszProviderDllPath,  
+                                                LPINT lpProviderDllPathLen,  
+                                                LPINT lpErrno)
+{
+    typedef int (__stdcall *sock_WSCGetProviderPath)(LPGUID,LPWSTR,LPINT,LPINT);
+    return ((sock_WSCGetProviderPath)_pSockFunc[SOCK_WSCGETPROVIDERPATH])(
+        lpProviderId,
+        lpszProviderDllPath,
+        lpProviderDllPathLen,
+        lpErrno);
+}
+int        __stdcall    hook_WSCInstallNameSpace(    LPWSTR lpszIdentifier,   
+                                                LPWSTR lpszPathName,   
+                                                DWORD dwNameSpace,     
+                                                DWORD dwVersion,       
+                                                LPGUID lpProviderId)
+{
+    typedef int (__stdcall *sock_WSCInstallNameSpace)(LPWSTR,LPWSTR,DWORD,DWORD,LPGUID);
+    return ((sock_WSCInstallNameSpace)_pSockFunc[SOCK_WSCINSTALLNAMESPACE])(
+        lpszIdentifier,
+        lpszPathName,
+        dwNameSpace,
+        dwVersion,
+        lpProviderId);
+}
+int        __stdcall    hook_WSCInstallProvider (    const LPGUID lpProviderId,                      
+                                                const LPWSTR lpszProviderDllPath,               
+                                                const LPWSAPROTOCOL_INFOW lpProtocolInfoList,   
+                                                DWORD dwNumberOfEntries,                        
+                                                LPINT lpErrno)
+{
+    typedef int (__stdcall *sock_WSCInstallProvider)(const LPGUID,const LPWSTR,const LPWSAPROTOCOL_INFOW,DWORD,LPINT);
+    return ((sock_WSCInstallProvider)_pSockFunc[SOCK_WSCINSTALLPROVIDER])(
+        lpProviderId,
+        lpszProviderDllPath,
+        lpProtocolInfoList,
+        dwNumberOfEntries,
+        lpErrno);
+}
+int        __stdcall    hook_WSCUnInstallNameSpace (LPGUID lpProviderId)
+{
+    typedef int (__stdcall *sock_WSCUnInstallNameSpace)(LPGUID);
+    return ((sock_WSCUnInstallNameSpace)_pSockFunc[SOCK_WSCUNINSTALLNAMESPACE])(lpProviderId);
+}
+int        __stdcall    hook_WSCWriteProviderOrder (LPDWORD lpwdCatalogEntryId,DWORD dwNumberOfEntries)
+{
+    typedef int (__stdcall *sock_WSCWriteProviderOrder)(LPDWORD,DWORD);
+    return ((sock_WSCWriteProviderOrder)_pSockFunc[SOCK_WSCWRITEPROVIDERORDER])(lpwdCatalogEntryId,dwNumberOfEntries);
+}
+int        __stdcall    hook_WSCWriteNameSpaceOrder (    IN LPGUID lpProviderId,IN DWORD dwNumberOfEntries)
+{
+    typedef int (__stdcall *sock_WSCWriteNameSpaceOrder)(LPGUID,DWORD);
+    return ((sock_WSCWriteNameSpaceOrder)_pSockFunc[SOCK_WSCWRITENAMESPACEORDER])(lpProviderId,dwNumberOfEntries);
+}
+WSAEVENT    __stdcall    hook_WPUCompleteOverlappedRequest(    SOCKET s,                      
+                                                            LPWSAOVERLAPPED lpOverlapped,  
+                                                            DWORD dwError,                 
+                                                            DWORD cbTransferred,           
+                                                            LPINT lpErrno)
+{
+    typedef WSAEVENT (__stdcall *sock_WPUCompleteOverlappedRequest)(SOCKET,LPWSAOVERLAPPED,DWORD,DWORD,LPINT);
+    return ((sock_WPUCompleteOverlappedRequest)_pSockFunc[SOCK_WPUCOMPLETEOVERLAPPEDREQUEST])(
+        s,
+        lpOverlapped,
+        dwError,
+        cbTransferred,
+        lpErrno);
+}
+int        __stdcall    hook_WPUFDIsSet (SOCKET s,FD_SET FAR *set)
+{
+    typedef int (__stdcall *sock_WPUFDIsSet)(SOCKET,FD_SET*);
+    return ((sock_WPUFDIsSet)_pSockFunc[SOCK_WPUFDISSET])(s,set);
+}
+BOOL    __stdcall    hook_WSAIsBlocking(void)
+{
+    typedef BOOL (__stdcall *sock_WSAIsBlocking)(void);
+    return ((sock_WSAIsBlocking)_pSockFunc[SOCK_WSAISBLOCKING])();
+}
+int        __stdcall    hook_WSACancelBlockingCall(void)
+{
+    typedef int (__stdcall *hook_WSACancelBlockingCall)(void);
+    return ((hook_WSACancelBlockingCall)_pSockFunc[SOCK_WSACANCELBLOCKINGCALL])();
+}
+
+FARPROC    __stdcall    hook_WSASetBlockingHook(IN FARPROC lpBlockFunc)
+{
+    typedef FARPROC (__stdcall *sock_WSASetBlockingHook)(FARPROC);
+    return ((sock_WSASetBlockingHook)_pSockFunc[SOCK_WSASETBLOCKINGHOOK])(lpBlockFunc);
+}
+int        __stdcall    hook_WSAUnhookBlockingHook(void)
+{
+    typedef int (__stdcall *sock_WSAUnhookBlockingHook)(void);
+    return ((sock_WSAUnhookBlockingHook)_pSockFunc[SOCK_WSAUNHOOKBLOCKINGHOOK])();
+}
+void    __stdcall    Timestamp(char* szTimestamp)
+{
+    SYSTEMTIME time;
+    GetLocalTime(&time);
+    szTimestamp[0]='
+ 
+
+本文来自CSDN博客，转载请标明出处：http://blog.csdn.net/zhongshan99/archive/2008/04/22/2315287.aspx
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+java中的socket编程
+
+Socket是网络上运行的两个程序间双向通讯的一端，它既可以接受请求，也可以发送请求，利用它可以较为方便的编写网络上数据的传递。在Java中，有专门的Socket类来处理用户的请求和响应。利用Socket类的方法，就可以实现两台计算机之间的通讯。这里就介绍一下在Java中如何利用Socket进行网络编程。 　　
+　　在Java中Socket可以理解为客户端或者服务器端的一个非凡的对象，这个对象有两个要害的方法，一个是getInputStream方法，另一个是getOutputStream方法。getInputStream方法可以得到一个输入流，客户端的Socket对象上的getInputStream方法得到的输入流其实就是从服务器端发回的数据流。GetOutputStream方法得到一个输出流，客户端Socket对象上的getOutputStream方法返回的输出流就是将要发送到服务器端的数据流，（其实是一个缓冲区，暂时存储将要发送过去的数据）。
+　　程序可以对这些数据流根据需要进行进一步的封装。本文的例子就对这些数据流进行了一定的封装（关于封装可以参考Java中流的实现部分）。
+　　为了更好的说明问题，这里举了一个网上对话的例子，客户端启动以后，服务器会启动一个线程来与客户进行文字交流。　　
+　　要完成这个工作，需要完成三个部分的工作，以下依次说明：　　
+　　一、建立服务器类　　
+　　Java中有一个专门用来建立Socket服务器的类，名叫ServerSocket,可以用服务器需要使用的端口号作为参数来创建服务器对象。　　
+　　ServerSocket server = new ServerSocket(9998) 　　
+　　这条语句创建了一个服务器对象，这个服务器使用9998号端口。当一个客户端程序建立一个Socket连接，所连接的端口号为9998时，服务器对象server便响应这个连接，并且server.accept()方法会创建一个Socket对象。服务器端便可以利用这个Socket对象与客户进行通讯。　　
+　　Socket incoming = server.accept() 　　
+　　进而得到输入流和输出流,并进行封装　　
+　　BufferedReader in = new BufferedReader(new 
+　　InputStreamReader(incoming.getInputStream()));
+　　PrintWriter out = new PrintWriter(incoming.getOutputStream(),true); 　　
+　　随后，就可以使用in.readLine()方法得到客户端的输入，也可以使用out.println()方法向客户端发送数据。从而可以根据程序的需要对客户端的不同请求进行回应。　　
+　　在所有通讯结束以后应该关闭这两个数据流，关闭的顺序是先关闭输出流，再关闭输入流，即使用 　　
+　　out.close();
+　　in.close(); 　　
+　　二、建立客户端代码　　
+　　相比服务器端，客户端要简单一些，客户端只需用服务器所在机器的ip以及服务器的端口作为参数创建一个Socket对象。得到这个对象后，就可以用"建立服务器"部分介绍的方法实现数据的输入和输出。　　
+　　Socket socket = new Socket("168.160.12.42",9998);
+　　in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+　　out = new PrintWriter(socket.getOutputStream(),true); 　　
+　　以上的程序代码建立了一个Socket对象，这个对象连接到ip地址为168.160.12.42的主机上、端口为9998的服务器对象。并且建立了输入流和输出流，分别对应服务器的输出和客户端的写入。　　
+　　三、建立用户界面　　
+　　读者可以根据自己的喜好建立自己的用户界面，这不是本文的重点。　　
+　　经过以上三个步骤，就可以建立一个比较简单的对话程序。但是，为了使这个程序更加完善，应进行以下几个改进：　　
+　　一、现在服务器只能服务一个客户，也就是单线程的。可以将它改进为多线程服务器。　　
+　　try
+　　{ file://建立服务器
+　　　ServerSocket server = new ServerSocket(9998);
+　　　int i=1;
+　　　for(;;)
+　　　{
+　　Socket incoming = server.accept();
+　　new ServerThread(incoming,i).start();
+　　i++;
+　　　}
+　　}catch (IOException ex){ ex.printStackTrace(); } 　　
+　　循环检测是否有客户连接到服务器上，假如有，则创建一个线程来服务这个客户，这个线程的名称是ServerThread，这个类扩展了Thread类，它的编写方法与前述的服务器的写法相同。　　
+　　二、为了可以随时得到对方传送过来的消息，可以在服务器以及客户端各建立一个独立的线程来察看输入流，假如输入流中有输入，则可以即时显示出来。代码如下：　　
+　　new Thread()
+　　{
+　　　public void run()
+　　　{
+　　try
+　　{　
+　　　while(true)
+　　　{
+　　checkInput();
+　　sleep(1000);//每1000毫秒检测一次
+　　　}
+　　}catch (InterruptedException ex)
+　　　{
+　　　}catch(IOException ex)
+　　　{
+　　}
+　　　}
+　　}.start();
+　　
+　　其中的checkInput()方法为
+　　private void checkInput() throws IOException
+　　{
+　　　String line;
+　　　if((line=in.readLine())!=null) file://检测输入流中是否有新的数据
+　　t.setPartner(line); file://将数据流中的消息显示出来
+　　} 
+　　
+　　通过以上改进，程序就可以比较好的运行了。　　
+　　附：服务器的实现代码　　
+　　
+　　public class talkServer
+　　{ public static void main(String[] args)
+　　　{ try
+　　{ file://建立服务器
+　　　ServerSocket server = new ServerSocket(9998);
+　　　int i=1;
+　　　for(;;)
+　　{ Socket incoming = server.accept();
+　　　new ServerThread(incoming,i).start();
+　　　i++;
+　　}
+　　　}catch (IOException ex){
+　　　ex.printStackTrace();
+　　}
+　　　}
+　　}
+　　
+　　class ServerThread extends Thread implements ActionListener
+　　{
+　　　private int threadNum;
+　　　private Socket socket;
+　　　talkServerFrm t;
+　　　BufferedReader in;
+　　　PrintWriter out;
+　　　private boolean talking=true;
+　　　public ServerThread(Socket s,int c)
+　　　{ threadNum = c;
+　　socket = s;
+　　　}
+　　
+　　public void actionPerformed(ActionEvent e)
+　　{ Object source = e.getSource();
+　　　try{
+　　if(source==t.BTnSend)
+　　　{ out.println(t.getTalk());
+　　t.clearTalk();
+　　}else
+　　if(source==t.btnEnd)
+　　　{ out.println("谈话过程被对方终止");
+　　out.close();
+　　in.close();
+　　talking = false;
+　　　}
+　　　}catch(IOException ex){
+　　　}
+　　}
+　　
+　　public void run()
+　　{ try{
+　　t=new talkServerFrm(new Integer(threadNum).toString(),this);
+　　t.setSize(500,500);
+　　t.show();
+　　in = new BufferedReader(new 
+　　　 InputStreamReader(socket.getInputStream()));
+　　out = new PrintWriter(socket.getOutputStream(),true);
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+Socket通信_GoaheadWebServer
+
+网络的 Socket数据传输是一种特殊的I/O，Socket也是一种文件描述符。Socket也具有一个类似于打开文件的函数调用Socket()，该函数返 回一个整型的Socket描述符，随后的连接建立、数据传输等操作都是通过该Socket实现的。常用的Socket类型有两种：流式Socket （SOCK_STREAM）和数据报式Socket（SOCK_DGRAM）。流式是一种面向连接的Socket，针对于面向连接的TCP服务应用；数据 报式Socket是一种无连接的Socket，对应于无连接的UDP服务应用。
+sockets（套接字）编程有三种，流式套接字（SOCK_STREAM），数据报套接字（SOCK_DGRAM），原始套接字（SOCK_RAW）；基于TCP的socket编程是采用的流式套接字。在这个程序中，将两个工程添加到一个工作区。要链接一个ws2_32.lib的库文件。
+服务器端编程的步骤：
+1：加载套接字库，创建套接字(WSAStartup()/socket())；
+2：绑定套接字到一个IP地址和一个端口上(bind())；
+3：将套接字设置为监听模式等待连接请求(listen())；
+4：请求到来后，接受连接请求，返回一个新的对应于此次连接的套接字(accept())；
+5：用返回的套接字和客户端进行通信(send()/recv())；
+6：返回，等待另一连接请求；
+7：关闭套接字，关闭加载的套接字库(closesocket()/WSACleanup())。
+1. Socket建立（sockGen.c->socketOpenConnection()）
+     sp->sock = socket(AF_INET, SOCK_STREAM, 0);
+为了建立Socket，程序可以调用Socket函数，该函数返回一个类似于文件描述符的句柄。socket函数原型为：
+　　 int socket(int domain, int type, int protocol);
+　 　 domain指明所使用的协议族，通常为PF_INET，表示互联网协议族（TCP/IP协议族）；type参数指定socket的类型： SOCK_STREAM 或SOCK_DGRAM，Socket接口还定义了原始Socket（SOCK_RAW），允许程序使用低层协议；protocol通常赋值"0"。 Socket()调用返回一个整型socket描述符，你可以在后面的调用使用它。
+　　 Socket描述符是一个指向内部数据结构的指针，它指向描述符表入口。调用Socket函数时，socket执行体将建立一个Socket，实际上"建立一个Socket"意味着为一个Socket数据结构分配存储空间。Socket执行体为你管理描述符表。
+    两个网络程序之间的一个网络连接包括五种信息：通信协议、本地协议地址、本地主机端口、远端主机地址和远端协议端口。Socket数据结构中包含这五种信息。
+2. Socket配置（sockGen.c->socketOpenConnection()）
+if (bind(sp->sock, (SOCKADDRIN_S*) &sockaddr, sizeof(sockaddr)) < 0)
+通过socket调用返回一个socket描述符后，在使用socket进行网络传输以前，必须配置该socket。面向连接的socket客户端通过 调用Connect函数在socket数据结构中保存本地和远端信息。无连接socket的客户端和服务端以及面向连接socket的服务端通过调用 bind函数来配置本地信息。
+Bind函数将socket与本机上的一个端口相关联，随后你就可以在该端口监听服务请求。Bind函数原型为：
+　　 int bind(int sockfd,struct sockaddr *my_addr, int addrlen);
+Sockfd是调用socket函数返回的socket描述符,my_addr是一个指向包含有本机IP地址及端口号等信息的sockaddr类型的指针；addrlen常被设置为sizeof(struct sockaddr)。
+3. 连接建立
+if (listen(sp->sock, SOMAXCONN) < 0) 
+à （sockGen.c->socketOpenConnection()）
+if ((newSock = accept(sp->sock, (SOCKADDRIN_S *) &addr, (S32 *) &len)) < 0)
+à （sockGen.c-> socketAccept ()）
+服务器端使用Listen函数使socket处于被动的监听模式，并为该socket建立一个输入数据队列，将到达的服务请求保存在此队列中，直到程序处理它们。
+　　 int listen(int sockfd， int backlog);
+Sockfd 是Socket系统调用返回的socket 描述符；backlog指定在请求队列中允许的最大请求数，进入的连接请求将在队列中等待accept()它们（参考下文）。
+accept()函数让服务器接收客户的连接请求。在建立好输入队列后，服务器就调用accept函数，然后睡眠并等待客户的连接请求。
+　　 int accept(int sockfd, void *addr, int *addrlen);
+　 　 sockfd是被监听的socket描述符，addr通常是一个指向sockaddr_in变量的指针，该变量用来存放提出连接请求服务的主机的信息（某台主机从某个端口发出该请求）；addrten通常为一个指向值为sizeof(struct sockaddr_in)的整型指针变量。出现错误时accept函数返回-1并置相应的errno值。
+　　首先，当accept函数监视的 socket收到连接请求时，socket执行体将建立一个新的socket，执行体将这个新socket和请求连接进程的地址联系起来，收到服务请求的 初始socket仍可以继续在以前的 socket上监听，同时可以在新的socket描述符上进行数据传输操作。
+4. 数据传输
+(1)bytes = send(sp->sock, buf, toWrite, 0);
+à （sock.c->socketDoOutput()）
+(2)recv(sp->sock, buf, sizeof(buf), 0);
+à（sock.c->socketFree ()）
+(3)bytesRead = recv(sp->sock, buf, toRead, 0);
+à（sock.c->socketGetInput ()）
+Send()和recv()这两个函数用于面向连接的socket上进行数据传输。
+　　 Send()函数原型为：
+　　 int send(int sockfd, const void *msg, int len, int flags);
+Sockfd是你想用来传输数据的socket描述符；msg是一个指向要发送数据的指针；Len是以字节为单位的数据的长度；flags一般情况下置为0（关于该参数的用法可参照man手册）。
+　　 Send()函数返回实际上发送出的字节数，可能会少于你希望发送的数据。在程序中应该将send()的返回值与欲发送的字节数进行比较。当send()返回值与len不匹配时，应该对这种情况进行处理。
+char *msg = "Hello!";
+int len, bytes_sent;
+……
+len = strlen(msg);
+bytes_sent = send(sockfd, msg,len,0);
+……
+　　 recv()函数原型为：
+　　 int recv(int sockfd,void *buf,int len,unsigned int flags);
+　　 Sockfd是接受数据的socket描述符；buf 是存放接收数据的缓冲区；len是缓冲的长度。Flags也被置为0。Recv()返回实际上接收的字节数，当出现错误时，返回-1并置相应的errno值。
+5. 结束传输
+close(sp->sock);
+à（sock.c->socketFree()）
+当所有的数据操作结束以后，你可以调用close()函数来释放该socket，从而停止在该socket上的任何数据操作：
+close(sockfd);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+利用socket进行java网络编程
+
+Socket是网络上运行的两个程序间双向通讯的一端，它既可以接受请求，也可以发送请求，利用它可以较为方便的编写网络上数据的传递。
+　　在Java中Socket可以理解为客户端或者服务器端的一个特殊的对象，这个对象有两个关键的方法，一个是getInputStream方法，另一个是getOutputStream方法。getInputStream方法可以得到一个输入流，客户端的Socket对象上的getInputStream方法得到的输入流其实就是从服务器端发回的数据流。GetOutputStream方法得到一个输出流，客户端Socket对象上的getOutputStream方法返回的输出流就是将要发送到服务器端的数据流，（其实是一个缓冲区，暂时存储将要发送过去的数据）。
+　　程序可以对这些数据流根据需要进行进一步的封装。本文的例子就对这些数据流进行了一定的封装（关于封装可以参考Java中流的实现部分）。
+　　为了更好的说明问题，这里举了一个网上对话的例子，客户端启动以后，服务器会启动一个线程来与客户进行文字交流。
+　　要完成这个工作，需要完成三个部分的工作，以下依次说明：
+　　一、建立服务器类
+　　Java中有一个专门用来建立Socket服务器的类，名叫ServerSocket,可以用服务器需要使用的端口号作为参数来创建服务器对象。
+
+ServerSocket server = new ServerSocket(9998)
+　　这条语句创建了一个服务器对象，这个服务器使用9998号端口。当一个客户端程序建立一个Socket连接，所连接的端口号为9998时，服务器对象server便响应这个连接，并且server.accept()方法会创建一个Socket对象。服务器端便可以利用这个Socket对象与客户进行通讯。
+
+Socket incoming = server.accept()
+　　进而得到输入流和输出流,并进行封装
+
+BufferedReader in = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
+PrintWriter out = new PrintWriter(incoming.getOutputStream(),true);
+　　随后，就可以使用in.readLine()方法得到客户端的输入，也可以使用out.println()方法向客户端发送数据。从而可以根据程序的需要对客户端的不同请求进行回应。
+
+　　在所有通讯结束以后应该关闭这两个数据流，关闭的顺序是先关闭输出流，再关闭输入流，即使用
+
+out.close();
+in.close();
+
+　二、建立客户端代码
+
+　　相比服务器端，客户端要简单一些，客户端只需用服务器所在机器的ip以及服务器的端口作为参数创建一个Socket对象。得到这个对象后，就可以用"建立服务器"部分介绍的方法实现数据的输入和输出。
+
+Socket socket = new Socket("168.160.12.42",9998);
+in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+out = new PrintWriter(socket.getOutputStream(),true);
+　　以上的程序代码建立了一个Socket对象，这个对象连接到ip地址为168.160.12.42的主机上、端口为9998的服务器对象。并且建立了输入流和输出流，分别对应服务器的输出和客户端的写入。
+　　三、建立用户界面
+　　读者可以根据自己的喜好建立自己的用户界面，这不是本文的重点。
+　　经过以上三个步骤，就可以建立一个比较简单的对话程序。但是，为了使这个程序更加完善，应进行以下几个改进：
+　　一、现在服务器只能服务一个客户，也就是单线程的。可以将它改进为多线程服务器。
+
+try
+{ file://建立服务器
+　ServerSocket server = new ServerSocket(9998);
+　int i=1;
+　for(;;)
+　{
+　　Socket incoming = server.accept();
+　　new ServerThread(incoming,i).start();
+　　i++;
+　}
+}catch (IOException ex){ ex.printStackTrace(); }
+　　循环检测是否有客户连接到服务器上，如果有，则创建一个线程来服务这个客户，这个线程的名称是ServerThread，这个类扩展了Thread类，它的编写方法与前述的服务器的写法相同。
+　　二、为了可以随时得到对方传送过来的消息，可以在服务器以及客户端各建立一个独立的线程来察看输入流，如果输入流中有输入，则可以即时显示出来。代码如下：
+
+new Thread()
+{
+　public void run()
+　{
+　　try
+　　{　
+　　　while(true)
+　　　{
+　　　　checkInput();
+　　　　sleep(1000);//每1000毫秒检测一次
+　　　}
+　　}catch (InterruptedException ex)
+　{
+　}catch(IOException ex)
+　{
+　　}
+　}
+}.start();
+
+其中的checkInput()方法为
+private void checkInput() throws IOException
+{
+　String line;
+　if((line=in.readLine())!=null) file://检测输入流中是否有新的数据
+　　t.setPartner(line); file://将数据流中的消息显示出来
+}
+　　通过以上改进，程序就可以比较好的运行了。
+附：服务器的实现代码
+
+public class talkServer
+{ public static void main(String[] args)
+　{ try
+　　{ file://建立服务器
+　　　ServerSocket server = new ServerSocket(9998);
+　　　int i=1;
+　　　for(;;)
+　　　　{ Socket incoming = server.accept();
+　　　　　new ServerThread(incoming,i).start();
+　　　　　i++;
+　　　　}
+　　　}catch (IOException ex){
+　　　ex.printStackTrace();
+　　}
+　}
+}
+
+class ServerThread extends Thread implements ActionListener
+{
+　private int threadNum;
+　private Socket socket;
+　talkServerFrm t;
+　BufferedReader in;
+　PrintWriter out;
+　private boolean talking=true;
+　public ServerThread(Socket s,int c)
+　{ threadNum = c;
+　　socket = s;
+　}
+
+public void actionPerformed(ActionEvent e)
+{ Object source = e.getSource();
+　try{
+　　if(source==t.btnSend)
+　　　{ out.println(t.getTalk());
+　　　　t.clearTalk();
+　　}else
+　　if(source==t.btnEnd)
+　　　{ out.println("谈话过程被对方终止");
+　　　　out.close();
+　　　　in.close();
+　　　　talking = false;
+　　　}
+　}catch(IOException ex){
+　}
+}
+
+public void run()
+{ try{
+　　t=new talkServerFrm(new Integer(threadNum).toString(),this);
+　　t.setSize(500,500);
+　　t.show();
+　　in = new BufferedReader(new 
+　　　　　 InputStreamReader(socket.getInputStream()));
+　　out = new PrintWriter(socket.getOutputStream(),true);
+　}catch(Exception e){
+}
+　new Thread()
+　{ public void run()
+　　{ try{
+　　　　while(true)
+　　　　{ checkInput();
+　　　　　sleep(1000);
+　　}
+　}catch (InterruptedException ex){
+　}catch(IOException ex){
+　}
+　}
+　}.start();
+　while(talking)
+　{ }
+　t.dispose();
+　}
+
+private void checkInput() throws IOException
+{ String line;
+　if((line=in.readLine())!=null)
+　　t.setPartner(line); file://这是界面类里的方法，
+　　file://用来将line的内容输出到用户界面
+　}
+}
+
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+socket笔记
+
+ 
+ 常用方法介绍 Socket网络编程学习笔记一
+在讲Socket编程前，我们先来看一下几个最常用的类和方法，相信这些东西能让你事半功倍。一、IP地址操作类 1、IPAddress类 a、在该类中有一个 Parse()方法，可以把点分的十进制IP表示转化成IPAddress类，方法如下： IPAddress address = IPAddress.Parse(“192.168.0.1”);
+b、IPAddress提供4个只读字段
+Any 用于代表本地系统可用的任何IP地址
+Broadcase 用于代表本地网络的IP广播地址
+Loopback 用于代表系统的回送地址 None 用于代表系统上没有网络接口
+其中IPAddress.Any最常用可以用来表示本机上所有的IP地址，这对于socket服务进行侦听时，最方便使用，不用对每个IP进行侦听了。而IPAddress.Broadcase可用来UDP的IP广播，这些具体讲socket时再详细介绍。 2、IPEndPoint类 我们可以通过二种构造方法来创建IPEndPoint类： a、IPEndPoint(long address, int port) b、IPEndPoint(IPAddress address, int port) 四个属性：
+Address
+AddressFamily
+Port
+MaxPort
+MinPort
+这些应该从名字上就很好理解，不再一一介绍。IPEndPoint其实就是一个IP地址和端口的绑定，可以代表一个服务，用来Socket通讯。 二、DNS相关类 DNS类有四个静态方法，来获取主机DNS相关信息， 1、GetHostName() 通过Dns.GetHostName()可以获得本地计算机的主机名 2、GetHostByName() 根据主机名称，返回一个IPHostEntry 对象：
+IPHostEntry GetHostByName(string hostName)
+其中IPHostEntry把一个DNS主机名与一个别名和IP地址的数组相关联，包含三个属性：
+AddressList：一个IPAddress对象的数组
+Aliases：一个字符串对象数组
+HostName：一个用于主机名的字符串对象 3、GetHostByAddress() 类似于GetHostByName()，只不过这里的参数是IP地址，而不是主机名，也返回一个IPHostEntry对象。
+IPHostEntry GetHostByAddress(IPAddress address)
+IPHostEntry GetHostByAddress(string address)
+4、Resolve()
+当我们不知道输入的远程主机的地址是哪种格式时（主机名或IP地址），用以上的二种方法来实现，我们可能还要通过判断客户输入的格式，才能正确使用，但Dns类提供一更简单的方法Resolve()，该方法可以接受或者是主机名格式或者是IP地址格式的任何一种地址，并返回IPHostEntry对象。 常用方法就写到这里了，当然针对网络编程不可能只有这么几个类和方法，只不过这几个我们最常用，也非常的简单。不过因为本人比较懒惰，没有放一些具体的实例上去，请见谅，：）。
+面向连接的Socket Socket网络编程学习笔记（2）
+在上一篇中，我列了一些常用的方法，可以说这些方法是一些辅助性的方法，对于分析网络中的主机属性非常有用。在这篇中，我将会介绍一下面向连接（TCP）socket编程，其中辅以实例，代码可供下载。
+对于TCP的Socket编程，主要分二部分： 一、服务端Socket侦听： 服务端Socket侦听主要分以下几个步骤，按照以下几个步骤我们可以很方便的建立起一个Socket侦听服务，来侦听尝试连接到该服务器的客户Socket，从而建立起连接进行相关通讯。 1、创建IPEndPoint实例，用于Socket侦听时绑定 2、创建套接字实例
+1IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 6001);
+1//创建一个套接字 2 serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+这里创建的时候用ProtocolType.Tcp，表示建立一个面向连接(TCP)的Socket。 3、将所创建的套接字与IPEndPoint绑定 4、设置套接字为收听模式 这个跟服务端Socket侦听差不多，下面一步由服务端Socket的侦听模式变成连接模式。 2、将套接字连接到远程服务器
+1 //将所创建的套接字与IPEndPoint绑定 2 serverSocket.Bind(ipep);
+1//设置套接字为收听模式 2 serverSocket.Listen(10);
+以上这四步，我们已经建立了Socket的侦听模式，下面我们就来设置怎么样来获取客户Socket连接的实例，以及连接后的信息发送。 5、在套接字上接收接入的连接
+1while (true) 2 { 3 try 4 { 5 //在套接字上接收接入的连接 6 clientSocket = serverSocket.Accept(); 7 clientThread = new Thread(new ThreadStart(ReceiveData)); 8 clientThread.Start(); 9 } 10 catch (Exception ex) 11 { 12 MessageBox.Show("listening Error: " + ex.Message); 13 } 14 }
+通过serverSocket.Accept()来接收客户Socket的连接请求，在这里用循环可以实现该线程实时侦听，而不是只侦听一次。当程序运行serverSocket.Accept()时，会等待，直到有客户端Socket发起连接请求时，获取该客户Socket，如上面的clientSocket。在这里我用多线程来实现与多个客户端Socket的连接和通信，一旦接收到一个连接后，就新建一个线程，执行ReceiveData功能来实现信息的发送和接收。 6、 在套接字上接收客户端发送的信息和发送信息
+1private void ReceiveData() 2 { 3 bool keepalive = true; 4 Socket s = clientSocket; 5 Byte[] buffer = new Byte[1024]; 6 7 //根据收听到的客户端套接字向客户端发送信息 8 IPEndPoint clientep = (IPEndPoint)s.RemoteEndPoint; 9 lstServer.Items.Add("Client：" + clientep.Address + "("+clientep.Port+")"); 10 string welcome = "Welcome to my test sever "; 11 byte[] data = new byte[1024]; 12 data = Encoding.ASCII.GetBytes(welcome); 13 s.Send(data, data.Length, SocketFlags.None); 14 15 while (keepalive) 16 { 17 //在套接字上接收客户端发送的信息 18 int bufLen = 0; 19 try 20 { 21 bufLen = s.Available; 22 23 s.Receive(buffer, 0, bufLen, SocketFlags.None); 24 if (bufLen == 0) 25 continue; 26 } 27 catch (Exception ex) 28 { 29 MessageBox.Show("Receive Error:" + ex.Message); 30 return; 31 } 32 clientep = (IPEndPoint)s.RemoteEndPoint; 33 string clientcommand = System.Text.Encoding.ASCII.GetString(buffer).Substring(0, bufLen); 34 35 lstServer.Items.Add(clientcommand + "("+clientep.Address + ":"+clientep.Port+")"); 36 37 } 38 39 }
+通过IPEndPoint clientep = (IPEndPoint)s.RemoteEndPoint;我们可以获取连接上的远程主机的端口和IP地址，如果想查询该主机的其它属性如主机名等，可用于上一篇讲的Dns.GetHostByAddress(string ipAddress)来返回一个IPHostEntry对象，就可以得到。另外我们要注意的是，通过Socket发送信息，必须要先把发送的信息转化成二进字进行传输，收到信息后也要把收到的二进字信息转化成字符形式，这里可以通过Encoding.ASCII.GetBytes(welcome);和Encoding.ASCII.GetString(buffer).Substring(0, bufLen);来实现。
+以上就是服务端Socket侦听模式的实现，只要有远程客户端Socket连接上后，就可以轻松的发送信息和接收信息了。下面我们来看看客户端Socket是怎么连接上服务器的。 二、客户端连接 客户端Socket连接相对来说比较简单了，另外说明一下，在执行客户端连接前，服务端Socket侦听必须先启动，不然会提示服务器拒绝连接的信息。 1、创建IPEndPoint实例和套接字
+1 //创建一个套接字 2 IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6001); 3 clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+1//将套接字与远程服务器地址相连 2 try 3 { 4 clientSocket.Connect(ipep); 5 } 6 catch (SocketException ex) 7 { 8 MessageBox.Show("connect error: " + ex.Message); 9 return; 10 }
+前面已说明，如果在执行Socket连接时，服务器的Socket侦听没有开启的话，会产生一个SocketException异常，如果没有异常发生，那恭喜你，你已经与服务器连接上了，接下来就可以跟服务器通信了。 3、接收信息
+1while (true) 2 { 3 //接收服务器信息 4 int bufLen = 0;
+5 try 6 { 7 bufLen = clientSocket.Available; 8 9 clientSocket.Receive(data, 0, bufLen, SocketFlags.None); 10 if (bufLen == 0) 11 { 12 continue; 13 } 14 } 15 catch (Exception ex) 16 { 17 MessageBox.Show("Receive Error:" + ex.Message); 18 return; 19 } 20 21 string clientcommand = System.Text.Encoding.ASCII.GetString(data).Substring(0, bufLen); 22 23 lstClient.Items.Add(clientcommand); 24 25 }
+4、发送信息
+1//向服务器发送信息 2 3 byte[] data = new byte[1024]; 4 data = Encoding.ASCII.GetBytes(txtClient.Text); 5 clientSocket.Send(data, data.Length, SocketFlags.None);
+客户端的发送信息和接收信息跟服务器的接收发送是一样的，只不过一个是侦听模式而另一个是连接模式。以下是程序的运行界面，这些在源码下载里都可以看到： 1、服务端界面： 2、客户端界面：好了，关于面向连接的Socket就讲到这里了，以实例为主，希望对那些派得上用场的朋友能够看得明白。另外提一下，这里服务端开启侦听服务、客户端连接服务端都采用线程方式来实现，这样服务端能够跟多个客户端同时通信，不用等候，当然还有另外一种方式可以实现那就是异步socket，关于这些可以搜索博客园上的相关文章，已经有好多了。
+利用套接字助手类 Socket网络编程学习笔记（3）
+在上一篇中已经介绍了利用Socket建立服务端和客户端进行通信，如果需要的朋友可访问《Socket网络编程学习笔记（2）：面向连接的Socket》。在本篇中，将利用C＃套接字的助手类来简化Socket编程，使得刚刚接触到网络编程的朋友们更容易上手。
+跟上篇一样，通过C＃套接字的助手类来编程同样分服务端和客户端。 一、服务端侦听模式 1、创建套接字与IPEndPoint绑定，并设置为侦听模式。
+1//创建IPEndPoint实例 2 IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 6001); 3 /* 4 //创建一个套接字 5 serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 6 //将所创建的套接字与IPEndPoint绑定 7 serverSocket.Bind(ipep); 8 //设置套接字为收听模式 9 serverSocket.Listen(10); 10 */ 11 serverTcp = new TcpListener(ipep); 12 serverTcp.Start();
+其中注释掉的部分是利用Socket来创建侦听，这里我们可以看到用套接字助手类只通过二行就可以建立起侦听，而且如果要更方便一些，可以不指定IPEndPoint，单单指定端口就可以了，如：
+1serverTcp = new TcpListener(6001); 2 serverTcp.Start();
+2、侦听并获取接入的客户Socket连接
+1while (true) 2 { 3 try 4 { 5 //在套接字上接收接入的连接 6 //clientSocket = serverSocket.Accept(); 7 clientTcp = serverTcp.AcceptTcpClient(); 8 clientThread = new Thread(new ThreadStart(ReceiveData)); 9 clientThread.Start(); 10 } 11 catch (Exception ex)
+12 { 13 MessageBox.Show("listening Error: " + ex.Message); 14 } 15 }
+在这里用clientTcp = serverTcp.AcceptTcpClient();来接收连接的TcpClient对象，我们了可以通过
+1clientSocket = serverTcp.AcceptSocket();
+来接收一个Socket对象，如果接收的是一个Socket对象，那么接下来的接收和发送信息跟上篇一样，如果接收的是TcpClient对象，那么我们来看一下如何来接收和发送信息： 3 、接收和发送信息
+1private void ReceiveData() 2 { 3 bool keepalive = true; 4 TcpClient s = clientTcp; 5 NetworkStream ns = s.GetStream(); 6 Byte[] buffer = new Byte[1024]; 7 8 //根据收听到的客户端套接字向客户端发送信息 9 IPEndPoint clientep = (IPEndPoint)s.Client.RemoteEndPoint; 10 lstServer.Items.Add("Client：" + clientep.Address + "("+clientep.Port+")"); 11 string welcome = "Welcome to my test sever "; 12 byte[] data = new byte[1024]; 13 data = Encoding.ASCII.GetBytes(welcome); 14 //s.Send(data, data.Length, SocketFlags.None); 15 ns.Write(data,0, data.Length); 16 17 while (keepalive) 18 { 19 //在套接字上接收客户端发送的信息 20 int bufLen = 0; 21 try 22 { 23 bufLen = s.Available; 24 //s.Receive(buffer, 0, bufLen, SocketFlags.None); 25 ns.Read(buffer, 0, bufLen); 26 if (bufLen == 0) 27 continue; 28 } 29 catch (Exception ex) 30 { 31 MessageBox.Show("Receive Error:" + ex.Message); 32 return;
+33 } 34 clientep = (IPEndPoint)s.Client.RemoteEndPoint; 35 string clientcommand = System.Text.Encoding.ASCII.GetString(buffer).Substring(0, bufLen); 36 37 lstServer.Items.Add(clientcommand + "("+clientep.Address + ":"+clientep.Port+")"); 38 39 } 40 41 }
+通过NetworkStream ns = s.GetStream();可以获取网络流对象，以此来发送和接收信息。二、客户端连接 1、创建套接字并连接到服务器
+1 //创建一个套接字 2 IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6001); 3 //clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 4 clientTcp = new TcpClient(); 5 6 //将套接字与远程服务器地址相连 7 try 8 { 9 //clientSocket.Connect(ipep); 10 clientTcp.Connect(ipep); 11 } 12 catch (SocketException ex) 13 { 14 MessageBox.Show("connect error: " + ex.Message); 15 return; 16 }
+2、接收服务器发送的信息
+1ns = clientTcp.GetStream(); 2 while (true) 3 { 4 //接收服务器信息 5 int bufLen = 0; 6 try 7 { 8 //bufLen = clientSocket.Available; 9 bufLen = clientTcp.Available; 1011 //clientSocket.Receive(data, 0, bufLen, SocketFlags.None); 12 ns.Read(data, 0, bufLen); 13 if (bufLen == 0) 14 { 15 continue; 16 } 17 } 18 catch (Exception ex) 19 { 20 MessageBox.Show("Receive Error:" + ex.Message); 21 return; 22 } 23 24 string clientcommand = System.Text.Encoding.ASCII.GetString(data).Substring(0, bufLen); 25 26 lstClient.Items.Add(clientcommand); 27 28 }
+同服务端，通过ns = clientTcp.GetStream();获取网络流来读取服务端发过来的信息。 3、向服务端发送信息
+1//向服务器发送信息 2 3 byte[] data = new byte[1024]; 4 data = Encoding.ASCII.GetBytes(txtClient.Text); 5 //clientSocket.Send(data, data.Length, SocketFlags.None); 6 ns.Write(data, 0, data.Length);
+到这里，我们就可以实现客户端与服务端的连接和通讯了。一些方法跟上一篇提到的类似，这里就不再详述。接下来，我会讲一下关于Socket发送的消息边界处理问题、发送实体类数据问题以及利用线程池来改善线程创建和分配问题。
+TCP消息边界处理 Socket网络编程学习笔记（4）
+在前面的几篇中，讲了关于套接字Socket以及利用套接字助手类来进行服务端和客户端之间的通信，在此中间并没有对发送的信息进行任何的处理。在本篇中将会讲一下TCP通信时的信息边界问题。
+通过套接字或其助手类来接收信息时，是从缓存区里一次性把全部的缘存都读取出来，只要你设置的缓存够大，它就能读取这么多，这样就会导致这样的情况出现。如果服务端连续发送信息到客户端，如我连续发送字符串“message 1”、“message 2”、“message 3”、“message 4”、“message 5”，我预想的是在客户端也是能够收到这样的五个完整的字符串，如果用前二篇中讲的方法，在同台机子上测试的话，是正常的，因为同台机子上网络信息传送出现的异常会比较少，但如果把客户端与服务端部署在不同的机器上，则会出现一些异想不到的现象。你会发现接收到的字符都被打乱了，会出现如“3message 4”的字符串，这样的话，我们就不能把服务端发送的信息正常的还原。这个就是消息的边界问题，要解决这个问题，方法有很多，现抽取其中几个来讲一下： 1、固定尺寸的消息 这是最简单但也是最昂贵的解决TCP消息问题的方案。就是要设计一种协议，永远以固定的长度传递消息，通过将所有的消息都设置为固定的尺寸，在从远程设备中接收到完整的消息时，TCP接收程序就能够了解发送的情况了。用这各地意味着必须将短消息加长，造成网络带宽资源的浪费。 2、使用消息尺寸信息 这个方案允许使用可变长度的消息，惟一的不足就是接收端的远程设置必须了解每一个变长消息的确切长度。具体的方法是，在发送消息的时候，一起发送该消息的长度。那么在客户端接收的时候就能知道该消息的长度是多少，再来读取消息。 3、使用消息标记 该方案使用预先确定的一个字符（或多个字符）来指定消息的结束，通过这种方式来分隔不同的消息。但用这种方法必须对所接收到的每一个字符进行检查以便确定为结束标记，这对于大型消息来说，可能导致系统性能的下降，不过对于C＃语言来说，提供了一些类，能够用于简化这个过程，那就是System.IO命名空间流类，下面我们也着重来讲一下这各方法。至于第二种方法，将在下一篇中与在消息中传送实体类信息相结合来讲述。在上一篇中，我们已经提到NetworkStream类，利用该类来传送和接收消息。在这里，再提一下另外的二个流类，那就是StreamReader和StreamWriter，这二个类也可用于TCP协议发送和接收文本消息。 当我们得到Socket连接的一个NetworkStream对象时，可以通过下面的方法得到StreamWriter和StreamReader对象。
+1NetworkStream ns = s.GetStream(); 2 StreamReader sr = new StreamReader(ns); 3 StreamWriter sw = new StreamWriter(ns);
+这样我们就可以通过StreamWriter来发送消息，通过StreamReader来接收消息：
+1//发送消息 2string welcome = "Welcome to my test sever "; 3 4 sw.WriteLine(welcome); 5 sw.Flush();
+接收消息：
+1//接收消息 2string data = ""; 3data = sr.ReadLine();
+这样是不是比以前的做法更简单了，而且同时也解决了TCP消息边界问题了。 但是用这各方法必须得注意以下二点： 1、这种方法其实就是利用消息标记来解决边界问题的，这里的标记就是换行符，也就是说，StreamWriter中的WriteLine()和StreamReader中的ReadLine()一定要成对使用，不然如果发送的信息中没有换行符，则客户机中用ReadLine()读取信息时，将无法结束，将堵塞程序的执行，一直等待换行符。 2、另外还要保证在发送的消息本身不应该带有换行符，如果消息本身带有换行符，则这些换行符将被ReadLine()方法错误地作为标记，影响数据的完整性。 关于TCP消息边界处理就暂时讲到这里了，由于自己的理解也不够深，难免会出现错误，请各位及时纠正。在下一篇中，将讲述传送实体类方面的问题。
+发送和接收实体类数据 Socket网络编程学习笔记（5）
+大家都知道，要想在网络上传输信息，必须要经过序列化才行，所以在传送类对象时，首选必须对该类对象进行序列化，才能够在网络上进行传输。这里主要讲一下利用Soap序列化来传送消息。
+在前面讲述的篇幅中，发送的都是文本信息，我们只要通过Encoding中的几个方法把文本转化成二进制数组就可以利用Socket来传输了，这对于一些基本的信息传输能够得到满足，但对于一些复杂的消息交流，则有些“吃力”。我们有时候会把一些信息封闭在一个类中，如果Socket能够传送类对象，那么一些复杂的问题能够通过面向对象来解决了，即方便又安全。大家都知道，要想在网络上传输信息，必须要经过序列化才行，所以在传送类对象时，首选必须对该类对象进行序列化，才能够在网络上进行传输。序列化类对象有三种序列化方法： 1、Xml序列化 2、Binary序列化 3、Soap序列化 这几种序列化方法，运用方法相类似，只不过用到的类不一样。在这里也不一一讲述了，有兴趣的朋友可以到网上搜一搜，相信会有不少的收获。这里主要讲一下利用Soap序列化来传送消息。 1、首先我们先来建立一个实体类，用来做消息的载体 2、发送前先把类对象进行Soap序列化
+1public static void Send(NetworkStream ns, SocketData sd) 2 { 3 IFormatter formatter = new SoapFormatter(); 4 MemoryStream mem = new MemoryStream(); 5 6 formatter.Serialize(mem, sd); 7 byte[] data = mem.GetBuffer(); 8 int memsize = (int)mem.Length; 9 byte[] size = BitConverter.GetBytes(memsize); 10 ns.Write(size, 0, 4); 11 ns.Write(data, 0, memsize); 12 ns.Flush(); 13 mem.Close(); 14 }
+这里利用 IFormatter formatter = new SoapFormatter(); MemoryStream mem = new MemoryStream();
+formatter.Serialize(mem, sd); 对类对象sd进行序列化。在这里还有一个细节值得一提，那就是消息边界问题的处理，这里是利用发送消息的长度方法来实现。代码如下：
+1int memsize = (int)mem.Length; 2 byte[] size = BitConverter.GetBytes(memsize); 3 ns.Write(size, 0, 4);
+通过BitConverter.GetBytes()方法可以把数据类型转化为二进制数组，从而可以在网络上传送，所以在接收的时候先接收消息长度，再通过该长度来循环读取完整的消息。 3、接收消息
+1public static SocketData Receive(NetworkStream ns) 2 { 3 MemoryStream mem = new MemoryStream(); 4 SocketData sd; 5 byte[] data = new byte[4]; 6 int revc = ns.Read(data, 0, 4); 7 int size = BitConverter.ToInt32(data, 0); 8 int offset = 0; 9 10 if (size > 0) 11 { 12 while (size > 0) 13 { 14 data = new byte[1024]; 15 revc = ns.Read(data, offset, size); 16 mem.Write(data, offset, revc); 17 offset += revc; 18 size -= revc; 19 } 20 21 IFormatter formatter = new SoapFormatter(); 22 mem.Position = 0; 23 sd = (SocketData)formatter.Deserialize(mem); 24 mem.Close(); 25 } 26 else 27 { 28 sd = null; 29 } 30 return sd; 31 }
+通过sd = (SocketData)formatter.Deserialize(mem);还原数据为类对象，就可以对此类对象进行访问了。用Xml序列化或用二进制序列化也是类似，只不过把序列化的方法改一下就可以了，一般来说用二进制序列化得到的数据最小，占用带宽也最小，而用xml和Soap来序列化，都是序列化为Xml格式，所以数据比较大，占用带宽比较大。但用xml或Soap序列化，兼容性高，可以兼容不同系统之间的通信，而二进制不行。可以说各有利弊，可以根据实际情况来选择哪一种序列化。
+使用线程池提高性能 Socket网络编程学习笔记（6）
+Windows操作系允许用户维持一池“预先建立的”线程，这个线程池为应用程序中指定的方法提供工作线索。一个线程控制线程池的操作，并用应用程序可以分配附加的线程进行处理。
+在前几篇介绍中，不论是服务端的侦听还是客户端的连接都是通过新建一个线程去执行特定功能的。在这种情况下，一量有一个新客户端需要连接，则又得创建新的线程，而当程序创建新线程时，往往需要大量的内部开销，这对程序的性能有一定的影响。在.NET库中提供了一种方法，可以避免一些开销。而在Socket通讯中还有另一种访求那就是异步Socket，我不知道用这种方式的性能如何，在这里且不管这种形式，主要来看一下用线程池解决问题。 Windows操作系允许用户维持一池“预先建立的”线程，这个线程池为应用程序中指定的方法提供工作线索。一个线程控制线程池的操作，并用应用程序可以分配附加的线程进行处理。在默认情况下，在线程池中有25个预处理线程，用这种方式可以满足一些小应用。 如果要为线程池中的线程注册一个代表，则用下面的格式： ThreadPool.QueueUserWorkItem(new WaitCallback(Counter)); 其中QueueUserWorkItem是ThreadPool类的一个静态方法；而Counter参数代表运行在线程中的方法，在这要注意的是该Counter方法必须包含一个object 参数，这个在下面的例子中有体现；另外，处Thread对象不一样，代表一旦放置在线程池查询中上，将被处理，不需要其他的方法启动该项工作；当主程序线程退出，所有的线程池线程都将终止，主线程不会等待线程池线程结束。下面我们来看看怎么样运用到我上面讲的例子中去： 原有线程调用：
+clientThread = new Thread(new ThreadStart(ReceiveData)); clientThread.Start(); 用线程池只要一句就可以了: ThreadPool.QueueUserWorkItem(new WaitCallback(ReceiveData));
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+Socket编程 Socket Programming
+
+第24章 Socket编程 Socket Programming
+24.0 简介
+Introduction
+socket （套接字）连接可让 Flash Player 通过指定的网络端口，向（从）服务器发送（加载）数据。socket 连接和第 20 章的服务器连接之间的主要差别，在于 socket 连接在数据传输完成后不会自动关闭。 当 socket 连接产生时，连接会一直开着，直到客户端（Flash Player）或服务器明确予以关闭。因此，socket 可以进行特殊类型的通信，称为数据推送（data push），也就是说服务器可以在任何时刻把信息发送给 Flash Player，而不需要 Player 本身提出请求。
+socket 连接一般用于创建多用户应用程序。这种应用程序的实例之一就是在线聊天室。聊天程序可能由一个中央聊天服务器以及几个连接的 Flash Player 客户端所组成。每次客户端 .swf 发送消息到服务器时，服务器就会确认该由哪个客户端接收该消息，然后，通过打开的连接把消息推送给特定客户端。就此而言，接收方客户端并没有要求那道消息，而是消息直接由服务器推送给它。当客户端关闭连接时，服务器会通知其他客户端，某人已登出系统了。 Flash Player 可以对socket 服务器做两种 socket 连接。这两种 socket 连接在行为和操作上都十分类似，只有少数差别。第一种是 XML socket 连接，类似于 Flash Player 前几版的 XMLSocket。Flash Player 9 新的 socket 连接是二进制（binary）socket 连接。 要建立 XML socket 连接时，需使用 flash.net.XMLSocket 类。要建立二进制 socket 连接时，需使用 flash.net.Socket 类。
+XML socket 连接的焦点是文本。客户端和服务器通信的方式是交换包含数据的 XML 包。动作是通过分析 XML 包的内容实施的。 二进制 socket 连接是 ActionScript 3.0 新增的功能，可以启用原始连接（raw connection），以传输二进制信息。比起 XML socket ，二进制 socket 比较高级，因为需要低阶的二进制数据类型知识，但是，也更加强大，因为你可以连接的 socket 服务器范围更加广泛，而且通常能做的事更多。例如，二进制 socket 可让你连接邮件服务器（通过 POP3、SMTP 和 IMAP）、新闻服务器（通过 NNTP）、聊天服务器，甚至连接至 VNC 服务器（通过 RFB），以实现屏幕共享和远端桌面应用程序。 无论你用的是哪一种 socket 连接，连接的行为都是异步的。也就是说，直到事件处理器通知你数据可用之前，你都无法从 socket 连接读取数据。所有数据的读取都必须在事件处理器内完成，当数据可用时，事件处理器就会自动执行。同步socket连接（试着从socket 读取数据时，会造成你的程序等待，直到数据在 socket 中可用为止）比较容易编程，但是，没那么有效率。当你读过本章时，你会进一步了解 Flash Player socket 连接的异步性质。
+24.1 连接至Socket服务器
+Connecting to a Socket Server
+问题
+你想和 socket 服务器建立连接。
+解法
+使用 Socket.connect() 或 XMLSocket.connect() 方法，并监听连接建立时会接到的 connect 事件通知。
+讨论
+要连接至 socket 服务器，试着建立连接之前，有两项重要信息是你需要事先知道的。第一项信息是要连接到的服务器的域名或 IP 地址，而第二项信息是连接所在的端口。 24.1 连接至 Socket 服务器无论你使用的是Socket或XMLSocket实例，连接过程都是相同的。两者都定义connect()方法，带两个参数： host 字符串值，指定要连接的主机，不是域名（例如 www.example.com），就是 IP 地址（例如 192.168.1.101）。要连接 Flash 影片所属的网站服务器，可以传 null，而非主机名称字符串。 port 一个 int 值，指定应该用于连接主机的端口编号。端口值至少是 1024，除非服务器有策略文件明确容许小于 1024 的端口。 因为 Flash 的 socket 编程有异步本质，不用等待 connect() 方法发生连接，就会继续执行下一行 ActionScript 代码。如果你在连接完全建立前就试着和 socket 交互，就会碰到无法预测的结果，而且你的代码不会正确运行。 连接 socket 的正确方式是试着调用 connect() 前，先替 connect 事件添加事件监听器。成功连接时，Socket 和 XMLSocket 对象都会分派 connect 事件，让你知道 socket 已就绪，可以进行互动了。 把Socket实例通过端口2900连接至localhost上所运行的socket服务器程序，就像这样：
+package {
+import flash.display.Sprite;
+import flash.events.*;
+import flash.net.Socket;
+public class SocketExample extends Sprite {
+private var socket:Socket;
+public function SocketExample() {
+socket = new Socket();
+// 添加事件监听器，连接完成时，可获得
+// 通知
+socket.addEventListener( Event.CONNECT, onConnect );
+// 连接至服务器
+socket.connect( "localhost", 2900 );
+}
+private function onConnect( event:Event ):void {
+trace( "The socket is now connected..." );
+}
+}
+}
+如果你想以 XMLSocket 连接，代码也几乎都相同。首先，你要替connect事件建立事件 监听器，然后，你要调用connect()方法。唯一的差别是所有Socket要换成XMLSocket： 24.1 连接至 Socket 服务器
+package {
+import flash.display.Sprite;
+import flash.events.*;
+import flash.net.XMLSocket;
+public class SocketExample extends Sprite {
+private var socket:XMLSocket;
+public function SocketExample() {
+socket = new XMLSocket();
+// 添加事件监听器，连接完成时，可获得通知
+socket.addEventListener( Event.CONNECT, onConnect );
+// 连接至服务器
+socket.connect( "localhost", 2900 );
+}
+private function onConnect( event:Event ):void {
+trace( "The xml socket is now connected..." );
+}
+}
+}
+如果连接失败，会发生下列两件事之一：不是连接立刻失败而产生一个运行时错误，就是引发 一个 ioError 或 securityError 事件，指出连接无法成功完成。有关如何处理错误事件，可参考锦囊妙计 24.6。 记住，以 socket 连接连接至主机时，适用下列 Flash Player 安全沙箱规则： 1. .swf 和主机必须位在相同域内，连接才能成功。 2. 经由网络传递的 .swf 不能连接至本地服务器。 3. 本地不受信赖的 .swf 不能访问任何网络资源。 4. 要允许跨域（cross-domain）访问或者连接到低于 1024 的端口，可以使用跨域策略文件。 试着连接至不受信赖的域或者低端口而违反安全沙箱时，就会引发securityError事件。这些议题都可以使用跨域策略文件而避开，如锦囊妙计3.12所讨论的。要让Socket或XMLSocket对象使用跨域策略文件，需要使用flash.system.Security.loadPolicy- File()加载策略文件，如下所示：
+Security.loadPolicyFile("http://www.rightactionscript.com/crossdomain.xml");
+编辑跨域策略文件时，应该指定的不只是允许的域，也要指定允许的端口。如果你不指定允许的端口，Flash Player 就假定端口 80（标准 HTTP 端口）是唯一允许的端口。你可以使用 <allow-access-from> 标签的 port 属性，指定以逗号分隔的列表。下列策略文件允许所有域连接至端口 80 和 110（标准 HTTP 和标准 POP 邮件端口）：
+<?xml version="1.0"?>
+<!DOCTYPE cross-domain-policy SYSTEM "http://www.macromedia.com/
+xml/dtds/cross-domain-policy.dtd">
+<cross-domain-policy>
+<allow-access-from domain="*" to-ports="80,110" />
+</cross-domain-policy>
+交叉参考
+锦囊妙计3.12、24.5和24.6。
+24.2 发送数据
+Sending Data
+问题
+你想发送数据给 socket 服务器。
+解法
+就Socket对象而言，要使用写方法（writeByte()、writeUTFBytes()等等）把数据写入缓冲区，然后，调用flush()以发送数据。就XMLSocket对象而言，要使用send()方法。
+讨论
+Socket 和 XMLSocket 类定义不同的 API，以发送数据到 socket 服务器。我们先看 Socket API。
+当你想使用 Socket 对象把数据发送到 socket 服务器时，你必须先把数据写入缓冲区。Socket 类定义一些方法可以写入数据。每个方法写入的数据都是不同类型的（或者以不24.2 发送数据同方式写入数据）。这些方法是 writeBoolean()、writeByte()、writeBytes()、writeDouble()、writeFloat()、writeInt()、writeMultiByte()、writeObject()、writeShort()、writeUnsignedInt()、writeUTF() 和 writeUTFBytes()。多数方法都接受一个参数（其类型由该方法名称可知）。例如，writeBoolean() 接受一个布尔参数，而 writeByte()、writeDouble()、writeFloat()、writeInt()、writeShort() 和 writeUnsignedInt() 则接受数值参数。writeObject() 方法接收一个对象参数（必须可以序列化成 AMF 格式）。writeBytes() 方法可让你传递一个ByteArray参数（以及 offset 和 length 参数）。例如，下面调用 writeBytes()，传递指向 ByteArray 对象的引用，并指出其应该写入所有字节（offset 从 0 起算，而 length 等于 ByteArray 的长度）：
+socket.writeBytes(byteArray, 0, byteArray.length);
+writeUTF() 和 writeUTFBytes() 方法可让你写入字符串。每个方法都接受一个字符串参数。writeUTFBytes() 方法就是把字符串当成几个字节写入。writeUTF() 方法把实际字节数据写入前，必须先写入字节数。 writeMultiByte() 方法也会写入字符串数据，但是，是使用非默认字符集。此方法需要两个参数：要写入的字符串以及要使用的字符集名称。Flash 和 Flex 的帮助文件列出所支持的字符集以及每种字符集的标签和别名。替 writeMultiByte() 指定字符集时，可以使用标签值作为字符串。下列范例以 Unicode 把字符串 example 写入：
+socket.writeMultiByte("example", "unicode");
+你用什么方法把数据写给 Socket 对象，完全取决于你想写入的数据是什么种类，以及服务器期待接收什么种类的数据。使用 Socket 对象时，你可以完全使用 ActionScript 写出 Telnet 或 POP 邮件客户程序。这两种协议都期望 ASCII 文本命令。例如，连接至 POP 服务器之后，你可以用 USER 命令指定用户。下列代码把这样的命令写给 Socket 对象：
+// POP 服务器预期新列字符（\n）以执行前面之命令
+socket.writeUTFBytes("USER exampleUsername\n");
+把数据写入 Socket 对象，实际上没有把数据发送给 socket 服务器。每次对写入方法调用时，都是把数据附加至 Socket 对象。例如，下列是把4个字节写入 Socket 对象，但是，都没有发送：socket.writeByte(1);
+socket.writeByte(5);
+socket.writeByte(4);
+socket.writeByte(8);
+当你想发送累积的数据给 socket 服务器时，就使用 flush() 方法。flush() 方法就是把所有写入的数据都发送出去，并把缓冲区清干净：
+socket.flush();
+XMLSocket 类发送数据的 API 更简单。写入和发送数据都是使用 send() 方法。send() 方法接收任何数据类型的参数，而将该参数转换成字符串，发送给服务器。传统上，该参数为 XML 对象或者包含 XML 结构化数据的字符串：
+xmlSocket.send(xml);
+然而，数据格式的正确与否完全依赖服务器所期待的格式。如果服务器期待 XML 格式的数据，则你需要发送 XML 格式的数据。如果服务器期待 URL 编码数据，则你需要发送 URL 编码数据。
+24.3 接收数据
+Receiving Data
+问题
+你想从 socket 服务器读取数据。
+解法
+就Socket实例而言，要订阅（subscribe）socketData事件，在事件处理器内调用读取方法之一（例如readByte()或readInt()），确保不会读取超过bytesAvailable（可用字节）。 就 XMLSocket 实例而言，要订阅 data 事件，在事件处理器内解读已接收的 XML 数据。 24.3 接收数据
+讨论
+从 socket 连接接收数据取决于你所用的 socket 类型。Socket 和 XMLSocket 都可以从服务器接收数据，但是，两者确实使用略微不同的技术。我们先讨论 Socket 类的运作方式，再谈 XMLSocket。 由本章简介已知，Flash 里的 socket 以异步方式工作。因此，不可能一建立 socket 连接，就立刻试着从 socket 读取数据。读取方法在返回前不用等待数据从服务器那儿传输过来，相反，只有在客户端已经从主机服务器那儿下载数据后，才能从 socket 读取数据。还没有数据可用时，就试着从 Socket 读取数据，只是错事一件。 要知道数据何时可以读取，Socket 实例会广播 socketData 事件。替 socketData 事件添加事件监听器，从 socket 服务器那儿接收新数据时，事件处理器就会被调用。在事件处理器内，你要写代码读取和解析所接收的数据。 为了读取服务器发送而来的数据，Socket类提供各种不同的读取方法，取决于你想读取的数据类型。例如，你可以用readByte()方法读取一个字节，或者以readUnsignedInt() 方法读取一个无符号整数。表 24-1 列出各种可从 socket 服务器那儿读取的数据类型、返回值，以及读取方法读取的字节数。 表24-1：各种数据类型的socket读取方法
+方法 :返回类型
+说 明
+读取的 字节
+readBoolean():Boolean
+从socket读取一个布尔值
+1
+readByte():int
+从socket读取一个有符号字节
+1
+readDouble():Number
+从socket读取一个IEEE 754双精度浮点数
+8
+readFloat():Number
+从socket读取一个IEEE 754单精度浮点数
+4
+readInt():int
+从socket读取一个有符号32位整数
+4
+readObject():*
+从socket读取一个AMF编码对象
+n
+readShort():int
+从socket读取一个有符号16位整数
+2
+readUnsignedByte():uint
+从socket读取一个无符号字节
+1
+readUnsignedInt():uint
+从socket读取一个无符号32位整数
+4
+readUnsignedShort():uint
+从socket读取一个无符号16位整数
+2
+readUTF():String
+从socket读取一个UTF-8字符串
+n
+ 
+表 24-1 有两个读取方法没有列入，也就是 readBytes() 和 readUTFBytes()。readBytes() 是 Socket 唯一没有返回值的方法，带下列三个参数： bytes 从 socket 将数据读进来的 flash.util.ByteArray 实例。 offset uint 值，指明从 socket 读进来的数据应该从 bytes 的何处（偏移量）开始。默认值是 0。 length uint 值，指明要读取的字节数。默认值是 0，意指所有可用数据都会从 socket 读进 bytes ByteArray。 另一方面，readUTFBytes() 方法带一个 length 参数，指明要读取的 UTF-8 字节数，然后，返回 String，对应于读取的字节。
+提示：从Socket读取数据前，先检查socket的bytesAvailable属性，这一点很重要。试着读取超过可用的数据量时，会造成 flash.errors.EOFError。 下列代码范例连接至 socket 服务器，读取和显示从服务器发送而来的数据，一次一个字节：
+package {
+import flash.display.Sprite;
+import flash.events.ProgressEvent;
+import flash.net.Socket;
+public class SocketExample extends Sprite {
+private var socket:Socket;
+public function SocketExample() {
+socket = new Socket();
+// 监听何时从 socket 服务器那儿接收到数据
+socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketData );
+// 连接至服务器
+socket.connect( "localhost", 2900 );
+}
+private function onSocketData( event:ProgressEvent ):void {
+trace( "Socket received " + socket.bytesAvailable + " byte(s) of data:" );
+// 循环所有已接收的数据，如果只有一个字节，
+// 就读一个字节
+while ( socket.bytesAvailable ) {
+// 从 socket 读取一个字节，然后予以显示。
+var data:int = socket.readByte();
+trace( data );
+}
+}
+}
+}
+前例中，如果 socket 服务器传回一道消息（例如“Hello”），那么，当客户连接时，代码的输出会类似这样：
+Socket received 5 byte(s) of data:
+72
+101
+108
+108
+111
+提示：一旦数据从Socket读取而来，就无法再读取一次。例如，读取一个字节后，该字节就不能被“放回去”，稍后再以一个 int 值的一部分读取出来。 当Socket对象所接收的数据是ASCII文本时，你可以使用readUTFBytes()方法重新构 造字符串。readUTFBytes() 方法需要你告诉它有多少字节要读取，然后转成字符串。你可以使用 bytesAvailable 以读取所有字节：
+var string:String = socket.readUTFBytes(socket.bytesAvailable);
+关于如何从服务器那儿接收数据，XMLSocket 类的行为很类似 Socket 类。就这两种情况而言，事件监听器必须用于接收数据可用的通知，因为 Flash 是采用异步 socket 实现方式。然而，用于实际读取数据的流程则十分不同。 当数据从服务器那儿下载完成时，XMLSocket 实例就会分派 data 事件。data 事件（由 flash.events.DataEvent.DATA 常数定义）包含 String 类型的 data 属性，内含从服务器那儿接收的信息。
+提示：使用 XMLSocket 时，从服务器那儿返回的数据，总是被解读为 String。没有针对各种数据类型的特定读取方法。 从服务器返回的数据是原始的（raw）服务器响应。因此，XMLSocket 连接并不限于使用 XML，相反的，你也可以发送和接收纯文本字符串信息。然而，如果你期待返回的是 XML，使用前，就必须先将数据转换成 XML 实例。 下列代码范例以 XMLSocket 建立连接，连接至本地电脑的 2900 端口上运行的服务器。连接成功后，<test> 消息会发送给服务器。onData 事件监听器会处理来自服务器的响应，而此例就是字符串 <response><test success='true'/></response>。你可以看到，传给 onData 的事件的 data 属性只是 String 而已，而 XML 构造方法会把 String转换成XML实例。最后，再以E4X语法输出转换后的XML的一部分（有关XML和 E4X 的信息，可参考第 21 章）：
+package {
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.events.DataEvent;
+import flash.net.XMLSocket;
+public class SocketExample extends Sprite {
+private var xmlSocket:XMLSocket;
+public function SocketExample() {
+xmlSocket = new XMLSocket();// 连接监听器以发送消息给服务器；
+// 在成功连接之后
+xmlSocket.addEventListener( Event.CONNECT, onConnect );
+// 监听数据何时从 socket 服务器那儿接收
+xmlSocket.addEventListener( DataEvent.DATA, onData );
+// 连接到服务器
+xmlSocket.connect( "localhost", 2900 );
+}
+private function onConnect( event:Event ):void {
+xmlSocket.send( "<test/>" );
+}
+private function onData( event:DataEvent ):void {
+// 服务器返回的原始字符串
+// 可能看起来像这样：
+// <response><test success='true'/></response>
+trace( event.data );
+// 把字符串转换成 XML
+var response:XML = new XML( event.data );
+// 使用 E4X，访问响应中
+// "test" 元素节点的 success 属性
+// 输出 : true
+trace( response.test.@success );
+}
+}
+}
+提示：data 事件得以分派之前，XMLSocket 实例必须检测到来自于服务器的 null 字节（'\0'）。也就是说，从服务器发送字符串，并不足以使客户得以接收。事实上，字符串必须以 null 字节结束才行。 24.4 和Socket服务器握手
+Handshaking with a Socket Server
+问题
+你想和 socket 服务器“握手”（handshaking），而且需要知道所接收数据的上下文（context），以了解该如何予以处理。
+解法
+创建不同的常数变量以代表协议状态。使用常数把相应的状态与特定的处理函数对应起来。在 socketData 事件处理器中，通过状态地图（state map）调用恰当的函数。
+讨论
+连接 socket 时，一般的场景是走过一个“握手”流程。一般而言，服务器会先发送数据给客户端。然后，客户端再以特定方式响应该数据，服务器再据此进行响应。整个流程会一直重复，直到握手完成并建立“正常”连接。 因为 socketData 事件处理器没有记录上下文，所以，很难处理来自于服务器的响应。也就是说，服务器响应没有搭配“原因”，或者没有“此数据是为了响应谁”的处理指令。想了解如何处理来自于服务器的响应，通常无法通过响应本身总结出来，特别是当响应会变化时。也许一道响应是返回两个字节，而另一道响应则是返回一个整数和一个双精确度浮点数。由此可见问题所在。 解决办法是创建不同的状态常数，代表服务器发送数据给客户端的不同上下文。把每个常数和处理数据的特定函数关联起来，就可以根据当前协议状态轻易调用正确的处理函数了。 考虑下列连接至 socket 服务器时会发生的“握手”场景： 1. 当服务器接到代表其所支持的最高协议版本的整数时，就会立刻响应。 2. 客户端则以代表应该用于通信的协议实际版本的整数，作为响应。 3. 服务器发回一个 8 字节的认证盘问（authentication challenge）。4. 客户端把认证盘问发回服务器。 5. 如果客户端的响应不是服务器所期待的，服务器就关闭连接，若是的话，此时，协议就会进入正常的运行模式，而“握手”就完成了。 实际上，步骤 4 牵涉到更安全的认证盘问响应。不是只把盘问逐字传回去，而是想用某种用户提供的密钥加密。也许客户端会要求用户提供密码，然后，把输入的密码作为 8 字节盘问的密钥。然后，加密过的盘问再发回服务器。如果盘问响应符合服务器所期待的， 则表示客户程序已知道正确密码，连接应该被允许。 要实现刚才所提的“握手”流程，要先创建一些常数，代表服务器所返回的各种数据。首先，步骤 1 要确认版本。其次，接收来自步骤 3 的盘问。最后，有步骤 5 的正常运行模式。这些可由下列常数表示：
+public const DETERMINE_VERSION:int = 0;
+public const RECEIVE_CHALLENGE:int = 1;
+public const NORMAL:int = 2;
+把什么值指定给常数并不要紧。相反的，唯一重要的部分就是所有值都必须不同，不能有两个常数代表相同 int 值。 下一步是创建不同的函数以处理数据。创建的三个函数是 readVersion()、readChallenge() 和 readNormalProtocol()。函数定义后，可建立 map，把先前状态常数之一，和用于处理该状态期间所接收数据的函数关联起来。代码看起来就像这样：
+stateMap = new Object();
+stateMap[ DETERMINE_VERSION ] = readVersion;
+stateMap[ RECEIVE_CHALLENGE ] = readChallenge;
+stateMap[ NORMAL ] = readNormalProtocol;
+最后的步骤是替socketData事件处理器编码，根据当前协议状态，调用正确的处理函数。为此，要创建int变量currentState。然后，利用stateMap，就能查找与currentState相关联的函数而加以调用：
+var processFunc:Function = stateMap[ currentState ];
+processFunc(); // 调用恰当的处理函数
+此流程牵涉到一点簿记工作。一定要在代码中更新 currentState，以准确反应出协议的当前状态。 整个处理前述“握手”场景的代码范例看起来就像这样：
+package {
+import flash.display.Sprite;
+import flash.events.ProgressEvent;
+import flash.net.Socket;
+import flash.utils.ByteArray;
+public class SocketExample extends Sprite {
+// 描述协议的状态常数
+public const DETERMINE_VERSION:int = 0;
+public const RECEIVE_CHALLENGE:int = 1;
+public const NORMAL:int = 2;
+// 把状态映射到处理函数
+private var stateMap:Object;
+// 记录当前协议状态
+private var currentState:int;
+private var socket:Socket;
+public function SocketExample() {
+// 初始化状态地图
+stateMap = new Object();
+stateMap[ DETERMINE_VERSION ] = readVersion;
+stateMap[ RECEIVE_CHALLENGE ] = readChallenge;
+stateMap[ NORMAL ] = readNormalProtocol;
+// 初始化当前状态
+currentState = DETERMINE_VERSION;
+// 建立并连接 socket
+socket = new Socket();
+socket.addEventListener( ProgressEvent.SOCKET_DATA, onSocketData );
+socket.connect( "localhost", 2900 );
+}
+private function onSocketData( event:ProgressEvent ):void {
+// 根据当前状态查找处理函数
+var processFunc:Function = stateMap[ currentState ];
+processFunc();
+}
+private function readVersion():void {
+// 步骤 1–从服务器读取版本
+var version:int = socket.readInt();
+// 一旦版本读出后，下一步就是从
+// 服务器接收盘问
+currentState = RECEIVE_CHALLENGE; // 步骤 2–把版本写回服务器
+socket.writeInt( version );
+socket.flush();
+}
+private function readChallenge():void {
+// 步骤 3–把 8 字节的盘问写入字节数组
+var bytes:ByteArray = new ByteArray();
+socket.readBytes( bytes, 0, 8 );
+// 接收到盘问后，下个状态就是
+// 正常协议操作
+currentState = NORMAL;
+// 步骤 4–把字节写回服务器
+socket.writeBytes( bytes );
+socket.flush();
+}
+private function readNormalProtocol():void {
+// 步骤 5–现在，处理正常 socket 消息，
+// 因握手流程已完成
+}
+}
+}
+24.5 和Socket服务器断开连接
+Disconnecting from a Socket Server
+问题
+你想和 socket 服务器断开连接，或者在服务器和你断开连接时接到通知。
+解法
+调用 Socket.close() 或 XMLSocket.close() 方法，明确关闭连接，或者监听 close
+事件，当服务器替你关闭连接时，接到通知。
+讨论
+程序设计的一条通用规则是“自扫门前雪”。也就是说，如果你创建了一个对象，当它不再需要时，就应该予以删除。就此而言，每当你连接至 socket 服务器，事情办完后，就应该明确关闭连接。留着未用的 socket 连接不关闭是浪费资源，要尽量避免。如果你不关闭连接，则服务器会持续保持一条打开着的 socket 连接，但却没在用，这会使得服务器很快就耗光许可的 socket 连接分配量。 关闭 socket 连接对 Socket 和 XMLSocket 实例来说，都是相同的。你所需做的就是对 socket 实例调用 close() 方法：
+// 假设 socket 是已连接的 Socket 实例
+socket.close(); // 和服务器断开连接
+使用 XMLSocket 时也相同：
+// 假设 xmlSocket 是已连接的 XMLSocket 实例
+xmlSocket.close(); // 和服务器断开连接
+close() 方法可让服务器知道客户端想断开连接。当服务器自行关闭连接，而你想收到通知时，就应该对 Socket 或 XMLSocket 实例调用 addEventListener()，以监听 close 事件（以 Event.CLOSE 作为事件类型）；例如：
+var socket:Socket = new Socket();
+// 添加事件监听器，当服务器把客户端断开连接时，
+// 可接到通知
+socket.addEventListener( Event.CLOSE, onClose );
+提示：调用 close() 方法并不会引发 close 事件。事实上，只有当服务器自行断开连接时，才会引发 close 事件。 一旦 socket 关闭后，就无法再读写数据了。如果你想再次利用该 socket，就得如锦囊妙计 24.1 所述那样重新建立连接。
+24.6 处理Socket错误
+Handling Socket Errors
+问题
+你想要处理在使用 socket 时可能发生的错误。
+解法
+使用 try/catch 处理 I/O 和 EOF （end of file，文件结束）错误。
+讨论
+Socket和XMLSocket类在错误和错误事件方面，行为都很类似。调用connect()方法时，Socket和XMLSocket对象在下列条件之一为真时，会抛出类型为SecurityError的错误：
+l .swf 为本地不受信赖文件。
+l 端口号高于 65535。
+ 
+调用send()（XMLSocket）或flush()（Socket）时，如果socket 没连接，方法会抛出类型为 IOError 的错误。虽然你可以（也可能应该）把 send() 或 flush() 方法放在 try/catch块内，但是，你不应该依赖try/catch块作为应用程序逻辑的一部分。相反，调用send()或flush()前，要使用 if 语句测试 socket 对象的 connected属性（如果你想把这类测试作为应用程序逻辑的一部分）。例如，下面使用 if 语句作为应用程序逻辑的一部分，如果 Socket 对象当前没有连接，就调用 connectToSocketServer()。此外，也使用 try/catch 块，在 flush() 方法抛出错误时，写下日志：
+if ( socket.connected ) {
+try {
+socket.flush();
+}
+catch( error:IOError ) {
+logInstance.write( "socket.flush error\n" + error );
+}
+}
+else {
+connectToSocketServer();
+}
+Socket 的所有读取方法都可以抛出类型为 EOFError 和 IOError 的错误。当你试着读取数据，但是没有数据可读时，就会发生 EOF 错误。当你试着从已关闭的 socket 读取数据时，就会发生 I/O 错误。 除了由Socket和XMLSocket类的方法所抛出的错误外，这些类的对象也会分派错误事件。socket会发生两种基本错误事件：IOError和securityError。IOError事件是IOError- Event类型，当数据发送或加载失败时，就会发生。securityError事件是Security- ErrorEvent 类型，当 socket 试着连接至服务器，但是因为服务器位在沙箱之外或者端口号低于 1024 而失败时，就会发生。
+提示：两种安全错误事件的场景都可由跨域策略文件予以更正。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+socket原理
+
+socket编程原理 
+1 问题的引入 
+UNIX系统的I/O命令集，是从Maltics和早期系统中的命令演变出来的，其模式为打开一读/写一关闭（open-write-read-close）。在一个用户进程进行I/O操作时，它首先调用“打开”获得对指定文件或设备的使用权，并返回称为文件描述符的整型数，以描述用户在打开的文件或设备上进行I/O操作的进程。然后这个用户进程多次调用“读/写”以传输数据。当所有的传输操作完成后，用户进程关闭调用，通知操作系统已经完成了对某对象的使用。 
+TCP/IP协议被集成到UNIX内核中时，相当于在UNIX系统引入了一种新型的I/O操作。UNIX用户进程与网络协议的交互作用比用户进程与传统的I/O设备相互作用复杂得多。首先，进行网络操作的两个进程不在相同机器上，如何建立它们之间的联系？其次，网络协议存在多种，如何建立一种通用机制以支持多种协议？这些都是网络应用编程界面所要解决的问题。 
+在UNIX系统中，网络应用编程界面有两类：UNIX BSD的套接字（socket）和UNIX System V的TLI。由于Sun公司采用了支持TCP/IP的UNIX BSD操作系统，使TCP/IP的应用有更大的发展，其网络应用编程界面──套接字（socket）在网络软件中被广泛应用，至今已引进微机操作系统DOS和Windows系统中，成为开发网络应用软件的强有力工具，本章将要详细讨论这个问题。 
+2 套接字编程基本概念 
+开始使用套接字编程之前，首先必须建立以下概念。 
+2.1 网间进程通信 
+进程通信的概念最初来源于单机系统。由于每个进程都在自己的地址范围内运行，为保证两个相互通信的进程之间既互不干扰又协调一致工作，操作系统为进程通信提供了相应设施，如UNIX BSD中的管道（pipe）、命名管道（named pipe）和软中断信号（signal），UNIX system V的消息（message）、共享存储区（shared memory）和信号量（semaphore)等，但都仅限于用在本机进程之间通信。网间进程通信要解决的是不同主机进程间的相互通信问题（可把同机进程通信看作是其中的特例）。为此，首先要解决的是网间进程标识问题。同一主机上，不同进程可用进程号（process ID）唯一标识。但在网络环境下，各主机独立分配的进程号不能唯一标识该进程。例如，主机A赋于某进程号5，在B机中也可以存在5号进程，因此，“5号进程”这句话就没有意义了。 
+其次，操作系统支持的网络协议众多，不同协议的工作方式不同，地址格式也不同。因此，网间进程通信还要解决多重协议的识别问题。 
+为了解决上述问题，TCP/IP协议引入了下列几个概念。 
+ 
+ 端口 
+ 网络中可以被命名和寻址的通信端口，是操作系统可分配的一种资源。 
+ 按照OSI七层协议的描述，传输层与网络层在功能上的最大区别是传输层提供进程通信能力。从这个意义上讲，网络通信的最终地址就不仅仅是主机地址了，还包括可以描述进程的某种标识符。为此，TCP/IP协议提出了协议端口（protocol port，简称端口）的概念，用于标识通信的进程。 
+ 端口是一种抽象的软件结构（包括一些数据结构和I/O缓冲区）。应用程序（即进程）通过系统调用与某端口建立连接（binding绑定）后，传输层传给该端口的数据都被相应进程所接收，相应进程发给传输层的数据都通过该端口输出。在TCP/IP协议的实现中，端口类似于一般的I/O操作，进程获取一个端口，相当于获取本地唯一的I/O文件，可以用一般的读写原语访问之。 
+ 类似于文件描述符，每个端口都拥有一个叫端口号（port number）的整数型标识符，用于区别不同端口。由于TCP/IP传输层的两个协议TCP和UDP是完全独立的两个软件模块，因此各自的端口号也相互独立，如TCP有一个255号端口，UDP也可以有一个255号端口，二者并不冲突。   
+端口号的分配是一个重要问题。有两种基本分配方式：第一种叫全局分配，这是一种集中控制方式，由一个公认的中央机构根据用户需要进行统一分配，并将结果公布于众。第二种是本地分配，又称动态连接，即进程需要访问传输层服务时，向本地操作系统提出申请，操作系统返回一个本地唯一的端口号，进程再通过合适的系统调用将自己与该端口号联系起来（绑定）。TCP/IP端口号的分配中综合了上述两种方式。TCP/IP将端口号分为两部分，少量的作为保留端口，以全局方式分配给服务进程。因此，每一个标准服务器都拥有一个全局公认的端口（即周知端口，well-known port），即使不同机器上，其端口号也相同。剩余的为自由端口，以本地方式进行分配。TCP和UDP均规定，小于256的端口号才能作保留端口。 
+ 
+地址 
+ 网络通信中通信的两个进程分别在不同的机器上。在互连网络中，两台机器可能位于不同的网络，这些网络通过网络互连设备（网关，网桥，路由器等）连接。因此需要三级寻址：   
+1. 某一主机可与多个网络相连，必须指定一特定网络地址；   
+2. 网络上每一台主机应有其唯一的地址； 
+ 3. 每一主机上的每一进程应有在该主机上的唯一标识符。   
+通常主机地址由网络ID和主机ID组成，在TCP/IP协议中用32位整数值表示；TCP和UDP均使用16位端口号标识用户进程。 
+  
+网络字节顺序（大小段big_endian/）
+ 不同的计算机存放多字节值的顺序不同，有的机器在起始地址存放低位字节（低价先存），有的存高位字节（高价先存）。为保证数据的正确性，在网络协议中须指定网络字节顺序。TCP/IP协议使用16位整数和32位整数的高价先存格式，它们均含在协议头文件中。 
+  
+连接 
+ 两个进程间的通信链路称为连接。连接表现为一些缓冲区和一组协议机制，在外部表现出比无连接高的可靠性。 
+ 
+ 半相关 
+ 综上所述，网络中用一个三元组可以在全局唯一标志一个进程：   （协议，本地地址，本地端口号）   
+这样一个三元组，叫做一个半相关（half-association），它指定连接的每半部分。 
+ 
+ 
+全相关 
+ 一个完整的网间进程通信需要由两个进程组成，并且只能使用同一种高层协议。也就是说，不可能通信的一端用TCP协议，而另一端用UDP协议。因此一个完整的网间通信需要一个五元组来标识：   （协议，本地地址，本地端口号，远地地址，远地端口号） 
+ 这样一个五元组，叫做一个相关（association），即两个协议相同的半相关才能组合成一个合适的相关，或完全指定组成一连接。 
+  
+2.2 服务方式 
+在网络分层结构中，各层之间是严格单向依赖的，各层次的分工和协作集中体现在相互之间的界面上。“服务”是描述其之间关系的抽象概念，即网络中各层向紧邻上层提供的一组操作。下层是服务提供者，上层是请求服务的用户。服务的表现形式是原语（primitive），如系统调用或库函数。系统调用是操作系统内核向网络应用程序或高层协议提供的服务原语。网络中的n层总要向n+1层提供比n-1层更完备的服务，否则n层就没有存在的价值。 
+ 
+在OSI的术语中，网络层及其以下各层又称为通信子网，只提供点到点通信，没有程序或进程的概念。而传输层实现的是“端到端”通信，引进网间进程通信概念，同时也要解决差错控制，流量控制，数据排序（报文排序），连接管理等问题，为此提供不同的服务方式： 
+ 
+ 
+面向连接（虚电路）或无连接 
+ 
+面向连接服务是电话系统服务模式的抽象，即每一次完整的数据传输都要经过建立连接，使用连接，终止连接的过程。在数据传输过程中，各数据分组不携带目的地址，而使用连接号（connect ID）。本质上，连接是一个管道，收发数据不但顺序一致，而且内容相同。TCP协议提供面向连接的虚电路。 
+ 
+无连接服务是邮政系统服务的抽象，每个分组都携带完整的目的地址，各分组在系统中独立传送。无连接服务不能保证分组的先后顺序，不进行分组出错的恢复与重传，不保证传输的可靠性。UDP协议提供无连接的数据报服务。 
+  
+顺序 
+ 
+在网络传输中，两个连续报文在端－端通信中可能经过不同路径，这样到达目的地时的顺序可能会与发送时不同。“顺序”是指接收数据顺序与发送数据顺序相同。TCP协议提供这项服务。 
+ 
+ 
+差错控制 
+ 
+保证应用程序接收的数据无差错的一种机制。检查差错的方法一般是采用检验“检查和（Checksum）”的方法。而保证传送无差错的方法是双方采用确认应答技术。TCP协议提供这项服务。 
+ 
+ 
+流控制 
+ 
+在数据传输过程中控制数据传输速率的一种机制，以保证数据不被丢失。TCP协议提供这项服务。 
+ 
+ 
+字节流 
+ 
+字节流方式指的是仅把传输中的报文看作是一个字节序列，不提供数据流的任何边界。TCP协议提供字节流服务。 
+ 
+ 
+报文 
+ 
+接收方要保存发送方的报文边界。UDP协议提供报文服务。 
+ 
+ 
+全双工/半双工 
+ 
+端－端间数据同时以两个方向/一个方向传送。 
+ 
+ 
+缓存/带外数据 
+ 
+在字节流服务中，由于没有报文边界，用户进程在某一时刻可以读或写任意数量的字节。为保证传输正确或采用有流控制的协议时，都要进行缓存。但对某些特殊的需求，如交互式应用程序，又会要求取消这种缓存。 
+ 
+在数据传送过程中，希望不通过常规传输方式传送给用户以便及时处理的某一类信息，如UNIX系统的中断键（Delete或Control-c）、终端流控制符（Control-s和Control-q），称为带外数据。逻辑上看，好象用户进程使用了一个独立的通道传输这些数据。该通道与每对连接的流相联系。由于Berkeley Software Distribution中对带外数据的实现与RFC 1122中规定的Host Agreement不一致,为了将互操作中的问题减到最小，应用程序编写者除非与现有服务互操作时要求带外数据外，最好不使用它。 
+ 
+2.3 客户/服务器模式 
+在TCP/IP网络应用中，通信的两个进程间相互作用的主要模式是客户/服务器模式（Client/Server model），即客户向服务器发出服务请求，服务器接收到请求后，提供相应的服务。客户/服务器模式的建立基于以下两点：首先，建立网络的起因是网络中软硬件资源、运算能力和信息不均等，需要共享，从而造就拥有众多资源的主机提供服务，资源较少的客户请求服务这一非对等作用。其次，网间进程通信完全是异步的，相互通信的进程间既不存在父子关系，又不共享内存缓冲区，因此需要一种机制为希望通信的进程间建立联系，为二者的数据交换提供同步.
+ 
+客户/服务器模式运作过程中采取的是主动请求方式： 
+ 
+首先服务器方要先启动，并根据请求提供相应服务： 
+ 
+1. 打开一通信通道并告知本地主机，它愿意在某一公认地址上（周知端口，如FTP为21）接收客户请求； 
+ 
+2. 等待客户请求到达该端口； 
+ 
+3. 接收到重复服务请求，处理该请求并发送应答信号。接收到并发服务请求，要激活一新进程来处理这个客户请求（如UNIX系统中用fork、exec）。新进程处理此客户请求，并不需要对其它请求作出应答。服务完成后，关闭此新进程与客户的通信链路，并终止。 
+ 
+4. 返回第二步，等待另一客户请求。 
+ 
+5. 关闭服务器 
+ 
+ 
+客户方： 
+ 
+1. 打开一通信通道，并连接到服务器所在主机的特定端口； 
+ 
+2. 向服务器发服务请求报文，等待并接收应答；继续提出请求...... 
+ 
+3. 请求结束后关闭通信通道并终止。 
+ 
+ 
+从上面所描述过程可知： 
+ 
+1. 客户与服务器进程的作用是非对称的，因此编码不同。 
+ 
+2. 服务进程一般是先于客户请求而启动的。只要系统运行，该服务进程一直存在，直到正常或强迫终止。 
+ 
+2.4 套接字类型 
+TCP/IP的socket提供下列三种类型套接字。 
+ 
+ 
+流式套接字（SOCK_STREAM） 
+ 
+提供了一个面向连接、可靠的数据传输服务，数据无差错、无重复地发送，且按发送顺序接收。内设流量控制，避免数据流超限；数据被看作是字节流，无长度限制。文件传送协议（FTP）即使用流式套接字。 
+ 
+ 
+数据报式套接字（SOCK_DGRAM） 
+ 
+提供了一个无连接服务。数据包以独立包形式被发送，不提供无错保证，
+数据可能丢失或重复，并且接收顺序混乱。网络文件系统（NFS）使用数据报式套接字。 
+ 
+ 
+原始式套接字（SOCK_RAW） 
+ 
+该接口允许对较低层协议，如IP、ICMP直接访问。常用于检验新的协议实现或访问现有服务中配置的新设备。 
+ 
+3 基本套接字系统调用 
+为了更好地说明套接字编程原理，下面给出几个基本套接字系统调用说明。 
+ 
+3.1 创建套接字──socket() 
+应用程序在使用套接字前，首先必须拥有一个套接字，系统调用socket()向应用程序提供创建套接字的手段，其调用格式如下： 
+ 
+SOCKET PASCAL FAR socket(int af, int type, int protocol); 
+ 
+该调用要接收三个参数：af、type、protocol。参数af指定通信发生的区域，UNIX系统支持的地址族有：AF_UNIX、AF_INET、AF_NS等，而DOS、WINDOWS中仅支持AF_INET，它是网际网区域。因此，地址族与协议族相同。参数type 描述要建立的套接字的类型。参数protocol说明该套接字使用的特定协议，如果调用者不希望特别指定使用的协议，则置为0，使用默认的连接模式。根据这三个参数建立一个套接字，并将相应的资源分配给它，同时返回一个整型套接字号。因此，socket()系统调用实际上指定了相关五元组中的“协议”这一元。 
+ 
+有关socket()的详细描述参看5.2.23。 
+ 
+3.2 指定本地地址──bind() 
+当一个套接字用socket()创建后，存在一个名字空间(地址族),但它没有被命名。bind()将套接字地址（包括本地主机地址和本地端口地址）与所创建的套接字号联系起来，即将名字赋予套接字，以指定本地半相关。其调用格式如下： 
+ 
+int PASCAL FAR bind(SOCKET s, const struct sockaddr FAR * name, int namelen); 
+ 
+参数s是由socket()调用返回的并且未作连接的套接字描述符(套接字号)。参数name 是赋给套接字s的本地地址（名字），其长度可变，结构随通信域的不同而不同。namelen表明了name的长度。 
+ 
+如果没有错误发生，bind()返回0。否则返回值SOCKET_ERROR。 
+ 
+地址在建立套接字通信过程中起着重要作用，作为一个网络应用程序设计者对套接字地址结构必须有明确认识。例如，UNIX BSD有一组描述套接字地址的数据结构，其中使用TCP/IP协议的地址结构为： 
+ 
+struct sockaddr_in{ 
+ 
+short sin_family; /*AF_INET*/ 
+ 
+u_short sin_port; /*16位端口号，网络字节顺序*/ 
+ 
+struct in_addr sin_addr; /*32位IP地址，网络字节顺序*/ 
+ 
+char sin_zero[8]; /*保留*/ 
+ 
+} 
+ 
+有关bind()的详细描述参看5.2.2。 
+ 
+3.3 建立套接字连接──connect()与accept() 
+这两个系统调用用于完成一个完整相关的建立，其中connect()用于建立连接。无连接的套接字进程也可以调用connect()，但这时在进程之间没有实际的报文交换，调用将从本地操作系统直接返回。这样做的优点是程序员不必为每一数据指定目的地址，而且如果收到的一个数据报，其目的端口未与任何套接字建立“连接”，便能判断该端靠纪�纪�可操作。而accept()用于使服务器等待来自某客户进程的实际连接。 
+ 
+connect()的调用格式如下： 
+ 
+int PASCAL FAR connect(SOCKET s, const struct sockaddr FAR * name, int namelen); 
+ 
+参数s是欲建立连接的本地套接字描述符。参数name指出说明对方套接字地址结构的指针。对方套接字地址长度由namelen说明。 
+ 
+如果没有错误发生，connect()返回0。否则返回值SOCKET_ERROR。在面向连接的协议中，该调用导致本地系统和外部系统之间连接实际建立。 
+ 
+由于地址族总被包含在套接字地址结构的前两个字节中，并通过socket()调用与某个协议族相关。因此bind()和connect()无须协议作为参数。 
+ 
+有关connect()的详细描述参看5.2.4。 
+ 
+accept()的调用格式如下： 
+ 
+SOCKET PASCAL FAR accept(SOCKET s, struct sockaddr FAR* addr, int FAR* addrlen); 
+ 
+参数s为本地套接字描述符，在用做accept()调用的参数前应该先调用过listen()。addr 指向客户方套接字地址结构的指针，用来接收连接实体的地址。addr的确切格式由套接字创建时建立的地址族决定。addrlen 为客户方套接字地址的长度（字节数）。如果没有错误发生，accept()返回一个SOCKET类型的值，表示接收到的套接字的描述符。否则返回值INVALID_SOCKET。 
+ 
+accept()用于面向连接服务器。参数addr和addrlen存放客户方的地址信息。调用前，参数addr 指向一个初始值为空的地址结构，而addrlen 的初始值为0；调用accept()后，服务器等待从编号为s的套接字上接受客户连接请求，而连接请求是由客户方的connect()调用发出的。当有连接请求到达时，accept()调用将请求连接队列上的第一个客户方套接字地址及长度放入addr 和addrlen，并创建一个与s有相同特性的新套接字号。新的套接字可用于处理服务器并发请求。 
+ 
+有关accept()的详细描述参看5.2.1。 
+ 
+四个套接字系统调用，socket()、bind()、connect()、accept()，可以完成一个完全五元相关的建立。socket()指定五元组中的协议元，它的用法与是否为客户或服务器、是否面向连接无关。bind()指定五元组中的本地二元，即本地主机地址和端口号，其用法与是否面向连接有关：在服务器方，无论是否面向连接，均要调用bind()；钥纪�纪�户方，若采用面向连接，则可以不调用bind()，而通过connect()自动完成。若采用无连接，客户方必须使用bind()以获得一个唯一的地址。 
+ 
+以上讨论仅对客户/服务器模式而言，实际上套接字的使用是非常灵活的，唯一需遵循的原则是进程通信之前，必须建立完整的相关。 
+ 
+3.4 监听连接──listen() 
+此调用用于面向连接服务器，表明它愿意接收连接。listen()需在accept()之前调用，其调用格式如下： 
+ 
+int PASCAL FAR listen(SOCKET s, int backlog); 
+ 
+参数s标识一个本地已建立、尚未连接的套接字号，服务器愿意从它上面接收请求。backlog表示请求连接队列的最大长度，用于限制排队请求的个数，目前允许的最大值为5。如果没有错误发生，listen()返回0。否则它返回SOCKET_ERROR。 
+ 
+listen()在执行调用过程中可为没有调用过bind()的套接字s完成所必须的连接，并建立长度为backlog的请求连接队列。 
+ 
+调用listen()是服务器接收一个连接请求的四个步骤中的第三步。它在调用socket()分配一个流套接字，且调用bind()给s赋于一个名字之后调用，而且一定要在accept()之前调用。 
+ 
+有关listen()的详细描述参看5.2.13。 
+ 
+2.3节中提到钥纪�纪�户/服务器模式中，有两种类型的服务：重复服务和并发服务。accept()调用为实现并发服务提供了极大方便，因为它要返回一个新的套接字号，其典型结构为： 
+ 
+int initsockid, newsockid; 
+ 
+if ((initsockid = socket(....)) < 0) 
+ 
+error(“can’t create socket”); 
+ 
+if (bind(initsockid,....) < 0) 
+ 
+error(“bind error”); 
+ 
+if (listen(initsockid , 5) < 0) 
+ 
+error(“listen error”); 
+ 
+for (; { 
+ 
+newsockid = accept(initsockid, ...) /* 阻塞 */ 
+ 
+if (newsockid < 0) 
+ 
+error(“accept error“); 
+ 
+if (fork() == 0){ /* 子进程 */ 
+ 
+closesocket(initsockid); 
+ 
+do(newsockid); /* 处理请求 */ 
+ 
+exit(0); 
+ 
+} 
+ 
+closesocket(newsockid); /* 父进程 */ 
+ 
+}
+ 
+ 
+这段程序执行的结果是newsockid与客户的套接字建立相关，子进程启动后，关闭继承下来的主服务器的initsockid,并利用新的newsockid与客户通信。主服务器的initsockid可继续等待新的客户连接请求。由于在Unix等抢先多任务系统中，在系统调度下，多个进程可以同时进行。因此，使用并发服务器可以使服务器进程在同一时间可以有多个子进程和不同的客户程序连接、通信。钥纪�纪�户程序看来，服务器可以同时并发地处理多个客户的请求，这就是并发服务器名称的来由。 
+ 
+面向连接服务器也可以是重复服务器，其结构如下： 
+ 
+int initsockid, newsockid; 
+ 
+if ((initsockid = socket(....))<0) 
+ 
+error(“can’t create socket”); 
+ 
+if (bind(initsockid,....)<0) 
+ 
+error(“bind error”); 
+ 
+if (listen(initsockid,5)<0) 
+ 
+error(“listen error”); 
+ 
+for (; { 
+ 
+newsockid = accept(initsockid, ...) /* 阻塞 */ 
+ 
+if (newsockid < 0) 
+ 
+error(“accept error“); 
+ 
+do(newsockid); /* 处理请求 */ 
+ 
+closesocket(newsockid); 
+ 
+} 
+ 
+重复服务器在一个时间只能和一个客户程序建立连接，它对多个客户程序的处理是采用循环的方式重复进行，因此叫重复服务器。并发服务器和重复服务器各有利弊：并发服务器可以改善客户程序的响应速度，但它增加了系统调度的开销；重复服务器正好与其相反，因此用户在决定是使用并发服务器还是重复服务器时，要根据应用的实际情考网考网来定。 
+ 
+3.5 数据传输──send()与recv() 
+当一个连接建立以后，就可以传输数据了。常用的系统调用有send()和recv()。 
+ 
+send()调用用于钥纪�纪�数s指定的已连接的数据报或流套接字上发送输出数据，格式如下： 
+ 
+int PASCAL FAR send(SOCKET s, const char FAR *buf, int len, int flags); 
+ 
+参数s为已连接的本地套接字描述符。buf 指向存有发送数据的缓冲区的指针，其长度由len 指定。flags 指定传输控制方式，如是否发送带外数据等。如果没有错误发生，send()返回总共发送的字节数。否则它返回SOCKET_ERROR。 
+ 
+有关send()的详细描述参看5.2.19。 
+ 
+recv()调用用于钥纪�纪�数s指定的已连接的数据报或流套接字上接收输入数据，格式如下： 
+ 
+int PASCAL FAR recv(SOCKET s, char FAR *buf, int len, int flags); 
+ 
+参数s 为已连接的套接字描述符。buf指向接收输入数据缓冲区的指针，其长度由len 指定。flags 指定传输控制方式，如是否接收带外数据等。如果没有错误发生，recv()返回总共接收的字节数。如果连接被关闭，返回0。否则它返回SOCKET_ERROR。 
+ 
+有关recv()的详细描述参看5.2.16。 
+ 
+3.6 输入/输出多路复用──select() 
+select()调用用来检测一个或多个套接字的状态。对每一个套接字来说，这个调用可以请求读、写或错误状态方面的信息。请求给定状态的套接字集合由一个fd_set结构指示。在返回时，此结构被更新，以反映那些满足特定条件的套接字的子集，同时， select()调用返回满足条件的套接字的数目，其调用格式如下： 
+ 
+int PASCAL FAR select(int nfds, fd_set FAR * readfds, fd_set FAR * writefds, fd_set FAR * exceptfds, const struct timeval FAR * timeout); 
+ 
+参数nfds指明被检查的套接字描述符的值域，此变量一般被忽略。 
+ 
+参数readfds指向要做读检测的套接字描述符集合的指针，调用者希望从中读取数据。参数writefds 指向要做写检测的套接字描述符集合的指针。exceptfds指向要检测是否出错的套接字描述符集合的指针。timeout指向select()函数等待的最大时间，如果设为NULL则为阻塞操作。select()返回包含在fd_set结构中已准备好的套接字描述符的总数目，或者是发生错误则返回SOCKET_ERROR。 
+ 
+有关select()的详细描述参看5.2.18。 
+ 
+3.7 关闭套接字──closesocket() 
+closesocket()关闭套接字s，并释放分配给该套接字的资源；如果s涉及一个打开的TCP连接，则该连接被释放。closesocket()的调用格式如下： 
+ 
+BOOL PASCAL FAR closesocket(SOCKET s); 
+ 
+参数s待关闭的套接字描述符。如果没有错误发生，closesocket()返回0。否则返回值SOCKET_ERROR。 
+ 
+有关closesocket()的详细描述参看5.2.3。 
+ 
+2.4 典型套接字调用过程举例 
+如前所述，TCP/IP协议的应用一般采用客户/服务器模式，因此在实际应用中，必须有客户和服务器两个进程，并且首先启动服务器，其系统调用时序图如下。 
+ 
+面向连接的协议（如TCP）的套接字系统调用如图2.1所示： 
+ 
+服务器必须首先启动，直到它执行完accept()调用，进入等待状态后，方能接收客户请求。假如客户在此前启动，则connect()将返回出错代码，连接不成功。 
+ 
+ 
+图2.1 面向连接的套接字系统调用时序图 
+ 
+ 
+无连接协议的套接字调用如图2.2所示： 
+图2.2 无连接协议的套接字调用时序图 
+ 
+无连接服务器也必须先启动，否则客户请求传不到服务进程。无连接客户不调用connect()。因此在数据发送之前，客户与服务器之间尚未建立完全相关，但各自通过socket()和bind()建立了半相关。发送数据时，发送方除指定本地套接字号外，还需指定接收方套接字号，从而在数据收发过程中动态地建立了全相关。 
+ 
+ 
+ 
+实例 
+ 
+本实例使用面向连接协议的客户/服务器模式，其流程如图2.3所示： 
+ 
+ 
+图2.3 面向连接的应用程序流程图 
+ 
+服务器方程序： 
+ 
+ 
+/* File Name: streams.c */ 
+ 
+#include 
+ 
+#include 
+ 
+#define TRUE 1 
+ 
+/* 这个程序建立一个套接字，然后开始无限循环；每当它通过循环接收到一个连接，则打印出一个信息。当连接断开，或接收到终止信息，则此连接结束，程序再接收一个新的连接。命令行的格式是：streams */ 
+ 
+ 
+main( ) 
+ 
+{ 
+ 
+int sock, length; 
+ 
+struct sockaddr_in server; 
+ 
+struct sockaddr tcpaddr; 
+ 
+int msgsock; 
+ 
+char buf[1024]; 
+ 
+int rval, len; 
+ 
+ 
+/* 建立套接字 */ 
+ 
+sock = socket(AF_INET, SOCK_STREAM, 0); 
+ 
+if (sock < 0) { 
+ 
+perror(“opening stream socket”); 
+ 
+exit(1); 
+ 
+} 
+ 
+ 
+/* 使用任意端口命名套接字 */ 
+ 
+server.sin_family = AF_INET; 
+ 
+server.sin_port = INADDR_ANY; 
+ 
+if (bind(sock, (struct sockaddr *)&server, sizeof(server)) < 0) { 
+ 
+perror(“binding stream socket”); 
+ 
+exit(1); 
+ 
+} 
+ 
+ 
+/* 找出指定的端口号并打印出来 */ 
+ 
+length = sizeof(server); 
+ 
+if (getsockname(sock, (struct sockaddr *)&server, &length) < 0) { 
+ 
+perror(“getting socket name”); 
+ 
+exit(1); 
+ 
+} 
+ 
+printf(“socket port #%d\n”, ntohs(server.sin_port)); 
+ 
+ 
+/* 开始接收连接 */ 
+ 
+listen(sock, 5); 
+ 
+len = sizeof(struct sockaddr); 
+ 
+do { 
+ 
+msgsock = accept(sock, (struct sockaddr *)&tcpaddr, (int *)&len); 
+ 
+if (msgsock == -1) 
+ 
+perror(“accept”); 
+ 
+else do{ 
+ 
+memset(buf, 0, sizeof(buf)); 
+ 
+if ((rval = recv(msgsock, buf, 1024)) < 0) 
+ 
+perror(“reading stream message”); 
+ 
+if (rval == 0) 
+ 
+printf(“ending connection \n”); 
+ 
+else 
+ 
+printf(“-->;%s\n”, buf); 
+ 
+}while (rval != 0); 
+ 
+closesocket(msgsock); 
+ 
+} while (TRUE); 
+ 
+ 
+/* 因为这个程序已经有了一个无限循环，所以套接字“sock”从来不显式关闭。然而，当进程被杀死或正常终止时，所有套接字都将自动地被关闭。*/ 
+ 
+exit(0); 
+ 
+} 
+ 
+客户方程序： 
+ 
+/* File Name: streamc.c */ 
+ 
+#include 
+ 
+#include 
+ 
+#define DATA “half a league, half a league ...” 
+ 
+/* 这个程序建立套接字，然后与命令行给出的套接字连接；连接结束时，在连接上发送 
+ 
+一个消息，然后关闭套接字。命令行的格式是：streamc 主机名 端口号 
+ 
+端口号要与服务器程序的端口号相同 */ 
+ 
+main(argc, argv) 
+ 
+int argc; 
+ 
+char *argv[ ]; 
+ 
+{ 
+ 
+int sock; 
+ 
+struct sockaddr_in server; 
+ 
+struct hostent *hp, *gethostbyname( ); 
+ 
+char buf[1024]; 
+ 
+ 
+/* 建立套接字 */ 
+ 
+sock = socket(AF_INET, SOCK_STREAM, 0); 
+ 
+if (sock < 0) { 
+ 
+perror(“opening stream socket”); 
+ 
+exit(1); 
+ 
+} 
+ 
+ 
+/* 使用命令行中指定的名字连接套接字 */ 
+ 
+server.sin_family = AF_INET; 
+ 
+hp = gethostbyname(argv[1]); 
+ 
+if (hp == 0) { 
+ 
+fprintf(stderr, “%s: unknown host \n”, argv[1]); 
+ 
+exit(2); 
+ 
+} 
+ 
+memcpy((char*)&server.sin_addr, (char*)hp->;h_addr, hp->;h_length); 
+ 
+sever.sin_port = htons(atoi(argv[2])); 
+ 
+ 
+if (connect(sock, (struct sockaddr*)&server, sizeof(server)) < 0) { 
+ 
+perror(“connecting stream socket”); 
+ 
+exit(3); 
+ 
+} 
+ 
+ 
+if (send(sock, DATA, sizeof(DATA)) < 0) 
+ 
+perror(“sending on stream socket”); 
+ 
+closesocket(sock); 
+ 
+exit(0); 
+ 
+} 
+ 
+ 
+ 
+2.5 一个通用的实例程序 
+在上一节中，我们介绍了一个简单的socket程序实例。从这个例子我们可以看出，使用socket编程几乎有一个模式，即所有的程序几乎毫无例外地按相同的顺序调用相同的函数。因此我们可以设想，设计一个中间层，它向上提供几个简单的函数，程序只要调用这几个函数就可以实现普通情考网考网下的数据传输，程序设计者不必太多地关心socket程序设计的细节。 
+ 
+本节我们将介绍一个通用的网络程序接口，它向上层提供几个简单的函数，程序设计者只要使用这几个函数就可以完成绝大多数情考网考网下的网络数据传输。这些函数将socket编程和上层隔离开来，它使用面向连接的流式套接字，采用非阻塞的工作机制，程序只要调用这些函数查询网络消息并作出相应的响应即可。这些函数包括： 
+ 
+l InitSocketsStruct：初始化socket结构，获取服务端口号。客户程序使用。 
+ 
+l InitPassiveSock：初始化socket结构，获取服务端口号，建立主套接字。服务器程序使用。 
+ 
+l CloseMainSock：关闭主套接字。服务器程序使用。 
+ 
+l CreateConnection：建立连接。客户程序使用。 
+ 
+l AcceptConnection：接收连接。服务器程序使用。 
+ 
+l CloseConnection：关闭连接。 
+ 
+l QuerySocketsMsg：查询套接字消息。 
+ 
+l SendPacket：发送数据。 
+ 
+l RecvPacket：接收数据。 
+ 
+2.5.1 头文件 
+/* File Name: tcpsock.h */ 
+ 
+/* 头文件包括socket程序经常用到的系统头文件（本例中给出的是SCO Unix下的头文件，其它版本的Unix的头文件可能略有不同），并定义了我们自己的两个数据结构及其实例变量，以及我们提供的函数说明。*/ 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+#include 
+ 
+ 
+typedef struct SocketsMsg{ /* 套接字消息结构 */ 
+ 
+int AcceptNum; /* 指示是否有外来连接等待接收 */ 
+ 
+int ReadNum; /* 有外来数据等待读取的连接数 */ 
+ 
+int ReadQueue[32]; /* 有外来数据等待读取的连接队列 */ 
+ 
+int WriteNum; /* 可以发送数据的连接数 */ 
+ 
+int WriteQueue[32]; /* 可以发送数据的连接队列 */ 
+ 
+int ExceptNum; /* 有例外的连接数 */ 
+ 
+int ExceptQueue[32]; /* 有例外的连接队列 */ 
+ 
+} SocketsMsg; 
+ 
+ 
+typedef struct Sockets { /* 套接字结构 */ 
+ 
+int DaemonSock; /* 主套接字 */ 
+ 
+int SockNum; /* 数据套接字数目 */ 
+ 
+int Sockets[64]; /* 数据套接字数组 */ 
+ 
+fd_set readfds, writefds, exceptfds; /* 要被检测的可读、可写、例外的套接字集合 */ 
+ 
+int Port; /* 端口号 */ 
+ 
+} Sockets; 
+ 
+ 
+Sockets Mysock; /* 全局变量 */ 
+ 
+SocketsMsg SockMsg; 
+ 
+ 
+int InitSocketsStruct(char * servicename) ; 
+ 
+int InitPassiveSock(char * servicename) ; 
+ 
+void CloseMainSock(); 
+ 
+int CreateConnection(struct in_addr *sin_addr); 
+ 
+int AcceptConnection(struct in_addr *IPaddr); 
+ 
+int CloseConnection(int Sockno); 
+ 
+int QuerySocketsMsg(); 
+ 
+int SendPacket(int Sockno, void *buf, int len); 
+ 
+int RecvPacket(int Sockno, void *buf, int size); 
+ 
+2.5.2 函数源文件 
+/* File Name: tcpsock.c */ 
+ 
+/* 本文件给出九个函数的源代码，其中部分地方给出中文注释 */ 
+ 
+#include "tcpsock.h" 
+ 
+ 
+int InitSocketsStruct(char * servicename) 
+ 
+/* Initialize Sockets structure. If succeed then return 1, else return error code (<0) */ 
+ 
+/* 此函数用于只需要主动套接字的客户程序，它用来获取服务信息。服务的定义 
+ 
+在/etc/services文件中 */ 
+ 
+{ 
+ 
+struct servent *servrec; 
+ 
+struct sockaddr_in serv_addr; 
+ 
+ 
+if ((servrec = getservbyname(servicename, "tcp")) == NULL) { 
+ 
+return(-1); 
+ 
+} 
+ 
+bzero((char *)&Mysock, sizeof(Sockets)); 
+ 
+Mysock.Port = servrec->;s_port; /* Service Port in Network Byte Order */ 
+ 
+return(1); 
+ 
+} 
+ 
+ 
+int InitPassiveSock(char * servicename) 
+ 
+/* Initialize Passive Socket. If succeed then return 1, else return error code (<0) */ 
+ 
+/* 此函数用于需要被动套接字的服务器程序，它除了获取服务信息外，还建立 
+ 
+一个被动套接字。*/ 
+ 
+{ 
+ 
+int mainsock, flag=1; 
+ 
+struct servent *servrec; 
+ 
+struct sockaddr_in serv_addr; 
+ 
+ 
+if ((servrec = getservbyname(servicename, "tcp")) == NULL) { 
+ 
+return(-1); 
+ 
+} 
+ 
+bzero((char *)&Mysock, sizeof(Sockets)); 
+ 
+Mysock.Port = servrec->;s_port; /* Service Port in Network Byte Order */ 
+ 
+ 
+if((mainsock = socket(AF_INET, SOCK_STREAM, 0)) < 0) { 
+ 
+return(-2); 
+ 
+} 
+ 
+ 
+bzero((char *)&serv_addr, sizeof(serv_addr)); 
+ 
+serv_addr.sin_family = AF_INET; 
+ 
+serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); /* 任意网络接口 */ 
+ 
+serv_addr.sin_port = servrec->;s_port; 
+ 
+if (bind(mainsock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) { 
+ 
+close(mainsock); 
+ 
+return(-3); 
+ 
+} 
+ 
+ 
+if (listen(mainsock, 5) == -1) { /* 将主动套接字变为被动套接字，准备好接收连接 */ 
+ 
+close(mainsock); 
+ 
+return(-4); 
+ 
+} 
+ 
+ 
+/* Set this socket as a Non-blocking socket. */ 
+ 
+if (ioctl(mainsock, FIONBIO, &flag) == -1) { 
+ 
+close(mainsock); 
+ 
+return(-5); 
+ 
+} 
+ 
+ 
+Mysock.DaemonSock = mainsock; 
+ 
+FD_SET(mainsock, &Mysock.readfds); /* 申明对主套接字“可读”感兴趣 */ 
+ 
+FD_SET(mainsock, &Mysock.exceptfds); /* 申明对主套接字上例外事件感兴趣 */ 
+ 
+return(1); 
+ 
+} 
+ 
+ 
+void CloseMainSock() 
+ 
+/* 关闭主套接字，并清除对它上面事件的申明。在程序结束前关闭主套接字是一个好习惯 */ 
+ 
+{ 
+ 
+close(Mysock.DaemonSock); 
+ 
+FD_CLR(Mysock.DaemonSock, &Mysock.readfds); 
+ 
+FD_CLR(Mysock.DaemonSock, &Mysock.exceptfds); 
+ 
+} 
+ 
+ 
+int CreateConnection(struct in_addr *sin_addr) 
+ 
+/* Create a Connection to remote host which IP address is in sin_addr. 
+ 
+Param: sin_addr indicates the IP address in Network Byte Order. 
+ 
+if succeed return the socket number which indicates this connection, 
+ 
+else return error code (<0) */ 
+ 
+{ 
+ 
+struct sockaddr_in server; /* server address */ 
+ 
+int tmpsock, flag=1, i; 
+ 
+ 
+if ((tmpsock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+ 
+return(-1); 
+ 
+ 
+server.sin_family = AF_INET; 
+ 
+server.sin_port = Mysock.Port; 
+ 
+server.sin_addr.s_addr = sin_addr->;s_addr; 
+ 
+ 
+/* Set this socket as a Non-blocking socket. */ 
+ 
+if (ioctl(tmpsock, FIONBIO, &flag) == -1) { 
+ 
+close(tmpsock); 
+ 
+return(-2); 
+ 
+} 
+ 
+ 
+/* Connect to the server. */ 
+ 
+if (connect(tmpsock, (struct sockaddr *)&server, sizeof(server)) < 0) { 
+ 
+if ((errno != EWOULDBLOCK) && (errno != EINPROGRESS)) { 
+ 
+/* 如果错误代码是EWOULDBLOCK和EINPROGRESS，则不用关闭套接字，因为系统将在之后继续为套接字建立连接，连接是否建立成功可用select()函数来检测套接字是否“可写”来确定。*/ 
+ 
+close(tmpsock); 
+ 
+return(-3); /* Connect error. */ 
+ 
+} 
+ 
+} 
+ 
+ 
+FD_SET(tmpsock, &Mysock.readfds); 
+ 
+FD_SET(tmpsock, &Mysock.writefds); 
+ 
+FD_SET(tmpsock, &Mysock.exceptfds); 
+ 
+ 
+i = 0; 
+ 
+while (Mysock.Sockets != 0) i++; /* look for a blank sockets position */ 
+ 
+if (i >;= 64) { 
+ 
+close(tmpsock); 
+ 
+return(-4); /* too many connections */ 
+ 
+} 
+ 
+ 
+Mysock.Sockets = tmpsock; 
+ 
+Mysock.SockNum++; 
+ 
+return(i); 
+ 
+} 
+ 
+ 
+int AcceptConnection(struct in_addr *IPaddr) 
+ 
+/* Accept a connection. If succeed, return the data sockets number, else return -1. */ 
+ 
+{ 
+ 
+int newsock, len, flag=1, i; 
+ 
+struct sockaddr_in addr; 
+ 
+ 
+len = sizeof(addr); 
+ 
+bzero((char *)&addr, len); 
+ 
+if ((newsock = accept(Mysock.DaemonSock, &addr, &len)) == -1) 
+ 
+return(-1); /* Accept error. */ 
+ 
+ 
+/* Set this socket as a Non-blocking socket. */ 
+ 
+ioctl(newsock, FIONBIO, &flag); 
+ 
+ 
+FD_SET(newsock, &Mysock.readfds); 
+ 
+FD_SET(newsock, &Mysock.writefds); 
+ 
+FD_SET(newsock, &Mysock.exceptfds); 
+ 
+ 
+/* Return IP address in the Parameter. */ 
+ 
+IPaddr->;s_addr = addr.sin_addr.s_addr; 
+ 
+ 
+i = 0; 
+ 
+while (Mysock.Sockets != 0) i++; /* look for a blank sockets position */ 
+ 
+if (i >;= 64) { 
+ 
+close(newsock); 
+ 
+return(-4); /* too many connections */ 
+ 
+} 
+ 
+ 
+Mysock.Sockets = newsock; 
+ 
+Mysock.SockNum++; 
+ 
+return(i); 
+ 
+} 
+ 
+ 
+int CloseConnection(int Sockno) 
+ 
+/* Close a connection indicated by Sockno. */ 
+ 
+{ 
+ 
+int retcode; 
+ 
+ 
+if ((Sockno >;= 64) || (Sockno < 0) || (Mysock.Sockets[Sockno] == 0)) 
+ 
+return(0); 
+ 
+ 
+retcode = close(Mysock.Sockets[Sockno]); 
+ 
+FD_CLR(Mysock.Sockets[Sockno], &Mysock.readfds); 
+ 
+FD_CLR(Mysock.Sockets[Sockno], &Mysock.writefds); 
+ 
+FD_CLR(Mysock.Sockets[Sockno], &Mysock.exceptfds); 
+ 
+ 
+Mysock.Sockets[Sockno] = 0; 
+ 
+Mysock.SockNum--; 
+ 
+return(retcode); 
+ 
+} 
+ 
+ 
+int QuerySocketsMsg() 
+ 
+/* Query Sockets Message. If succeed return message number, else return -1. 
+ 
+The message information stored in struct SockMsg. */ 
+ 
+{ 
+ 
+fd_set rfds, wfds, efds; 
+ 
+int retcode, i; 
+ 
+struct timeval TimeOut; 
+ 
+ 
+rfds = Mysock.readfds; 
+ 
+wfds = Mysock.writefds; 
+ 
+efds = Mysock.exceptfds; 
+ 
+TimeOut.tv_sec = 0; /* 立即返回，不阻塞。*/ 
+ 
+TimeOut.tv_usec = 0; 
+ 
+ 
+bzero((char *)&SockMsg, sizeof(SockMsg)); 
+ 
+if ((retcode = select(64, &rfds, &wfds, &efds, &TimeOut)) == 0) 
+ 
+return(0); 
+ 
+ 
+if (FD_ISSET(Mysock.DaemonSock, &rfds)) 
+ 
+SockMsg.AcceptNum = 1; /* some client call server. */ 
+ 
+ 
+for (i=0; i<64; i++) /* Data in message */ 
+ 
+{ 
+ 
+if ((Mysock.Sockets >; 0) && (FD_ISSET(Mysock.Sockets, &rfds))) 
+ 
+SockMsg.ReadQueue[SockMsg.ReadNum++] = i; 
+ 
+} 
+ 
+ 
+for (i=0; i<64; i++) /* Data out ready message */ 
+ 
+{ 
+ 
+if ((Mysock.Sockets >; 0) && (FD_ISSET(Mysock.Sockets, &wfds))) 
+ 
+SockMsg.WriteQueue[SockMsg.WriteNum++] = i; 
+ 
+} 
+ 
+ 
+if (FD_ISSET(Mysock.DaemonSock, &efds)) 
+ 
+SockMsg.AcceptNum = -1; /* server socket error. */ 
+ 
+ 
+for (i=0; i<64; i++) /* Error message */ 
+ 
+{ 
+ 
+if ((Mysock.Sockets >; 0) && (FD_ISSET(Mysock.Sockets, &efds))) 
+ 
+SockMsg.ExceptQueue[SockMsg.ExceptNum++] = i; 
+ 
+} 
+ 
+return(retcode); 
+ 
+} 
+ 
+ 
+int SendPacket(int Sockno, void *buf, int len) 
+ 
+/* Send a packet. If succeed return the number of send data, else return -1 */ 
+ 
+{ 
+ 
+int actlen; 
+ 
+ 
+if ((Sockno >;= 64) || (Sockno < 0) || (Mysock.Sockets[Sockno] == 0)) 
+ 
+return(0); 
+ 
+ 
+if ((actlen = send(Mysock.Sockets[Sockno], buf, len, 0)) < 0) 
+ 
+return(-1); 
+ 
+return(actlen); 
+ 
+} 
+ 
+ 
+int RecvPacket(int Sockno, void *buf, int size) 
+ 
+/* Receive a packet. If succeed return the number of receive data, else if the connection 
+ 
+is shutdown by peer then return 0, otherwise return 0-errno */ 
+ 
+{ 
+ 
+int actlen; 
+ 
+if ((Sockno >;= 64) || (Sockno < 0) || (Mysock.Sockets[Sockno] == 0)) 
+ 
+return(0); 
+ 
+if ((actlen = recv(Mysock.Sockets[Sockno], buf, size, 0)) < 0) 
+ 
+return(0-errno); 
+ 
+return(actlen); /* actlen是接收的数据长度，如果为零，指示连接被对方关闭。*/ 
+ 
+} 
+ 
+ 
+2.5.3 简单服务器程序示例 
+/* File Name: server.c */ 
+ 
+/* 这是一个很简单的重复服务器程序，它初始化好被动套接字后，循环等待接收连接。如果接收到连接，它显示数据套接字序号和客户端的IP地址；如果数据套接字上有数据到来，它接收数据并显示该连接的数据套接字序号和接收到的字符串。*/ 
+ 
+#include "tcpsock.h" 
+ 
+main(argc, argv) 
+ 
+int argc; 
+ 
+char **argv; 
+ 
+{ 
+ 
+struct in_addr sin_addr; 
+ 
+int retcode, i; 
+ 
+char buf[32];
+/* 对于服务器程序，它经常是处于无限循环状态，只有在用户主动kill该进程或系统关机时，它才结束。对于使用kill强行终止的服务器程序，由于主套接字没有关闭，资源没有主动释放，可能会给随后的服务器程序重新启动产生影响。因此，主动关闭主套接字是一个良好的变成习惯。下面的语句使程序在接收到SIGINT、SIGQUIT和SIGTERM等信号时先执行CloseMainSock()函数关闭主套接字，然后再结束程序。因此，在使用kill强行终止服务器进程时，应该先使用kill -2 PID给服务器程序一个消息使其关闭主套接字，然后在用kill -9 PID强行结束该进程。*/ 
+ 
+(void) signal(SIGINT, CloseMainSock); 
+ 
+(void) signal(SIGQUIT, CloseMainSock); 
+ 
+(void) signal(SIGTERM, CloseMainSock); 
+ 
+ 
+if ((retcode = InitPassiveSock("TestService")) < 0) { 
+ 
+printf("InitPassiveSock: error code = %d\n", retcode); 
+ 
+exit(-1); 
+ 
+} 
+ 
+ 
+while (1) { 
+ 
+retcode = QuerySocketsMsg(); /* 查询网络消息 */ 
+ 
+if (SockMsg.AcceptNum == 1) { /* 有外来连接等待接收？*/ 
+ 
+retcode = AcceptConnection(&sin_addr); 
+ 
+printf("retcode = %d, IP = %s \n", retcode, inet_ntoa(sin_addr.s_addr)); 
+ 
+} 
+ 
+else if (SockMsg.AcceptNum == -1) /* 主套接字错误？*/ 
+ 
+printf("Daemon Sockets error.\n"); 
+ 
+for (i=0; i 
+if ((retcode = RecvPacket(SockMsg.ReadQueue, buf, 32)) >; 0) 
+ 
+printf("sockno %d Recv string = %s \n", SockMsg.ReadQueue, buf); 
+ 
+else /* 返回数据长度为零，指示连接中断，关闭套接字。*/ 
+ 
+CloseConnection(SockMsg.ReadQueue); 
+ 
+} 
+ 
+} /* end while */ 
+ 
+} 
+ 
+2.5.4 简单客户程序示例 
+/* File Name: client.c */ 
+ 
+/* 客户程序在执行时，先初始化数据结构，然后等待用户输入命令。它识别四个命令： 
+ 
+conn(ect)： 和服务器建立连接； 
+ 
+send： 给指定连接发送数据； 
+ 
+clos(e)： 关闭指定连接； 
+ 
+quit： 退出客户程序。 
+ 
+*/ 
+ 
+#include "tcpsock.h" 
+ 
+ 
+main(argc, argv) 
+ 
+int argc; 
+ 
+char **argv; 
+ 
+{ 
+ 
+char cmd_buf[16]; 
+ 
+struct in_addr sin_addr; 
+ 
+int sockno1, retcode; 
+ 
+char *buf = "This is a string for test."; 
+ 
+ 
+sin_addr.s_addr = inet_addr("166.111.5.249"); /* 运行服务器程序的主机的IP地址 */ 
+ 
+ 
+if ((retcode = InitSocketsStruct("TestService")) < 0) { /* 初始化数据结构 */ 
+ 
+printf("InitSocketsStruct: error code = %d\n", retcode); 
+ 
+exit(1); 
+ 
+} 
+ 
+ 
+while (1) { 
+ 
+printf(">;"); 
+ 
+gets(cmd_buf); 
+ 
+if (!strncmp(cmd_buf, "conn", 4)) { 
+ 
+retcode = CreateConnection(&sin_addr); /* 建立连接 */ 
+ 
+printf("return code: %d\n", retcode); 
+ 
+} 
+ 
+else if(!strncmp(cmd_buf, "send", 4)) { 
+ 
+printf("Sockets Number:"); 
+ 
+scanf("%d", &sockno1); 
+ 
+retcode = SendPacket(sockno1, buf, 26); /* 发送数据 */ 
+ 
+printf("return code: %d\n", retcode, sizeof(buf)); 
+ 
+} 
+ 
+else if (!strncmp(cmd_buf, "close", 4)) { 
+ 
+printf("Sockets Number:"); 
+ 
+scanf("%d", &sockno1); 
+ 
+retcode = CloseConnection(sockno1); /* 关闭连接 */ 
+ 
+printf("return code: %d\n", retcode); 
+ 
+} 
+ 
+else if (!strncmp(cmd_buf, "quit", 4)) 
+ 
+exit(0); 
+ 
+else 
+ 
+putchar('\007'); 
+ 
+} /* end while */ 
+ 
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+study
+socket
+
+Socket是什么呢？
+Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议
+ 
+ 
+服务器端先初始化Socket，然后与端口绑定(bind)，对端口进行监听(listen)，调用accept阻塞，等待客户端连接。在这时如果有个客户端初始化一个Socket，然后连接服务器(connect)，如果连接成功，这时客户端与服务器端的连接就建立了。客户端发送数据请求，服务器端接收请求并处理请求，然后把回应数据发送给客户端，客户端读取数据，最后关闭连接，一次交互结束。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+服务端
+
+import java.io.DataInputStream;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+public class FTPServer {
+ public static void main(String[] args) {
+  try {
+   ServerSocket server_s = new ServerSocket(8856);
+   Socket socket_s = server_s.accept();
+   PrintStream server_out = new PrintStream(socket_s.getOutputStream());
+   DataInputStream server_in = new DataInputStream(socket_s
+     .getInputStream());
+   System.out.println("server");
+   boolean flag = true;
+   while (flag) {
+    Scanner s = new Scanner(System.in);
+    String in = s.next();
+    if (in.equals("quit_out")) {
+     flag = false;
+    } else {
+     server_out.println(in);
+     server_out.flush();
+    }
+   }
+  } catch (Exception e) {
+   // TODO: handle exception
+  }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+客户端
+
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.Scanner;
+public class FTPClient {
+ public static void main(String[] args) {
+  try {
+   Socket socket_s = new Socket("127.0.0.2", 8856);
+   DataInputStream client_in = new DataInputStream(socket_s
+     .getInputStream());
+   DataOutputStream client_out = new DataOutputStream(socket_s
+     .getOutputStream());
+   PrintStream server_out = new PrintStream(client_out);
+   System.out.println("client");
+   boolean flag = true;
+   while (flag) {
+    Scanner s = new Scanner(System.in);
+    String in = s.next();
+    if (in.equals("quit_out")) {
+     flag = false;
+    } else {
+     server_out.println(in);
+     server_out.flush();
+    }
+   }
+  } catch (Exception e) {
+   // TODO: handle exception
+  }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 

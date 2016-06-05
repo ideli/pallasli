@@ -1,0 +1,1240 @@
+
+study
+io流
+
+1、输入、输出i:input;o:out
+2、文件 File
+3、流的概念
+4、流的分类
+5、通过流进行文件读写
+6、补充Serializable接口
+==============================
+一、数据的持久化
+java程序运行在内存中---数据处于瞬时状态
+--数据的保存过程即是数据的持久化
+数据持久化方式：
+1、数据库  --jdbc
+2、文件    --io操作（io输入输出，读写）
+输入、输出相对概念
+输入是将硬盘上的数据读取到内存中
+输出是将内存中的数据固化到硬盘上。
+流的分类：
+IO
+输入流（inputstream或reader结尾）
+和输出流（outputstream或者writer结尾）
+
+字符流和字节流
+reader,writer结尾是字符流，便于读写文本文件
+input,output结尾的是字节流，给系统使用。
+==========================
+注意
+1、用什么流写的文件，一定要用什么流来读。（字节流，用什么方法写，必须用什么方法读）
+2、输出流必须要关闭，否则数据无法写入到文件。
+3、思考如何读取到文件末尾？
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+写文件步骤
+
+
+   // 1、根据路径构建文件
+   File f = new File("c:\\c.txt");
+   FileWriter fr = null;
+   PrintWriter pw = null;
+   // 2、根据文件构建基础流
+   fr = new FileWriter(f, true);
+   // 3、根据基础流构建过滤流
+   pw = new PrintWriter(fr);
+   // 4、写文件
+   pw.println("天下合久必分，分久必合");
+   // 5、关闭流
+   pw.close();
+   fr.close();
+ 
+data数据流写数据文件
+ // 1、根据路径构建文件
+  File file = new File("test.dat");
+  // 2、根据文件构造一个基础流
+  // 在写文件时候，如果没有该文件，会自动创建一份这样的文件
+  FileOutputStream fous = new FileOutputStream(file, true);
+  // fous.flush();
+  // 3、根据基础流构建一个过滤流
+  DataOutputStream dous = new DataOutputStream(fous);
+  // 4、用过滤流进行文件的读写
+  dous.writeUTF("中国人民");
+  // 5、关闭所有流
+  dous.close();
+  fous.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+读文件步骤
+
+  // 1、根据路径构建文件
+   File file = new File("c:\\c.txt");
+   if (!file.exists()) {
+    file.createNewFile();
+   }  
+  // 2、根据文件构建基础流
+   FileReader   fr = new FileReader(file); 
+  // 3、根据基础流构建过滤流
+   BufferedReader    br = new BufferedReader(fr);   
+// 4、读文件
+   String str = br.readLine();
+   while (str != null) {
+    System.out.println(str);
+    str = br.readLine();   }
+  // 5、关闭流
+   br.close();
+   fr.close();
+ 
+data数据流读取数据文件
+    // 1、根据路径构建文件
+   File file = new File("test.dat");
+   // 2、根据文件构建基础流
+   FileInputStream fin = new FileInputStream(file);
+   // 3、根据基础流构建过滤流
+   DataInputStream din = new DataInputStream(fin);
+   // 4、读文件???????????怎样读取到文件末尾？？？？？？
+   while (true) {
+    try {
+     String str = din.readUTF();
+     System.out.println(str);
+     if (null == str) {
+      break;
+     }
+    } catch (EOFException ex) {
+     break;
+    }
+   } 
+ // 5、关闭流
+   din.close();
+   fin.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+文件的建立/检查与删除
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>文件的建立、检查与删除</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("");
+//out.println(path);
+File f=new File(path,"File.txt");
+//out.println(f);
+//out.println(f.exists());
+if(f.exists()){//检查File.txt是否存在
+f.delete();//删除File.txt文件
+out.println(path + "\\File.txt 存在，已删除。");
+}else{
+f.createNewFile();//在当前目录下建立一个名为File.txt的文件
+out.println(path + "\\File.txt 不存在，已建立。");//输出目前所在的目录路径
+}
+%>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+目录的建立/检查与删除
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>目录的建立/检查与删除</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("");
+path=path + "\\Sub";//将要建立的目录路径
+File d=new File(path);//建立代表Sub目录的File对象，并得到它的一个引用
+if(d.exists()){//检查Sub目录是否存在
+d.delete();
+out.println("Sub目录存在，已删除");
+}else{
+d.mkdir();//建立Sub目录
+out.println("Sub目录不存在，已建立");
+}
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+如何在JSP中处理虚拟目录
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>JSP中如何处理虚拟目录</title>
+</head>
+<body>
+取得虚拟目录对应的磁盘路径<br>
+Web站点主目录的位置为<font color=#ff0000><%=request.getRealPath("/")%></font><br>
+JSP网页所在的目录位置<font color=#ff0000><%=request.getRealPath("./")%></font><br>
+JSP网页所在目录上一层目录的位置<font color=#ff0000><%=request.getRealPath("../")%></font><br>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+文件属性的取得
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.util.Date,java.io.*"%>
+<html>
+<head>
+<title>文件属性的取得</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("/");
+File f=new File(path,"ReadData.txt");
+if(f.exists()){
+%>
+<%=f.getName()%>的属性如下：<br><br>
+文件长度为：<%=f.length()%>
+<%=f.isFile()?"是文件":"不是文件"%><br>
+<%=f.isDirectory()?"是目录":"不是目录"%><br>
+<%=f.canRead()?"可读取":"不可读取"%><br>
+<%=f.canWrite()?"可写入":"不可写入"%><br>
+<%=f.isHidden()?"是隐藏文件":"不是隐藏文件"%><br>
+文件的最后修改日期为：<%=new Date(f.lastModified())%><br>
+<%
+}else{
+f.createNewFile();//在当前目录下建立一个名为ReaData.txt的文件
+%> 
+<%=f.getName()%>的属性如下：<br><br>
+文件长度为：<%=f.length()%>
+<%=f.isFile()?"是文件":"不是文件"%><br>
+<%=f.isDirectory()?"是目录":"不是目录"%><br>
+<%=f.canRead()?"可读取":"不可读取"%><br>
+<%=f.canWrite()?"可写入":"不可写入"%><br>
+<%=f.isHidden()?"是隐藏文件":"不是隐藏文件"%><br>
+文件的最后修改日期为：<%=new Date(f.lastModified())%><br>
+<%
+}
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+取出目录中文件的方法
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>取出目录中文件的方法--列出目录中的文件</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("/");
+File d=new File(path);//建立当前目录中文件的File对象
+File list[]=d.listFiles();//取得代表目录中所有文件的File对象数组
+out.println("<font color=#ff0000>" + path + "目录下的文件：</font><br>");
+for(int i=0;i<list.length;i++){
+if(list<I>.isFile()){
+out.println(list<I>.getName() + "<br>");
+}
+}
+out.println("<br><font color=#ff0000>" + path + "目录下的目录：</font><br>");
+for(int i=0;i<list.length;i++){
+if(list<I>.isDirectory()){
+out.println(list<I>.getName() + "<br>");
+}
+}
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+判断是否为空白文件
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>判断是否为空白文件</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("/");
+out.println(path);
+FileReader fr=new FileReader(path + "\\AtEnd.txt");//建立FileReader对象，并实例化为fr
+//对FileReader类生成的对象使用read()方法，可以从字符流中读取下一个字符。
+if(fr.read()==-1)//判断是否已读到文件的结尾
+{
+out.print("AtEnd.txt文件中没有数据<br>");
+}else{
+out.println("AtEnd.txt文件中有数据");
+}
+fr.close();
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+读取所有的文件数据
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*,java.lang.*"%>
+<html>
+<head>
+<title>读取所有的文件数据</title>
+</head>
+<body>
+<%
+String path=request.getRealPath(".");
+FileReader fr=new FileReader(path + "\\ReadData.txt");
+//关键在于读取过程中，要判断所读取的字符是否已经到了文件的末尾，并且这个字符是不是文件中的断行符，即判断该字符值是否为13。
+int c=fr.read();//从文件中读取一个字符
+//判断是否已读到文件结尾
+while(c!=-1){
+out.print((char)c);//输出读到的数据
+c=fr.read();//从文件中继续读取数据
+if(c==13){//判断是否为断行字符
+out.print("<br>");//输出分行标签
+fr.skip(1);//略过一个字符
+//c=fr.read();//读取一个字符
+}
+}
+fr.close();
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+study
+将数据写入文件
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>将数据写入文件</title>
+</head>
+<body>
+<%
+String path=request.getRealPath(".");
+FileWriter fw=new FileWriter(path + "\\WriteData.txt");//建立FileWriter对象，并实例化fw
+//将字符串写入文件
+fw.write("大家好！");
+fw.write("本书是《JSP编程技巧》");
+fw.write("请多多指教！");
+fw.write("email:stride@sina.com");
+fw.close();
+FileReader fr=new FileReader(path + "\\WriteData.txt");
+BufferedReader br=new BufferedReader(fr);//建立BufferedReader对象，并实例化为br
+String Line=br.readLine();
+//读取一行数据
+out.println(Line + "<br>");
+br.close();//关闭BufferedReader对象
+fr.close();
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+如何将数据追加写入到文件
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>将写入文件的数据分行</title>
+</head>
+<body>
+<%
+String path=request.getRealPath(".");
+RandomAccessFile rf=new RandomAccessFile(path + "\\WriteData.txt","rw");//定义一个类RandomAccessFile的对象，并实例化
+rf.seek(rf.length());//将指针移动到文件末尾
+rf.writeBytes("\nAppend a line to the file!");
+rf.close();//关闭文件流
+out.println("写入文件内容为：<br>");
+FileReader fr=new FileReader(path + "\\WriteData.txt");
+BufferedReader br=new BufferedReader(fr);//读取文件的BufferedRead对象
+String Line=br.readLine();
+while(Line!=null){
+out.println(Line + "<br>");
+Line=br.readLine();
+}
+fr.close();//关闭文件
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+将写入文件的数据分行
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>将写入文件的数据分行</title>
+</head>
+<body>
+<%
+String path=request.getRealPath(".");
+FileWriter fw=new FileWriter(path + "\\WriteData.txt");
+BufferedWriter bw=new BufferedWriter(fw);
+bw.write("大家好！");
+bw.write("本书是《JSP编程技巧》。");
+bw.newLine();//断行
+bw.write("请多多指教！");
+bw.newLine();//断行
+bw.write("email: stride@sina.com");
+bw.flush();//将数据更新至文件
+fw.close();//关闭文件流
+out.println("写入文件内容为：<br>");
+FileReader fr=new FileReader(path + "\\WriteData.txt");
+BufferedReader br=new BufferedReader(fr);
+String Line=br.readLine();//读取一行数据
+while(Line!=null){
+out.println(Line + "<br>");
+Line=br.readLine();
+}
+fr.close();
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+略过文件中的字符不读取
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>略过字节不读取</title>
+</head>
+<body>
+<%
+String path=request.getRealPath(".");
+FileReader fr=new FileReader(path + "\\ReadData.txt");
+fr.skip(2);//跳过2个字节
+int c=fr.read();//读取一个字节
+while(c!=-1){
+out.print((char)c);
+c=fr.read();
+}
+fr.close();
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+一行一行读取数据
+
+<%@ page contentType="text/html;charset=gb2312"%>
+<%@ page import="java.io.*"%>
+<html>
+<head>
+<title>文件读取</title>
+</head>
+<body>
+<%
+String path=request.getRealPath("");//取得当前目录的路径
+FileReader fr=new FileReader(path + "\\file\\inc\\t.txt");//建立FileReader对象，并实例化为fr
+BufferedReader br=new BufferedReader(fr);//建立BufferedReader对象，并实例化为br
+String Line=br.readLine();//从文件读取一行字符串
+//判断读取到的字符串是否不为空
+while(Line!=null){
+out.println(Line + "<br>");//输出从文件中读取的数据
+Line=br.readLine();//从文件中继续读取一行数据
+}
+br.close();//关闭BufferedReader对象
+fr.close();//关闭文件
+%>
+</body>
+</html>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+列出某文件夹下的所有文件
+
+public static void displayFile(String path){
+  File file = new File(path);
+  if(file.isFile()){
+   System.out.println(file.getName());
+  }
+  else{
+   System.out.println("<DIR> "+file.getName());
+   String [] fileList = file.list();
+   String pathName = file.getAbsolutePath();
+   for(int i = 0;i<fileList.length;i++){
+    displayFile(pathName+File.separator+fileList[i]);
+   }
+  }
+  
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+按字节读取文件内容
+
+import java.io.BufferedReader;   
+import java.io.File;   
+import java.io.FileInputStream;   
+import java.io.FileReader;   
+import java.io.IOException;   
+import java.io.InputStream;   
+import java.io.InputStreamReader;   
+import java.io.RandomAccessFile;   
+import java.io.Reader;   
+
+public class ReadFromFile {   
+    /**  
+     * 以字节为单位读取文件，常用于读二进制文件，如图片、声音、影像等文件。  
+     *   
+     * @param fileName  
+     *            文件的名  
+     */  
+    public static void readFileByBytes(String fileName) {   
+        File file = new File(fileName);   
+        InputStream in = null;   
+        try {   
+           System.out.println("以字节为单位读取文件内容，一次读一个字节：");   
+           // 一次读一个字节   
+            in = new FileInputStream(file);   
+           int tempbyte;   
+            while ((tempbyte = in.read()) != -1) {   
+               System.out.write(tempbyte);   
+            }   
+            in.close();   
+        } catch (IOException e) {   
+           e.printStackTrace();   
+           return;   
+        }   
+       try {   
+           System.out.println("以字节为单位读取文件内容，一次读多个字节：");   
+           // 一次读多个字节   
+          byte[] tempbytes = new byte[100];   
+          int byteread = 0;   
+         in = new FileInputStream(fileName);   
+            ReadFromFile.showAvailableBytes(in);   
+           // 读入多个字节到字节数组中，byteread为一次读入的字节数   
+            while ((byteread = in.read(tempbytes)) != -1) {   
+                System.out.write(tempbytes, 0, byteread);   
+            }   
+      } catch (Exception e1) {   
+           e1.printStackTrace();   
+       } finally {   
+           if (in != null) {   
+                try {   
+                    in.close();   
+               } catch (IOException e1) {   
+              }   
+            }   
+        }   
+    }   
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+按字符读取文件内容
+
+/**  
+     * 以字符为单位读取文件，常用于读文本，数字等类型的文件  
+     *   
+     * @param fileName  
+     *            文件名  
+    */  
+    public static void readFileByChars(String fileName) {   
+        File file = new File(fileName);   
+        Reader reader = null;   
+        try {   
+            System.out.println("以字符为单位读取文件内容，一次读一个字节：");   
+           // 一次读一个字符   
+           reader = new InputStreamReader(new FileInputStream(file));   
+           int tempchar;   
+            while ((tempchar = reader.read()) != -1) {   
+               // 对于windows下，\r\n这两个字符在一起时，表示一个换行。   
+                // 但如果这两个字符分开显示时，会换两次行。   
+                // 因此，屏蔽掉\r，或者屏蔽\n。否则，将会多出很多空行。   
+               if (((char) tempchar) != '\r') {   
+                   System.out.print((char) tempchar);   
+               }   
+           }   
+            reader.close();   
+        } catch (Exception e) {   
+            e.printStackTrace();   
+        }   
+        try {   
+           System.out.println("以字符为单位读取文件内容，一次读多个字节：");   
+           // 一次读多个字符   
+           char[] tempchars = new char[30];   
+           int charread = 0;   
+          reader = new InputStreamReader(new FileInputStream(fileName));   
+           // 读入多个字符到字符数组中，charread为一次读取字符数   
+           while ((charread = reader.read(tempchars)) != -1) {   
+              // 同样屏蔽掉\r不显示   
+               if ((charread == tempchars.length)   
+                       && (tempchars[tempchars.length - 1] != '\r')) {   
+                   System.out.print(tempchars);   
+                } else {   
+                   for (int i = 0; i < charread; i++) {   
+                       if (tempchars[i] == '\r') {   
+                           continue;   
+                        } else {   
+                            System.out.print(tempchars[i]);   
+                        }   
+                    }   
+                }   
+           }   
+  
+       } catch (Exception e1) {   
+           e1.printStackTrace();   
+        } finally {   
+            if (reader != null) {   
+                try {   
+                   reader.close();   
+               } catch (IOException e1) {   
+                }   
+            }   
+        }   
+   }   
+  
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+按行读取文件内容
+
+/**  
+     * 以行为单位读取文件，常用于读面向行的格式化文件  
+    *   
+     * @param fileName  
+   *            文件名  
+     */  
+    public static void readFileByLines(String fileName) {   
+        File file = new File(fileName);   
+        BufferedReader reader = null;   
+        try {   
+           System.out.println("以行为单位读取文件内容，一次读一整行：");   
+           reader = new BufferedReader(new FileReader(file));   
+            String tempString = null;   
+           int line = 1;   
+           // 一次读入一行，直到读入null为文件结束   
+            while ((tempString = reader.readLine()) != null) {   
+               // 显示行号   
+                System.out.println("line " + line + ": " + tempString);   
+                line++;   
+           }   
+           reader.close();   
+       } catch (IOException e) {   
+            e.printStackTrace();   
+        } finally {   
+           if (reader != null) {   
+               try {   
+                    reader.close();   
+                } catch (IOException e1) {   
+                }   
+           }   
+        }   
+    }   
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+随机读取文件内容
+
+/**  
+     * 随机读取文件内容  
+     *   
+     * @param fileName  
+     *            文件名  
+     */  
+    public static void readFileByRandomAccess(String fileName) {   
+        RandomAccessFile randomFile = null;   
+       try {   
+            System.out.println("随机读取一段文件内容：");   
+           // 打开一个随机访问文件流，按只读方式   
+           randomFile = new RandomAccessFile(fileName, "r");   
+            // 文件长度，字节数   
+           long fileLength = randomFile.length();   
+            // 读文件的起始位置   
+            int beginIndex = (fileLength > 4) ? 4 : 0;   
+           // 将读文件的开始位置移到beginIndex位置。   
+          randomFile.seek(beginIndex);   
+           byte[] bytes = new byte[10];   
+           int byteread = 0;   
+            // 一次读10个字节，如果文件内容不足10个字节，则读剩下的字节。   
+           // 将一次读取的字节数赋给byteread   
+          while ((byteread = randomFile.read(bytes)) != -1) {   
+              System.out.write(bytes, 0, byteread);   
+          }   
+      } catch (IOException e) {   
+          e.printStackTrace();   
+        } finally {   
+            if (randomFile != null) {   
+                try {   
+                   randomFile.close();   
+               } catch (IOException e1) {   
+               }   
+           }   
+       }   
+    }   
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+显示输入流中还剩的字节数
+
+ /**  
+     * 显示输入流中还剩的字节数  
+     *   
+     * @param in  
+     */  
+    private static void showAvailableBytes(InputStream in) {   
+       try {   
+            System.out.println("当前字节输入流中的字节数为:" + in.available());   
+        } catch (IOException e) {   
+           e.printStackTrace();   
+        }   
+    }   
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+将内容追加到文件尾部
+
+import java.io.FileWriter;   
+import java.io.IOException;   
+import java.io.RandomAccessFile;   
+  
+/**  
+* 将内容追加到文件尾部  
+*/  
+public class AppendToFile {   
+ 
+    /**  
+     * A方法追加文件：使用RandomAccessFile  
+     * @param fileName 文件名  
+     * @param content 追加的内容  
+    */  
+   public static void appendMethodA(String fileName, String content) {   
+       try {   
+           // 打开一个随机访问文件流，按读写方式   
+           RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");   
+           // 文件长度，字节数   
+           long fileLength = randomFile.length();   
+           //将写文件指针移到文件尾。   
+          randomFile.seek(fileLength);   
+            randomFile.writeBytes(content);   
+          randomFile.close();   
+       } catch (IOException e) {   
+            e.printStackTrace();   
+       }   
+    }   
+  
+    /**  
+     * B方法追加文件：使用FileWriter  
+     * @param fileName  
+     * @param content  
+     */  
+    public static void appendMethodB(String fileName, String content) {   
+       try {   
+           //打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件   
+            FileWriter writer = new FileWriter(fileName, true);   
+          writer.write(content);   
+          writer.close();   
+      } catch (IOException e) {   
+            e.printStackTrace();   
+        }   
+   }   
+ 
+   public static void main(String[] args) {   
+       String fileName = "C:/temp/newTemp.txt";   
+       String content = "new append!";   
+        //按方法A追加文件   
+        AppendToFile.appendMethodA(fileName, content);   
+        AppendToFile.appendMethodA(fileName, "append end. \n");   
+        //显示文件内容   
+        ReadFromFile.readFileByLines(fileName);   
+        //按方法B追加文件   
+       AppendToFile.appendMethodB(fileName, content);   
+        AppendToFile.appendMethodB(fileName, "append end. \n");   
+       //显示文件内容   
+        ReadFromFile.readFileByLines(fileName);   
+   }   
+} 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+文件处理
+
+类File提供了一种与机器无关的方式来描述一个文件对象的属性。下面我们介绍类File中提供的各种方法。
+ 
+　　◇ 文件或目录的生成
+　　public File(String path)；/*如果path是实际存在的路径，则该File对象
+　　　　/*表示的是目录；如果path是文件名，则该File对象表示的是文件。*/
+　　public File(String path,String name)；//path是路径名，name是文件名
+　　public File(File dir,String name)；//dir是路径名，name是文件名
+　◇ 文件名的处理
+　　String getName( )； //得到一个文件的名称（不包括路径）
+　　String getPath( )； //得到一个文件的路径名
+　　String getAbsolutePath( )；//得到一个文件的绝对路径名
+　　String getParent( )； //得到一个文件的上一级目录名
+　　String renameTo(File newName); //将当前文件名更名为给定文件的
+　　　　　　　　　　　　　　　　　 　完整路径
+　◇ 文件属性测试
+　　boolean exists( )； //测试当前File对象所指示的文件是否存在
+　　boolean canWrite( )；//测试当前文件是否可写
+　　boolean canRead( )；//测试当前文件是否可读
+　　boolean isFile( )； //测试当前文件是否是文件（不是目录）
+　　boolean isDirectory( )； //测试当前文件是否是目录
+　◇ 普通文件信息和工具
+　　long lastModified( );//得到文件最近一次修改的时间
+　　long length( ); //得到文件的长度，以字节为单位
+　　boolean delete( ); //删除当前文件
+　◇ 目录操作
+　　boolean mkdir( ); //根据当前对象生成一个由该对象指定的路径
+　　String list( ); //列出当前目录下的文件
+在java的windows编程中，目录用如下形式：File dir = new File("e://myapp//src");
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+文件的顺序处理
+
+类FileInputStream和FileOutputStream用来进行文件I/O处理，由它们所提供的方法可以打开本地主机上的文件，并进行顺序的读/写。例如，下列的语句段是顺序读取文件名为text的文件里的内容，并显示在控制台上面，直到文件结束为止。
+ 
+FileInputStream fis;
+　　 try{
+　　　　fis = new FileInputStream( "text" );
+　　 System.out.print( "content of text is : ");
+　　　　　int b;
+　　　　　while( (b=fis.read())!=-1 ) //顺序读取文件text里的内容并赋值
+　　　　　　　　　　　　　　　　　　　　给整型变量b,直到文件结束为止。
+　　　　　{ 　　　　　　　　　　　　　
+　　　　　　　System.out.print( (char)b );
+　　　　　}
+　　 }catch( FileNotFoundException e ){
+　　 System.out.println( e );
+　　 }catch( IOException e ){
+　　 System.out.println( e );
+　　 }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+随机访问文件
+
+对于InputStream 和OutputStream 来说，它们的实例都是顺序访问流，也就是说，只能对文件进行顺序地读/写。随机访问文件则允许对文件内容进行随机读/写。在java中，类RandomAccessFile 提供了随机访问文件的方法。类RandomAccessFile的声明为：
+public class RandomAccessFile extends Object implements DataInput, DataOutput
+ 
+接口DataInput 中定义的方法主要包括从流中读取基本类型的数据、读取一行数据、或者读取指定长度的字节数。如：readBoolean( )、readInt( )、readLine( )、readFully( ) 等。
+　　接口DataOutput 中定义的方法主要是向流中写入基本类型的数据、或者写入一定长度的字节数组。如：writeChar( )、writeDouble( )、write( ) 等。 下面详细介绍RandomAccessFile类中的方法。
+　◇ 构造方法：
+　　RandomAccessFile(String name,String mode); //name是文件名，mode
+　　　　　　　　　　//是打开方式，例如"r"表示只读，"rw"表示可读写，"
+　　RandomAccessFile(File file,String mode); //file是文件对象
+　◇ 文件指针的操作
+　　long getFilePointer( ); //用于得到当前的文件指针
+　　void seek( long pos ); //用于移动文件指针到指定的位置
+　　int skipBytes( int n ); //使文件指针向前移动指定的n个字节
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+过滤流
+
+过滤流在读/写数据的同时可以对数据进行处理，它提供了同步机制，使得某一时刻只有一个线程可以访问一个I/O流，以防止多个线程同时对一个I/O流进行操作所带来的意想不到的结果。类FilterInputStream和FilterOutputStream分别作为所有过滤输入流和输出流的父类。
+ 
+ 
+为了使用一个过滤流，必须首先把过滤流连接到某个输入/出流上，通常通过在构造方法的参数中指定所要连接的输入/出流来实现。例如：
+　　FilterInputStream( InputStream in );
+　　FilterOutputStream( OutputStream out );
+ 
+几种常见的过滤流：
+ 
+　　◇ BufferedInputStream和BufferedOutputStream
+　　　 缓冲流，用于提高输入/输出处理的效率。
+　　◇ DataInputStream 和 DataOutputStream
+　　　 不仅能读/写数据流，而且能读/写各种的java语言的基本类型，如：boolean，int，float等。
+　　◇ LineNumberInputStream
+　　　 除了提供对输入处理的支持外，LineNumberInputStream可以记录当前的行号。
+　　◇ PushbackInputStream
+　　　 提供了一个方法可以把刚读过的字节退回到输入流中，以便重新再读一遍。
+　　◇ PrintStream
+　　　 打印流的作用是把Java语言的内构类型以其字符表示形式送到相应的输出流。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+Reader和Writer
+
+ Reader和Writer
+ 
+这两个类是抽象类，只是提供了一系列用于字符流处理的接口，不能生成这两个类的实例，只能通过使用由它们派生出来的子类对象来处理字符流。
+1．Reader类是处理所有字符流输入类的父类。
+　　◇ 读取字符
+　　public int read() throws IOException; //读取一个字符，返回值为读取的字符
+　　public int read(char cbuf[]) throws IOException; /*读取一系列字符到数组cbuf[]中，返回值为实际读取的字符的数量*/
+　　public abstract int read(char cbuf[],int off,int len) throws IOException;
+　　/*读取len个字符，从数组cbuf[]的下标off处开始存放，返回值为实际读取的字符数量，该方法必须由子类实现（因为是抽象方法，否则类必须声明为抽象类）*/
+　　◇ 标记流
+　　public boolean markSupported(); //判断当前流是否支持做标记
+　　public void mark(int readAheadLimit) throws IOException;
+　　 //给当前流作标记，最多支持readAheadLimit个字符的回溯。
+　　public void reset() throws IOException; //将当前流重置到做标记处
+　　◇ 关闭流
+　　public abstract void close() throws IOException;
+　2． Writer类是处理所有字符流输出类的父类。
+　　◇ 向输出流写入字符
+　　public void write(int c) throws IOException；
+　　//将整型值c的低16位写入输出流
+　　public void write(char cbuf[]) throws IOException；
+　　//将字符数组cbuf[]写入输出流
+　　public abstract void write(char cbuf[],int off,int len) throws IOException；
+　　//将字符数组cbuf[]中的从索引为off的位置处开始的len个字符写入输出流
+　　public void write(String str) throws IOException；
+　　//将字符串str中的字符写入输出流
+　　public void write(String str,int off,int len) throws IOException；
+　　//将字符串str 中从索引off开始处的len个字符写入输出流
+　　◇ flush( )
+　　刷空输出流，并输出所有被缓存的字节。
+　　◇ 关闭流
+　　public abstract void close() throws IOException；
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+InputStreamReader和OutputStreamWriter
+
+InputStreamReader和OutputStreamWriter
+　　java.io包中用于处理字符流的最基本的类,用来在字节流和字符流之间作为中介。
+ 
+　　◇ 生成流对象
+　　public InputStreamReader(InputStream in);
+　　/*in是字节流，而InputStreamReader是字符流，但是其来源是字节流in，
+　　因此InputStreamReader就可以把字节流in转换成字符流处理。/*
+　　public InputStreamReader(InputStream in,String enc) throws UnsupportedEncodingException;
+　　/*enc是编码方式，就是从字节流到字符流进行转换时所采用的编码方式，
+　　　例如 ISO8859-1，UTF-8，UTF-16等等*/
+　　public OutputStreamWriter(OutputStream out);
+　　/*out是字节流，而OutputStreamReader是字符流 */
+　　public OutputStreamWriter(OutputStream out,String enc) throws UnsupportedEncodingException; //enc是编码方式
+　　InputStreamReader和OutputStreamWriter的方法：
+　　◇ 读入和写出字符
+　　基本同Reader和Writer。
+　　◇ 获取当前编码方式
+　　public String getEncoding();
+　　◇ 关闭流
+　　public void close() throws IOException;
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+BufferedReader和BufferedWriter
+
+BufferedReader和BufferedWriter
+ 
+ 
+ ◇ 生成流对象
+　　public BufferedReader(Reader in); //使用缺省的缓冲区大小
+　　public BufferedReader(Reader in, int sz); //sz为缓冲区的大小
+　　public BufferedWriter(Writer out);
+　　public BufferedWriter(Writer out, int sz);
+　◇ 读入/写出字符
+　　除了Reader和Writer中提供的基本的读写方法外，增加对整行字符的处理。
+　　public String readLine() throws IOException; //读一行字符
+　　public void newLine() throws IOException; //写一行字符
+ 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+文件属性读取
+
+
+  File f = new File("c:\\a.txt");
+  int begin = path.lastIndexOf(".");
+  System.out.println("文件后缀"+path.substring(begin, path.length()));
+  if (f.isDirectory()) {
+   System.out.println("这是一个目录");
+  }
+  if (f.isFile()) {
+   System.out.println("这是一个文件");
+   System.out.println("文件大小:" + f.length());
+   Date d = new Date(f.lastModified());
+   System.out.println("最后一次的修改时间:" + d);
+   System.out.println("绝对路径:" + f.getCanonicalPath());
+   System.out.println("全路径:" + f.getAbsolutePath());//如果构造的时候就是全路径那直接返回全路径。如果构造的时候试相对路径，返回当前目录的路径+构造file时候的路径
+
+
+   System.out.println("相对路径:" + f.getPath());
+  }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+读取properties配置文件
+
+ Properties settings = new Properties(defaultSettings);
+  try {
+   FileInputStream in = new FileInputStream(
+     "E:\\workspace\\test\\src\\CustomWorld.properties");
+   settings.load(in);
+  } catch (IOException e) {
+   e.printStackTrace();
+  }
+  int red = Integer.parseInt(settings.getProperty("color.red"));
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+根目录获取
+
+File path = new File("/");//盘根目录
+ File path = new File(".");//项目根目录
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+文件过滤
+   File path = new File(".");//获取某文件夹
+   String[] list = null;
+ （1）  list = path.list(new DirFilter("include"));//模糊查询某文件夹下的文件
+ （2）  list = path.list(filter(args[0]));//通过匿名类
+ （3） list = path.list(
+          new FilenameFilter() {
+            public boolean 
+            accept(File dir, String n) {
+              String f = new File(n).getName();
+              return f.indexOf(args[0]) != -1;
+            }
+          });
+
+//方法1 自定义类  模糊文件搜索
+class DirFilter implements FilenameFilter {
+ String afn;
+ DirFilter(String afn) {
+  this.afn = afn;
+ }
+ public boolean accept(File dir, String name) {
+  // Strip path information:
+  String f = new File(name).getName();
+  return f.indexOf(afn) != -1;
+ }
+}
+ //方法2 定义匿名内部类
+ public static FilenameFilter filter(final String afn) {
+    return new FilenameFilter() {
+      String fn = afn;
+      public boolean accept(File dir, String n) {
+        String f = new File(n).getName();
+        return f.indexOf(fn) != -1;
+      }
+    };  
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+java读大文件
+
+public static void main(String[] args) throws Exception {
+    int bufSize = 1024;
+    byte[] bs = new byte[bufSize];
+    ByteBuffer byteBuf = ByteBuffer.allocate(1024);
+    FileChannel channel = new RandomAccessFile("d://filename","r").getChannel();
+    while(channel.read(byteBuf) != -1) {
+      int size = byteBuf.position();
+      byteBuf.rewind();
+      byteBuf.get(bs);
+      // 把文件当字符串处理，直接打印做为一个例子。
+      System.out.print(new String(bs, 0, size));
+      byteBuf.clear();
+    }
+  }
+ Copyright ©2012 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+删除文件
+
+/**
+* 删除文件，可以是文件或文件夹
+* @param fileName 要删除的文件名
+* @return 删除成功返回true，否则返回false
+*/
+public static boolean delete(String fileName) {
+   File file = new File(fileName);
+   if(!file.exists()) {
+    System.out.println("删除文件失败:" + fileName + "不存在！");
+    return false;
+   } else {
+    if(file.isFile())
+     return deleteFile(fileName);
+    else
+     return deleteDirectory(fileName);
+   }
+}
+/**
+* 删除单个文件
+* @param fileName 要删除的文件的文件名
+* @return 单个文件删除成功返回true，否则返回false
+*/
+public static boolean deleteFile(String fileName) {
+   File file = new File(fileName);
+   // 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+   if(file.exists() && file.isFile()) {
+    if(file.delete()) {
+     System.out.println("删除单个文件" + fileName + "成功！");
+       return true;
+    } else {
+     System.out.println("删除单个文件" + fileName + "失败！");
+       return false;
+    }
+   } else {
+    System.out.println("删除单个文件失败：" + fileName + "不存在！");
+      return false;
+   }
+}
+
+/**
+* 删除目录及目录下的文件
+* @param dir 要删除的目录的文件路径
+* @return 目录删除成功返回true，否则返回false
+*/
+public static boolean deleteDirectory(String dir) {
+   // 如果dir不以文件分隔符结尾，自动添加文件分隔符
+   if(!dir.endsWith(File.separator))
+    dir = dir + File.separator;
+   File dirFile = new File(dir);
+   // 如果dir对应的文件不存在，或者不是一个目录，则退出
+   if((!dirFile.exists()) || (!dirFile.isDirectory())) {
+    System.out.println("删除目录失败：" + dir + "不存在！");
+    return false;
+   }
+   boolean flag = true;
+   // 删除文件夹中的所有文件包括子目录
+   File[] files = dirFile.listFiles();
+   for(int i = 0; i < files.length; i++) {
+    // 删除子文件
+    if(files[i].isFile()) {
+     flag = DeleteFileUtil.deleteFile(files[i].getAbsolutePath());
+     if(!flag)
+      break;
+    }
+    // 删除子目录
+    else if(files[i].isDirectory()) {
+     flag = DeleteFileUtil.deleteDirectory(files[i].getAbsolutePath());
+     if(!flag)
+      break;
+    }
+   }
+   if(!flag) {
+    System.out.println("删除目录失败！");
+    return false;
+   }
+   //删除当前目录
+   if(dirFile.delete()) {
+    System.out.println("删除目录" + dir + "成功！");
+    return true;
+   } else {
+    return false;
+   }
+}
+public static void main(String[] args) {
+   // 删除单个文件
+   String file = "c:/test/test0/test1/test2/testFile.txt";
+   DeleteFileUtil.deleteFile(file);
+   System.out.println();
+   // 删除一个目录
+   String dir = "c:/test/test0/test1";
+   DeleteFileUtil.deleteDirectory(dir);
+   System.out.println();
+   // 删除文件
+   dir = "c:/test/test0";
+   DeleteFileUtil.delete(dir);
+  
+}
+ Copyright ©2011 lyt. All Rights Reserved.

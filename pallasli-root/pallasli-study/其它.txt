@@ -1,0 +1,1377 @@
+
+study
+终止正在运行的程序
+
+System.exit(0)
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+study
+字符串处理
+//首字母大写 
+ public static String parseFirstToUpper(String str) {  
+  String s=String.valueOf(str.charAt(0)).toUpperCase().concat(str.substring(1));
+  return s;
+  }
+ //首字母小写 
+ public static String parseFirstToLower(String str) {  
+  String s=String.valueOf(str.charAt(0)).toLowerCase().concat(str.substring(1));
+  return s;
+  }
+ //获取字段的Get方法名
+ public static String parseToGetField(String field) {  
+  String s="get".concat(parseFirstToUpper(field));
+  return s;
+  }
+ //获取字段的Set方法名 
+ public static String parseToSetField(String field) {  
+  String s="set".concat(parseFirstToUpper(field));
+  return s;
+  }
+ //获取Set方法执行的相应字段
+ public static String parseToField(String method) {
+  if(method.substring(0,3).equals("set")){  
+  String s=parseFirstToUpper(method.substring(3));
+  return s;
+  }
+  return null;
+  }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+study
+圆角分处理
+
+  /**
+     * 用户设置大写钱数(100,000,000 (一亿)以内).
+     * 
+     * @param money :
+     *            String 接收用户的正实数.
+     * @return : String 包括 圆整 或 角分的中文大写人民币,如果不合法,将返回空(null)
+     */
+    public String setMoney(String money) {
+        String re = null;
+        double num;
+        
+        //测试数据是否合法
+        try {
+            num = Double.parseDouble(money.trim());
+            if (num < 100000000 && num >= 0) {
+                //合法, 使用字符串开始转换
+                re = this.mySetMoney(money);
+            }//end if
+        } catch (Exception ex) {
+        }//end try
+        //返回值
+        return re;
+    }
+    
+    /**
+     * 大写转换函数. 功能: 转换数字为中文大写
+     * 
+     * @param num :
+     *            int 接受整数
+     * @return : String 大写数字 零 到 玖.
+     */
+    private String setDaXie(int num) {
+        String re = null;
+        switch (num) {
+        case 0:
+            re = "零";
+            break;
+        case 1:
+            re = "壹";
+            break;
+        case 2:
+            re = "贰";
+            break;
+        case 3:
+            re = "叁";
+            break;
+        case 4:
+            re = "肆";
+            break;
+        case 5:
+            re = "伍";
+            break;
+        case 6:
+            re = "陆";
+            break;
+        case 7:
+            re = "柒";
+            break;
+        case 8:
+            re = "捌";
+            break;
+        case 9:
+            re = "玖";
+            break;
+        default:
+            break;
+        }
+        return re;
+    }
+    /**
+     * 处理大写人民币
+     * 
+     * @param num :
+     *            String 接收处理过的字符串(实为数字).
+     * @return : 返回处理过的大写人民币.
+     */
+    private String mySetMoney(String num) throws Exception {
+        //要返回的字符串
+        String re = "";
+        //转换过程
+        String setNum = null;
+        int index = num.indexOf(".");
+        //处理整数
+        if (index == -1) {
+            setNum = num;
+        } else {
+            setNum = num.substring(0, index);
+        }
+        int weiShu = setNum.length();
+        if (weiShu > 0) {
+            int leng = setNum.length();
+            int numYuan = Integer.parseInt("" + setNum.charAt(weiShu - 1));
+            String zhuanYuan = setDaXie(numYuan);
+            re = zhuanYuan;
+            //个位
+            if (weiShu > 1) {
+                int numShi = Integer.parseInt("" + setNum.charAt(weiShu - 2));
+                String zhuanShi = setDaXie(numShi);
+                //十位
+                re = zhuanShi + "拾" + re;
+                if (weiShu > 2) {
+                    int numBai = Integer.parseInt(""
+                            + setNum.charAt(weiShu - 3));
+                    String zhuanBai = setDaXie(numBai);
+                    //百位
+                    re = zhuanBai + "佰" + re;
+                    if (weiShu > 3) {
+                        int numQian = Integer.parseInt(""
+                                + setNum.charAt(weiShu - 4));
+                        String zhuanQian = setDaXie(numQian);
+                        //千位
+                        re = zhuanQian + "仟" + re;
+                        if (weiShu > 4) {
+                            int numWan = Integer.parseInt(""
+                                    + setNum.charAt(weiShu - 5));
+                            String zhuanWan = setDaXie(numWan);
+                            //万位
+                            re = zhuanWan + "万" + re;
+                            if (weiShu > 5) {
+                                int numShiWan = Integer.parseInt(""
+                                        + setNum.charAt(weiShu - 6));
+                                String zhuanShiWan = setDaXie(numShiWan);
+                                //十万位
+                                re = zhuanShiWan + "拾" + re;
+                                if (weiShu > 6) {
+                                    int numBaiWan = Integer.parseInt(""
+                                            + setNum.charAt(weiShu - 7));
+                                    String zhuanBaiWan = setDaXie(numBaiWan);
+                                    //百万位
+                                    re = zhuanBaiWan + "佰" + re;
+                                    if (weiShu > 7) {
+                                        int numQianWan = Integer.parseInt(""
+                                                + setNum.charAt(weiShu - 8));
+                                        String zhuanQianWan = setDaXie(numQianWan);
+                                        //千万位
+                                        re = zhuanQianWan + "仟" + re;
+                                    }//end qianwan
+                                }//end baiwan
+                            }//end shiwan
+                        }//end wan
+                    }//end qian
+                }//end bai
+            }//end shi
+        }//end yuan
+      
+        //处理小数
+        if (index != -1) {
+            String xiaoShu = num.substring(index + 1, num.length());
+            int leng = xiaoShu.length();
+            int numJiao = Integer.parseInt("" + xiaoShu.charAt(0));
+            String zhuanJiao = setDaXie(numJiao);
+            int numFen;
+            if (leng == 1) {
+                numFen = 0;
+            }//end if
+            numFen = Integer.parseInt("" + xiaoShu.charAt(1));
+            String zhuanFen = setDaXie(numFen);
+            //十分位+百分位
+            if (numJiao == 0 && numFen != 0 || numJiao != 0 && numFen != 0) {
+                re = re + "圆" + zhuanJiao + "角" + zhuanFen + "分";
+            } else {
+                re = re + "圆整";
+            }//end if
+        } else {
+            re = re + "圆整";
+        }//end index
+        return re;
+    }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+study
+内存
+
+Runtime rt=Runtime.getRuntime( );
+//通过调用Runtime的getRuntime()方法创建了一个Runtime，该对象中包含了内存等信息
+rt.totalMemory( ) //总内存大小
+rt.freeMemory( )); //空闲内存大小
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+study
+回调函数
+
+public class Boss {
+ public static void main(String args[]) {
+  Employee em = new Employee();
+  em.doTel(new BackFun() {
+   public void callResult(String message) {
+    System.out.println(message);
+   }
+  });
+  System.out.println("其他业务安排......");
+ }
+}
+public class Employee {
+ 
+    /**
+     * 
+     * @param backFun
+     */
+ public void doTel(BackFun backFun){
+  
+  for(int i = 1;i<1000;i++){
+   System.out.println("************** "+i); 
+  }
+  backFun.callResult("电话已经拨打完毕!!!");
+ }
+}
+public interface BackFun {
+ 
+ public void callResult(String message);
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+study
+cmd命令处理
+public final static String SVN_START = "svnserve -d -r e:/svnroot";// 启动svn
+public final static String pow_START = "rundll32 url.dll,FileProtocolHandler file://d:/pow";// 启动相应的windows程序来打开文件
+ public final static String SC_START = "sc start";
+ public final static String SC_STOP = "sc stop";
+ public final static String SC_QUERY_ALL = "sc query state= all";
+ public final static String SC_QUERY = "sc query";
+ public final static String SC_QUERY_INACTIVE = "sc query state= inactive";
+ public final static String NET_START = "net start";
+ public final static String NET_STOP = "net stop";
+ 
+  *********************************************************************************
+ 
+Runtime.getRuntime().exec(SVN_START);
+ List<String> list=new ArrayList<String>();
+  try {
+   Process p=Runtime.getRuntime().exec(SC_QUERY_INACTIVE);
+   BufferedReader reader=new BufferedReader(new InputStreamReader(p.getInputStream()));
+   String line;
+   while((line=reader.readLine())!=null){
+    if(line.startsWith("SERVICE_NAME: ")){
+     line=line.replaceFirst("SERVICE_NAME: ", "");
+     list.add(line);
+    }
+   }
+   request.setAttribute("servicesList", list);
+  } catch (IOException e) {
+   e.printStackTrace();
+  }
+  return mapping.findForward("listService");
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+study
+static
+
+在Java语言中，static表示“全局”或者“静态”的意思，用来修饰成员变量和成员方法，也可以形成静态static代码
+块，但是Java语言中没有全局变量的概念。
+被static修饰的成员变量和成员方法独立于该类的任何对象。也就是说，它不依赖类特定的实例，被类的所有实例共享。
+只要这个类被加载，Java虚拟机就能根据类名在运行时数据区的方法区内定找到他们。因此，static对象可以在它的任何
+对象创建之前访问，无需引用任何对象。
+用public修饰的static成员变量和成员方法本质是全局变量和全局方法，当声明它类的对象时，不生成static变量的副本
+，而是类的所有实例共享同一个static变量。
+static变量前可以有private修饰，表示这个变量可以在类的静态代码块中，或者类的其他静态成员方法中使用（当然也
+可以在非静态成员方法中使用），但是不能在其他类中通过类名来直接引用，这一点很重要。实际上你需要搞明白，
+private是访问权限限定，static表示不要实例化就可以使用，这样就容易理解多了。static前面加上其它访问权限关键
+字的效果也以此类推。
+static修饰的成员变量和成员方法习惯上称为静态变量和静态方法，可以直接通过类名来访问，访问语法为：
+类名.静态方法名(参数列表...)
+类名.静态变量名
+用static修饰的代码块表示静态代码块，当Java虚拟机（JVM）加载类时，就会执行该代码块（用处非常大）。
+static在Java语言中的使用有四种：(变量、方法、代码块、内部类)
+1、static变量
+按照是否静态的对类成员变量进行分类可分两种：一种是被static修饰的变量，叫静态变量或类
+变量；另一种是没有被static修饰的变量，叫实例变量。
+两者的区别是：
+对于静态变量在内存中只有一个拷贝（节省内存），JVM只为静态分配一次内存，在加载类的过
+程中完成静态变量的内存分配，可用类名直接访问（方便），当然也可以通过对象来访问（但是这是不推荐的）。
+对于实例变量，没创建一个实例，就会为实例变量分配一次内存，实例变量可以在内存中有多个拷贝，互不影响（灵活）
+。
+2、静态方法
+静态方法可以直接通过类名调用，任何的实例也都可以调用，因此静态方法中不能用this和super关键字，不能直接访问
+所属类的实例变量和实例方法(就是不带static的成员变量和成员成员方法)，只能访问所属类的静态成员变量和成员方法
+。因为实例成员与特定的对象关联！这个需要去理解，想明白其中的道理，不是记忆！！！
+因为static方法独立于任何实例，因此static方法必须被实现，而不能是抽象的abstract。
+3、static代码块
+static代码块也叫静态代码块，是在类中独立于类成员的static语句块，可以有多个，位置可以随便放，它不在任何的方
+法体内，JVM加载类时会执行这些静态的代码块，如果static代码块有多个，JVM将按照它们在类中出现的先后顺序依次执
+行它们，每个代码块只会被执行一次。
+例如：
+// -- Java code example :)
+public class Test5 {
+private static int a;
+private int b;
+static {
+Test5.a = 3 ;
+System.out.println(a);
+Test5 t = new Test5();
+t.f();
+t.b = 1000 ;
+System.out.println(t.b);
+}
+static {
+Test5.a = 4 ;
+System.out.println(a);
+}
+public static void main(String[] args) {
+// TODO 自动生成方法存根
+}
+// -- static代码块的位置可以随便放置！
+static {
+Test5.a = 5 ;
+System.out.println(a);
+}
+public void f(){
+System.out.println( " hhahhahah " );
+}
+}
+运行结果：
+3
+hhahhahah
+1000
+4
+5
+利用静态代码块可以对一些static变量进行赋值，最后再看一眼这些例子，都一个static的main方法，这样JVM在运行
+main方法的时候可以直接调用而不用创建实例。
+4. 静态内部类（Inner Class）
+为正确理解static在应用于内部类时的含义，必须记住内部类的对象默认持有创建它的那个封装类的一个对象的句柄。然
+而，假如我们说一个内部类是static的，这种说法却是不成立的。
+static内部类意味着：
+(1) 为创建一个static内部类的对象，我们不需要一个外部类对象。
+(2) 不能从static内部类的一个对象中访问一个外部类对象。
+但在存在一些限制：由于static成员只能位于一个类的外部级别，所以内部类不可拥有static数据或static内部类。
+倘若为了创建内部类的对象而不需要创建外部类的一个对象，那么可将所有东西都设为static。为了能正常工作，同时也
+必须将内部类设为static。如下所示：
+//: Parcel10.Java
+// Static inner classes
+package c07.parcel10;
+abstract class Contents {
+abstract public int value();
+}
+
+interface Destination {
+String readLabel();
+}
+public class Parcel10 {
+private static class PContents
+extends Contents {
+private int i = 11;
+public int value() { return i; }
+}
+protected static class PDestination
+implements Destination {
+private String label;
+private PDestination(String whereTo) {
+label = whereTo;
+}
+public String readLabel() { return label; }
+}
+public static Destination dest(String s) {
+return new PDestination(s);
+}
+public static Contents cont() {
+return new PContents();
+}
+public static void main(String[] args) {
+Contents c = cont();
+Destination d = dest("Tanzania");
+}
+} ///:~
+在main()中，我们不需要Parcel10的对象；相反，我们用常规的语法来选择一个static成员，以便调用将句柄返回
+Contents和Destination的方法。
+通常，我们不在一个接口里设置任何代码，但static内部类可以成为接口的一部分。由于类是“静态”的，所以它不会违
+反接口的规则——static内部类只位于接口的命名空间内部：
+//: IInterface.java
+// Static inner classes inside interfaces
+interface IInterface {
+static class Inner {
+int i, j, k;
+public Inner() {}
+void f() {}
+}
+} ///:~
+建议大家在每个类里都设置一个main()，将其作为那个类的测试床使用。但这样做的一个缺点就是额外代码的数量太多。
+若不愿如此，可考虑用一个static内部类容纳自己的测试代码。如下所示：
+//: TestBed.java
+// Putting test code in a static inner class
+class TestBed {
+TestBed() {}
+void f() { System.out.println("f()"); }
+public static class Tester {
+public static void main(String[] args) {
+TestBed t = new TestBed();
+t.f();
+}
+}
+} ///:~
+这样便生成一个独立的、名为TestBed$Tester的类（为运行程序，请使用“java TestBed$Tester”命令）。可将这个类
+用于测试，但不需在自己的最终发行版本中包含它。
+PS: 静态内部类--代码示例
+Java中我们经常会使用到内部类（inner classes），如果没有Static的内部类，它的instance的创建是依赖于其元类的
+。这样的关系似乎比较难表达，让我们直接看下面的代码：
+ public class Outer {
+      int var;
+     void outerHoge() {
+          System.out.println("hogehoge");
+      }
+     void outerHote2() {
+          /* 普通内部类Instance的生成 */
+         Inner i = new Inner();
+          staticHoge sh = new StaticHoge();
+         /* 非static的内部类，下面的写法看起来很正常，
+           * 语法上似乎也没什么错误，实际上却是错误的
+           * （编译错误）
+           */
+ //        Inner i2 = new this.Inner();
+      }
+      /* 依赖于元类的内部类*/
+      class Inner {
+          void innerHoge() {
+             /* 依赖于Instance的内部变量
+               *
+               */
+              var = 1;
+              outerHoge();
+          }
+      }
+      static class StaticHoge() {
+          void methodHoge() {
+              /* 下面的写法是不对的
+               * 同样是编译错误
+               */
+ //            var = 10;
+ //            outerHoge();
+ //            Inner inner = new Inner();
+          }
+      }
+ }
+static的内部类的使用，我们可以像Package一样用它：
+ public class Outer2 {
+      public static class StaticHoge1 {
+          //...
+      }
+      public static class StaticHoge2 {
+          //...
+      }
+ }
+可以像下面这样使用：
+1: Outer2.StaticHoge1 sh1 = new Outer2.StaticHoge1();
+2: Outer2.StaticHoge2 sh2 = new Outer2.StaticHoge2();
+是不是很方便？
+不过对于内部的Static类，需要注意下面几点：
+●为创建一个static内部类的对象，我们不需要一个外部类对象
+●不能从static内部类的一个对象中访问一个外部类对象
+●由于static成员只能位于一个类的外部级别，所以内部类不可拥有static数据或static内部类
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+study
+内部类的定义和使用
+
+内部类的定义和使用：
+　　内部类是在一个类的内部嵌套定义的类，它可以是其它类的成员，也可以在一个语句块的内部定义，还可以在表达式内部匿名定义。
+　　内部类有如下特性：
+　　◇ 一般用在定义它的类或语句块之内,在外部引用它时必须给出完整的名称.名字不能与包含它的类名相同。
+　　◇ 可以使用包含它的类的静态和实例成员变量,也可以使用它所在方法的局部变量。
+　　◇ 可以定义为abstract。
+　　◇ 可以声明为private或protected。
+　　◇ 若被声明为static,就变成了顶层类,不能再使用局部变量。
+　　◇ 若想在Inner Class中声明任何static成员,则该Inner Class必须声明为static。
+内部类的优缺点：
+　　◇ 优点:节省编译后产生的字节码文件的大小
+　　◇ 缺点:使程序结构不清楚
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+study
+double类型
+boolean t;
+  double f1;
+  f1 = Math.PI;
+  double f2;
+  f2 = Math.PI * Math.PI;
+  System.out.println(f1 + f2 + f2 == f2 + f2 + f1);//false
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+自定义泛型类
+
+
+public class Pair<T> 
+{
+   public Pair() { first = null; second = null; }
+   public Pair(T first, T second) { this.first = first;  this.second = second; }
+   public T getFirst() { return first; }
+   public T getSecond() { return second; }
+   public void setFirst(T newValue) { first = newValue; }
+   public void setSecond(T newValue) { second = newValue; }
+   private T first;
+   private T second;
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+
+
+
+study
+枚举类型
+
+  /*最普通的枚举*/
+    public enum ColorSelect {
+        red, green, yellow, blue;    
+    }
+
+    /* 枚举也可以象一般的类一样添加方法和属性,你可以为它添加静态和非静态的属性或方法,这一切都象你在一般的类中做的那样. */
+    public enum Season {
+        // 枚举列表必须写在最前面，否则编译出错
+        winter, spring, summer, fall;
+
+        private final static String location = "Phoenix";        
+
+        public static Season getBest() {
+            if (location.equals("Phoenix"))
+                return winter;
+            else
+                return summer;
+        }
+    }
+    /*还可以有构造方法*/
+    public enum Temp {
+        /*通过括号赋值,而且必须有带参构造器和一属性跟方法，否则编译出错
+         * 赋值必须是都赋值或都不赋值，不能一部分赋值一部分不赋值
+         * 如果不赋值则不能写构造器，赋值编译也出错*/
+        absoluteZero(-459), freezing(32),boiling(212), paperBurns(451);
+        
+        private final int value;
+        public int getValue() {
+            return value;
+        }
+        //构造器默认也只能是private, 从而保证构造函数只能在内部使用
+        Temp(int value) {
+            this.value = value;
+        }
+    }
+
+    public static void main(String[] args) {
+        /*
+         * 枚举类型是一种类型，用于定义变量，以限制变量的赋值 赋值时通过"枚举名.值"来取得相关枚举中的值
+         */
+        ColorSelect m = ColorSelect.blue;
+        switch (m) {
+        /*注意:枚举重写了ToString(),说以枚举变量的值是不带前缀的
+          *所以为blue而非ColorSelect.blue
+          */
+　　 case red:
+            System.out.println("color is red");
+            break;
+        case green:
+            System.out.println("color is green");
+            break;
+        case yellow:
+            System.out.println("color is yellow");
+            break;
+        case blue:
+            System.out.println("color is blue");
+            break;
+        }
+        System.out.println("遍历ColorSelect中的值");
+        /*通过values()获得枚举值的数组*/
+        for (ColorSelect c : ColorSelect.values()) {
+            System.out.println(c);
+        }　 
+　　 System.out.println("枚举ColorSelect中的值有："+ColorSelect.values().length+"个");
+ 　　/*ordinal()返回枚举值在枚举中的索引位置，从0开始*/
+　　System.out.println(ColorSelect.red.ordinal());//0
+　　System.out.println(ColorSelect.green.ordinal());//1
+　　System.out.println(ColorSelect.yellow.ordinal());//2
+　　System.out.println(ColorSelect.blue.ordinal());//3
+
+　　/*枚举默认实现了java.lang.Comparable接口*/ 
+　　System.out.println(ColorSelect.red.compareTo(ColorSelect.green));
+
+　　System.out.println(Season.getBest());
+        
+        for(Temp t:Temp.values()){
+            /*通过getValue()取得相关枚举的值*/
+            System.out.println(t+"的值是"+t.getValue());
+        }
+
+    }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+控制台读取
+
+
+Scanner sc = new Scanner(System.in);
+   String str = sc.next();
+   try {
+    i = Integer.parseInt(str);
+   } catch (Exception e) {
+    System.out.println("********请输入数字*********");
+   }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+读取异常
+
+  Throwable t = new Throwable();
+  StackTraceElement[] frames = t.getStackTrace();
+  t.printStackTrace();
+  for (StackTraceElement f : frames)
+   System.out.println(f);
+ *********************************************************
+ java.lang.Throwable
+ at StackTraceTest.factorial(StackTraceTest.java:21)
+ at StackTraceTest.main(StackTraceTest.java:39)
+StackTraceTest.factorial(StackTraceTest.java:21)
+StackTraceTest.main(StackTraceTest.java:39)
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+内部类
+
+内部类是指在一个外部类的内部再定义一个类。内部类作为外部类的一个成员，并且依附于外部类而存在的。内部类可为静态，可用protected和private修饰（而外部类只能使用public和缺省的包访问权限）。内部类主要有以下几类：成员内部类、局部内部类、静态内部类、匿名内部类
+ 
+为什么需要内部类？
+典型的情况是，内部类继承自某个类或实现某个接口，内部类的代码操作创建其的外围类的对象。所以你可以认为内部类提供了某种进入其外围类的窗口。使用内部类最吸引人的原因是：
+每个内部类都能独立地继承自一个（接口的）实现，所以无论外围类是否已经继承了某个（接口的）实现，对于内部类都没有影响。如果没有内部类提供的可以继承多个具体的或抽象的类的能力，一些设计与编程问题就很难解决。从这个角度看，内部类使得多重继承的解决方案变得完整。接口解决了部分问题，而内部类有效地实现了“多重继承”。
+ 
+A：成员内部类
+作为外部类的一个成员存在，与外部类的属性、方法并列。
+publicclass Outer {
+       privatestaticinti = 1;
+       privateintj = 10;
+       privateintk = 20;
+ 
+       publicstaticvoidouter_f1() {
+       }
+ 
+       publicvoidouter_f2() {
+       }
+ 
+       // 成员内部类中，不能定义静态成员
+       // 成员内部类中，可以访问外部类的所有成员
+       class Inner {
+              // static int inner_i = 100;//内部类中不允许定义静态变量
+              intj = 100; // 内部类和外部类的实例变量可以共存
+              intinner_i = 1;
+ 
+              void inner_f1() {
+                     System.out.println(i);
+                         //在内部类中访问内部类自己的变量直接用变量名
+                     System.out.println(j);
+                         //在内部类中访问内部类自己的变量也可以用this.变量名
+                     System.out.println(this.j);
+                         //在内部类中访问外部类中与内部类同名的实例变量用外部类名.this.变量名
+                     System.out.println(Outer.this.j);
+                         //如果内部类中没有与外部类同名的变量，则可以直接用变量名访问外部类变量
+                     System.out.println(k);
+                                          outer_f1();
+                                          outer_f2();
+              }
+       }
+ 
+       //外部类的非静态方法访问成员内部类
+       publicvoidouter_f3() {
+              Inner inner = new Inner();
+              inner.inner_f1();
+       }
+ 
+       // 外部类的静态方法访问成员内部类，与在外部类外部访问成员内部类一样
+       publicstaticvoidouter_f4() {
+              //step1 建立外部类对象
+              Outer out = new Outer();
+              //step2 根据外部类对象建立内部类对象
+              Inner inner = out.new Inner();
+              //step3 访问内部类的方法
+              inner.inner_f1();
+       }
+ 
+       publicstaticvoid main(String[] args) {
+              //outer_f4();//该语句的输出结果和下面三条语句的输出结果一样
+              //如果要直接创建内部类的对象，不能想当然地认为只需加上外围类Outer的名字，
+              //就可以按照通常的样子生成内部类的对象，而是必须使用此外围类的一个对象来
+              //创建其内部类的一个对象：
+              //Outer.Inner outin = out.new Inner()
+              //因此，除非你已经有了外围类的一个对象，否则不可能生成内部类的对象。因为此
+              //内部类的对象会悄悄地链接到创建它的外围类的对象。如果你用的是静态的内部类，
+              //那就不需要对其外围类对象的引用。
+              Outer out = new Outer();
+              Outer.Inner outin = out.new Inner();
+              outin.inner_f1();
+       }
+}
+
+注意：内部类是一个编译时的概念，一旦编译成功，就会成为完全不同的两类。对于一个名为outer的外部类和其内部定义的名为inner的内部类。编译完成后出现outer.class和outer$inner.class两类。
+ 
+B:局部内部类
+在方法中定义的内部类称为局部内部类。与局部变量类似，局部内部类不能有访问说明符，因为它不是外围类的一部分，但是它可以访问当前代码块内的常量，和此外围类所有的成员。
+ 
+publicclass Outer {
+       privateints = 100;
+       privateintout_i = 1;
+ 
+       publicvoid f(finalint k) {
+              finalint s = 200;
+              int i = 1;
+              finalint j = 10;
+             
+                 //定义在方法内部
+              class Inner {
+                     ints = 300;// 可以定义与外部类同名的变量
+ 
+                     // static int m = 20;//不可以定义静态变量
+                     Inner(int k) {
+                            inner_f(k);
+                     }
+ 
+                     intinner_i = 100;
+ 
+                     voidinner_f(int k) {
+                         //如果内部类没有与外部类同名的变量，在内部类中可以直接访问外部类的实例变量
+                            System.out.println(out_i);
+                         //可以访问外部类的局部变量(即方法内的变量)，但是变量必须是final的
+                            System.out.println(j);
+                            //System.out.println(i);
+                         //如果内部类中有与外部类同名的变量，直接用变量名访问的是内部类的变量
+                            System.out.println(s);
+                         //用this.变量名访问的也是内部类变量
+                            System.out.println(this.s);
+                         //用外部类名.this.内部类变量名访问的是外部类变量
+                            System.out.println(Outer.this.s);
+                     }
+              }
+              new Inner(k);
+       }
+ 
+       publicstaticvoid main(String[] args) {
+              // 访问局部内部类必须先有外部类对象
+              Outer out = new Outer();
+              out.f(3);
+       }
+}
+ 
+C：静态内部类(嵌套类)：（注意：前两种内部类与变量类似，所以可以对照参考变量）
+如果你不需要内部类对象与其外围类对象之间有联系，那你可以将内部类声明为static。这通常称为嵌套类（nested class）。想要理解static应用于内部类时的含义，你就必须记住，普通的内部类对象隐含地保存了一个引用，指向创建它的外围类对象。然而，当内部类是static的时，就不是这样了。嵌套类意味着：
+1. 要创建嵌套类的对象，并不需要其外围类的对象。
+2. 不能从嵌套类的对象中访问非静态的外围类对象。
+ 
+publicclass Outer {
+       privatestaticinti = 1;
+       privateintj = 10;
+       publicstaticvoidouter_f1() {
+       }
+ 
+       publicvoidouter_f2() {
+       }
+ 
+       // 静态内部类可以用public,protected,private修饰
+       // 静态内部类中可以定义静态或者非静态的成员
+       staticclass Inner {
+              staticintinner_i = 100;
+              intinner_j = 200;
+              staticvoidinner_f1() {
+                      //静态内部类只能访问外部类的静态成员(包括静态变量和静态方法)
+                     System.out.println("Outer.i" + i);
+                     outer_f1();
+              }
+ 
+              voidinner_f2() {
+                     // 静态内部类不能访问外部类的非静态成员(包括非静态变量和非静态方法)
+                     // System.out.println("Outer.i"+j);
+                     // outer_f2();
+              }
+       }
+ 
+       publicvoidouter_f3() {
+              // 外部类访问内部类的静态成员：内部类.静态成员
+              System.out.println(Inner.inner_i);
+              Inner.inner_f1();
+              // 外部类访问内部类的非静态成员:实例化内部类即可
+              Inner inner = new Inner();
+              inner.inner_f2();
+       }
+ 
+       publicstaticvoid main(String[] args) {
+              newOuter().outer_f3();
+       }
+}
+
+生成一个静态内部类不需要外部类成员：这是静态内部类和成员内部类的区别。静态内部类的对象可以直接生成：Outer.Inner in = new Outer.Inner();而不需要通过生成外部类对象来生成。这样实际上使静态内部类成为了一个顶级类(正常情况下，你不能在接口内部放置任何代码，但嵌套类可以作为接口的一部分，因为它是static 的。只是将嵌套类置于接口的命名空间内，这并不违反接口的规则）
+ 
+D：匿名内部类(from thinking in java 3th)
+简单地说：匿名内部类就是没有名字的内部类。什么情况下需要使用匿名内部类？如果满足下面的一些条件，使用匿名内部类是比较合适的：
+　　·只用到类的一个实例。 
+　　·类在定义后马上用到。 
+　　·类非常小（SUN推荐是在4行代码以下） 
+　　·给类命名并不会导致你的代码更容易被理解。
+　　在使用匿名内部类时，要记住以下几个原则：
+　　·匿名内部类不能有构造方法。 
+　　·匿名内部类不能定义任何静态成员、方法和类。 
+　　·匿名内部类不能是public,protected,private,static。 
+　　·只能创建匿名内部类的一个实例。
+·一个匿名内部类一定是在new的后面，用其隐含实现一个接口或实现一个类。 
+　　·因匿名内部类为局部内部类，所以局部内部类的所有限制都对其生效。 
+
+ 
+下面的例子看起来有点奇怪：
+//在方法中返回一个匿名内部类
+public class Parcel6 {
+        public Contents cont() {
+                return new Contents() {
+                     private int i = 11;
+ 
+                     public int value() {
+                            return i;
+                     }
+              }; // 在这里需要一个分号
+        }
+ 
+        public static void main(String[] args) {
+                Parcel6 p = new Parcel6();
+                Contents c = p.cont();
+        }
+}
+cont()方法将下面两个动作合并在一起：返回值的生成，与表示这个返回值的类的定义！进一步说，这个类是匿名的，它没有名字。更糟的是，看起来是你正要创建一个Contents对象：
+return new Contents()
+但是，在到达语句结束的分号之前，你却说：“等一等，我想在这里插入一个类的定义”:
+return new Contents() {
+private int i = 11;
+public int value() { return i; }
+};
+这种奇怪的语法指的是：“创建一个继承自Contents的匿名类的对象。”通过new 表达式返回的引用被自动向上转型为对Contents的引用。匿名内部类的语法是下面例子的简略形式：
+class MyContents implements Contents {
+private int i = 11;
+public int value() { return i; }
+    }
+return new MyContents();
+在这个匿名内部类中，使用了缺省的构造器来生成Contents。下面的代码展示的是，如果你的基类需要一个有参数的构造器，应该怎么办：
+public class Parcel7 {
+public Wrapping wrap(int x) {
+// Base constructor call:
+return new Wrapping(x) { // Pass constructor argument.
+public int value() {
+return super.value() * 47;
+            }
+}; // Semicolon required
+    }
+public static void main(String[] args) {
+Parcel7 p = new Parcel7();
+Wrapping w = p.wrap(10);
+    }
+}
+只需简单地传递合适的参数给基类的构造器即可，这里是将x 传进new Wrapping(x)。在匿名内部类末尾的分号，并不是用来标记此内部类结束（C++中是那样）。实际上，它标记的是表达式的结束，只不过这个表达式正巧包含了内部类罢了。因此，这与别的地方使用的分号是一致的。
+ 
+如果在匿名类中定义成员变量，你同样能够对其执行初始化操作：
+public class Parcel8 {
+// Argument must be final to use inside
+// anonymous inner class:
+public Destination dest(final String dest) {
+return new Destination() {
+private String label = dest;
+public String readLabel() { return label; }
+};
+    }
+public static void main(String[] args) {
+Parcel8 p = new Parcel8();
+Destination d = p.dest("Tanzania");
+    }
+}
+如果你有一个匿名内部类，它要使用一个在它的外部定义的对象，编译器会要求其参数引用是final 型的，就像dest()中的参数。如果你忘记了，会得到一个编译期错误信息。如果只是简单地给一个成员变量赋值，那么此例中的方法就可以了。但是，如果你想做一些类似构造器的行为，该怎么办呢？在匿名类中不可能有已命名的构造器（因为它根本没名字！），但通过实例初始化，你就能够达到为匿名内部类“制作”一个构造器的效果。像这样做：
+abstract class Base {
+public Base(int i) {
+System.out.println("Base constructor, i = " + i);
+    }
+public abstract void f();
+}
+ 
+public class AnonymousConstructor {
+public static Base getBase(int i) {
+return new Base(i) {
+            {
+System.out.println("Inside instance initializer");
+            }
+public void f() {
+System.out.println("In anonymous f()");
+            }
+};
+    }
+public static void main(String[] args) {
+Base base = getBase(47);
+base.f();
+    }
+}
+在此例中，不要求变量i 一定是final 的。因为i 被传递给匿名类的基类的构造器，它并不会在匿名类内部被直接使用。下例是带实例初始化的“parcel”形式。注意dest()的参数必须是final，因为它们是在匿名类内被使用的。
+public class Parcel9 {
+public Destinationdest(final String dest, final float price) {
+return new Destination() {
+private int cost;
+// Instance initialization for each object:
+            {
+cost = Math.round(price);
+if(cost > 100)
+System.out.println("Over budget!");
+            }
+ 
+private String label = dest;
+public String readLabel() { return label; }
+};
+    }
+public static void main(String[] args) {
+Parcel9 p = new Parcel9();
+Destination d = p.dest("Tanzania", 101.395F);
+    }
+}
+在实例初始化的部分，你可以看到有一段代码，那原本是不能作为成员变量初始化的一部分而执行的（就是if 语句）。所以对于匿名类而言，实例初始化的实际效果就是构造器。当然它受到了限制：你不能重载实例初始化，所以你只能有一个构造器。
+ 
+ 
+  
+ 
+ 
+从多层嵌套类中访问外部
+一个内部类被嵌套多少层并不重要，它能透明地访问所有它所嵌入的外围类的所有成员，如下所示：
+class MNA {
+private void f() {}
+class A {
+private void g() {}
+public class B {
+void h() {
+g();
+f();
+            }
+        }
+    }
+}
+public class MultiNestingAccess {
+public static void main(String[] args) {
+MNA mna = new MNA();
+MNA.A mnaa = mna.new A();
+MNA.A.B mnaab = mnaa.new B();
+mnaab.h();
+    }
+}
+可以看到在MNA.A.B中，调用方法g()和f()不需要任何条件（即使它们被定义为private）。这个例子同时展示了如何从不同的类里面创建多层嵌套的内部类对象的基本语法。“.new”语法能产生正确的作用域，所以你不必在调用构造器时限定类名。
+ 
+ 
+ 
+ 
+ 
+内部类的重载问题
+ 
+如果你创建了一个内部类，然后继承其外围类并重新定义此内部类时，会发生什么呢？也就是说，内部类可以被重载吗？这看起来似乎是个很有用的点子，但是“重载”内部类就好像它是外围类的一个方法，其实并不起什么作用：
+ 
+class Egg {
+       private Yolk y;
+ 
+       protectedclass Yolk {
+              public Yolk() {
+                     System.out.println("Egg.Yolk()");
+              }
+       }
+ 
+       public Egg() {
+              System.out.println("New Egg()");
+              y = new Yolk();
+       }
+}
+ 
+publicclass BigEgg extends Egg {
+       publicclass Yolk {
+              public Yolk() {
+                     System.out.println("BigEgg.Yolk()");
+              }
+       }
+ 
+       publicstaticvoid main(String[] args) {
+              new BigEgg();
+       }
+}
+ 
+ 
+输出结果为：
+New Egg()
+Egg.Yolk()
+ 
+缺省的构造器是编译器自动生成的，这里是调用基类的缺省构造器。你可能认为既然创建了BigEgg 的对象，那么所使用的应该是被“重载”过的Yolk，但你可以从输出中看到实际情况并不是这样的。
+这个例子说明，当你继承了某个外围类的时候，内部类并没有发生什么特别神奇的变化。这两个内部类是完全独立的两个实体，各自在自己的命名空间内。当然，明确地继承某个内部类也是可以的：
+ 
+class Egg2 {
+       protected class Yolk {
+              public Yolk() {
+                     System.out.println("Egg2.Yolk()");
+              }
+ 
+              public void f() {
+                     System.out.println("Egg2.Yolk.f()");
+              }
+       }
+ 
+       private Yolk y = new Yolk();
+ 
+       public Egg2() {
+              System.out.println("New Egg2()");
+       }
+ 
+       public void insertYolk(Yolk yy) {
+              y = yy;
+       }
+ 
+       public void g() {
+              y.f();
+       }
+}
+ 
+public class BigEgg2 extends Egg2 {
+       public class Yolk extends Egg2.Yolk {
+              public Yolk() {
+                     System.out.println("BigEgg2.Yolk()");
+              }
+ 
+              public void f() {
+                     System.out.println("BigEgg2.Yolk.f()");
+              }
+       }
+ 
+       public BigEgg2() {
+              insertYolk(new Yolk());
+       }
+ 
+       public static void main(String[] args) {
+              Egg2 e2 = new BigEgg2();
+              e2.g();
+       }
+}
+ 
+输出结果为：
+Egg2.Yolk()
+New Egg2()
+Egg2.Yolk()
+BigEgg2.Yolk()
+BigEgg2.Yolk.f()
+ 
+现在BigEgg2.Yolk 通过extends Egg2.Yolk 明确地继承了此内部类，并且重载了其中的方法。Egg2 的insertYolk()方法使得BigEgg2 将它自己的Yolk 对象向上转型，然后传递给引用y。所以当g()调用y.f()时，重载后的新版的f()被执行。第二次调用Egg2.Yolk()是BigEgg2.Yolk 的构造器调用了其基类的构造器。可以看到在调用g()的时候，新版的f()被调用了。
+ 
+内部类的继承问题（thinking in java 3th p294）
+因为内部类的构造器要用到其外围类对象的引用，所以在你继承一个内部类的时候，事情变得有点复杂。问题在于，那个“秘密的”外围类对象的引用必须被初始化，而在被继承的类中并不存在要联接的缺省对象。要解决这个问题，需使用专门的语法来明确说清它们之间的关联：
+class WithInner {
+        class Inner {
+                Inner(){
+                        System.out.println("this is a constructor in WithInner.Inner");
+                };
+        }
+}
+ 
+public class InheritInner extends WithInner.Inner {
+        // ! InheritInner() {} // Won't compile
+        InheritInner(WithInner wi) {
+                wi.super();
+                System.out.println("this is a constructor in InheritInner");
+        }
+ 
+        public static void main(String[] args) {
+                WithInner wi = new WithInner();
+                InheritInner ii = new InheritInner(wi);
+        }
+}
+ 
+输出结果为：
+this is a constructor in WithInner.Inner
+this is a constructor in InheritInner
+ 
+可以看到，InheritInner 只继承自内部类，而不是外围类。但是当要生成一个构造器时，缺省的构造器并不算好，而且你不能只是传递一个指向外围类对象的引用。此外，你必须在构造器内使用如下语法：
+enclosingClassReference.super();
+这样才提供了必要的引用，然后程序才能编译通过。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+过滤特殊字符
+
+public class Test {
+public   static   String StringFilter(String   str)   throws   PatternSyntaxException   {   
+                // 只允许字母和数字  
+                // String   regEx = "[^a-zA-Z0-9]";                   
+                   // 清除掉所有特殊字符
+    String regEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+    Pattern   p   =   Pattern.compile(regEx);   
+    Matcher   m   =   p.matcher(str);   
+    return   m.replaceAll("").trim();   
+    }   
+@Test     
+public    void    main(String args[]) {   
+    String   str   =   "*adCVs*34_a _09_b5*[/435^*&城池()^$$&*).{}+.|.)%%*(*.中国}34{45[]12.fd'*&999下面是中文的字符￥……{}【】。，；’“‘”？";   
+    System.out.println(str);   
+    System.out.println(StringFilter(str));   
+    }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+study
+获取classes类路径
+
+String path = getClass().getProtectionDomain().getCodeSource()
+    .getLocation().getPath().substring(1);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+study
+获取web根目录
+
+request.getSession().getServletContext().getRealPath("/") 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+study
+堆栈
+ heap new出来的对象adress=object && null
+ stack局部变量    name=adress
+ data segment静态变量字符串常量
+code segment存放代码
+
+1
+       String a0 = "abc";
+       String b0 = "abc";
+       a0 == b0
+    
+2   
+        String a0 = String.valueOf("abc");   
+        String b0 = String.valueOf("abc");   
+        a0 == b0
+3
+        String a0 = "abc"+"def";   
+        String b0 = "abcdef";   
+        a0==b04
+4 
+        String a0 = "abc";   
+        String b0 = "def";   
+        String c0 = "abcdef";   
+        String d0 = a0 + b0;   
+        c0 != d0
+
+5   
+        String a0 = new String("abc");   
+        String b0 = new String("abc");   
+        a0 != b0
+6
+        String a0 = String.valueOf("abc")+String.valueOf("def");   
+        String b0 = String.valueOf("abcdef");   
+        a0 != b0
+
+我们的都知道，Java的内存分配策略：栈中存放基本数据类型（或者叫内置类型）以及引用类型（或者叫对象句柄），而堆中存放对象数据。 
+String很特殊，根据Think In Java介绍：“通过编译器和特殊的覆盖或过载运算符+和+=，可将引号字符串转换成一个String。可见引号字符串本身并不是一个String，而是通过运算符的重载转换成了String。注意：没有=号。 
+
+
+Java的内存分配栈中存放两种类型数据： 
+1、基本数据类型：此处疑问？存放的是具体的数据还是也是一个内存地址。 
+   答案是数据存放于上边提到的常量区，而栈中存放的是此常量区对应数据的地址。其实Java设计师们很注重内存的利用，我们可能看见很多文章曾提到这样一个概念，当int n =1;时，Java会在内存中搜索，看有没有1的存在，假如有的话，则不会重新分配空间建立1，如果没有的话，则会建立1，假如int m=1;则Java不会再建立1的空间。可见似乎内存中存在一个存放数据的地方。
+2、引用类型：栈中存放的是对象的引用，此引用是通过new创建的对象在堆中分配的地址。 
+现在分析String。 
+属于什么类型？基本数据类型、引用类型。 
+当作为String str = "abc";建立时，作为基本类型。
+当作为String str = new String("abc");建立时，毫无疑问作为引用类型处理（参见第5部分代码）。 
+
+我们暂且将+作为一种Java特殊的处理机制，当它处理引号字符串时不会采用new方式建立String（即像"abc"+"def"），而对于栈中数据处理时会采用new方式建立String（即像a+b）。（参见第3、4、6部分代码）。 
+
+当作为String str = String.valueOf("abc");建立或者执行+时。 
+其实String.valueOf()可以看做是对"abc"的封装，但不是new的（参见第2、6部分代码）。 
+
+
+其实现在要是按照以上的观点，可以得出这样一种结论: 
+栈中存放的是句柄，包括基本数据类型。内存中存在另外一块区域（常量区），存放基本数据类型数据以及引号字符串数据。 
+堆中存放的是对象，且必须是new的或者通过+运算符的重载隐式new的。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+
+
+study
+System.getProperty()参数大全
+System.getProperty()参数大全  
+  
+java.version            Java Runtime Environment version  
+java.vendor            Java Runtime Environment vendor  
+java.vendor.url            Java vendor URL  
+java.home            Java installation directory  
+java.vm.specification.version                    Java Virtual Machine specification version  
+java.vm.specification.vendor                    Java Virtual Machine specification vendor  
+java.vm.specification.name                    Java Virtual Machine specification name  
+java.vm.version            Java Virtual Machine implementation version  
+java.vm.vendor            Java Virtual Machine implementation vendor  
+java.vm.name            Java Virtual Machine implementation name  
+java.specification.version                Java Runtime Environment specification version  
+java.specification.vendor             Java Runtime Environment specification vendor  
+java.specification.name        Java Runtime Environment specification name  
+java.class.version                        Java class format version number  
+java.class.path                  Java class path  
+java.library.path                        List of paths to search when loading libraries  
+java.io.tmpdir                Default temp file path  
+java.compiler            Name of JIT compiler to use  
+java.ext.dirs            Path of extension directory or directories  
+os.name                Operating system name  
+os.arch                Operating system architecture  
+os.version            Operating system version  
+file.separator            File separator ("/" on UNIX)  
+path.separator            Path separator (":" on UNIX)  
+line.separator            Line separator ("\n" on UNIX)  
+user.name            User's account name  
+user.home            User's home directory  
+user.dir                User's current working directory 
+
+ Copyright ©2013 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+study
+jxl 打印excel设置
+
+    WritableSheet sheet = workbook.getSheet(0);
+ //简单设置
+ sheet.setHeader("left","center","right");
+ sheet.setFooter("left","center","right");
+ sheet.setPageSetup(PageOrientation纸张方向,PaperSize纸张大小,页眉边距，页脚边距);
+ 
+ 
+ ///详细设置
+    SheetSettings setting = sheet.getSettings();
+    
+    // ①设置打印范围（右上的列号和行号，左下的列号和行号）
+    setting.setPrintArea(1, 2, 3, 4);
+    
+    // ②设置打印的标题部分（开始行和结束行）
+    setting.setPrintTitlesRow(0, 3);
+    
+    // ③设置打印的标题部分（开始列和结束列）
+    setting.setPrintTitlesCol(0, 3);
+    
+    // ④是否打印边框
+    setting.setPrintGridLines(true);
+    
+    // ⑤是否打印行列番号
+    setting.setPrintHeaders(false);
+    
+    // ⑥打印方向
+    setting.setPageOrder(PageOrder.DOWN_THEN_RIGHT); // 从上往下
+    setting.setPageOrder(PageOrder.RIGHT_THEN_DOWN); // 从左往右
+    
+// 设置页眉的文字
+    HeaderFooter header = new HeaderFooter();
+    
+    Contents contentsHeader = header.getRight();
+    contentsHeader.setFontSize(10);
+    contentsHeader.append(<span class="string">"系统时间"</span>);
+    contentsHeader.appendDate();
+    contentsHeader.append(<span class="string">" - "</span>);
+    contentsHeader.appendTime();
+    contentsHeader.append(<span class="string">"   "</span>);
+    contentsHeader.appendPageNumber();
+    contentsHeader.append(<span class="string">" . "</span>);
+    contentsHeader.appendTotalPages();
+    
+    setting.setHeader(header);
+    
+ // 设置页脚的文字
+    HeaderFooter footer = new HeaderFooter();
+    
+    Contents contentsFooter = footer.getCentre();
+    contentsFooter.setFontSize(10);
+    contentsFooter.append(<span class="string">"打印时间"</span>);
+    contentsFooter.appendDate();
+    contentsFooter.append(<span class="string">" - "</span>);
+    contentsFooter.appendTime();
+    contentsFooter.append(<span class="string">"   "</span>);
+    contentsFooter.appendPageNumber();
+    contentsFooter.append(<span class="string">" / "</span>);
+    contentsFooter.appendTotalPages();
+    
+    setting.setFooter(footer); // 输出Excel 
+workbook.write(); 
+workbook.close();
+
+ Copyright ©2013 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+study
+jdk设置
+
+set JAVA_HOME=/java
+set PATH=$JAVA_HOME/bin:$PATH
+set CLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar:$CLASSPATH
+ Copyright ©2013 lyt. All Rights Reserved.
+

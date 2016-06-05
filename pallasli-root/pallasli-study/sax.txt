@@ -1,0 +1,243 @@
+
+java核心技术学习
+自定义节点计数
+
+public class saxCounter extends HandlerBase {
+ int startDocumentEvents = 0;
+ int endDocumentEvents = 0;
+ int startElementEvents = 0;
+ int endElementEvents = 0;
+ int processingInstructionEvents = 0;
+ int characterEvents = 0;
+ int ignorableWhitespaceEvents = 0;
+ int warningEvents = 0;
+ int errorEvents = 0;
+ int fatalErrorEvents = 0;
+ public void parseURI(String uri) {
+  SAXParser parser = new SAXParser();
+  parser.setDocumentHandler(this);
+  parser.setErrorHandler(this);
+  try {
+   parser.parse(uri);
+  } catch (Exception e) {
+   System.err.println(e);
+  }
+  System.out.println("Document Statistics for " + uri + ":");
+  System.out.println("====================================");
+  System.out.println("DocumentHandler Events:");
+  System.out.println(" startDocument " + startDocumentEvents);
+  System.out.println(" endDocument " + endDocumentEvents);
+  System.out.println(" startElement " + startElementEvents);
+  System.out.println(" endElement " + endElementEvents);
+  System.out.println(" processingInstruction "
+    + processingInstructionEvents);
+  System.out.println(" character " + characterEvents);
+  System.out.println(" ignorableWhitespace " + ignorableWhitespaceEvents);
+  System.out.println("ErrorHandler Events:");
+  System.out.println(" warning " + warningEvents);
+  System.out.println(" error " + errorEvents);
+  System.out.println(" fatalError " + fatalErrorEvents);
+  System.out.println(" ----------");
+  int totalEvents = startDocumentEvents + endDocumentEvents
+    + startElementEvents + endElementEvents
+    + processingInstructionEvents + characterEvents
+    + ignorableWhitespaceEvents + warningEvents + errorEvents
+    + fatalErrorEvents;
+  System.out.println("Total: " + totalEvents + " Events");
+ }
+ /** 指令处理. */
+ @Override
+ public void processingInstruction(String target, String data) {
+  processingInstructionEvents++;
+ }
+ /** 文档开始. */
+ @Override
+ public void startDocument() {
+  startDocumentEvents++;
+ }
+ /** 元素开始. */
+ @Override
+ public void startElement(String name, AttributeList attrs) {
+  startElementEvents++;
+ }
+ /** 字符. */
+ @Override
+ public void characters(char ch[], int start, int length) {
+  characterEvents++;
+ }
+ /** 忽略空格. */
+ @Override
+ public void ignorableWhitespace(char ch[], int start, int length) {
+  ignorableWhitespaceEvents++;
+ }
+ /** 元素结尾. */
+ @Override
+ public void endElement(String name) {
+  endElementEvents++;
+ }
+ /** 文档结尾 . */
+ @Override
+ public void endDocument() {
+  endDocumentEvents++;
+ }
+ // 错误处理方法
+ /** 警告. */
+ @Override
+ public void warning(SAXParseException ex) {
+  warningEvents++;
+ }
+ /** 错误. */
+ @Override
+ public void error(SAXParseException ex) {
+  errorEvents++;
+ }
+ /** 严重错误. */
+ @Override
+ public void fatalError(SAXParseException ex) throws SAXException {
+  fatalErrorEvents++;
+  throw ex;
+ }
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+自定义打印
+
+import org.apache.xerces.parsers.SAXParser;
+import org.xml.sax.AttributeList;
+import org.xml.sax.HandlerBase;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+/**
+ * XmlSaxDemo.java 本例分析主何用SAX解析器来处理XML文档
+ */
+public class XmlSaxDemo extends HandlerBase {
+ public void parseURI(String uri) {
+  SAXParser parser = new SAXParser();
+  parser.setDocumentHandler(this);
+  parser.setErrorHandler(this);
+  try {
+   parser.parse(uri);
+  } catch (Exception e) {
+   System.err.println(e);
+  }
+ }
+ /** 处理指令. */
+ @Override
+ public void processingInstruction(String target, String data) {
+  System.out.print("<?");
+  System.out.print(target);
+  if (data != null && data.length() > 0) {
+   System.out.print(' ');
+   System.out.print(data);
+  }
+  System.out.print("?>");
+ }
+ /** 开始部分描述. */
+ @Override
+ public void startDocument() {
+  System.out.println("<?xml version=\"1.0\"?>");
+ }
+ /** 开始元素. */
+ @Override
+ public void startElement(String name, AttributeList attrs) {
+  System.out.print("<");
+  System.out.print(name);
+  if (attrs != null) {
+   int len = attrs.getLength();
+   for (int i = 0; i < len; i++) {
+    System.out.print(" ");
+    System.out.print(attrs.getName(i));
+    System.out.print("=\"");
+    System.out.print(attrs.getValue(i));
+    System.out.print("\"");
+   }
+  }
+  System.out.print(">");
+ }
+ /** 字符. */
+ @Override
+ public void characters(char ch[], int start, int length) {
+  System.out.print(new String(ch, start, length));
+ }
+ /** 忽略空格. */
+ @Override
+ public void ignorableWhitespace(char ch[], int start, int length) {
+  characters(ch, start, length);
+ }
+ /** 元素结尾. */
+ @Override
+ public void endElement(String name) {
+  System.out.print("</");
+  System.out.print(name);
+  System.out.print(">");
+ }
+ /** 文档结尾. */
+ @Override
+ public void endDocument() {
+  // No need to do anything.
+ }
+ // ErrorHandler 方法
+ //
+ /** 警告. */
+ @Override
+ public void warning(SAXParseException ex) {
+  System.err.println("[Warning] " + getLocationString(ex) + ": "
+    + ex.getMessage());
+ }
+ /** 错误. */
+ @Override
+ public void error(SAXParseException ex) {
+  System.err.println("[Error] " + getLocationString(ex) + ": "
+    + ex.getMessage());
+ }
+ /** 严重错误. */
+ @Override
+ public void fatalError(SAXParseException ex) throws SAXException {
+  System.err.println("[Fatal Error] " + getLocationString(ex) + ": "
+    + ex.getMessage());
+  throw ex;
+ }
+ /** 从当前位置返回一个字符串. */
+ private String getLocationString(SAXParseException ex) {
+  StringBuffer str = new StringBuffer();
+  String systemId = ex.getSystemId();
+  if (systemId != null) {
+   int index = systemId.lastIndexOf('/');
+   if (index != -1) {
+    systemId = systemId.substring(index + 1);
+   }
+   str.append(systemId);
+  }
+  str.append(':');
+  str.append(ex.getLineNumber());
+  str.append(':');
+  str.append(ex.getColumnNumber());
+  return str.toString();
+ }
+ /** 主方法. */
+ public static void main(String argv[]) {
+  if (argv.length == 0) {
+   System.out.println("用法: Java 程序应用");
+   System.out.println(" 输入Java程序的文件地址和所要解析的XML文档.");
+   System.out.println(" 例如: Java XmlDomDemo XmlDemoon.xml");
+   argv = new String[1];
+   argv[0] = "src\\com\\XmlDemoone.xml";
+  }
+  XmlSaxDemo s1 = new XmlSaxDemo();
+  s1.parseURI(argv[0]);
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dwr>
+	<allow>
+		<create creator="new" javascript="service">
+			<param name="class" value="com.Bike" />
+		</create>
+		<create creator="new" javascript="service1">
+			<param name="class" value="com.Hello" />
+		</create>
+		<create creator="new" javascript="service2" scope="application">
+			<param name="class" value="com.Service" />
+		</create>
+	</allow>
+
+	<!-- 聊天消息调用接口 -->
+	<create creator="new" javascript="ChatWithSamePage" scope="application">
+		<param name="class" value="cn.netjava.dwr.ChatWithSamePage" />
+	</create>
+	<convert match="cn.netjava.dwr.WebMessage" converter="bean" />
+</dwr>
+

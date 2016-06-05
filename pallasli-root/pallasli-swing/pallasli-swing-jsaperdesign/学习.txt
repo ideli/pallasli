@@ -1,0 +1,2677 @@
+
+java核心技术学习
+GridBagLayout 以及 GridBagConstraints 用法
+
+GridBagLayout是一个灵活的布局管理器，部件如果想加入其中需借助GridBagConstraints，其中有若干个参数，解释如下：
+gridx/gridy：组件的横纵坐标
+gridwidth：组件所占列数，也是组件的宽度
+gridheight：组件所占行数，也是组件的高度
+fill：当组件在其格内而不能撑满其格时，通过 fill的值来设定填充方式，有四个值
+ipadx： 组件间的横向间距
+ipady：组件间的纵向间距
+insets：当组件不能填满其格时，通过 insets来指定四周（即上下左右）所留空隙
+anchor：同样是当组件不能填满其格时，通过 anchor来设置组件的位置，anchor有两种值，绝对和相对的值分别有 若干个，文档中有，可自行查看
+weightx：行的权重，通过这个属性来决定如何分配行的剩余空间
+weighty：列的权重，通过这个属性来决定如何分配列的剩余空间
+1.要明确一点概念：每个 GridBagLayout 对象维持一个动态的矩形单元网格，每个组件占用一个或多个这样的单元，称为显示区域。
+网格的总体方向取决于容器的 ComponentOrientation 属性。对于水平的从左到右的方向，网格坐标 (0,0) 位于容器的左上角，其中 X 向右递增，Y 向下递增。
+2.要使用GidBagLayout要先定义一个GridBagConstraints对象。
+java API说明如下：“每个由 GridBagLayout 管理的组件都与 GridBagConstraints 的实例相关联。Constraints 对象指定组件在网格中的显示区域以及组件在其显示区域中的放置方式。”
+例如，如下几行代码就可以添加其它组件：
+         GridBagLayout gridbag = new GridBagLayout();
+         GridBagConstraints c = new GridBagConstraints();
+         JFrame   f=new JFrame();
+         f.setLayout(gridbag);
+         Button button = new Button(name);
+         gridbag.setConstraints(button, c);
+         f.add(jButton);
+3.为了有效使用网格包布局，必须自定义与组件相关联的一个或多个 GridBagConstraints 对象。
+即须设置GridBagConstraints 对象的属性。我认为只要能掌握以下四种参数就能很好的使用GidBagLayout：
+（1）GridBagConstraints.gridwidthGridBagConstraints.gridheight
+    指定组件的显示区域行（针对 gridwidth）或列（针对 gridheight）中的单元数。默认值为 1。如下向窗口中添加一个占两个单元格（两行一列）的按钮的例子：
+         JFrame   f=new JFrame();
+         GridBagLayout gridbag = new GridBagLayout();
+         GridBagConstraints c = new GridBagConstraints();
+         f.setLayout(gridbag);
+         c.gridheight=2;
+         c.gridwidth=1;
+         JButton jButton = new JButton("按钮1");
+         gridbag.setConstraints(button, c);
+         f.add(jButton);
+（2）GridBagConstraints.fill 
+    当组件的显示区域大于组件的所需大小时，用于确定是否（以及如何）调整组件。
+    可能的值为 GridBagConstraints.NONE（默认值）、
+              GridBagConstraints.HORIZONTAL（加宽组件直到它足以在水平方向上填满其显示区域，但不更改其高度）、               
+              GridBagConstraints.VERTICAL（加高组件直到它足以在垂直方向上填满其显示区域，但不更改其宽度）和                  
+            GridBagConstraints.BOTH（使组件完全填满其显示区域）。 
+    使用情景举例：在一个很大的窗口（如300*300）中添加一个按钮（原始大小40*30）。
+（3）GridBagConstraints.anchor 
+    当组件小于其显示区域时，用于确定将组件置于何处（在显示区域中）。可能的值有两种：相对和绝对。相对值的解释是相对于容器的ComponentOrientation 属性，而绝对值则不然。个人觉得只使用绝对值就可以。有效值有： 
+    绝对值
+    GridBagConstraints.NORTH 
+    GridBagConstraints.SOUTH 
+    GridBagConstraints.WEST 
+    GridBagConstraints.EAST 
+    GridBagConstraints.NORTHWEST 
+    GridBagConstraints.NORTHEAST 
+    GridBagConstraints.SOUTHWEST 
+    GridBagConstraints.SOUTHEAST 
+    GridBagConstraints.CENTER (the default) 
+
+（4）GridBagConstraints.weightx、GridBagConstraints.weighty   （************最重要的属性） 
+用于确定分布空间的方式，这对于指定调整行为至关重要。例如：在一个很大的窗口（如300*300）中添加两个按钮（也可以是面板）（原始大小 40*30），默认的，你会发现两个按钮分别处于上下两个等大小的区域中，且只占用了一小部分，没有被按钮占用的区域就被称为额外区域。该额外区域会随着参数weightx、weighty而被分配。
+
+   完整的示例代码如下：
+import javax.swing.*;
+import java.util.*;
+import java.awt.*;
+public class Example{
+     public Example() {
+     }
+     public static void main(String args[]) {
+        JFrame f = new JFrame("GridBag Layout Example");
+        GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        f.setLayout(gridbag);
+//添加按钮1
+        c.fill = GridBagConstraints.BOTH;
+        c.gridheight=2;
+        c.gridwidth=1;
+        c.weightx=0.0;//默认值为0.0
+        c.weighty=0.0;//默认值为0.0
+        c.anchor=GridBagConstraints.SOUTHWEST;
+        JButton jButton1 = new JButton("按钮1");
+        gridbag.setConstraints(jButton1, c);
+        f.add(jButton1);
+//添加按钮2        
+        c.fill = GridBagConstraints.NONE;
+        c.gridwidth=GridBagConstraints.REMAINDER;
+        c.gridheight=1;
+        c.weightx=1.0;//默认值为0.0
+        c.weighty=0.8;
+        JButton jButton2 = new JButton("按钮2");
+        gridbag.setConstraints(jButton2, c);
+        f.add(jButton2);
+//添加按钮3
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth=1;
+        c.gridheight=1;
+        c.weighty=0.2;
+        JButton jButton3 = new JButton("按钮3");
+        gridbag.setConstraints(jButton3, c);
+        f.add(jButton3);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setSize(500,500);
+        f.setVisible(true);
+     }
+}
+gridx,gridy —— 设置组件的位置，
+gridx设置为GridBagConstraints.RELATIVE代表此组件位于之前所加入组件的右边。
+gridy设置为GridBagConstraints.RELATIVE代表此组件位于以前所加入组件的下面。
+建议定义出gridx,gridy的位置以便以后维护程序。gridx=0,gridy=0时放在0行0列。
+
+gridwidth,gridheight —— 用来设置组件所占的单位长度与高度，默认值皆为1。
+你可以使用GridBagConstraints.REMAINDER常量，代表此组件为此行或此列的最后一个组件，而且会占据所有剩余的空间。
+
+weightx,weighty —— 用来设置窗口变大时，各组件跟着变大的比例。
+当数字越大，表示组件能得到更多的空间，默认值皆为0。
+
+anchor —— 当组件空间大于组件本身时，要将组件置于何处。
+有CENTER(默认值)、NORTH、NORTHEAST、EAST、SOUTHEAST、WEST、NORTHWEST选择。
+
+insets —— 设置组件之间彼此的间距。
+它有四个参数，分别是上，左，下，右，默认为(0,0,0,0)。
+
+ipadx,ipady —— 设置组件间距，默认值为0。
+
+GridBagLayout里的各种设置都必须通过GridBagConstraints，因此当我们将GridBagConstraints的参数都设置
+好了之后，必须new一个GridBagConstraints的对象出来，以便GridBagLayout使用。
+
+
+构造函数：
+GirdBagLayout()建立一个新的GridBagLayout管理器。
+GridBagConstraints()建立一个新的GridBagConstraints对象。
+GridBagConstraints(int gridx,int gridy,
+int gridwidth,int gridheight,
+double weightx,double weighty,
+int anchor,int fill, Insets insets,
+int ipadx,int ipady)建立一个新的GridBagConstraints对象，并指定其参数的值。
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+自定义GridBagConstraints类
+
+/*
+GBC - A convenience class to tame the GridBagLayout
+Copyright (C) 2002 Cay S. Horstmann (http://horstmann.com)
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+import java.awt.*;
+/**
+   This class simplifies the use of the GridBagConstraints
+   class.
+*/
+public class GBC extends GridBagConstraints 
+{
+   /**
+      Constructs a GBC with a given gridx and gridy position and
+      all other grid bag constraint values set to the default.
+      @param gridx the gridx position
+      @param gridy the gridy position
+   */
+   public GBC(int gridx, int gridy)
+   {
+      this.gridx = gridx;
+      this.gridy = gridy;
+   }
+   /**
+      Constructs a GBC with given gridx, gridy, gridwidth, gridheight
+      and all other grid bag constraint values set to the default.
+      @param gridx the gridx position
+      @param gridy the gridy position
+      @param gridwidth the cell span in x-direction
+      @param gridheight the cell span in y-direction
+   */
+   public GBC(int gridx, int gridy, int gridwidth, int gridheight)
+   {
+      this.gridx = gridx;
+      this.gridy = gridy;
+      this.gridwidth = gridwidth; 
+      this.gridheight = gridheight; 
+   }
+   /**
+      Sets the anchor.
+      @param anchor the anchor value
+      @return this object for further modification
+   */
+   public GBC setAnchor(int anchor) 
+   { 
+      this.anchor = anchor; 
+      return this;
+   }
+   
+   /**
+      Sets the fill direction.
+      @param fill the fill direction
+      @return this object for further modification
+   */
+   public GBC setFill(int fill) 
+   { 
+      this.fill = fill; 
+      return this;
+   }
+   /**
+      Sets the cell weights.
+      @param weightx the cell weight in x-direction
+      @param weighty the cell weight in y-direction
+      @return this object for further modification
+   */
+   public GBC setWeight(double weightx, double weighty) 
+   { 
+      this.weightx = weightx; 
+      this.weighty = weighty; 
+      return this;
+   }
+   /**
+      Sets the insets of this cell.
+      @param distance the spacing to use in all directions
+      @return this object for further modification
+   */
+   public GBC setInsets(int distance) 
+   { 
+      this.insets = new Insets(distance, distance, distance, distance);
+      return this;
+   }
+   /**
+      Sets the insets of this cell.
+      @param top the spacing to use on top
+      @param left the spacing to use to the left
+      @param bottom the spacing to use on the bottom
+      @param right the spacing to use to the right
+      @return this object for further modification
+   */
+   public GBC setInsets(int top, int left, int bottom, int right) 
+   { 
+      this.insets = new Insets(top, left, bottom, right);
+      return this;
+   }
+   /**
+      Sets the internal padding
+      @param ipadx the internal padding in x-direction
+      @param ipady the internal padding in y-direction
+      @return this object for further modification
+   */
+   public GBC setIpad(int ipadx, int ipady) 
+   { 
+      this.ipadx = ipadx; 
+      this.ipady = ipady; 
+      return this;
+   }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+版面管理器
+
+BorderLayout的使用:
+   BorderLayout的类层次结构图：
+       java.lang.Object
+        --java.awt.BorderLayout
+   构造函数：BorderLayout()建立一个没有间距的border layout
+             BorderLayout(int hgap,int vgap)建立一个组件间有间距的border layout
+  BorderLayout将版面划分为东、西、南、北、中
+   设置组件的间距，你可以使用有间距参数的BorderLayout构造函数，也可以利用BorderLayout的setHgap(int hgap)与
+   setVgap(int vgap)两个方法来达成。
+FlowLayout的使用：
+   FlowLayout的类层次结构图：
+       java.lang.Object
+        --java.awt.FlowLayout
+   构造函数：FlowLayout()建立一个新的Flow Layout，此FlowLayout默认值是居中对齐，组件彼此有5单位的水平与垂直间距。
+             FlowLayout(int align)建立一个新的Flow Layout，此FlowLayout可设置排列方式，组件彼此有5单位的水平与垂直
+                                 间距。
+             FlowLayout(int align,int hgap,int vgap)建立一个新的Flow Layout，此FlowLayout可设置排列方式与组件间距。
+GridLayout的使用：
+       GridLayout的类层次结构图：
+       java.lang.Object
+        --java.awt.GridLayout
+    GridLayout比FlowLayout多了行和列的设置，也就是说你要先设置GridLayout共有几行几列，就如同二维平面一般，然后你加
+进去的组件会先填第一行的格子，然后再从第二行开始填，依此类扒，就像是一个个的格子一般。而且GridLayout会将所填进去组
+件的大小设为一样。
+构造函数：GridLayout()建立一个新的GridLayout，默认值是1行1列。
+          GridLayout(int rows,int cols)建立一个几行几列的GridLayout.
+          GridLayout(int rows,int cols, int hgap,int vgap)建立一个几行几列的GridLayout,并设置组件的间距。
+GridBagLayout的使用：是java中最有弹性但也是最复杂的一种版面管理器。它只有一种构造函数，但必须配合
+                           GridBagConstraints才能达到设置的效果。
+    GridBagLayout的类层次结构图：
+    java.lang.Object
+     --java.awt.GridBagLayout
+构造函数：
+    GirdBagLayout()建立一个新的GridBagLayout管理器。
+    GridBagConstraints()建立一个新的GridBagConstraints对象。
+    GridBagConstraints(int gridx,int gridy,int gridwidth,int gridheight,double weightx,double weighty,
+                       int anchor,int fill, Insets insets,int ipadx,int ipady)建立一个新的GridBagConstraints对象
+                      ，并指定其参数的值。
+参数说明:
+gridx,gridy:设置组件的位置，gridx设置为GridBagConstraints.RELATIVE代表此组件位于之前所加入组件的右边。
+             若将gridy设置为GridBagConstraints.RELATIVE代表此组件位于以前所加入组件的下面。建议定义出
+             gridx,gridy的位置，以便以后维护程序。表示放在几行几列，gridx=0,gridy=0时放在0行0列。
+
+gridwidth,gridheight:用来设置组件所占的单位长度与高度，默认值皆为1。你可以使用GridBagConstraints.REMAINDER常
+                      量，代表此组件为此行或此列的最后一个组件，而且会占据所有剩余的空间。
+
+weightx,weighty:用来设置窗口变大时，各组件跟着变大的比例，当数字越大，表示组件能得到更多的空间，默认值皆为0。
+anchor:         当组件空间大于组件本身时，要将组件置于何处，有CENTER(默认值)、NORTH、NORTHEAST、EAST、SOUTHEAST、
+                 WEST、NORTHWEST可供选择。
+insets:设置组件之间彼此的间距，它有四个参数，分别是上，左，下，右，默认为(0,0,0,0).
+ipadx,ipady:设置组件内的间距，默认值为0。              
+   我们以前提过，GridBagLayout里的各种设置都必须通过GridBagConstraints,因此当我们将GridBagConstraints的参数都设置
+好了之后，必须new一个GridBagConstraints的对象出来，以便GridBagLayout使用。
+BoxLayout的使用：
+    BoxLayout的类层次结构图：
+    java.lang.Object
+     --java.awt.BoxLayout
+
+   BoxLayout提供了两个常数X_AXIS,Y_AXIS来表示水平或垂直排列。若放进去的组件不等高，则系统将会使所有的组件与最高组件
+等高，还有，若你将组件都摆在同一行时，系统不因组件宽度在于Container的宽度，而使组件自动摆在下一行，你必须自行处理换
+行的操作。
+构造函数：
+     BoxLayout(Container targe,int axis)建立一个水平或垂直的BoxLayout.
+   讲到BoxLayout，我们就不得不提到Box这个Container,Box这个Container默认的Layout为BoxLayout,而它只能使用这个Layout,
+否则编译时会有Error产生，如同前面所讲的，BoxLayout是以水平或垂直方式排列，因此，当我们要产生一个Box Container时，
+就必须指定它的排列方式，下面为Box的构造函数：
+  Box(int axis) 建立一个Box Container,并指定组件的排列方式是水平或垂直。
+  上面的axis参数，我们可以使用BoxLayout.X_AXIS或BoxLayout.Y_AXIS来指定。或是利用Box类所提供的两个方法：
+createHorizontalBox()与createVerticalBox(),来建立BoxContainer.
+  Box类提供4种透明的组件来做更方便的版面管理。分别是glue、strut、rigid、filler:
+Glue:当glue插入在两组件间时，它会将两组件挤到最左与最右（或最上与最下），透明的glue将会占满整个中间的空间。baseBox.add(Box.createHorizontalGlue());
+Strut:当你不想将A与B按钮挤到最旁边时，你可以使用Strut组件，来设置所需要的大小，但仅能限定一维的大小，例如限定
+     水平或垂直高度。baseBox.add(Box.createHorizontalStrut(50));//A,B之间间隔50个像素。
+Rigid:这个透明组件跟Strut很像，但它可以设置二维的限制，也就是可以设置水平与垂直的限制宽度。 baseBox.add(Box.createRigidArea(new Dimension(50,50)));
+    为了将Rigid的高度功能显示出来，因此以pack()方法代替setSize()方法，11行替换为：f.pack();
+    若我们将高度再拉长，例如baseBox.add(Box.createRigidArea(new Dimension(50,50)));的Dimension改成(50,100)，则两
+    组件的上下空白将会增大，因为透明的Rigid组件高度增高了。
+Filler:Filler是Box的inner class,它的功能跟Rigid很像，都可以指定长宽的大小限制，且Filler可以指定最大、较佳、最小的长
+      宽大小，以下是Filler的构造函数：
+     Box.Filler(Dimension min,Dimension pref Dimension max)建立一个指定大小的Filler对象。
+     参数min表示最小的显示区域大小，如同上面的例子所示，若所设置最小区域的高度大于按钮A与B的高度，则按钮A与B的上方
+     与下方将有空白出现。
+   pref表示较佳的显示区域大小。max表示最大的显示区域大小。
+    例：在10与11行间加入下面一行程序：
+     baseBox.add(new Box.Filler(new Dimension(50,50),
+                                new Dimension(100,50),
+                                new Dimension(200,50)));
+   Box类所提供的方法：
+   Static Component       createGlue()构造一个Glue组件可向水平与垂直方向延伸
+   Static Box             createHorizontalBox()构造一个水平排列的Box组件
+   Static Component       createHorizontalGlue()构造一个水平的Glue组件
+   Static Component       createHorizontalStrut(int width)构造一个水平的Strut组件
+   Static Component       createRigidArea(Dimension d)构造一个Rigid组件
+   Static Box             createVerticalBox()构造一个垂直排列的Box组件
+   Static Component       createVerticalGlue()构造一个垂直的Glue组件
+   Static Component       createVerticalStrut(int height)构造一个垂直的Strut组件
+   AccessibleContext      getAccessibleContext()取得与JComponent相关边的AccessibleContext
+   Void                   setLayout(LayoutManager l)丢出AWTError,因为Box只能使用BoxLayout
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+swing主页面设置
+
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+
+public class ViewUtil {
+     public static void setCenterLocation(Container container) {
+        /*?*/
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        /*?*/
+        Dimension dimension = toolkit.getScreenSize();
+        double dheight = dimension.getHeight();
+        double dweight = dimension.getWidth();
+        int fheight = container.getHeight();
+        int fweight = container.getWidth();
+        container.setLocation(((int) dweight - fweight) / 2, ((int) dheight - fheight) / 2);
+    }
+  
+    public static void setCenterLocation(Container father, Container container) {
+        int dheight = father.getHeight();
+        int dweight = father.getWidth();
+        int fheight = container.getHeight();
+        int fweight = container.getWidth();
+        container.setLocation((dweight - fweight) / 2, (dheight - fheight) / 2);
+    }
+
+    public static Image setImgURL(URL imgURL) {
+        Image img = Toolkit.getDefaultToolkit().createImage(imgURL);
+        return img;
+    }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+swing定时器
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
+import javax.swing.Timer;
+ActionListener listener = new TimePrinter();
+      Timer t = new Timer(10000, listener);
+      t.start();
+**********************************************
+class TimePrinter implements ActionListener
+{  
+   public void actionPerformed(ActionEvent event)
+   {  
+      Date now = new Date();
+      System.out.println("At the tone, the time is " + now);
+      Toolkit.getDefaultToolkit().beep();
+   }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+java核心技术学习
+button监听
+
+JButton blueButton = new JButton("blue");
+  add(blueButton);
+  blueButton.addActionListener(listener);
+ private class ButtonListener implements ActionListener {
+  public void actionPerformed(ActionEvent event) {
+   String arg = event.getActionCommand();
+   if (arg.equals("yellow")) {
+    System.out.println("yellow");
+    setBackground(Color.yellow);
+   } else if (arg.equals("blue"))
+    setBackground(Color.blue);
+   else if (arg.equals("red"))
+    setBackground(Color.red);
+  }
+ }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+自定义控制台
+
+JFrame frame = new JFrame();
+  frame.setTitle("ConsoleWindow");
+  final JTextArea output = new JTextArea();
+  output.setEditable(false);
+  frame.add(new JScrollPane(output));
+  frame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  frame.setLocation(DEFAULT_LEFT, DEFAULT_TOP);
+  frame.setFocusableWindowState(false);
+  frame.setVisible(true);
+  // define a PrintStream that sends its bytes to the
+  // output text area
+  PrintStream consoleStream = new PrintStream(new OutputStream() {
+   @Override
+   public void write(int b) {
+   } // never called
+   @Override
+   public void write(byte[] b, int off, int len) {
+    output.append(new String(b, off, len));
+   }
+  });
+  // set both System.out and System.err to that stream
+  System.setOut(consoleStream);
+  System.setErr(consoleStream);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+swing空间鼠标轨迹
+
+**************test*************************************** 
+JFrame frame = new EventTracerFrame();
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.setVisible(true);
+  
+class EventTracerFrame extends JFrame
+{
+   public EventTracerFrame()
+   {
+      setTitle("EventTracerTest");
+      setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);      // add a slider and a button
+      add(new JSlider(), BorderLayout.NORTH);
+      add(new JButton("Test"), BorderLayout.SOUTH);      // trap all events of components inside the frame
+      EventTracer tracer = new EventTracer();
+      tracer.add(this);      
+   }   public static final int DEFAULT_WIDTH = 400;
+   public static final int DEFAULT_HEIGHT = 400;  
+}
+**************end***************************************
+
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.lang.reflect.*;public class EventTracer
+{
+   public EventTracer()
+   {
+      // the handler for all event proxies
+      handler = new
+         InvocationHandler()
+         {
+            public Object invoke(Object proxy, Method method, Object[] args)
+            {
+               System.out.println(method + ":" + args[0]);
+               return null;
+            }
+         };
+   }   /**
+      Adds event tracers for all events to which this component
+      and its children can listen
+      @param c a component
+   */
+   public void add(Component c)
+   {
+      try
+      {
+         // get all events to which this component can listen
+         BeanInfo info = Introspector.getBeanInfo(c.getClass());         EventSetDescriptor[] eventSets = info.getEventSetDescriptors();
+         for (EventSetDescriptor eventSet : eventSets)
+            addListener(c, eventSet);
+      }
+      catch (IntrospectionException e) {}
+      // ok not to add listeners if exception is thrown      if (c instanceof Container)
+      {
+         // get all children and call add recursively
+         for (Component comp : ((Container) c).getComponents())
+            add(comp);
+      }
+   }   /**
+      Add a listener to the given event set
+      @param c a component
+      @param eventSet a descriptor of a listener interface
+   */
+   public void addListener(Component c, EventSetDescriptor eventSet)
+   {
+      // make proxy object for this listener type and route all calls to the handler
+      Object proxy = Proxy.newProxyInstance(null,
+         new Class[] { eventSet.getListenerType() }, handler);      // add the proxy as a listener to the component
+      Method addListenerMethod = eventSet.getAddListenerMethod();
+      try
+      {
+         addListenerMethod.invoke(c, proxy);
+      }
+      catch(InvocationTargetException e) {}
+      catch(IllegalAccessException e) {}
+      // ok not to add listener if exception is thrown
+   }   private InvocationHandler handler;
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+
+java核心技术学习
+屏幕操作
+
+GraphicsEnvironment environment = GraphicsEnvironment
+    .getLocalGraphicsEnvironment();
+  GraphicsDevice screen = environment.getDefaultScreenDevice();
+  Robot robot = new Robot(screen);
+  // simulate a space bar press
+  robot.keyPress(' ');
+  robot.keyRelease(' ');  
+  // simulate a tab key followed by a space
+  robot.delay(2000);
+  robot.keyPress(KeyEvent.VK_TAB);
+  robot.keyRelease(KeyEvent.VK_TAB);
+  robot.keyPress(' ');
+  robot.keyRelease(' ');
+  // simulate a mouse click over the rightmost button
+  robot.delay(2000);
+  robot.mouseMove(200, 50);
+  robot.mousePress(InputEvent.BUTTON1_MASK);
+  robot.mouseRelease(InputEvent.BUTTON1_MASK);
+  // capture the screen and show the resulting image
+  robot.delay(2000);
+  BufferedImage image = robot.createScreenCapture(new Rectangle(0, 0,
+    400, 300));
+  ImageFrame frame = new ImageFrame(image);
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.setVisible(true);
+ 
+****************************************************************************************
+class ImageFrame extends JFrame {
+ public ImageFrame(Image image) {
+  setTitle("Capture");
+  setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+  JLabel label = new JLabel(new ImageIcon(image));
+  add(label);
+ }
+ public static final int DEFAULT_WIDTH = 450;
+ public static final int DEFAULT_HEIGHT = 350;
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+java核心技术学习
+单选按钮
+
+javax.swing.Box panel = new ExceptTestPanel();
+  add(panel);
+  pack();
+*************************************************
+ javax.swing.Box符合如下布局
+************************************************
+  JRadioButton button = new JRadioButton(s, false) {
+   // the button calls this method to fire an
+   // action event. We override it to trap exceptions
+   @Override
+   protected void fireActionPerformed(ActionEvent event) {
+    try {
+     textField.setText("No exception");
+     super.fireActionPerformed(event);
+    } catch (Exception e) {
+     textField.setText(e.toString());
+    }
+   }
+  };
+  button.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent event) {
+    try {
+     InputStream in = new FileInputStream("woozle.txt");
+    } catch (IOException e) {
+     textField.setText(e.toString());
+    }
+   }
+  });
+  add(button);
+  ButtonGroup group = new ButtonGroup();
+  group.add(button);
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+文件选择器
+
+/**
+   @version 1.22 2004-05-06
+   @author Cay Horstmann
+ */
+ 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.ArrayList;
+ 
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileView;
+ 
+public class FileChooserTest {
+ public static void main(String[] args) {
+  ImageViewerFrame frame = new ImageViewerFrame();
+  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  frame.setVisible(true);
+ }
+}
+ 
+/**
+ * A frame that has a menu for loading an image and a display area for the
+ * loaded image.
+ */
+class ImageViewerFrame extends JFrame {
+ public ImageViewerFrame() {
+  setTitle("FileChooserTest");
+  setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+ 
+  // set up menu bar
+  JMenuBar menuBar = new JMenuBar();
+  setJMenuBar(menuBar);
+ 
+  JMenu menu = new JMenu("File");
+  menuBar.add(menu);
+ 
+  JMenuItem openItem = new JMenuItem("Open");
+  menu.add(openItem);
+  openItem.addActionListener(new FileOpenListener());
+ 
+  JMenuItem exitItem = new JMenuItem("Exit");
+  menu.add(exitItem);
+  exitItem.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent event) {
+    System.exit(0);
+   }
+  });
+ 
+  // use a label to display the images
+  label = new JLabel();
+  add(label);
+ 
+  // set up file chooser
+  chooser = new JFileChooser();
+ 
+  // accept all image files ending with .jpg, .jpeg, .gif
+  final ExtensionFileFilter filter = new ExtensionFileFilter();
+  filter.addExtension("jpg");
+  filter.addExtension("jpeg");
+  filter.addExtension("gif");
+  filter.setDescription("Image files");
+  chooser.setFileFilter(filter);
+ 
+  chooser.setAccessory(new ImagePreviewer(chooser));
+ 
+  chooser.setFileView(new FileIconView(filter, new ImageIcon(
+    "palette.gif")));
+ }
+ 
+ /**
+  * This is the listener for the File->Open menu item.
+  */
+ private class FileOpenListener implements ActionListener {
+  public void actionPerformed(ActionEvent event) {
+   chooser.setCurrentDirectory(new File("."));
+ 
+   // show file chooser dialog
+   int result = chooser.showOpenDialog(ImageViewerFrame.this);
+ 
+   // if image file accepted, set it as icon of the label
+   if (result == JFileChooser.APPROVE_OPTION) {
+    String name = chooser.getSelectedFile().getPath();
+    label.setIcon(new ImageIcon(name));
+   }
+  }
+ }
+ 
+ public static final int DEFAULT_WIDTH = 300;
+ public static final int DEFAULT_HEIGHT = 400;
+ 
+ private final JLabel label;
+ private final JFileChooser chooser;
+}
+ 
+/**
+ * This file filter matches all files with a given set of extensions.
+ */
+class ExtensionFileFilter extends FileFilter {
+ /**
+  * Adds an extension that this file filter recognizes.
+  * 
+  * @param extension
+  *            a file extension (such as ".txt" or "txt")
+  */
+ public void addExtension(String extension) {
+  if (!extension.startsWith("."))
+   extension = "." + extension;
+  extensions.add(extension.toLowerCase());
+ }
+ 
+ /**
+  * Sets a description for the file set that this file filter recognizes.
+  * 
+  * @param aDescription
+  *            a description for the file set
+  */
+ public void setDescription(String aDescription) {
+  description = aDescription;
+ }
+ 
+ /**
+  * Returns a description for the file set that this file filter recognizes.
+  * 
+  * @return a description for the file set
+  */
+ @Override
+ public String getDescription() {
+  return description;
+ }
+ 
+ @Override
+ public boolean accept(File f) {
+  if (f.isDirectory())
+   return true;
+  String name = f.getName().toLowerCase();
+ 
+  // check if the file name ends with any of the extensions
+  for (String extension : extensions)
+   if (name.endsWith(extension))
+    return true;
+  return false;
+ }
+ 
+ private String description = "";
+ private final ArrayList<String> extensions = new ArrayList<String>();
+}
+ 
+/**
+ * A file view that displays an icon for all files that match a file filter.
+ */
+class FileIconView extends FileView {
+ /**
+  * Constructs a FileIconView.
+  * 
+  * @param aFilter
+  *            a file filter--all files that this filter accepts will be
+  *            shown with the icon.
+  * @param anIcon--the
+  *            icon shown with all accepted files.
+  */
+ public FileIconView(FileFilter aFilter, Icon anIcon) {
+  filter = aFilter;
+  icon = anIcon;
+ }
+ 
+ @Override
+ public Icon getIcon(File f) {
+  if (!f.isDirectory() && filter.accept(f))
+   return icon;
+  else
+   return null;
+ }
+ 
+ private final FileFilter filter;
+ private final Icon icon;
+}
+ 
+/**
+ * A file chooser accessory that previews images.
+ */
+class ImagePreviewer extends JLabel {
+ /**
+  * Constructs an ImagePreviewer.
+  * 
+  * @param chooser
+  *            the file chooser whose property changes trigger an image
+  *            change in this previewer
+  */
+ public ImagePreviewer(JFileChooser chooser) {
+  setPreferredSize(new Dimension(100, 100));
+  setBorder(BorderFactory.createEtchedBorder());
+ 
+  chooser.addPropertyChangeListener(new PropertyChangeListener() {
+   public void propertyChange(PropertyChangeEvent event) {
+    if (event.getPropertyName() == JFileChooser.SELECTED_FILE_CHANGED_PROPERTY) {
+     // the user has selected a new file
+     File f = (File) event.getNewValue();
+     if (f == null) {
+      setIcon(null);
+      return;
+     }
+ 
+     // read the image into an icon
+     ImageIcon icon = new ImageIcon(f.getPath());
+ 
+     // if the icon is too large to fit, scale it
+     if (icon.getIconWidth() > getWidth())
+      icon = new ImageIcon(icon.getImage().getScaledInstance(
+        getWidth(), -1, Image.SCALE_DEFAULT));
+ 
+     setIcon(icon);
+    }
+   }
+  });
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+字体设置
+
+ActionListener listener = new FontAction();
+  // construct components
+  JLabel faceLabel = new JLabel("Face: ");
+  face = new JComboBox(new String[] { "Serif", "SansSerif", "Monospaced",
+    "Dialog",});
+      face .setEditable(true);
+      face .addItem("DialogInput");
+  face.addActionListener(listener);
+  JLabel sizeLabel = new JLabel("Size: ");
+  size = new JComboBox(new String[] { "8", "10", "12", "15", "18", "24",
+    "36", "48" });
+  size.addActionListener(listener);
+  bold = new JCheckBox("Bold");
+  bold.addActionListener(listener);
+  italic = new JCheckBox("Italic");
+  italic.addActionListener(listener);
+******************************************************************
+   private class FontAction implements ActionListener
+   {
+      public void actionPerformed(ActionEvent event)
+      {  
+         String fontFace = (String) face.getSelectedItem();
+         int fontStyle = (bold.isSelected() ? Font.BOLD : 0)
+            + (italic.isSelected() ? Font.ITALIC : 0);
+         int fontSize = Integer.parseInt((String) size.getSelectedItem());
+         Font font = new Font(fontFace, fontStyle, fontSize);
+         sample.setFont(font);
+         sample.repaint();
+      }
+   }
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+对话框
+
+ JMenuItem aboutItem = new JMenuItem("About");
+  aboutItem.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent event) {
+    if (dialog == null) // first time
+     dialog = new AboutDialog(DialogFrame.this);
+    dialog.setVisible(true); // pop up dialog
+   }
+  });
+  fileMenu.add(aboutItem);
+ ********************************************************
+ class AboutDialog extends JDialog {
+ public AboutDialog(JFrame owner) {
+  super(owner, "About DialogTest", true);
+  // add HTML label to center
+  add(
+    new JLabel(
+      "<html><h1><i>Core Java</i></h1><hr>By Cay Horstmann and Gary Cornell</html>"),
+    BorderLayout.CENTER);
+  // Ok button closes the dialog
+  JButton ok = new JButton("Ok");
+  ok.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent event) {
+    setVisible(false);
+   }
+  });
+  // add Ok button to southern border
+  JPanel panel = new JPanel();
+  panel.add(ok);
+  add(panel, BorderLayout.SOUTH);
+  setSize(250, 150);
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+绘图面板
+
+class DrawFrame extends JFrame
+{
+   public DrawFrame()
+   {
+      setTitle("DrawTest");
+      setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      // add panel to frame
+      DrawPanel panel = new DrawPanel();
+      add(panel);
+   }
+   public static final int DEFAULT_WIDTH = 400;
+   public static final int DEFAULT_HEIGHT = 400;  
+}
+**************************************************************
+class DrawPanel extends JPanel
+{  
+   public void paintComponent(Graphics g)
+   {  
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+      // draw a rectangle
+      double leftX = 100;
+      double topY = 100;
+      double width = 200;
+      double height = 150;
+      Rectangle2D rect = new Rectangle2D.Double(leftX, topY, width, height);
+      g2.draw(rect);
+      // draw the enclosed ellipse
+      Ellipse2D ellipse = new Ellipse2D.Double();
+      ellipse.setFrame(rect);
+      g2.draw(ellipse);
+      // draw a diagonal line
+      g2.draw(new Line2D.Double(leftX, topY, leftX + width, topY + height));
+      // draw a circle with the same center
+      double centerX = rect.getCenterX();
+      double centerY = rect.getCenterY();
+      double radius = 150;
+      Ellipse2D circle = new Ellipse2D.Double();
+      circle.setFrameFromCenter(centerX, centerY, centerX + radius, centerY + radius);
+      g2.draw(circle);
+   }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+屏幕居中显示
+
+Toolkit kit = Toolkit.getDefaultToolkit();
+Dimension screenSize = kit.getScreenSize();
+int screenHeight = screenSize.height;
+int screenWidth = screenSize.width;
+// center frame in screen
+setSize(screenWidth / 2, screenHeight / 2);
+setLocation(screenWidth / 4, screenHeight / 4);
+// set frame icon and title
+Image img = kit.getImage("icon.gif");
+setIconImage(img);
+setTitle("CenteredFrame");
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+计算器
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+/**
+   A panel with calculator buttons and a result display.
+*/
+class CalculatorPanel extends JPanel
+{  
+   public CalculatorPanel()
+   {  
+      setLayout(new BorderLayout());
+      result = 0;
+      lastCommand = "=";
+      start = true;
+      
+      // add the display
+      display = new JLabel("0");
+      add(display, BorderLayout.NORTH);
+      
+      ActionListener insert = new InsertAction();
+      ActionListener command = new CommandAction();
+      // add the buttons in a 4 x 4 grid
+      panel = new JPanel();
+      panel.setLayout(new GridLayout(4, 4));
+      addButton("7", insert);
+      addButton("8", insert);
+      addButton("9", insert);
+      addButton("/", command);
+      addButton("4", insert);
+      addButton("5", insert);
+      addButton("6", insert);
+      addButton("*", command);
+      addButton("1", insert);
+      addButton("2", insert);
+      addButton("3", insert);
+      addButton("-", command);
+      addButton("0", insert);
+      addButton(".", insert);
+      addButton("=", command);
+      addButton("+", command);
+      add(panel, BorderLayout.CENTER);
+   }
+   /**
+      Adds a button to the center panel.
+      @param label the button label
+      @param listener the button listener
+   */
+   private void addButton(String label, ActionListener listener)
+   {  
+      JButton button = new JButton(label);
+      button.addActionListener(listener);
+      panel.add(button);
+   }
+   /**
+      This action inserts the button action string to the
+      end of the display text.
+   */
+   private class InsertAction implements ActionListener
+   {
+      public void actionPerformed(ActionEvent event)
+      {
+         String input = event.getActionCommand();
+         if (start) 
+         {
+            display.setText("");
+            start = false;
+         }
+         display.setText(display.getText() + input);
+      }
+   }
+   /**
+      This action executes the command that the button
+      action string denotes.
+   */
+   private class CommandAction implements ActionListener
+   {
+      public void actionPerformed(ActionEvent event)
+      {  
+         String command = event.getActionCommand();
+         if (start)
+         {  
+            if (command.equals("-")) 
+            { 
+               display.setText(command); 
+               start = false; 
+            }
+            else 
+               lastCommand = command;
+         }
+         else
+         {  
+            calculate(Double.parseDouble(display.getText()));
+            lastCommand = command;
+            start = true;
+         }
+      }
+   }
+   /**
+      Carries out the pending calculation. 
+      @param x the value to be accumulated with the prior result.
+   */
+   public void calculate(double x)
+   {
+      if (lastCommand.equals("+")) result += x;
+      else if (lastCommand.equals("-")) result -= x;
+      else if (lastCommand.equals("*")) result *= x;
+      else if (lastCommand.equals("/")) result /= x;
+      else if (lastCommand.equals("=")) result = x;
+      display.setText("" + result);
+   }
+   
+   private JLabel display;
+   private JPanel panel;
+   private double result;
+   private String lastCommand;
+   private boolean start;
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+工具栏菜单栏
+
+Action exitAction = new 
+         AbstractAction("Exit", new ImageIcon("exit.gif"))
+         {  
+            public void actionPerformed(ActionEvent event)
+            {  
+               System.exit(0);
+            }
+         };
+      exitAction.putValue(Action.SHORT_DESCRIPTION, "Exit");
+      exitAction.putValue(Action.NAME, "Exit");
+      exitAction.putValue(Action.SMALL_ICON, "iconPath");
+      // populate tool bar
+      JToolBar bar = new JToolBar();
+      bar.add(exitAction);
+      add(bar, BorderLayout.NORTH);
+      // populate menu
+      JMenu menu = new JMenu("Color");
+      menu.add(exitAction);
+      JMenuBar menuBar = new JMenuBar();
+      menuBar.add(menu);
+      setJMenuBar(menuBar);
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+java核心技术学习
+刻度尺
+
+slider1 = new JSlider(); 
+ //setPaintTicks()方法是设置是否在JSlider加上刻度，若为true则下面两行才有作用。 
+slider1.setPaintTicks(true); 
+         
+ /*设置大刻度与小刻度之间的距离(setMajorTickSpacing()与setMinorTickSpacing()方法).例如若大刻度间距离为30， 
+  *小刻度间距离为10，则表示2个大刻度间会有3个小刻度. 
+*/ 
+slider1.setMajorTickSpacing(20); 
+ slider1.setMinorTickSpacing(10); 
+
+ //setPaintLabels()方法为设置是否数字标记，若设为true，则JSlider刻度上就会有数值出现。 
+slider1.setPaintLabels(true); 
+
+//setPaintTrack()方法表示是否出现滑动杆的横杆。默认值为true. 
+slider1.setPaintTrack(true); 
+
+ //setSnapToTicks()方法表示一次移动一个小刻度，而不再是一次移动一个单位刻度。 
+slider1.setSnapToTicks(true); 
+ labelTable = new Hashtable<Integer, Component>();
+  // add card images
+labelTable.put(0, new JLabel("0"));
+labelTable.put(20, new JLabel(new ImageIcon("20.gif")));
+ slider1.setLabelTable(labelTable);
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+简易时钟
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
+import javax.swing.Timer;
+/**
+   This class shows a frame with several clocks that
+   are updated by a timer thread.
+*/
+public class TimerTest
+{  
+   public static void main(String[] args)
+   {  
+      TimerTestFrame frame = new TimerTestFrame();
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.show();
+   }
+}
+/**
+   The frame holding the clocks.
+*/
+class TimerTestFrame extends JFrame
+{  
+   public TimerTestFrame()
+   {  
+      setTitle("TimerTest");
+      setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+      Container c = getContentPane();
+      c.setLayout(new GridLayout(2, 3));
+      c.add(new ClockCanvas("America/Los_Angeles"));
+      c.add(new ClockCanvas("America/New_York"));
+      c.add(new ClockCanvas("America/Caracas"));
+      c.add(new ClockCanvas("Europe/Rome"));
+      c.add(new ClockCanvas("Africa/Cairo"));
+      c.add(new ClockCanvas("Asia/Taipei"));
+   }
+   public static final int DEFAULT_WIDTH = 450;
+   public static final int DEFAULT_HEIGHT = 300;
+}
+/**
+   The canvas to display a clock that is updated by a timer.
+*/
+class ClockCanvas extends JPanel
+{ 
+   /**
+      Constructs a clock canvas.
+      @param tz the time zone string
+   */
+   public ClockCanvas(String tz)
+   {  
+      zone = tz;
+      calendar = new GregorianCalendar(TimeZone.getTimeZone(tz));
+      Timer t = new Timer(1000, new
+         ActionListener()
+         {
+            public void actionPerformed(ActionEvent event)
+            {
+               calendar.setTime(new Date());
+               repaint();
+            }
+         });
+      t.start();
+      setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+   }
+   public void paintComponent(Graphics g)
+   {  
+      super.paintComponent(g);
+      g.drawOval(0, 0, 100, 100);
+      int seconds = calendar.get(Calendar.HOUR) * 60 * 60
+         + calendar.get(Calendar.MINUTE) * 60
+         + calendar.get(Calendar.SECOND);
+      double hourAngle = 2 * Math.PI
+         * (seconds - 3 * 60 * 60) / (12 * 60 * 60);
+      double minuteAngle = 2 * Math.PI
+         * (seconds - 15 * 60) / (60 * 60);
+      double secondAngle = 2 * Math.PI
+         * (seconds - 15) / 60;
+      g.drawLine(50, 50, 50 + (int)(30
+         * Math.cos(hourAngle)),
+         50 + (int)(30 * Math.sin(hourAngle)));
+      g.drawLine(50, 50, 50 + (int)(40
+         * Math.cos(minuteAngle)),
+         50 + (int)(40 * Math.sin(minuteAngle)));
+      g.drawLine(50, 50, 50 + (int)(45
+         * Math.cos(secondAngle)),
+         50 + (int)(45 * Math.sin(secondAngle)));
+      g.drawString(zone, 0, 115);
+   }
+   private String zone;
+   private GregorianCalendar calendar;
+   public static final int DEFAULT_WIDTH = 125;
+   public static final int DEFAULT_HEIGHT = 125;
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+边框线
+
+"Lowered bevel", demoPanel.setBorder(BorderFactory.createLoweredBevelBorder());    
+"Raised bevel", demoPanel.setBorder(BorderFactory.createRaisedBevelBorder());    
+"Etched", demoPanel.setBorder(BorderFactory.createEtchedBorder()));
+"Line", demoPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+"Matte",demoPanel.setBorder( BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLUE));
+"Empty",demoPanel.setBorder( BorderFactory.createEmptyBorder());
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+字体列表
+
+String[] fontNames = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment()
+    .getAvailableFontFamilyNames();
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+浏览网页
+
+JFrame f = new JFrame("test");
+  Container c = f.getContentPane();
+  c.setLayout(new FlowLayout());
+  JButton b = new JButton("打开百度");
+  b.addActionListener(new ActionListener() {
+   public void actionPerformed(ActionEvent e) {
+    try {
+     String cmd = "rundll32 url.dll,FileProtocolHandler http://www.baidu.com";// 启动相应的windows程序来打开文件
+     Process p = Runtime.getRuntime().exec(cmd);
+    } catch (Exception e1) {
+     System.out.println(e1);
+    }
+   }
+  });
+  c.add(b);
+  f.setBounds(100, 100, 300, 300);
+ f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//关闭按钮执行中止程序
+  f.setVisible(true);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+
+java核心技术学习
+事件处理
+
+Source                                    Event                                      Event Listener
+--------------------------------------------------------------------------------------------------------------
+AbstractButton                         ActionEvent                                  ActionListener
+(JButton,JtoggleButton,                ChangeEvent                                  ChangeListener
+JCheckBox,JRadioButton                 ItemEvent                                    ItemListener
+-------------------------------------------------------------------------------------------------------
+JTextField                             ActionEvent                                  ActionListener
+JpasswordField                         CaretEvent                                   CaretListener
+                                       DocumentEvent                                DocumentListener
+                                       UndoableEvent                                UndoableListener
+-------------------------------------------------------------------------------------------------------
+JTextArea                              CaretEvent                                   CaretListener
+                                       DocumentEvent                                DocumentListener
+                                       UndoableEvent                                UndoableListener
+-------------------------------------------------------------------------------------------------------
+JTextPane                              CaretEvent                                   CaretListener
+JEditorPane                            DocumentEvent                                DocumentListener
+                                       UndoableEvent                                UndoableListener
+                                       HyperlinkEvent                               HyperlinkListener
+-------------------------------------------------------------------------------------------------------
+JComboBox                              ActionEvent                                  ActionListener
+                                       ItemEvent                                    ItemListener
+-------------------------------------------------------------------------------------------------------
+JList                                  ListSelectionEvent                           ListSelectionListener
+                                       ListDataEvent                                ListDataListener
+-------------------------------------------------------------------------------------------------------
+JFileChooser                           ActionEvent                                  ActionListener
+-------------------------------------------------------------------------------------------------------
+JMenuItem                              ActionEvent                                  ActionListener
+                                       ChangeEvent                                  ChangeListener
+                                       ItemEvent                                    ItemListener
+                                       MenuKeyEvent                                 MenuKeyListener
+                                       MenuDragMouseEvent                           MenuDragMouseListener
+-------------------------------------------------------------------------------------------------------
+JMenu                                  MenuEvent                                    MenuListener
+-------------------------------------------------------------------------------------------------------
+JPopupMenu                             PopupMenuEvent                               PopupMenuListener
+-------------------------------------------------------------------------------------------------------
+JProgressBar                           ChangeEvent                                  ChangeListener
+-------------------------------------------------------------------------------------------------------
+JSlider                                ChangeEvent                                  ChangeListener
+-------------------------------------------------------------------------------------------------------
+JScrollBar                             AdjustmentEvent                              AdjustMentListener
+-------------------------------------------------------------------------------------------------------
+JTable                                 ListSelectionEvent                           ListSelectionListener
+                                       TableModeEvent                               TableModeListener
+                                       TableColumnModelEvent                        TableColumnModeListener
+                                       CellEditorEvent                              CellEditorListener
+-------------------------------------------------------------------------------------------------------
+JTabbedPane                            ChangeEvent                                  ChangeListener
+-------------------------------------------------------------------------------------------------------
+JTree                                  TreeSelectionEvent                           TreeSelectionListener
+                                       TreeExpansionEvent                           TreeExpansionListener
+                                       TreeWillExpandEvent                          TreeWillExpandListener
+                                       TreeModeEvent                                TreeModeListener     
+-------------------------------------------------------------------------------------------------------
+JTimer                                 ActionEvent                                  ActionListener
+-------------------------------------------------------------------------------------------------------     
+        底层事件：
+---------------------------------------------------------------------------------------------------------------
+     Event                                                                     Listener
+  ComponentEvent                                                        ComponentListener
+  ContainerEvent                                                        ConatainerListener
+  FocusEvent                                                            FocusListener
+  KeyEvent                                                              KeyListener
+  MouseEvent                                                            MouseListener
+  MouseMotionEvent                                                      MouseMotionListener
+  WindowEvent                                                           WindowListener
+
+ComponentEvent:主要处理组件大小的改变，位置的改变，或是可见与不可见状态(hidden or visible)等。
+ContainerListener:主要在处理组件的加入或移出容器。
+FocusListener:主要在处理焦点的取得或移开焦点等操作。
+MouseListener:主要就是在处理鼠标是否在某个组件上，是否按下鼠标键，是否离开某个组件等操作，主要针对鼠标按键与位置
+              作处理。
+MouseMotionListener:主要就是在追踪鼠标的位置，如(X,Y)坐标的位置，主人是针对鼠标坐标与拖曳操作作处理。
+WindowListener:主要在处理窗口的所有操作。如处理active窗口或是de-active窗口，处理窗口的最大、最小化，处理窗口的关闭
+               、打开、退出等。
+
+  以上所述的每种EventListener都是一种interface,里面只有定义这个EventListener的interface,然后在这个类中，把要处理事
+件的程序代码写在此interface的方法中。这是处理事件的标准操作，当然还有其他编写模式，如：利用inner class的匿名类方法
+，就可以不用在class后面加上implements EventListener的表示法，或是利用Adapter类，就不用一一将interface中的每种方法都
+实现。
+  让我们来了解一下，每一种EventListener的interface到底提供了哪几种方法要我们实现(Implement)!我们把事件区分成是由
+Swing或是AWT所引发：
+       Swing EventListener                                          Method
+----------------------------------------------------------------------------------------------------------------
+         CaretListener                                        caretUpdate(CaretEvent e)
+--------------------------------------------------------------------------------------------------------------
+         CellEditorListener                                   editingCanceled(ChangeEvent e)
+                                                              editingStopped(ChangeEvent e)
+--------------------------------------------------------------------------------------------------------------
+         ChangeListener                                       stateChanged(ChangeEvent e)
+--------------------------------------------------------------------------------------------------------------
+         DocumentListener                                     changedUpdate(DocumentEvent e)
+                                                              insertUpdate(DocumentEvent e)
+                                                              removeUpdate(DocumentEvent e)
+--------------------------------------------------------------------------------------------------------------
+         HyperlinkListener                                    hyperlinkUpdate(HyperlinkEvent e)
+--------------------------------------------------------------------------------------------------------------
+         ListDataListener                                     contentsChanged(ListdataEvent e)
+                                                              intervalAdded(ListDataEvent e)
+                                                              intervalRemoved(ListDataEvent e)
+--------------------------------------------------------------------------------------------------------------
+         ListSelectionListener                                valueChanged(ListSelectionEvent e)
+--------------------------------------------------------------------------------------------------------------
+         MenuDragMouseListener                                menuDragMouseDragged(MenuDragMouseEvent e)
+                                                              menuDragMouseEntered(menuDragMouseEvent e)
+                                                              menuDragMouseExited(MenuDragMouseEvent e)
+                                                              menuDragMouseReleased(MenuDragMouseEvent e)
+--------------------------------------------------------------------------------------------------------------
+         MenuKeyListener                                      menuKeyPressed(MenuKeyEvent e)
+                                                              menuKeyReleased(MenuKeyEvent e)
+                                                              menuKeyTyped(MenuKeyEvent e)
+--------------------------------------------------------------------------------------------------------------
+         MenuListener                                         menuCanceled(MenuEvent e)
+                                                              menuDeselected(MenuEvent e)
+                                                              menuSelected(MenuEvent e)
+--------------------------------------------------------------------------------------------------------------
+         PopupMenuListener                                    popupMenuCanceled(PopupMenuEvent e)
+                                                              popupMenuWillBecomeInvisible(PopupMenuEvent e)
+                                                              popupMenuWillBecomeVisible(PopupMenuEvent e)
+--------------------------------------------------------------------------------------------------------------
+         TableColumnModelListener                             columnAdded(TableColumnModelEvent e)
+                                                              columnMarginChanged(ChangeEvent e)
+                                                              columnMoved(TableColumnModelEvent e)
+                                                              columnRemoved(TableColumnModelEvent e)
+                                                              columnSelectionChanged(ListSelectionEvent e)
+--------------------------------------------------------------------------------------------------------------
+         TableModelListener                                   tableChanged(TableModelEvent e)
+--------------------------------------------------------------------------------------------------------------
+         TreeExpansionListener                                treeCollapsed(TreeExpansionEvent event)
+                                                              treeExpanded(TreeExpansionEvent event)
+---------------------------------------------------------------------------------------------------------------
+         TreeModelListener                                    treeNodesChanged(TreeModelEvent e)
+                                                              treeNodesInserted(TreeModelEvent e)
+                                                              treeNodesRemoved(TreeModelEvent e)
+                                                              treeStructureChanged(TreeModelEvent e)
+---------------------------------------------------------------------------------------------------------------
+         TreeSelectionListener                                valueChanged(TreeSelectionEvent e)
+---------------------------------------------------------------------------------------------------------------
+         TreeWillExpandListener                               treeWillCollapse(TreeExpansionEvent event)
+                                                              treeWillExpand(TreeExpansionEvent event)
+---------------------------------------------------------------------------------------------------------------
+         UndoableEditListener                                 undoableEditHappened(UndoableEditEvent e)
+---------------------------------------------------------------------------------------------------------------
+                    
+
+
+
+
+
+            AWT EventListener                                         Method                       
+--------------------------------------------------------------------------------------------------------------
+          ActionListener                                       actionPerformed(ActionEvent e)
+--------------------------------------------------------------------------------------------------------------
+          AdjustmentListener                                   adjustmentValueChanged(AdjustmentEvent e)
+--------------------------------------------------------------------------------------------------------------
+          ComponentListener                                    componentHidden(ComponentEvent e)
+                                                               componentMoved(ComponentEvent e)
+                                                               componentResized(ComponentEvent e)
+                                                               componentShown(ComponentEvent e)
+--------------------------------------------------------------------------------------------------------------
+          ContainerListener                                    componentAdded(ContainerEvent e)
+                                                               componentRemoved(ContainerEvent e)
+--------------------------------------------------------------------------------------------------------------
+          FocusListener                                        focusGained(FocusEvent e)
+                                                               focusLost(FocusEvent e)
+--------------------------------------------------------------------------------------------------------------
+          ItemListener                                         itemStateChanged(ItemEvent e)
+--------------------------------------------------------------------------------------------------------------
+          KeyListener                                          keyPressed(KeyEvent e)
+                                                               keyReleased(KeyEvent e)
+                                                               keyTyped(KeyEvent e)
+--------------------------------------------------------------------------------------------------------------
+          MouseListener                                        mouseClicked(MouseEvent e)
+                                                               mouseEntered(MouseEvent e)
+                                                               mouseExited(MouseEvent e)
+                                                               mousePressed(MouseEvent e)
+                                                               mouseReleased(MouseEvent e)
+--------------------------------------------------------------------------------------------------------------
+          MouseMotionListener                                  mouseDragged(MouseEvent e)
+                                                               mouseMoved(MouseEvent e)
+--------------------------------------------------------------------------------------------------------------
+          WindowListener                                       windowActivated(WindowEvent e)
+                                                               windowClosed(WindowEvent e)
+                                                               windowClosing(WindowEvent e)
+                                                               windowDeactivated(WindowEvent e)
+                                                               windowDeiconified(WindowEvent e)
+                                                               windowIconified(WindowEvent e)
+                                                               windowOpened(WindowEvent e)
+---------------------------------------------------------------------------------------------------------------
+
+常用的Adapter类如下：
+              Adapter                                           对应的EventListener
+---------------------------------------------------------------------------------------------------------------
+         java.awt.event.ComponentAdapter                      ComponentListener
+         java.awt.event.ContainerAdapter                      ContainerListener
+         java.awt.event.FocusAdapter                          FocusListener
+         java.awt.event.KeyAdapter                            KeyListener
+         java.awt.event.MouseAdapter                          MouseListener
+         java.awt.event.MouseMotionAdapter                    MouseMotionListener
+         java.awt.event.WindowAdapter                         WindowListener
+---------------------------------------------------------------------------------------------------------------
+MouseListener的使用：
+--------------------------------------------------------------------------------------------------------------
+          MouseListener                                        mouseClicked(MouseEvent e)
+                                                               mouseEntered(MouseEvent e)
+                                                               mouseExited(MouseEvent e)
+                                                               mousePressed(MouseEvent e)
+                                                               mouseReleased(MouseEvent e)
+--------------------------------------------------------------------------------------------------------------
+
+MouseMotionListener的使用：
+         下面是讨论MouseMotionListener的使用时机,它提供的下面的两个方法，可让你随时掌握鼠标的坐标，并处理拖曳鼠标
+的操作。
+--------------------------------------------------------------------------------------------------------------
+          MouseMotionListener                                  mouseDragged(MouseEvent e)
+                                                               mouseMoved(MouseEvent e)
+--------------------------------------------------------------------------------------------------------------
+键盘事件处理:
+
+--------------------------------------------------------------------------------------------------------------
+          KeyListener                                          keyPressed(KeyEvent e)
+                                                               keyReleased(KeyEvent e)
+                                                               keyTyped(KeyEvent e)
+--------------------------------------------------------------------------------------------------------------
+JTable的事件处理
+     在前面的介绍中，我们了解了数种在不同组件上的事件处理。同样，在JTable的事件大致均针对表格内容的异操作处理，包括字段内容改变，列数增加
+或减少，行数增加或减少，或是表格的结构改变等等。这些事件我们称为TableModelEvent事件。要处理
+TableModelEvent事件我们必须实现TableModelListener界面，此界面定义了一个方法，那就是tableChanged(),为了处理这些事件的种种
+情况，在AbstractTableModel类中提供了下列方法来提示TableModelListener:表格内容已经改动了，如下所示：
+   1.fireTableCellUpdated():发出表格中的某一个字段已经更改的事件信息。
+   2.fireTableChanged():发出表格已经改动的事件信息。
+   3.fireTableDataChanged():发出表格中的某字段已经更改的事件信息。
+   4.fireTableRowsDeleted():发出表格中的某几行已经删除的事件信息。
+   5.fireTableRowsInserted():发出表格中的已经新增某几行的事件信息。
+   6.fireTableRowsUpdated():发出表格中的某几行已经修改的事件信息。
+   7.fireTableStructureChanged():发出表格结构已经改变的事件信息，这里指的结构改变可能包括表格的列数已经改变。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+面板的使用
+
+Swing的容器结构与JLayeredPane的使用：
+类层次结构图：
+   java.lang.Object
+    --java.awt.Compontent
+    --java.awt.Container
+      --javax.swing.JComponent
+        --javax.swing.JLayeredPane
+我们可把Swing容器的结构看似如下图所示：
+         |Grass Pane
+         |
+Root Pane|
+         |            |Content Pane
+         |Layered Pane|
+                      |Menu Bar
+  其中,Root Pane可以看成是虚拟的容器，包含着Grass Pane、Layered Pane、Content Pane与Menu Bar.Swing的容器包括JApplet
+,JFrame,JDialog,JWindow与JInternalFrame都是构造在此结构上，JApplet、JFrame、JDialog、JWindow都是heavyweight容器，只
+有JInternalFrame是lightweight容器。当我们要加入某个组件到Swing的容器中时，并不是直接加入到Root Pane,而是加入到
+RootPane下面的某一成员(Layered Pane或Content Pane)
+  Content Pane与Menu Bar只是Layered Pane的其中一层，我们称此层为Frame-Content Layer.若你想知道Frame-Content Layer
+在Layered Pane的层次是什么？你可以由JLayeredPane类中的Frame_Content_layer类常数取得。
+  由此我们可以知道，Layered Pane基本上可拥有非常多的“层”(Layer),那么如何分辨哪一层是在哪一层的上面或下面呢？
+   答案是Z_order.Z_order本身具有两个整数值，一个是代表层(Layer)的深度，另一个代表同层的相关位置(Position),当Z_order
+的Layer数值越小时，表示其位置就在越底层，当Z_order的Layer数值越大时，表示其位置就在越上层。在JLayeredPane类中，共定
+义了6个Z_order常数供用户参考，如下所示：
+   DEFAULT_LAYER:Z_order的Layer数值为0，以整数对象Integer(0)来表示，一般我们加入的组件若没有标记是第几层，默认值就
+                 把组件放在此Default Layer中。
+   PALETTE_LAYER:Z_order的Layer数值为100，以整数对象Integer(100)来表示,位于Default Layer之上，一般用于放置可移动的
+                 工具栏(Floatable Toolbar).
+   MODAL_LAYER:Z_order的Layer数值为200，以整数对象Integer(200)来表示,位于PALETTE_LAYER之上，一般用于放置对话框
+               (Dialog Box).
+   POPUP_LAYER:Z_order的Layer数值为300，以整数对象Integer(300)来表示,位于MODAL_LAYER之上，一般用于快捷菜单(Poup 
+               Menu)与工具栏提示(Tool Tips)中.
+   DRAG_LAYER:Z_order的Layer数值为400，以整数对象Integer(400)来表示,位于POPUP_LAYER之上，一般用于拖曳组件使其在不同
+              区域上.
+   FRAME_CONTENT_LAYER:Z_order的Layer数值为－30000，以整数对象Integer(－30000)来表示,一般来说，Frame Content Layer
+                       最底层的是Layer，用来表示Content Pane与Menu Bar的位置，大部份情况我们不会更改到这个数值。
+  
+   
+    一般程序会提供良好的Z-order自动管理机制，当然java也不例外，因此大部份情况我们不会使用到Z-order，因为系统会自动
+帮我们管理得好好的。用户只需将所需的组件直接加入Content Pane即可，不需要知道它们之间的顺序关系。但如果今天您必须处
+理对象之间的层次关系时，例如Word中你可以把某个绘图对象下推至下一层，你就必须亲自处理Z-order的关系了。
+JInternalFrame的使用
+类层次结构图：
+  
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+       --javax.swing.JComponent
+             --javax.swing.JInternalFrame
+   JinternalFrame的使用跟JFrame几乎一样，可以最大化、最小化、关闭窗口、加入菜单等功能;唯一不同的是JinternalFrame是
+lightweight component ,也就是说JInternalFrame不能单独出现，必须依附在最上层组件上。由于这个特色，JInternalFrame能
+够利用java提供的Look and Feel功能作出完全不同于原有操作系统所提供的窗口外型，也比JFrame更具有弹性。
+   一般我们会将Internal Fram加入Desktop Pane方便管理，Desktop Pane是一种特殊的Layered pane,用来建立虚拟桌面(Vitual 
+Desktop).它可以显示并管理众多Internal Frame之间的层次关系。以下是JDesktopPane的类层次结构图;
+     类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+       --javax.swing.JComponent
+             --javax.swing.JLayeredPane
+                  --javax.swing.JDesktop
+  我们先来看看如何构造JInternalFrame与JDesktopPane,再来看它跟Desktop Pane之间的关系。下面分别是JInternalFram与
+JDesktopPane的构造函数：
+   JInternalFrame构造函数：
+   JInternalFrame():建立一个不能更改大小、不可关闭、不可最大最小化、也没有标题的Internal Frame。
+   JInternalFrame(String title):建立一个不能更改大小、不可关闭、不可最大最小化、但具有标题的Internal Frame。
+   JInternalFrame(String title,boolean resizable):建立一个不可关闭、不可最大最小化、但可变更大小且具有标题的
+                                                 Internal Frame。
+   JInternalFrame(String title,boolean resizable,boolean closable):建立一个可关闭、可更改大小、且具有标题，但不可
+                                                                   最大化最小化的Internal Frame.
+   JInternalFrame(String title,boolean resizable,boolean closable,boolean maximizable):建立一个可关闭、可更改大小、 
+                         具有标题、可最大化，但不可最小化的Internal Frame.
+   JInternalFrame(String title,boolean resizable,boolean closable,boolean maximizable,boolean iconifiable):
+                建立一个可关闭、可更改大小、具有标题、可最大化与最小化的Internal Frame.
+
+   JDesktopPane构造函数：
+   JDesktopPane():建立JDesktopPane组件。
+JPanel的使用：
+     类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+       --javax.swing.JComponent
+            --javax.swing.JPanel
+  Panel民是java中时常用到的容器之一，Panel除了可以让组件加入外，有效的利用Panel可以使版面管理更为容易。Swing的
+JPanel支持double buffering的功能，使得JPanel在处理动画上更为流畅，较不会有画面闪烁的情况发生。下面为它的构造函
+数:
+JPanel构造函数：
+JPanel():建立一个具有double buffering功能的JPanel,默认的版面管理是Flow Layout.
+JPanel(boolean isDoubleBuffered):选择建立是否具有double buffering功能的JPanel,默认的版面管理是Flow Layout.
+JPanel(LayoutManager layout):建立一个具有double buffering功能JPanel,可自定义版面管理器.
+JPanel(LayoutManager layout,boolean isDoubleBuffered):选择建立是否具有double buffering功能的JPanel，并自定义版面管                                                      
+理器.
+JSplitPane的使用：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+       --javax.swing.JComponent
+          --javax.swing.JSplitPane
+      Split Pane(分割面版)一次可将两个组件同时显示在两个显示区中，若你想要同时在多个显示区显示组件，你便必须同时使
+用多个Split Pane。JSplitPane提供两个常数让你设置到底是要水平分割还是垂直分割。这两个常数分别是：HORIZONTAL_SPIT,
+VERTICAL_SPLIT.除了这两个重要的常数外，JSplitPane还提供许多类常数让你使用，我们会在下面的例子中介绍比较常用的类常数
+，其余信息请参年java API.
+   JsplitPane构造函数：
+JSplitPane():建立一个新的JSplitPane,里面含有两个默认按钮，并以水平方向排列，介没有Continuous Layout功能。
+JSplitPane(int newOrientation):建立一个指定水平或垂直方向切割JSplitPane,但没有Continuous Layout功能。
+JSplitPnae(int newOrientation,boolean newContinuousLayout):建立一个指定水平或垂直方向切割的JSplitPane,且指定是否具
+                                                           有Continuous Layout功能。
+JSplitPane(int newOrientation,boolean newContinuousLayout,Component newLeftComponent,Component newRightComponent):
+                 建立一个指定水平或垂直方向切割的JSplitPane,且指定显示区所要显示的组件，并设置是否Continuous 
+                 Layout功能。
+JSplitPane(int newOrientation,COmponent newLeftComponent,COmponent newRightComponent):
+                 建立一个指定水平或垂直方向切割的JSplitPane,且指定显示区所要显示的组件，但没有Continuous Layout功能
+                 。
+   上面所说的Continuous Layout意思是指当你拖曳切割面版的分隔线时，窗口内的组件是否会随着分隔线的拖曳而动态改变大小
+。newContinuousLayout是一个boolean值，若设为true,则组件大小会随着分隔线的拖曳而一起改动;
+若设为false,则组件大小在分隔线停止改动时才确定。你也可以使用JSplitPane中的setContinuousLayout()方法来设置此项目。
+JTabbedPane的使用：
+类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+            --javax.swing.JComponent
+            --javax.swing.JTabbedPane
+JTabbedPane构造函数：
+JTabbedPane():建立一个空的JTabbedPane对象。
+JTabbedPane(int tabPlacement):建立一个空的JTabbedPane对象,并指定摆放位置，如TOP,BOTTOM,LEFT,RIGHT.
+JTabbedPane的事件处理模式：
+  JTabbedPane以处理ChangeEvent事件为主。每当在JTabbedpane选换标签时，都会产生ChangeEvent事件。因此要处理选换标签所
+对应的操作，必须实现ChangeListener这个interface.另外JTabbedPane上的每个标签都有索引值（index），一般若没有加以设置
+，索引置从左到右依次是0,1,2.....，依此类推，因此下例中，Picture的索引值为0，Label 2的索引值为1。
+一个标签都有所对应的操作。
+JScrollPane的使用：
+类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+            --javax.swing.JComponent
+            --javax.swing.JScrollPane
+JScrollPane构造函数：
+JScrollPane():建立一个空的JScrollPane对象。
+JScrollPane(Component view):建立一个新的JScrollPane对象，当组件内容大于显示区域时会自动产生滚动轴。
+JScrollPane(Component view,int vsbPolicy,int hsbPllicy):建立一新的JScrollPane对象，里面含有显示组件，并设置滚动轴
+                                                         出现时机。
+JScrollPane(int vsbPolicy,int hsbPolicy):建立一个新的JScrollPane对象，里面不含有显示组件，但设置滚动轴出现时机。
+
+         JScrollPane或利用下面这些参数来设置滚动轴的出现的时机，这些参数是定义在ScrollPaneConstants interface中，而
+JScrollPane类实现此界面，因此也就能使用这些参数：
+  HORIZONTAL_SCROLLBAR_ALAWAYS:显示水平滚动轴。
+  HORIZONTAL_SCROLLBAR_AS_NEEDED:当组件内容水平区域大于显示区域时出现水平滚动轴。
+  HORIZONTAL_SCROLLBAR_NEVER:不显示水平滚动轴。
+  VERTICAL_SCROLLBAR_ALWAYS:显示垂直滚动轴。
+  VERTICAL_SCROLLBAR_AS_NEEDED:当组件内容垂直区域大于显示区域时出现垂直滚动轴。
+  VERTICAL_SCROLLBAR_NEVER:不显示垂直滚动轴。
+
+JScrollBar的使用：
+类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+            --javax.swing.JComponent
+              --javax.swing.JScrollBar
+      在上一节我们看到JScrollPane利用ScrollBar的功能使它可以利用滚动轴滚动窗口，乍看之下我们并不会直接使用到
+JScrollBar的方法，因为JScrollPane都帮我们处理得好好的，但如果我们想对滚动轴做更细的设置，例如在拖曳时一次滚动多少
+区域等，就必须了解JScrollBar所提供的功能了。JScrollBar在处理窗口的滚动并不像JScrollPane那么容易，看起来也比
+JScrollPane简单得许多，因此通常在实现时我们会取一些JScrollBar所提供的功能，来补足我们对JScrollPane的需要，而不会直
+接拿JScrollBar来做滚动操作。下面是构造函数：
+JScrollBar构造函数：
+JScrollBar():建立一个垂直的滚动轴，默认参数值分别为：minimum=0,maximum=100,value=0,extent=10.
+JScrollBar(int orientation):建立一个指定方向的滚动轴，默认参数值分别是：
+                   minimum=0,maximum=100,value=0,extent=10.
+JScrollBar(int orientation,int value,int extent,int min,int max):建立一个指定方向的滚动轴，并设置value、extent、
+                                    mimimum与maximum四个参数值。
+JScrollBar四个参数的意义如下：
+value:JScrollBar一开始的起始位置，若设为0表示在滚动轴的最顶端。
+extent:延伸区，限制滚动轴可滚动的范围。例如，若minimum值设为0，maximan值设为100，而extent值设为20，则滚动轴可滚动的
+区域大小为100-20-0=80个刻度，滚动的范围从0～80。若minimum值设为20，maximan值设为100，而extent值设为30，则滚动轴可滚
+动的区域大小为100-30-20=50个刻度，滚动的范围从20～70。因此可知，延伸区设得越大，可滚动的范围就起小。
+minimum:设置最小刻度值。
+maximum:设置最大刻度值。
+JScrollBar最常用到的就是AdjustmentEvent事件，当用户拖曳滚动轴时就会触发此事件。因此若要处理这类事件，就必须实现
+AdjustmentEvent界面。此界面定义了一个adjustmentValueChanged()方法，实现此方法就能够得到滚动轴的相关信息。
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+标签与按钮的使用
+
+
+Border的使用
+Border类是应用在描绘组件的边界，Border本身是一个interface,里面定义了3个方法，为getBorderInsets()、isBorderOpaque()
+、与isBorderOpaque()、与paintBorder().若您想使用Border类来绘制你的窗口边界，您必须先实现(implements)这3个方法，可说
+是有点麻烦。还好，java本身提供了另一个类，它已经实现了Border类所有的方法，且提供许多不同的边界样式供用户使用，用户
+只需要选择到底要用哪个样式即可，不需要理会如何去画出这个边界，因为这个类已经都帮您实现好了，这个类就是
+BorderFactory,下面是borderFactory的类层次结构图。
+BorderFactory提供了以下方法：
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+  static Border          creatBevelBorder(int type)建立一个立体的边界，并由参数type指定为凹陷或突起，type可为
+                          BevelBorder.LOWERED表示凹陷，或是BevelBorder.RAISED表示突起。
+  static Border          createBevelBorder(int type,Color highlight,Color shadow)建立一个立体的边界，并指定突边与阴
+                          影的颜色。
+  static Border          createBevelBorder(int type,Color highlightOuter,Color highlightInner,Color shadowOuter
+                          ,Color shadowInner)建立一个立体的边界，并指定内外部的突边与阴影的颜色。
+  static CompoundBorder  createCompoundBorder()建立一个复合边界。 
+  static CompoundBorder  createCompoundBorder(Border outsideBorder,Border insideBorder)建立一个复合边界，并指定它
+                         的内外边界。
+  static Border          createEmptyBorder()建立一个空的边界。
+  static Border          createEmptyBorder(int top,int left,int bottom,int right)建立一个空的边界，并指定上下左右
+                         的宽度，在这些宽度中不能作绘图的效果。
+  static Border          createEtchedBorder()建立一个四周有凹痕的边界。
+  static Border          createEtchedBorder(Color highlight,Color shadow)建立一个四周有凹痕的边界,并指定突边与阴影
+                         的颜色。 
+  static Border          createLineBorder(Color color)
+                         建立一个线务边界，并指定线条的颜色。
+  static Border          createLineBorder(Color color,int thicness)
+                         建立一个线务边界，并指定线条的颜色与宽度。
+  static Border          createLoweredBevelBorder()建立一个具有凹陷效果的边界，意义与
+                         createBevelBorder(BevelBorder.LOWERED)相同。
+  static MatteBorder     createMatteBorder(int top,int left,int bottom,int right,Color color)建立一个垫子边界，这跟
+                         createEmptyBorder有点像，但可以指定边界颜色。
+  static MatteBorder     createMatteBorder(int top,int left,int bottom,int right,Icon tileIcom)建立一个垫子边界，并
+                         指定边界的花纹。
+  static Border          createRaisedBevelBorder()建立一个具有突起效果的边界，意义与createBevelBorder(BevelBorder.
+                         RAISED)相同。
+  static TitledBorder    createTitledBorder(Border border)建立一个标题边界，但没有标题名称。
+  static TitledBorder    createTitledBorder(Border border,String title)建立一个标题边界，并指定标题名称，标题默认位
+                         置是TitledBorder.DEFAULT_JUSTIFICATION与TitledBorder.DEFAULT_POSITION,也就是左上方。
+  static TitledBorder    createTitledBorder(Border border,String title,int titleJustification,int titlePosition)
+                         建立一个标题边界，并指定标题名称与标题位置，参数titleJustification可为:
+                         TitledBorder.LEFT
+                         TitledBorder.CENTER
+                         TitledBorder.RIGHT
+                         TitledBorder.DEFAULT_JUSTIFICATION(leading)
+                         参数titlePosition可为：
+                           TitedBorder.ABOVE_TOP
+                           TitledBorder.TOP(sittin on the top line)
+                           TitledBorder.BELOW_TOP
+                           TitledBorder.ABOVE_BOTTOM
+                           TitledBorder.BOTTOM(sitting on the bottom line)
+                           TitledBorder.BELOW_BOTTOM
+                           TitledBorder.DEFAULT_POSITION(top)
+  static TitledBorder    createTitledBorder(Border border,String title,int titleJustification,int titlePosition,
+                          Font titleFont)建立一个标题边界，并指定标题名称，标题位置与字体。
+  
+  static TitledBorder    createTitledBorder(Border border,String title,int titleJustification,int titlePosition,
+                          Font titleFont,Color titleColor)建立一个标题边界，并指定标题名称，标题位置、字体与标题颜
+                          色。
+  static TitledBorder    createTitledBorder(String title)建立一个标题边界，并指定标题名称，其他为默认值。
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+
+Icon的使用：
+ImageIcon的类层次结构图：
+java.lang.Object
+   --javax.swing.ImageIcon
+
+ImageIcon的结构函数：
+   ImageIcon():建立一个ImageIcon组件。
+   ImageIcon(byte[] imageData):建立一个ImageIcon组件，Image的数据放在byte array的数据可从GIF获释JPEG的文件读取面来
+                               。
+   ImageIcon(byte[] imageData,String description)建立一个ImageIcon组件，Image的数据放在byte array中，而byte array
+                              的数据可从GIF获释JPEG的文件读取而来，并多了一个此Icon的描述文字。
+   ImageIcon(Image image)利用Image组件,建立一个ImageIcon组件。
+   ImageIcon(Image image,String description)利用Image组件，建立一个ImageIcon组件，附加此Icon的描述文字。
+   ImageIcon(Staring filename)利用图文件建立一个ImageIcon组件。
+   ImageIcon(Staring filename,String description)利用图文件建立一个ImageIcon组件,附加此Icon的描述文字。
+   ImageIcon(URL location)利用网址建立一个ImageIcon组件。
+   ImageIcon(URL location)利用网址建立一个ImageIcon组件，附加此Icon的描述文字。
+
+JLabel的使用：
+类层次结构图：
+  java.lang.Object
+    --java.awt.Component
+    --java.awt.Container
+     --javax.swing.JComponent
+        --javax.swing.JLabel
+      在以前的许多范例，我们已经使用过JLabel这个组件，相信大家对此组件应该不会感到陌生，接下来我们来深入了解JLabel
+的各种我特性。
+     一般而言：我们最常在JLabel上放置文字或图形，也因此我们常常需要调整JLabel上文字或图形。在JLabel实现了
+SwingConstants这个interface,而这个interface主要是定义一些组件排列方式的参数：
+    TOP
+    LEFT
+    RIGHT
+    BOTTOM
+    CENTER
+    NORTH
+    EAST
+    WEST
+    SOUTH
+    NORTH_EAST
+    SOUTH_EAST
+    SOUTH_WEST
+    NORTH_WEST
+    HORIZONTAL
+    VERTICAL
+    LEADING                         置于前端
+    TRAILING                        置于后端。
+     在swing中，有相当多的类均实现了SwingConstants这个interface,如AbstractButton、JCheckBoxMenuItem、JLabel、
+JProgressBar、JSeparator、JSlider、JTextField、JTabbedPane、JToolbar等等，因此当你使用到这些组件时，你就可以在适当
+的时候，利用SwingConstants的参数来定义组件的位置了。
+   JLabel共有6种构造函数，如下：
+   JLabel构造函数：
+      JLabel():建立一个空白的JLabel组件。
+      JLabel(Icon image):建立一个含有Icon的JLabel组件，Icon的默认排列方式是CENTER.
+      JLabel(Icon image,int horizontalAlignment):建立一个含有Icon的JLabel组件，并指定其排列方式。
+      JLabel(String text):建立一个含有文字的JLabel组件，文字的默认排列方式是LEFT.
+      JLabel(String text,int horizontalAlignment):建立一个含有文字的JLabel组件，并指定其排列方式。
+      JLabel(String text,Icon icon,int horizontalAlignment):建立一个含有文字与Icon的JLabel组件，并指定其排列方式，
+                          文字与Icon的间距，默认值是4个pixels.
+    在JLabel中，有几个方法可能是常用到的，例如setHorizontalAlignment(int alignment)与setVerticalAlignment(int 
+alignment),分别是设置标签内组件（文字或Icon）的水平或垂直位置，而setHorizontalTextPosition(int textPosition)与
+setVerticalTextPosition(int textPosition)可设置文字相对于Icon的相对位置，另外，setIconTextGap(int iconTextGap)可设
+置标签内文字与Icon间的间距、setText(String test)与setIcon(Icon icon)可分别设置标签内的文字与Icon。
+JButton的使用：
+JButton的类层次结构图：
+   java.lang.Object 
+    --java.awt.Component
+     --javax.swing.JComponent
+      --javax.swing.AbstractButton
+      --javax.swing.JButton
+   JButton是继承AbstractButton类而来，而AbstractButton本身是一个抽象类，里面定义了许多组件设置的方法与组件事件驱动
+方法(Event handle),如addActionListener()、setText等，详情请看相关手册，所提供的方法不下50种，可说是非常重要的一个
+类。事实上，AbstractButton类不公被JButton所继承，它同时还被JMenuItem、JToggleButton、JCheckBox、JRadioButton等类所
+继承，提供给这些类强大且方便的功能，而且在使用上更能掌握这些组件的特性。我们此节先来了解JButton与JToggleButton的特
+性，其余类在后面各节介绍。
+JButton共有4个构造函数：
+
+JButton():建立一个按钮。
+JButton(Icon icon):建立一个有图像的按钮。
+JButton(String icon):建立一个有文字的按钮。
+JButton(String text,Icon icon):建立一个有图像与文字的按钮。
+   由JButton的构造函数可以看出：JButton与JLabel的使用相当类似，只是JButton少了排列方式的参数罢了。要是我们想设置
+JButton内文字或图像的水平排列方式，我们可以利用AbstractButton抽象类所提供的setHorizontalAlignment()方法来达成。
+JButton在使用上与JLabel相当类似，只是类的设计方式有所不同，JLabel类自行提供组件排列方式的方法，而JButton是继承
+AbstractButton抽象类的方法来排列按钮内的内容。为什么JButton不自行提供排列方式等方法呢？主要是因为JButton与JMenuItem
+、JToggleButton、JCheckBox、JRadioButton组件有许多共同的物性，例如它们都会有“按”的操作、都可以插入Icon与文字、
+都可设置快捷键、都可呈现Enable或Disable状态等等，因此将AbstractButton类独立出来，实现这些共通的方法，再由其他类来继
+承，将可增加程序结构对象化与模块化的特性，也让程序更容易维护.
+    JButton类所提供的方法非常少，大部份都会用到AbstractButton抽象类所提供的方法。
+JToggleButton的使用.
+JToggleButton类层次结构图：
+java.lang.Object
+    --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+         --javax.swing.AbstractButton
+          --javax.swing.JToggleButton
+   JToggleButton跟一般JButton其实很像，主要的差别在于一般的按钮按下去会自动弹回来，而JToggleButton按钮按下去会陷下
+去，不会弹回来，除非你再按一次。由上面的类层次结构图可知JToggleButton也继承AbstractButton抽象类而来，因此
+JToggleButton组件可以使用所有AbstractButton类所提供的方法。下面是JToggleButton所提供的构造函数：
+
+JToggleButton构造函数：
+JToggleButton():建立一个新的JToggleButton。
+JToggleButton(Icon icon):建立一个有图像但没有文字的JToggleButton。
+JToggleButton(Icon icon,boolean selected):建立一个有图像但没有文字的JToggleButton，且设置其初始状态（有无选取）。
+JToggleButton(String text):建立一个有文字的JToggleButton。
+JToggleButton(String text,boolean selected):建立一个有文字的JToggleButton，初始状态有无被选取。
+JToggleButton(String text,Icon icon):建立一个有文字且有图像的JToggleButton，初始状态为有无被选取。
+JToggleButton(String text,Icon icon,boolean selected):建立一个有文字且有图像的JToggleButton，且设置其初始状态(
+            有无选取).
+
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+其他控件
+
+使用JCheckBox组件：
+类层次结构图：
+  java.lang.Object
+    --java.awt.Component
+     --java.awt.Container
+       --javax.swing.JComponent
+          --javax.swing.AbstractButton
+            --javax.swing.JToggleButton
+              --javax.swing.JCheckBox
+   JCheckBox与JRadioButton为JToggleButton的子类，因此它们可以使用AbstractButton抽象类里面许多好用的方法,如addItemLi
+stener()、setText()、isSelected()等等。
+构造函数：
+   JCheckBox():建立一个新的JChcekBox.
+   JCheckBox(Icon icon):建立一个有图像但没有文字的JCheckBox.
+   JCheckBox(Icon icon,boolean selected):建立一个有图像但没有文字的JCheckBox,且设置其初始状态（有无被选取）。   
+   JCheckBox(String text):建立一个有文字的JCheckBox.
+   JCheckBox(String text,boolean selected):建立一个有文字的JCheckBox,且设置其初始状态（有无被选取）。
+   JCheckBox(String text,Icon icon):建立一个有文字且有图像的JCheckBox,初始状态为无被选取。
+   JCheckBox(String text,Icon icon,boolean selected):建立一个有文字且有图像的JCheckBox,且设置其初始状态(有无被选取
+JCheckBox事件处理:
+     你可以在上面的选项中勾选你喜欢吃的快餐店，在勾选的过程中，你可以发现它是可以复选的。但在图形选项中，我们并无法
+清楚用户是否选择此项目，因为选或不选图形都一样。为解决这个问题，我们要使用到事件处理方法。当JCheckBox中的选项被选取
+或取消时，它会触发ItemEvent的事件，ItemEvent这个类共提供了4种方法可以使用，分别是getItem()、getItemSelectable()、
+getStateChange()、paramString()。getItem()与paramString()方法会返回一些这个JCheckBox的状态值。一般我们较少用到这两
+个方法。
+    getItemSelectable()相当于getSource()方法，一样都是返回触发事件的组件，用来判断是那个组件产生事件。在上一章中我
+们曾经说过，getSource()方法是EventObject类所提供，而所有事件类都会继承这个类，因此所有的事件我们均能用getSource()
+方法来判断到底是哪个组件触发了事件。
+   最后getStateChange()方法会返回此组件到底有没有被选取。这个方法会返回一个整数值。而我们可以用ItemEvent所提供的类
+变量;若被选取则返回SELECTED,若没有被选取则返回DESELECTED.
+JRadioButton的使用:
+   java.lang.Object
+    --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.Abstractbutton
+         --javax.swing.JToggleButton
+            --javax.swing.JRadioButton
+
+   JRadioButtonBN J JToggleButton的一个了类，因此它也可以使用AbstractButton抽象类里的方法。如同前面所述，JChexkBox
+主要用在多重选择时机，而JRadioButton则是运用在单一选择时机。
+  JRadioButton构造函数：
+   JRadioButton():建立一个新的JRadioButton.
+   JRadioButton(Icon icon):建立一个有图像但没有文字的JRadioButton.
+   JRadioButton(Icon icon,boolean selected):建立一个有图像但没有文字的JRadioButton,且设置其初始状态(有无被选取).   
+   JRadioButton(String text):建立一个有文字的JRadioButton.
+   JRadioButton(String text,boolean selected):建立一个有文字的JRadioButton,且设置其初始状态（有无被选取）。
+   JRadioButton(String text,Icon icon):建立一个有文字且有图像的JRadioButton,初始状态为无被选取。
+   JRadioButton(String text,Icon icon,boolean selected):建立一个有文字且有图像的JRadioButton,且设置其初始状态(有无被选取。
+JList的使用:
+类层次结构图：
+   java.lang.Object
+     --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.JList
+    JList与JCheckBox有点相似，都可以让你选择一到多个选项，较不同的是，JList的选项方式是整列选取。我们先来看看JList
+所提供的构造函数，方便迅速建立JList对象,如下所示:
+JList构造函数:
+JList():建立一个新的JList组件。
+JList(ListModel dataModel):利用ListModel建立一个新的JList组件.
+JList(Object[] listData):利用Array对象建立一个新的JList组件。
+JList(Vector listData):利用Vector对象建立一个新的JList组件。
+
+利用ListModel构造JList:
+  ListModel是一个interface,主要的功能是定义一些方法，让JList或JComboBox这些组件取得每个项目的值，并可限定项目的显示
+时机与方式，下面为ListModel这个interface所定义的方法:
+   ListModel interface定义的方法:
+    void                    addListDataListener(ListDataListener l):当data model的长度或内容值有任何改变时，利用此
+                            方法就可以处理ListDataListener的事件。data model是vector或array的数据类型，里面存放List
+                            中的值。
+    Object                  getElementAt(int index):返回在index位置的Item值。
+    int                     getSize():返回List的长度。
+    void                    removeListDataListener(ListDataListener l):删除ListDataListener.
+  还记得我们一开始在介绍JList时所提到的构造函数吗？其中有一个JList的构造函数是这样的：
+      JList(ListModel dataModel)
+  因此我们必须实作ListModel所有的方法，才能利用上面这个构造函数建立JList.不过要实现ListModel所有的方法有点麻烦，因
+为一般我们不会用到addListDataListener()与removeListDataListener()这两个方法。因此java提供了AbstractListModel这个抽
+象类，此抽象类实作了addListDataListener()与removeListDataListener()这两个方法。若我们继承AbstractListModel,就不需
+实现这两个方法，只需要实作getElementAt()与getSize()方法即可
+建立有图像的JList:
+  我们也可以在JList中加入Icon图像，不过JList加入图像比较麻烦一点，不像JLabel或JButton那样简单。要在JList上加入Icon,
+要先了解ListCellRenderer interface.我们必须由这个interface所定义的方法，将图像画在JList中的每个项目。
+ListCellRenderer interface里只定义了一个方法，那就是getListCellRendererComponent,不过这个参数有点多，我们把它列出来
+看看:
+public Component getListCellRendererComponent(JList list,
+                                              Object value,
+                                              int index,
+                                              boolean isSelected,
+                                              boolean cellHasFocus)
+list:即所要画上的图像的JList组件。
+value:JList项目值，如list.getModel().getElementAt(index)所返回的值。
+index:为JList项目的索引值，由0开始。
+isSelected与cellHasFocus:判断JList中的项目是否有被选取或是有焦点置入。
+  上面这4个参数会在你设置JList的绘图样式(setCellRenderer())时自动的由JList组件提供，你只要关心怎么控制
+getListCellRendererComponent()方法中的4个参数，而无需担心怎么参数传入。
+JComboBox的使用：
+  类层次结构图：
+   java.lang.Object
+    --java.awt.Component
+     --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.JComboBox 
+   构造函数：
+    JComboBox():建立一个新的JComboBox组件。
+    JComboBox(ComboBoxModel aModel):用ListModel建立一个新的JComboBox组件。
+    JComboBox(Object[] items):利用Array对象建立一个新的JComboBox组件。
+    JComboBox(Vector items):利用Vector对象建立一个新的JComboBox组件。
+利用ComboModel构造JComboBox:
+    如同JList一般，在JComboBox中也有一个构造函数是利用某种Model来构造。如下所示:
+      JComboBox(COmboBoxModel aModel)
+   ComboBoxModel是一个interface,里面定义了两个方法，分别是setSelectedItem()与getSelectedItem().这两个方法目的是让用
+户选取某个项目后，可正确地显示出用户所选取的项目。下面是这两个方法的详细定义:
+  ComboBoxModel interface定义的方法：
+   Object    getSelectedItem():返回所选取的项目值。
+   Void      setSelectedItem(Object anItem):设置所选取的项目值.
+
+与JList不同的是，JComboBox是利用ComboBoxModel,而不是ListModel.不过ComboBoxModel interface是继承ListModel interface
+,因此若我们要利用ComboBoxModel来构造JComboBox,除了要实作ComboBoxModel的两个方法外，还必须实作ListModel的所定义的4个
+方法，这样的做法可说相当麻烦。
+   在介绍JList时我们曾经提到AbstractListModel这个抽象类。这个抽象类实作了ListModel interface中的addListDataListener
+()、removeListDataListener()这两个方法。因此若我们继承AbstractListModel,则可少掉实作这两个方法，只需要实作
+getElementAt()、getSize()、setSelectedItem()与getSelectedItem()这4个方法。这样的作法就显得比较简单一点.
+
+建立有图像的JComboBox:
+    在上一节中我们利用ListCellRenderer  interface在JList中加入Icon图像，而要在JComboBox中加入图像的方法也是一样的。
+我们必须实作ListCellRenderer interface所定义的方法getListCellRendererComponent.以下为这个方法的定义：
+要先了解ListCellRenderer interface.我们必须由这个interface所定义的方法，将图像画在JComboBox中的每个项目。
+ListCellRenderer interface里只定义了一个方法，那就是getListCellRendererComponent,不过这个参数有点多，我们把它列出来
+看看:
+public Component getListCellRendererComponent(JList list,
+                                              Object value,
+                                              int index,
+                                              boolean isSelected,
+                                              boolean cellHasFocus)
+list:即所要画上的图像的JComboBox组件。
+value:JComboBox项目值，如JComboBox.getModel().getElementAt(index)所返回的值。
+index:为JComboBox项目的索引值，由0开始。
+isSelected与cellHasFocus:判断JComboBox中的项目是否有被选取或是有焦点置入。
+  上面这4个参数会在你设置JComboBox的绘图样式(setCellRenderer())时自动的由JComboBox组件提供，你只要关心怎么控制
+getListCellRendererComponent()方法中的4个参数，而无需担心怎么参数传入。
+   要在JList中加入Icon图像的技巧就是将JComboBox中的每一个项目当作是JLabel,因为JLabel在使用文字与图像上非常的方便，要设置JComboBox的图像，
+必须使用setRenderer(ListCellRenderer cellRenderer){注:我们在JList中画上图像是利用JList所提供的setCellRenderer(ListCellRenderer 
+cellRenderer)方法,读者请小心}这个方法。
+使用JTable组件:
+  类层次结构图：
+  java.lang.Object
+    --java.awt.Component
+     --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.JTabel
+   在使用JTable以前，我们先看一下它的构造函数有哪些， 以及应该如何使用：
+
+JTabel构造函数：
+JTable():建立一个新的JTables,并使用系统默认的Model.
+JTable(int numRows,int numColumns):建立一个具有numRows行，numColumns列的空表格，使用的是DefaultTableModel.
+JTable(Object[][] rowData,Object[][] columnNames):建立一个显示二维数组数据的表格，且可以显示列的名称。
+JTable(TableModel dm):建立一个JTable,有默认的字段模式以及选择模式，并设置数据模式。
+JTable(TableModel dm,TableColumnModel cm):建立一个JTable,设置数据模式与字段模式，并有默认的选择模式。
+JTable(TableModel dm,TableColumnModel cm,ListSelectionModel sm):建立一个JTable,设置数据模式、字段模式、与选择模式。
+JTable(Vector rowData,Vector columnNames):建立一个以Vector为输入来源的数据表格，可显示行的名称。
+
+TableModel
+   TableModel类本身是一个interface,在这个interface里面定义了若干的方法:包括了存取表格字段(cell)的内容、计算表格的列数等等
+的基本存取操作，让设计者可以简单地利用TableModel来实作他所想要的表格。TableModel界面是放在javax.swing.table package中，这
+个package定义了许多JTable会用到的各种Model,读者可利用java api文件找到这个package,并由此package找到各类或界面所定义的方法
+。
+TableModel方法：
+void             addTableModelListener(TableModelListener l):使表格具有处理TableModelEvent的能力。当表格的Table Model有所
+                                            变化时，会发出TableModel Event事件信息.
+Class            getColumnClass(int columnIndex):返回字段数据类型的类名称.
+int              getColumnCount():返回字段(行)数量.
+String           getColumnName(int columnIndex):返回字段名称.
+int              getRowCount():返回数据列数量.
+Object           getValueAt(int rowIndex,int columnIndex):返回数据某个cell中的值.
+boolean          isCellEditable(int rowIndex,int columnIndex):返回cell是否可编辑,true的话为可编辑.
+void             removeTableModelListener(TableModelListener l):从TableModelListener中移除一个listener.
+void             setValueAt(Object aValue,int rowIndex,int columnIndex):设置某个cell(rowIndex,columnIndex)的值;
+  
+   由于TableModel本身是一个Interface,因此若要直接实现此界面来建立表格并不是件轻松的事.幸好java提供了两个类分别实现了这个
+界面,一个是AbstractTableModel抽象类,一个是DefaultTableModel实体类.前者实现了大部份的TableModel方法,让用户可以很有弹性地构
+造自己的表格模式;后者继承前者类,是java默认的表格模式.这三者的关系如下所示:
+   TableModel---implements--->AbstractTableModel-----extends--->DefaultTableModel
+   
+AbstractTableModel:
+  
+  java提供的AbstractTableModel是一个抽象类,这个类帮我们实现大部份的TableModel方法,除了getRowCount(),getColumnCount(),
+getValueAt()这三个方法外.因此我们的主要任务就是去实现这三个方法.利用这个抽象类就可以设计出不同格式的表格.我们来看看它所
+提供的方法:
+AbstractTableModel方法:
+void   addTableModelListener(TableModelListener l):使表格具有处理TableModelEvent的能力.当表格的Table Model有所变化时,会发
+                      出TableModelEvent事件信息.
+int    findColumn(String columnName):寻找在行名称中是否含有columnName这个项目.若有,则返回其所在行的位置;反之则返回-1表示
+                           未找到.
+void   fireTableCellUpdated(int row, int column):通知所有的Listener在这个表格中的(row,column)字段的内容已经改变了.
+void   fireTableChanged(TableModelEvent e):将所收的事件通知传送给所有在这个table model中注册过的TableModelListeners.
+void   fireTableDataChanged():通知所有的listener在这个表格中列的内容已经改变了.列的数目可能已经改变了,因此JTable可能需要
+                           重新显示此表格的结构.
+void   fireTableRowsDeleted(int firstRow, int lastRow):通知所有的listener在这个表格中第firstrow行至lastrow列已经被删除了.
+void   fireTableRowsUpdated(int firstRow, int lastRow)
+:通知所有的listener在这个表格中第firstrow行至lastrow列已经被修改了.
+void   fireTableRowsInserted(int firstRow, int lastRow):通知所有的listener在这个表格中第firstrow行至lastrow列已经被加入了
+                                                        .
+
+void   fireTableStructureChanged():通知所有的listener在这个表格的结构已经改变了.行的数目,名称以及数据类型都可能已经改变了
+                                   .
+Class  getColumnClass(int columnIndex):返回字段数据类型的类名称.
+String getColumnName(int column):若没有设置列标题则返回默认值,依次为A,B,C,...Z,AA,AB,..;若无此column,则返回一个空的String
+                                 .
+Public EventListener[] getListeners(Class listenerType):返回所有在这个table model所建立的listener中符合listenerType的
+                   listener,并以数组形式返回.
+boolean isCellEditable(int rowIndex, int columnIndex)
+:返回所有在这个table model所建立的listener中符合listenerType形式的
+                                                      listener,并以数组形式返回.
+void removeTableModelListener(TableModelListener l):从TableModelListener中移除一个listener.
+
+void setValueAt(Object aValue, int rowIndex, int columnIndex)
+:设置某个cell(rowIndex,columnIndex)的值.
+     若你仔细比较TableModel所定义的方法与上述AbstractTableModel所提供的方法,你可以发现,AbstractTableModel抽象类并没有实现
+getRowCount(),getColumnCount(),getValueAt()这三个方法,这也就是为什么我们要去实现这三个方法的原因.下面我们来看如何使用
+AbstractTableModel来实作出自己想要的表格模式.
+TableColumnModel:
+   TableColumnModel本身是一个Interface,里面定义了许多与表格的"列(行)"有关的方法,例如增加列,删除列,设置与取得"列"的相关信
+息.通常我们不会直接实现TableColumnModel界面,而是会利用JTable的getColumnModel()方法取得TableColumnModel对象,再利用此对象对
+字段做设置.举例来说,如果我们想设计的表格是包括有下拉式列表的Combo Box,我们就能利用TableColumnModel来达到这样的效果.
+
+SelectionModel
+     表格的选择模式是依据我们前面所讲的ListSelectionModel而来,因此它的操作模式与事件处理跟JList没什么分别!我们稍微复习一
+下ListSelectionModel这个Interface,它包含了3个常数值,如下:
+      static int SINGLE_SELECTION
+      static int SINGLE_INTERVAL_SELECTION
+      static int MULTIPLE_INTERVAL_SELECTION
+   分别可让用户作单一选择,连续区间选择与多重选择.当用户作后面两个模式的操作时,应配合[Shift]键或[Ctrl]键.
+   要使用ListSelectionModel可利用JTable的getSelectionModel()方法取得ListSelectionModel对象,再利用ListSelectionModel界面所
+定义的setSelectionModel()来设置选择模式.
+   如同JList一般,当用户对表格作数据域位的选取时会产生ListSelectionEvent事件,要处理这个事件就必须实现ListSelectionListener
+这个界面,此界面定义了一个方法,那就是valueChanged().
+DefaultTableModel
+    我们曾提到过DefaultTableModel类,并说明了此类是继承AbstractTableModel抽象类而来,且实现了getColumnCount(),getRowCount()
+与getValueAt()3个方法.因此在实际的使用上,DefaultTableModel比AbstractTableModel要来得简单许多,也较常被拿来使用
+.DefaultTableModel内部使用Vector来使用表格的数据,若佻所要显示的表格格式是比较单纯的变化,笔者建议使用DefaultTableModel类会
+来得方便也简单许多.若佻所要显示的数据模式非常复杂,例如我们所举的成绩表格外加学生选课信息等,像这类的表格通常显示的信息会因
+人面异,因此使用AbstractTableModel会比较容易设计些.
+
+下面是DefaultTableModel的构造函数:
+    DefaultTableModel():建立一个DefaultTableModel,里面没有任何数据.
+    DefaultTableModel(int numRows,int numColumns):建立一个指定行列数的DefaultTableModel.
+    DefaultTableModel(Object[][] data,Object[] columnNames):建立一个DefaultTableModel，输入数据格式为Object Array.系统会
+                                       自动调用setDataVector()方法来设置数据。
+    DefaultTableModel(Object[] columnNames,int numRows):建立一个DefaultTableModel，并具有Column Header名称与行数信息。
+    DefaultTableModel(Vector columnNames,int numRows):建立一个DefaultTableModel，并具有column Header名称与行数信息。
+    DefaultTableModel(Vector data,Vector columnNames):建立一个DefaultTableModel，输入数据格式为Vector.系统会自动调用
+                                        setDataVector()方法来设置数据。
+   
+  DefaultTableModel类提供相当多好用的方法，如之前我们谈论过的getColumnCount(),getRowCount(),getValueAt(),isCellEditable()
+setValueAt()等方法，均可直接使用。且DefaultTableModel也提供了addColumn()与addRow()等方法，可让我们随时增加表格的数据。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+树(Tree)的使用与介绍
+
+使用JTree组件：
+   java.lang.Object
+     --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.JTree
+JTree构造函数:
+JTree():建立一棵系统默认的树。
+JTree(Hashtable value):利用Hashtable建立树，不显示root node(根节点).
+JTree(Object[] value):利用Object Array建立树，不显示root node.
+JTree(TreeModel newModel):利用TreeModel建立树。
+JTree(TreeNode root):利用TreeNode建立树。
+JTree(TreeNode root,boolean asksAllowsChildren):利用TreeNode建立树，并决定是否允许子节点的存在.
+JTree(Vector value):利用Vector建立树，不显示root node.
+以Hashtable构造JTree:
+   上面的例子对我们并没有裨的帮助，因为各个节点的数据均是java的默认值，而非我们自己设置的。因此我们需利用其他JTree构造函数来输入我们想要的节点数据。
+以TreeNode构造JTree:
+   JTree上的每一个节点就代表一个TreeNode对象，TreeNode本身是一个Interface,里面定义了7个有关节点的方法，例如判断是否为树叶节点、有几个子节点(getChildCount())、父节点为何(getparent())等等、这些方法的定义你可以在javax.swing.tree的package中找到，读者可自行查阅java api文件。在实际的应用上，一般我们不会直接实作此界面，而是采用java所提供的DefaultMutableTreeMode类，此类是实作MutableTreeNode界面而来，并提供了其他许多实用的方法。MutableTreeNode本身也是一个Interface,且继承了TreeNode界面此类主要是定义一些节点的处理方式，例如新增节点(insert())、删除节点(remove())、设置节点(setUserObject())等。整个关系如下图:
+    TreeNode----extends--->MutableTreeNode---implements---DefaultMutableTreeNode
+
+  接下来我们来看如何利DefaultMutableTreeNode来建立JTree,我们先来看DefaultMutableTreeNode的构造函数:
+
+DefaultMutableTreeNode构造函数:
+DefaultMutableTreeNode():建立空的DefaultMutableTreeNode对象。
+DefaultMutableTreeNode(Object userObject):建立DefaultMutableTreeNode对象，节点为userObject对象。
+DefaultMutableTreeNode(Object userObject,Boolean allowsChildren):建立DefaultMutableTreeNode对象，节点为userObject对象并决定此节点是否允许具有子节点。
+以TreeModel构造JTree.
+   除了以节点的观念(TreeNode)建立树之外，你可以用data model的模式建立树。树的data model称为TreeModel,用此模式的好处是可以触发相关的树事件，来处理树可能产生的一些变动。TreeModel是一个interface,里面定义了8种方法;如果你是一个喜欢自己动手做的人，或是你想显示的数据格式很复杂，你可以考虑直接实作TreeModel界面中所定义的方法来构造出JTree.TreeModel界面的方法如下所示:
+TreeModel方法:
+void      addTreeModelListener(TreeModelListener l):增加一个TreeModelListener来监控TreeModelEvent事件。
+Object    getChild(Object parent,int index):返回子节点。
+int       getChildCount(Object parent):返回子节点数量.
+int       getIndexOfChild(Object parent,Object child):返回子节点的索引值。
+Object    getRoot():返回根节点。
+boolean   isLeaf(Object node):判断是否为树叶节点。
+void      removeTreeModelListener(TreeModelListener l):删除TreeModelListener。
+void      valueForPathChanged(TreePath path,Object newValue):当用户改变Tree上的值时如何应对。
+
+   你可以实作出这8种方法，然后构造出自己想要的JTree,不过在大部份的情况下我们通常不会这样做，毕竟要实作出这8种方法不是件很轻松的事，而且java本身也提供了一个默认模式，叫做DefaultTreeModel,这个类已经实作了TreeModel界面，也另外提供许多实用的方法。利用这个默认模式，我们便能很方便的构造出JTree出来了。下面为DefaultTreeModel的构造函数与范例:
+DefaultTreeModel构造函数:
+DefaultTreeModel(TreeNode root):建立DefaultTreeModel对象，并定出根节点。
+DefaultTreeModel(TreeNode root,Boolean asksAllowsChildren):建立具有根节点的DefaultTreeModel对象，并决定此节点是否允许具有子节点。
+
+改变JTree的外观:
+你可以使用JComponent所提供的putClientProperty(Object key,Object value)方法来设置java默认的JTree外观，设置方式共有3种:
+1.tree.putClientProperty("JTree.lineStyle","None"):java默认值。
+2.tree.putClientProperty("JTree.lineStyle","Horizontal"):使JTree的文件夹间具有水平分隔线。
+3.tree.putClientProperty("JTree.lineStyle","Angled"):使JTree具有类似Windows文件管理器的直角连接线。
+  
+更换JTree节点图案:
+  JTree利用TreeCellRenderer界面来运行绘制节点的工作，同样的，你不需要直接支实作这个界面所定义的方法，因为java本身提供一个已经实作好的类来给我们使用，此类就是DefaultTreeCellRenderer,你可以在javax.swing.tree package中找到此类所提供的方法。
+JTree的事件处理模式:
+    在此节中，我们将详细介绍JTree两个常用的事件与处理，分别是TreeModeEvent与TreeSelectionEvent.
+处理TreeModeEvent事件：
+  当树的结构上有任何改变时，例如节点值改变了、新增节点、删除节点等，都会TreeModelEvent事件，要处理这样的事件必须实作TreeModelListener界面，此界面定义了4个方法，如下所示:
+TreeModelListener方法:
+Void              treeNodesChanged(TreeModelEvent e):当节点改变时系统就会云调用这个方法。
+Void              treeNodesInserted(TreeModelEvent e):当新增节时系统就会去调用这个方法。
+Void              treeNodesRemoved(TreeModeEvent e):当删除节点时系统就会去调用这个方法。
+Void              treeStructureChanged(TreeModelEvent e):当树结构改变时系统就会去调用这个方法。
+
+  TreeModelEvent类本身提供了5个方法，帮我们取得事件的信息，如下所示:
+
+TreeModelEvent方法：
+int[]                getChildIndices():返回子节点群的索引值。
+Object[]             getChildren():返回子节点群.
+Object[]             getPath():返回Tree中一条path上(从root nod到leaf node)的节点。
+TreePath             getTreePath():取得目前位置的Tree Path.
+String               toString()：取得蝗字符串表示法.
+  
+    由TreeModelEvent的getTreePath()方法就可以得到TreePath对象，此对象就能够让我们知道用户目前正选哪一个节点，TreePath类最常用的方法为：
+     public  Object getLastPathComponent():取得最深（内）层的节点。
+     public int    getPathCount():取得此path上共有几个节点.
+处理TreeSelectionEvent事件：
+    当我们在JTree上点选任何一个节点，都会触发TreeSelectionEvent事件，如果我们要处理这样的事件，必须实作TreeSelectionListener界面，此界面只定义了一个方法，那就是valueChanged()方法。
+    TreeSelectionEvent最常用在处理显示节点的内容，例如你在文件图标中点两下就可以看到文件的内容。在JTree中选择节点的方式共有3种，这3种情况跟选择JList上的项目是一模一样的，分别是：
+      DISCONTIGUOUS_TREE_SELECTION:可作单一选择，连续点选择（按住[Shift]键），不连续选择多个节点（按住[Ctrl]键）,这是java默认值.
+      CONTINUOUS_TREE_SELECTION:按住[Shift]键，可对某一连续的节点区间作选取。
+      SINGLE_TREE_SELECTION:一次只能选一个节点。
+   你可以自行实作TreeSelectionModel制作作更复杂的选择方式，但通常是没有必要的，因为java提供了默认的选择模式类供我们使用，那就是DefaultTreeSelectionModel,利用这个类我们可以很方便的设置上面3种选择模式。
+JTree的其他操作:
+     我们在之前小节中曾说到Tree中的每一个节点都是一个TreeNode,并可利用JTree的setEditable()方法设置节点是否可编辑，若要在Tree中找寻节点的父节点或子节点，或判断是否为树节点，皆可由实作TreeNode界面做到，但要编辑节点呢？java将编辑节点的任务交给TreeCellEditor,TreeCellEditor本身是一个界面，里面只定义了getTreeCellEditor Component()方法，你可以实作此方法使节点具有编辑的效果。不过你不用这么辛苦去实作这个方法，java本身提供了DefaultTreeCellEditor类来实作此方法，亦提供了其他许多方法，例如取得节点内容(getCellEditorValue())、设置节点字体(setFont())、决定节点是否可编辑(isCellEditable())等等。除非你觉得DefaultTreeCellEditor所提供的功能不够，你才需要去实作TreeCellEditor界面。你可以利用JTree的getCellEditor()方法取得DefaultTreeCellEditor对象。当我们编辑节点时会触发ChangeEvent事件，你可以实作CellEditorListener界面来处理此事件，CellEditorListener界面包括两个方法，分别是editingStopped(ChangeEvent e)与editingCanceled(ChangeEvent e).若你没有实作TreeCellEditor界面，系统会以默认的DefaultTreeCellEdtior类来处理掉这两个方法(你可以在DefaultTreeCellEditor中找到这两个方法)，因此你无须再编写任何的程序。
+     另外，JTree还有一种事件处理模式，那就是TreeExpansionEvent事件。要处理这个事件你必须实作TreeExpansionListener界面，此界面定义了两个方法，分别是treeCollapsed(TreeExpansionEvent e)与treeExpanded(TreeExpansionEvent e).当节点展开时系统就会自动调用treeExpanded()方法，当节点合起来时，系统就会自动调用treeCollapsed()方法。你可以在这两个方法中编写所要处理事情的程序代码。
+认识Swing的文字输入组件:
+          Swing与文字输入有关的组件分别是JTextField、JPasswordField、JTextArea、JEditorPane与JTextPane.JTextField与JPasswordField为单行的文本编辑器;JTextArea为多行的文本编辑器;JEditorPane可显示多种文件格式;JTextPane可设置文件各种样式。这些组件都继承了JTextComponent为类,它们之间的关系如下:
+
+                 |--JTextField--JPasswordField
+                 |
+   JTextComponent|
+                 |--JTextArea
+                 |
+                 |--JEditorPane--JTextPane
+
+     JTextComponent提供了相当多实用的方法，可使处理输入组件更为方便，例如copy(),paste(),cut(),getText(),setText()等相当直觉的方法：另外还有设置是否可编辑(setEditable()),setSelectionEnd(),setSelectionStart())、设置或取得光标位置(getCaretPosition(),setCaretPosition())等等，这些相当常用的方法你都可以在JTextComponent类中找到.
+     Swing的文字输入组件均以Document来当作数据模式，当输入组件的内容有所改变时，均是更改此Document的内容。因此你可以将同一个Document内容以不同的输入组件来显示，这就是MVC概念的一个基本应用。Document为一个interface,你可以实现此界面或利用java提供的默认类来构造文字输入组件。
+
+
+         |---implements-->AbstractDocument---extends->PlainDocument
+         |                     
+Document |                       
+         |
+         |--extends-->StyleDocument---implements--->DefaultStyleDocument---extends--->HTMLDocument
+   
+    AbstractDocument----extends-->DefaultStyleDocument
+
+  PlainDocument是一个实体类，已经实现了AbstractDocument与Document中的所有抽象方法，你可以用此类直接构造出JTextField、JPasswordField与JTextArea组件;相同的，你可以使用DefaultStyledDocument构造出JTextPane组件，这些关系我们均会在下面各节中提到。下面我们开始介绍各种文字输入组件的使用:
+
+
+使用JTextField组件:
+JTextField继承JTextComponent类，因此它也可以使用JTextComponent抽象类里面许多好用的方法，如copy(),paste(),setText(),isEditable()等等。我们可以在很多地方使用JTextField,JTextField是一个单行的输入组件，那么有没有多行的输入组件呢？有的，就是JTextArea,我们将在后面介绍.
+
+JTextField构造函数：
+JTextField()
+JTextField(Document doc,String text,int columns):使用指定的文件存储模式建立一个新的JTextField并设置其初始化字符串和字段长度。
+JTextField(int columns):建立一个新的JTextField并设置其初始字段长度。
+JTextField(String text):建立一个新的JTextField并设置其初始字字符串。
+JTextField(String text,int columns):建立一个新的JTextField并设置其初始字符串和字段长度.
+利用Document构造JTextField:
+     Document是一个interface,主要的功能是定义一些方法，让我们在使用所有与Text相关的组件时，能够将输入文字的内容加以结构化或规格化。将文字内容结构化又是什么呢？举例来说，就好像一本书的内容，它的结构一定会有各个大章，在各章中又会分成许多小节，小节内会再有各个小重点等等，这样的树状组件结构就是结构化的一种。由于这个interface定义了10几个方法，但是在这里我们所会用到的只有少数几个方法，为了不让大家混淆，因此我们先列出这个interface常被使用到的方法，有兴趣的可查阅java api文件：
+void   addDocumentListener(DocumentListener listener):增加DocumentListener，使组件具有处理DocumentEvent功能。
+void   addUndoableEditListener(UndoableEditListener listener):增加UndoableEditListener,使组件具有处理UndoableEditEvEnt功能，当文件中的内容被修改时自动记忆可以被复原的内容。
+String getText(int offset,int length):取得document中的文字内容。
+void   insertString(int offset,String str,AttributeSet a):将字符串加入到Text组件的内容中。
+void   removeDocumentListener(DocumentListener listener):移除DocumentListener.
+void   removeUndoableEditListener(UndoableEditListener listener):移除UndoableEditListener,使复原功能失效。
+
+   还记得我们一开始在介绍JTextField时所提到的构造函数吗？其中有一个JTextField的构造函数是这样子的：JTextField(Document doc,String text,int columns):使用指定的文件存储模式建立一个新的JTextField并设置其初始化字符串和字段长度。因此我们必须实作Document所有的方法，才能利用Document构造出JTextField,这样的做法有点麻烦，因为我们之前有提到Document的方法有数十种，但是我们要用到的却只有其中几种，若是要将全部的方法实作那是相当费时的做法。大家还记行我们前几章介绍JList时，利用继承AbstractListModel的抽象类来构造JList吗？由于抽象类已经了许多接口的方法，所以当我们继承这个抽象类后便不需要实作这些方法。同样的java在这里也提供了一个AbstractDocument的抽象类来供我们使用。不过在这里我们并不是要使用AbstractDocument,因为java在这部份已经提供了一个实体类：PlainDocument.这个实体类继承AbstractDocument，也就是具备了所有AbstractDocument的方法，所以我们只要直接继承PlainDocument这个实体类就能利用Document来构造JTextField.这种概念跟JList或是JTable的模式结构均是相同的。
+使用JPasswordField组件：
+     JPasswordField的类层次结构图：
+       java.lang.Object
+             --java.awt.Component
+               --javax.swing.JComponent
+                --javax.swing.text.JTextComponent
+                  --javax.swing.JTextField
+                   --javax.swing.JPasswordField
+    一般我们在网络中填写登录密码时，密码都会显示"*"号代表用户输入的字段，这样可避免用户输入的密码信息被旁人所偷窥。而Swing中的JPasswordField就可以提供这样的功能。JPasswordField继承JTextField类，因此它也可以使用JTextField类里面许多好用的方法，如addActionListener()、removeActionListener()、setHorizontalAlignment()等等。如同JTextField一样JPasswordField也是一个单行的输入组件，不同的是JPasswordField多了屏蔽(Mask)的功能，也就是说在JPasswordField中的字符都会以单一种的字符类型表现出来。在使用JPasswordField之前，我们先看看它的构造函数：
+JPasswordField()
+JPasswordField(Document doc,String text,int columns):使用指定的文件存储模式建立一个新的JPasswordField并设置其初始化字符串和字段长度。
+JPasswordField(int columns):建立一个新的JPasswordField并设置其初始字段长度。
+JPasswordField(String text):建立一个新的JPasswordField并设置其初始字字符串。
+JPasswordField(String text,int columns):建立一个新的JPasswordField并设置其初始字符串和字段长度.
+使用JTextArea组件:
+   JTextArea的类层次结构图:
+       java.lang.Object
+           --java.awt.Component
+            --java.awt.Container
+              --javax.swing.JCompontent
+                --javax.swing.text.JTextComponent
+                  --javax.swing.JTextArea
+    JTextArea继承JTextComponent为类，因此它也可以使用JTextComponent抽象类里面许多好用的方法，如compy(),paste(),setText(),isEditable()等等。我们在前面有提到JTextArea是一个多行的输入组件，在这个组件中可以利用Enter来做换行的操作。在使用JTextArea之前，我们先看看JTextArea有哪些构造函数可以使用:
+
+JTextArea的构造函数：
+  JTextArea():建立一个新的JTextArea.
+  JTextArea(Document doc):使用指定的文件存储模式建立一个新的JTextArea.
+  JTextArea(Document doc,String text,int row ,int columns):使用指定的文件存储模式建立一个新的JTextArea并设置其初始字符串和列、字段长度。
+  JTextArea(int row,int columns):建立一个新的JTextArea并设置其初始列、字段长度。
+  JTextArea(String text):建立一个新的JTextArea并设置其初始字符串.
+  JTextArea(String text,int row,int columns):建立一个新的JTextArea并设置其初始字符串和列、字段长度。
+使用JEditorPane组件：
+JEditorPane的类层次结构图:
+    java.lang.Object
+      --java.awt.Component
+        --java.awt.Container
+          --javax.swing.JComponent
+           --javax.swing.text.JTextComponent
+             --javax.swing.JEditorPane
+    JEditorPane继承JTextComponent类，因此它也可以使用JTextComponent抽象类里面的方法。JEditorPane的最主要功能在于展现不同类型的文件格式内容。JEditorPane支持的文件类型有三种:第一种是纯文本类型，其类型的表示法为"text/plain",这种类型的文件就是我们最常使用的txt文件，这类型的文件可以用记事本或WordPad等文书编辑软件来编辑。第二种是RTF类型，其表示法为"text/rtf",这种类型的文件特色是能对文字内容做字体缩放、变形、上色等特殊效果。第三类是HTML类型，也就是我们在网络上所浏览的网页类型，其表示法为"text/html",这类文件的特色相信大家都非常的清楚，除了在对字体效果的表现之外还具有在文件内加入图片、超级链接等相关功能。但是JEditorPane并不是一个全功能的Web Browser,它仅能支持简单的HTML语法.JEditorPane支持HTML类型的文件最主要的用途是用来制作在线辅助说明文件。
+JEditorPane构造函数:
+JEditorPane():建立一个新的JEditorPane.
+JEditorPane(String url):以详细的URL字符串为基础来建立一个JEditorPane。
+JEditorPane(String type,String text):建立一个被指定字符串text并指定初始化JEditorPane的类型。
+JEditorPane(URL initialPage):以详细的URL字符串当作输入值来建立一个JEditorPane.
+
+使用JTextPane组件：
+   JTextPane的类层次结构图:
+    java.lang.Object
+     --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.text.JTextComponent
+          --javax.swing.JEditorPane
+            --javax.swing.JTextPane
+    我们在前面有介绍过JTextArea类，虽然JTextArea在某些功能上已经能够满足我们的需求，但是当我们想再加入更多的变化时（如文字加入色彩、插入图片...）就会发现JTextArea类根本无法做到。要做到这些功能，我们必须使用JEditorPane的子类： JTextpane。JTextPane提供了许多对文字的处理，如改变颜色、字体缩放、文字风格、加入图片等。我们先来看看JTextPane的构 造方法：
+JTextPane构造函数:
+JTextPane():建立一个新的JTextPane.
+JTextPane(StyledDocument doc):以指定的文件模式建立一个新的JTextPane.
+
+JTextPane的特性:
+    相信大家都有用过Word来写过报告或文章，那么你一定会知道我们在Word中可以对文章中的文字做很多的变化，这些变化都是属于文字的“属性”变化。由于在JTextPane中产生的效果几乎都是由属性的变化而来，所以改变属性的类组件在JTextpane中是少不了的。因此在介绍如何构造JTextPane之前，我们要先介绍两个在JTextPane中常用到属性类:   SimpleAttributeSet和StyleConstant.
+属性的变化原本是利用AttributeSet interface来处理的，但是这个interface中包含了太多的方法，若是我们直接实作AttributeSet interface那就需要实作此interface里所有的方法，这对编写程序来说并不是一个很理想的做法;而java另外提供了SimpleAttributeSet类，实作了AttributeSet interface.因此，只要我们直接使用SimpleAttributeSet类就能具备AttributeSet interface的所有功能，而不用一个个的编写AttributeSet中的方法。另外StyleConstant类则是提供AttributeSet类许多常用的属性键值(Attribute Key)和方法来设置或取得JTextPane内容的状态。StyleConstant类中包含了许多的常用的属性设置，包括本文与边界空白区段设置、文字字体/大小/类型设置、背景颜色设置等。利用这两个类来辅助设计JTextPane便使JTextPane有更丰富的内容变化。
+   JTextPane是专为文字和版面处理设计的组件。JTextPane对可输入区域内容的设计概念是一个类似Word的设计概念,也就是说在JTextPane中的文字结构是有段落概念的。“段落”的概念就是以[Enter]键为每一段落的分界点，每按一次[Enter]键就增加一个段落。记得我们在JTextArea中提过的Element存储模式吗？在JTextPane中也是采用相同的做法，但是差别在于规划存储的方式不同。
+在JTextArea中并没有分段落，只是单纯的以[Enter]键当作存储成两个Element的分界。而在JTextPane则是以整个编辑区哉为根节点，每个段落为枝节点 ，每个字符为叶节点来存储文件。也因为JTextPane是采用这样的方式来存储数据，因此在JTextPane中也可以像Word文件一样将各个段落设置成不同的属性，如第一段为斜体字、字体大小为14号字、粗体字，第二段为斜体字、字体颜色为蓝色、向左边界缩排2厘米等;另外，我们还可以设置JTextPane编辑区内输入的文字与各个边界间的距离。由这些功能看来，对于一个TextComponent来说JTextPane是一个具有相当多实用功能的组件。
+
+使用JMenuBar组件:
+   JMenuBar的类层次结构图:
+   java.lang.Object
+    --java.awt.Component
+      --java.awt.Container
+        --javax.swing.JComponent
+          --javax.swing.JMenuBar
+     在介绍JMenu组件前,我们先介绍JMenuBar组件,JMenuBar组件的功能是用来摆入JMenu组件.当我们建立完许多的JMenu组件后,需要通过JMenuBar组件来将JMenu组件加入到窗口中.虽然我们由下表中看出JMenuBar组件只有一种构造方式,但是它对于构造一个菜单来说是个不可缺少的组件.JMenuBar构造函数:JMenuBar():建立一个新的JMenuBar;
+    由于构造一个空的JMenuBar然后设置到窗口上对于窗口来说是没有意义的,因此JMenuBar需要结合至少一个以上的JMenu组件才会在画面上显现出视觉的效果,所以JMenuBar的构造方法及范例我们留到JMenu的第一个范例中再加以说明.
+
+使用JMenu组件:
+  JMenu的类层次结构图:
+   java.lang.Object
+   --java.awt.Component
+    --java.awt.Container
+     --javax.swing.JComponent
+      --javax.swing.AbstractButton
+       --javax.swing.JMenuItem
+         --javax.swing.JMenu
+    JMenu组件是用来存放和整合JMenuItem的组件,这个组件也是在构成一个菜单中不可或缺的组件之一.JMenu可以是单一层次的结构也可以是一个层次式的结构,要使用何种形式的结构取决于界面设计上的需要而定,如下表所示:
+   JMenu构造函数:
+   JMenu():建立一个新的JMenu.
+   JMenu(Action a):建立一个支持Action的新的JMenu.
+   JMenu(String s):以指定的字符串名称建立一个新的JMenu.
+   JMenu(String,Boolean b):以指定的字符串名称建立一个新的JMenu并决定这个菜单是否可以下拉式的属性.
+使用JMenuItem组件:
+JMenuItem组件的类层次结构图:
+
+   java.lang.Object
+   --java.awt.Component
+    --java.awt.Container
+     --javax.swing.JComponent
+      --javax.swing.AbstractButton
+       --javax.swing.JMenuItem
+    JMenuItem继承AbstractButton类,因此JMenuItem具有许多AbstractButton的特性,也可以说JMenuItem是一种特殊的Button,所以JMenuItem支持许多在Button中好用的功能,例如加入图标文件或是当我们在菜单中选择某一项JMenuItem时就如同按下按钮的操作一样触发ActionEvent,通过ActionEvent的机制我们就能针对不同的JMenuItem编写其对应的程序区段,我们来看看JMenuItem的构造方式有哪些:
+
+JMenuItem构造函数:
+JMenuItem():建立一个新的JMenuItem.
+JMenuItem(Action a):建立一个支持Action的新的JMenuItem.
+JMenuItem(Icon icon):建立一个有图标的JMenuItem.
+JMenuItem(String text):建立一个有文字的JMenuItem.
+JMenuItem(String text,Icon icon):建立一个有图标和文字的JMenuItem.
+JMenuItem(String text,int mnemonic):建立一个有文字和键盘设置快捷键的JMenuItem.
+
+使用JCheckBoxMenuItem:
+  JCheckBoxMenuItem的类层次结构图:
+   java.lang.Object
+   --java.awt.Component
+    --java.awt.Container
+     --javax.swing.JComponent
+      --javax.swing.AbstractButton
+       --javax.swing.JMenuItem
+         --javax.swing.JCheckBoxMenuItem
+   JCheckBoxMenuItem继承JMenuItem类,因此JCheckBoxMenuItem可以使用JMenuItem所提供的方法,而且JCheckBoxMenuItem也具有AbstractButton的特性,而JChcekBoxMenuItem和JCheckBox的性质几乎是一样,两者间最大的差别在于JCheckBoxMenuItem是专用在MenuItem上.我们来看看JCheckBoxMenuItem的构造方法:
+JCheckBoxMenuItem构造函数:
+JCheckBoxMenuItem():建立一个新的JCheckBoxMenuItem.
+JCheckBoxMenuItem(Action a):建立一个支持Action的新的JCheckBoxMenuItem.
+JCheckBoxMenuItem(Icon icon):建立一个有图标的JCheckBoxMenuItem.
+JCheckBoxMenuItem(String text):建立一个有文字的JCheckBoxMenuItem.
+JCheckBoxMenuItem(String text,Boolean b):建立一个有文字和设置选择状态的JCheckBoxMenuItem.
+JCheckBoxMenuItem(String text,Icon icon):建立一个有文字和图标的JCheckBoxMenuItem.
+JCheckBoxMenuItem(String text,Icon icon,Boolean b):建立一个有文字,图标和设置状态的JCheckBoxMenuItem.
+
+使用JRadioButtonMenuItem组件:
+JRadioButtonMenuItem的类层次结构图:
+java.lang.Object
+   --java.awt.Component
+    --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.AbstractButton
+        --javax.swing.JMenuItem
+         --javax.swing.JRadioButtonMenuItem
+     与JCheckBoxMenuItem相同,JRadioButtonItem也是继承JMenuItem,因此JRadioButtonMenuItem也具备JMenuItem的许多特性.而JRadioButtonMenuItem和JCheckBoxMenuItem一样也是一种特殊的JMenuItem.我们在前面也介绍过JRadioButton组件,而JRadioButtonMenuItem是专用在MenuItem上.我们来看看JRadioButtonMenuItem的构造方法,如下表:
+
+JRadioButtonMenuItem的构造函数:
+JRadioButtonMenuItem():建立一个新的JRadioButtonMenuItem.
+JRadioButtonMenuItem(Action a):建立一个支持Action的新的JRadioButtonMenuItem.
+JRadioButtonMenuItem(Icon icon):建立一个有图标的JRadioButtonMenuItem.
+JRadioButtonMenuItem(Icon icon,Boolean selected):建立一个有图标和设置选择状态的JRadioButtonMenuItem.
+JRadioButtonMenuItem(String text):建立一个有文字的JRadioButtonMenuItem.
+JRadioButtonMenuItem(String text,Boolean selected):建立一个有文字和设置选择状态的JRadioButtonMenuItem.
+JRadioButtonMenuItem(String text,Icon icon):建立一个有文字和图标的JRadioButtonMenuItem.
+JRadioButtonMenuItem(String text,Icon icon,Boolean selected):建立一个有文字,图标和设置状态的JRadioButtonMenuItem.
+
+使用JToolBar组件:
+     
+JToolBar的类层次结构图:
+java.lang.Object
+   --java.awt.Component
+    --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.JToolBar
+   ToolBar的功能是用来放置各种常用的功能或控制组件,这个功能在各类软件中都可以很轻易的看到.一般我们在设计软件时,会将所有功能依类放置在菜单中(JMenu),但当功能数量相当多时,可能造成用户操作一个简单的操作就必须繁复的寻找菜单中相关的功能,这将造成用户操作上的负担.若我们能将一般常用的功能以工具栏方式呈现在菜单下,让用户很快得到他想要的功能,不仅增加用户使用软件的意愿,也加速工作的运行效率.这就是使用ToolBar的好处.我们现在来看看JTooBar的构造方式.
+JToolBar构造函数:
+JToolBar():建立一个新的JToolBar,位置为默认的水平方向.
+JToolBar(int orientation):建立一个指定的JToolBar.
+JToolBar(String name):建立一个指定名称的JToolBar.
+JToolBar(String name,int orientation):建立一个指定名称和位置的JToolBar.
+
+使用JPopupMenu组件.
+   JPopupMenu的类层次结构图:
+   java.lang.Object
+    --java.awt.Component
+     --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.JPopupMenu
+    JPopupMenu是一种特别形式的Menu,其性质与Menu几乎完全相同,但是PopupMenu并不固定在窗口的任何一个位置,而是由鼠标指针和系统判断决定PopupMenu要出现在哪里.相信大家在使用许多软件时都有用过Popupmenu的功能,例如在使用Word文书编辑器软件时,当我们在编辑区域的任一处按下鼠标右键,就会跳出一个PopupMenu菜单.
+
+JPopupMenu构造函数:
+JPopupMenu():建立一个新的JPopupMenu;
+JPopupMenu(String label):建立一个指定标题的JPopupMenu.
+
+使用JFileChooser组件.
+    JFileChooser的类层次结构图:
+    java.lang.Object
+     --java.awt.Component
+       --java.awt.Container
+        --javax.swing.JComponent
+         --javax.swing.JFileChooser
+  当我们在处理窗口上的一些操作,特别是文本处理的部份,例如一个文本编辑器上打了一段文字,我们可能希望将此段文字存储起来,供以后方便使用,此时系统应当提供一个存储文件的对话框,将此段文字存到一个自定义或内定的文件名中.同样,当我们要叫出某个文件时,系统也应当提供打开文件的功能,让我们选择所欲打开的文件.在java中这些操作都可以由JFileChoose组件来达成.这个组件提供了打开文件存盘的窗口功能,也提供了显示特定类型文件图标的功能,亦能针对某些文件类型做过滤的操作.如果你的系统需要对某些文件或文件做操作,JFileChooser组件可以让你轻松地做出漂亮的用户界面.在这边读者要注意的是,JFileChooser本身不提供读文件或存盘的功能,这些功能必须你自行实作.事实上,JFileChooser本身只是一个对话框模型,它也是依附在JDialog的结构上,因此它只是一个针对文件操作的对话框,当然本身也就不会有读文件或存盘的功能!以下我们来看JFileChooser的构造函数:
+
+JFileChooser构造函数:
+JFileChooser():建立一个JFileChooser对象,默认的文件对话框路径是用户的家目录(Home Directory),例如在windows 2000中的Administrator的家目录是在C:\Documents and Settings\Administrator中.
+JFileChooser(File currentDirectory):建立一个JFileChooser对象,并以File所在位置文件为文件对话框的打开路径.
+JFileChooser(File currentDirectory,FileSystemView fsv):建立一个JFileChooser对象,以File所在位置为文件对话框的打开路径并设置文件图标查看方式.
+JFileChooser(FileSystemView fsv):建立一个JFileChooser对象,并设置文件图标查看方式.
+JFileChooser(String currentDirectoryPath):建立一个JFileChooser对象,并设置文件对话框的打开路径.
+JFileChooser(String currentDirectoryPath,FileSystemView fsv): 建立一个JFileChooser对象,并设置文件对话框的打开路径与文件图标查看方式.
+
+建立一个简单的JFileChooser对话框:
+    介绍完JFileChooser构造函数后,我们来实作一个简单的范例.这个范例可以让用户在JTextArea上输入文字,输入完后按下"存储文件"按钮就可以打开JFileChooser存储文件对话框,用户可以输入欲存储的文件名,按下"Save"按钮就可以存储文件.若用户要打开某个文件内容,只需要按下"打开文件"按钮,就会出现JFileChooser打开文件对话框,用户选择好所欲打开的文件就可以将数据读入JTextArea中.
+    在这个范例中,我们使用JFileChooser的showOpenDialog()或showSaveDialog()方法来打开文件对话框,此两个方法在用户按下按钮或关闭对话框时会返回一个整数值,这个整数值的类型有3种,分别是:
+   JFileChooser.CANCEL_OPTION:表示用户按下取消按钮.
+   JFileChooser.APPROVE_OPTION:表示用户按下确定按钮.
+   JFileChooser.ERROR_OPEION:表示有错误产生或是对话框不正常关闭.
+   利用这3个整数值我们就能判断用户到底在对话框中做了什么操作,并加以处理,例如当用户选择了文件并按下确定键后,我们就可以利用getSelectedFile()方法取得文件对象,利用这个文件对象我们就能够取得文件名称(getName())与文件路径(getPath());
+
+建立可选择文件类型的JFileChooser对话框:
+    当你专为某种文件类型设计一套软件时,为了用户打开文件存盘方便,我们通常会在文件对话框中过滤掉无关的文件类型,让用户很快速选择出想要的文件数据.例如在Word软件中,当我们按下"另存新文件"选项时,所出现的文件对话框将会以".doc"扩展名当作默认的文件存储类型.
+    如果你所设计的软件可以支持多种类型的文件操作,你应该设计让用户可以选择使用哪一种类型的文件.
+    若你想在java的文件对话框中做到这样的功能,你必须实现FileFilter这个抽象类.此抽象类里面定义了两个空的方法,分别是accept(File f)与getDescripton().当目录里的文件与设置的文件类型相符时,accept()方法就会返回true,并将此文件显示在文件对话框中.而getDescription()方法则是对此文件类型的描述,可由程序设计者自定义,如"*.java"等等.要设置选择文件类型对话框你可以使用JFileChooser的addChoosableFileFilter()方法或是setFileFilter()方法.下面这个例子我们实现FileFilter的功能,让用户打开文件时可以选择显示所有文件,或是*.java文件,亦或是*.class文件.
+
+建立具有特殊文件类型的图标的JFileChooser:在上个范例中,读者可以发现若你选择显示所有文件时,文件类型图标不会因扩展名的不同而有所区别,这样可能造成用户混淆或是使用上的不方便.要解决这个问题,你必须再实现FileView这个抽象类,此抽象类定义了5个空的方法,如下表所示:
+FileView方法:
+String    getDescription(File f):返回对这个文件的描述,如这是一张风景图片等.
+Icon      getIcon(File f):返回文件Icon图标.
+String    getName(File f):返回文件名.
+String    getTypeDescription(File f):返回文件类型描述,如:"JAVA Source File"等等.
+Boolean   isTraversable(File f):返回目录是否可浏览.
+
+建立颜色选择对话框(JColorChooer):
+   JColorChooer的类层次结构图:
+    java.lang.Object
+     --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.JColorChooser
+    Color Chooser可以让你选择所想要的颜色,并更改某个组件的颜色.例如在小画家中,你可以在画板上画上图案,并选择各式各样的颜色来加以装饰;至于颜色的选择上,你可以在小画家中找到颜色选择对话框.
+
+JColorChooser构造函数:
+JColorChooser():建立一个JColorChooer对象,默认颜色为白色.
+JColorChooser(Color initialColor):建立一个JColorChooer对象,并设置初始颜色.
+JColorChooser(ColorSelectionModel modal):以ColorSelectionModel构造JColorChooser对象.
+轻松输出颜色选择对话框:
+     最常使用JColorChooser的方式是使用JColorChooser的静态方法showDialog().也就是说在大部份的情况下,我们不会new一个JColorChooser对象,而是直接使用JColorChooser的静态方法(showDialog())来输出颜色选择对话框.利用这个方法我们亦可以得到用户所选择的颜色,若用户没有选择则返回null值.
+     另外还有一个使用JColorChooser常用的方式,那就是使用createDialog()静态方法.使用这个静态方法后会得到一个JDialog对象,我们可以利用这个JDialog对象对颜色选择对话框做更多的设置.不过利用这个方法必须配合JColorChooser对象才行,也就是必须new出一个JColorChooser对象来.下面范例我们先介绍第一种最简单的也是最实用的JColorChooser选择颜色完毕后就能更改JLabel上的背景颜色.
+将JColorChooser置于一般容器中显示.
+    我们刚刚所讲的JColorChooser都是以对话框的形式出现.事实上JColorChooser可以置于一般的java容器上,不过这时候你就必须实际构造出JColorChooser对象,并使用ColorSelectionModel来管理用户所选择的颜色.ColorSelectionModel本身是个interface.里面定义一些用户选择颜色或设置颜色的方法,并有addChangeListener()方法来检测用户是否改变了颜色的选择.要使用到ColorSelectionModel Interface所定义的方法,理论上我们必须实现它,然而java本身可利用JColorChooser所提供的getSelectionModel()方法得到ColorSelectionModel的实体.这时候就可以直接以ColorSelectionModel的addChangeListener()方法来检测用户是否对颜色的选择有所改变,而不需要再另外实现这些方法.
+    每当用户JColorChooser上做一次颜色的改变时,就会触发ChangeEvent事件,因此我们必须实现ChangeListener界面来处理这个事件.此界面只定义了一个方法,那就是stateChanged().下面范例我们将JColorChooser放在JPanel上,并在label上输出用户所选择的颜色与颜色参数.
+
+
+改变JColorChooser的颜色选择面版.
+    在以前我们曾经提到JColorChooser提供3种面版让我们选择,分别"Swatches","HSB"与"RGB".这3个面版是java已经构造好的颜色面版,如果佻要自行产生自己所设计的颜色面版,你可以继承AbstractColorChooserPanel这个抽象类,并实现里面的抽象方法,这个抽象类位于javax.swing.colorchooser这个package中.当你实现完成之后,你可以使用JColorChooser类提供的addChooserPanel()方法,或是setChooserPanels()方法,将你所设计的颜色面版增加到上图的颜色显示面版中.
+    若你想删除某一个颜色面版模式,你可以先使用JColorChooser类所提供的getChooserPanels()方法,得到类型为AbstractColorChooserPanel的Array Object.例如在上例中运行所示,"Swatches"就会放在此类型的Array[0]中,面"HSB"会放在Array[1]中,以此类推.得到此Array Object之后,我们就可以利用JColorChooser类提供的removeChooserPanel()方法.决定删除一个颜色面版.例如我们若要删除上例运行所示的"HSB"面版,我们可以在上面范例/****add code***/里面增加这2行程序:
+    AbstractColorChooserPanel[] colorPanel=colorChooser.getChooserPanels();
+    colorChooser.removeChooserPanel(colorPanel[1]);
+   
+
+建立分隔线(JSeparator):
+  JSeparator)的类层次结构图:
+    java.lang.Object
+     --java.awt.Component
+      --java.awt.Container
+       --javax.swing.JComponent
+        --javax.swing.JSeparator
+   JSeparator通常用在菜单(Menu)或工具栏(ToolBar)上,可以明显地分格出不同的功能区域.在JMenu或JPopupMenu中我们可以使用addSeparator()方法轻易的加入分隔线,但若是在一般的面版中呢?这时候我们必须自行建立JSeparator对象,然后再依照自己所需将分隔线放在所想要的位置上.JSeparator有水平与垂直两种,建立的方式非常简单,我们来看看JSeparator的构造函数:
+   JSeparator构造函数:
+   JSeparator():建立水平的JSeparator组件.
+   JSeparator(int orientation):建立水平或垂直的JSeparator组件.
+  JSeparator类所提供的方法跟其他Swing组件比较起来算是少了许多,因为分隔线本身并没有什么功能可言,主要是设置分隔线的方向,其他如分隔线的长短或设置位置方法,都可以在它的父类JComponent中找到.下面我们来看如何使用JSeparator,并显示水平与垂直分隔线的外观.
+使用JSlider组件:
+JSlider的类层次结构图:
+  java.lang.Object
+   --java.awt.COmponent
+    --java.awt.Container
+     --javax.swing.JComponent
+      --javax.swing.JSlider
+    我们曾在前面提到JScrollBar这个组件,可以让用户决定拉曳时一次滚动的区域大小,并且可以得到目前滚动杆上的值,看起来JScrollBar好象可以当作这种微调的组件.然而JScrollBar通常置于窗口的最右边或最下面,且常JScrollBar来使用,因此在外观上或实际应用上并不适合当微调工具使用,不过不用担心,java提供了一个特别为微调设计的组件,那就是JSlider.JSlider不仅可以置于面版的任何地方,也可以在JSlider上标上刻度与数字,既美观又实用,我们现在就来看如何使用JSlider吧.
+
+JSlider的构造函数:
+JSlider():建立一个水平的JSlider对象,刻度从0-100,初始刻度为50.
+JSlider(BoundedRangeModel brm):使用默认模式建立一个水平的JSlider对象.
+JSlider(int orientation):建立一个自定义方向的JSlider对象,刻度从0-100,初始刻度为50.
+JSlider(int min,int max):建立一个水平的JSlider对象,自定义刻度,从min-max,初始刻度为50.
+JSlider(int min, int max,int value):建立一个水平的JSlider的对象,自定义刻度与初始值.
+JSlider(int orientation,int min,int max,int value):建立一个自定义方向,刻度与刻度初始值的JSlider对象.
+   要使用JSlider组件就不得不提到JSlider事件的处理.当用户在JSlider上滑动杆时,就会产生ChangeEvent事件,若我们要处理ChangeEvent事件就必须实作ChangeListener界面,此界面定义了一个方法,那就是stateChanged().通常我们在这个方法上会取得或置滑动杆的相关信息,例如滑动杆的延伸区(extent),最大最小值或滑动杆目前所在刻度等等.
+使用Timer组件：
+   java.lang.Object
+    --javax.swing.Timer
+   使用Timer组件可以让你在一段时间内依次做出你指定的操作，这在动画的展示上非常有用。如果你有用过如ACDsee这类的看图软件，你可以发现这类软件都会提供一种功能，那就是自动换图的功能，而且也可以让你设置换图时间间隔的长短。在java中，swing的Timer组件就可以让你做到这样的功能，而且非常容易使用，下面我们先来看Timer的构造函数。
+
+Timer构造函数：Timer(int delay,ActionListener listener):建立一个Timer组件，并在每一次delay的时间点上触发ActionEvent.
+          使用Timer组件它会在根据你所给予的delay时间，周期性的触发ActionEvent事件，如果你要处理这个事件，你必须实作ActionListener界面所定义的actionPerformed()方法。要开始激活Timer组件，你可以用start()方法，要停止Timer组件可以使用stop()方法，要从新激活Timer组件可以使用restart()方法，若只想Timer组件只触发一次ActionEvent事件，可利用setRepeats(false)方法，将参数设为false，若要设置delay时间则可用setDelay()方法。
+    事实上使用Timer组件表示在程序背后是利用Threads在运行Timer的工作，因此你当然也可以利用Thread的功能来自行制造出这样的效果，不过这不在本书的讨论范围内，下面的范例我们实作一个显示图程序，可让用户调整显示图时间的快慢。
+
+使用Progress Bar组件：
+JProgressBar的类层次结构图：
+  java.lang.Object
+   --java.awt.Component
+     --java.awt.Container
+      --javax.swing.JComponent
+       --javax.swing.JProgressBar
+   当你在安装一个新软件时，系统会告知你目前软件安装的进度如何？才不会让你觉得程序好像死了，同样的，若你设计的程序所需要的运行超过2秒以上，你应该显示程序正在运行中的图标，或直接显示程序运行的进度，这样就能让用户清楚知道程序到底是死了还是继续运行，在swing中，JProgressBar组件提供了类似这样的功能，它可以簋简单地输出进度的变化情况，让你想要提供进度信息时，不再需要自行绘制绘图组件，只需要使用JProgressBar再加上几行程序设置就可以了。以下是JProgressBar的范例，在此范例中，我们使用Timer组件当作控制进度杆移动的速度，当用户按下"start"按钮，则进度杆线就会开始向右移动，并显示出目前的进度信息。每当JProgressBar的值改变一次（利用setValue()方法），就会触发一次ChangeEvent事件，如果你要处理这个事件，你必须实作ChangeListener界面所定义的stateChanged()方法，在此我们是将JPogressBar的移动信息放在label上。
+
+ Copyright ©2011 lyt. All Rights Reserved.
+
+

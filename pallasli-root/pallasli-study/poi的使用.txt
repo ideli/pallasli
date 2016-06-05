@@ -59,3 +59,255 @@ wb.write(response.getOutputStream());
 反复读写一个excel文件，读的速度会越来越慢
 不支持图片
 打开的sheet页执行sheet.setRowBreak 当sheet里原本没有分页符时会抛出异常
+
+
+
+
+
+java核心技术学习
+word03
+
+
+ //读取：
+org.textmining.text.extraction.WordExtractor doc = new org.textmining.text.extraction.WordExtractor();
+   String text = new org.textmining.text.extraction.WordExtractor()
+     .extractText(new FileInputStream(
+       "E:/eworkspace/poitest/resources/word03.doc"));
+    //修改
+     
+   String path = "E:/eworkspace/poitest/resources/word03.doc";
+   String content = "what";
+ 
+ 
+   // byte[] b = content.getBytes("ISO-8859-1");
+   byte[] b = content.getBytes();
+   ByteArrayInputStream bais = new ByteArrayInputStream(b);
+   POIFSFileSystem fs = new POIFSFileSystem();
+   DirectoryEntry dir = fs.getRoot();
+   DocumentEntry de = dir.createDocument("WordDocument", bais);
+   FileOutputStream fos = new FileOutputStream(path);
+   fs.writeFilesystem(fos);
+   bais.close();
+   fos.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+word07
+
+//读取
+ XWPFDocument docx = new XWPFDocument(POIXMLDocument
+     .openPackage("E:/word07.docx"));
+   // get .doc extractor
+   XWPFWordExtractor doc = new XWPFWordExtractor(POIXMLDocument
+     .openPackage("E:/word07.docx"));
+   // get .doc context
+   String text = doc.getText();
+   System.out.println(text);
+   int pageCount = docx.getProperties().getExtendedProperties()
+     .getUnderlyingProperties().getPages();
+   System.out.println(pageCount);
+   int wordCount = docx.getProperties().getExtendedProperties()
+     .getUnderlyingProperties().getCharacters();
+   System.out.println(wordCount);
+   // get .doc comments
+   XWPFComment[] comments = ((XWPFDocument) (doc.getDocument()))
+     .getComments();
+   for (XWPFComment comment : comments) {
+    comment.getId();
+    comment.getAuthor();
+    comment.getText();
+   }
+ //修改
+ String path = "E:/word07.docx";
+   String content = "what";
+   // byte[] b = content.getBytes("ISO-8859-1");
+   byte[] b = content.getBytes();
+   ByteArrayInputStream bais = new ByteArrayInputStream(b);
+   POIFSFileSystem fs = new POIFSFileSystem();
+   DirectoryEntry dir = fs.getRoot();
+   DocumentEntry de = dir.createDocument("WordDocument", bais);
+   FileOutputStream fos = new FileOutputStream(path);
+   fs.writeFilesystem(fos);
+   bais.close();
+   fos.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+xsl03
+
+//读取
+   final String filename = "xls03.xls";
+   HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(filename));
+   HSSFSheet sheet = wb.getSheet("test1");
+   HSSFSheet sheetnum = wb.getSheetAt(0);
+   HSSFRow row = sheet.getRow(0);
+   HSSFRow rownum = sheetnum.getRow(0);
+   HSSFCell cell = row.getCell(3);
+   HSSFCell cellnum = rownum.getCell(3);
+   System.out.println(cell.getStringCellValue());
+   System.out.println(cellnum.getStringCellValue());
+ 
+       //修
+   HSSFWorkbook wb = new HSSFWorkbook();
+   HSSFSheet sheet = wb.createSheet("test1");
+   HSSFRow row1 = sheet.createRow(0);
+   HSSFRow row2 = sheet.createRow(1);
+   HSSFRow row3 = sheet.createRow(2);
+   HSSFCell cellA1 = row1.createCell(0);
+   HSSFCell cellZH = row1.createCell(2);
+   HSSFCell cellZH2 = row1.createCell(3);
+   HSSFCell cellDate = row1.createCell(4);
+   HSSFCell cellA2 = row2.createCell(0);
+   HSSFCell cellA3 = row3.createCell(0);
+   cellA1.setCellValue(1);
+   row1.createCell(1).setCellValue(2);
+   cellZH.setCellValue("lie1");
+   cellZH2.setCellValue("lie2");
+   cellDate.setCellValue(new Date());
+   HSSFCellStyle styleDate = wb.createCellStyle();
+   styleDate.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy h:mm"));
+   cellDate.setCellStyle(styleDate);
+   cellA2.setCellValue(2);
+   HSSFCellStyle style = wb.createCellStyle();
+   style.setDataFormat(HSSFDataFormat.getBuiltinFormat("($#,##0_);[Red]($#,##0)"));
+   style.setFillBackgroundColor(HSSFColor.AQUA.index);
+   style.setFillPattern(HSSFCellStyle.BIG_SPOTS);
+   HSSFFont font = wb.createFont();
+   font.setColor(HSSFFont.COLOR_RED);
+   font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+   style.setFont(font);
+   cellA3.setCellStyle(style);
+   cellA3.setCellFormula("SUM(A1:A2)");
+   FileOutputStream fo = new FileOutputStream("xls03.xls");
+   wb.write(fo);
+   fo.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+java核心技术学习
+xsl07
+
+//读取
+
+   final String filename = "xls07.xlsx";
+   XSSFWorkbook wb = new XSSFWorkbook(POIXMLDocument
+     .openPackage(filename));
+   XSSFSheet sheet = wb.getSheet("test1");
+   XSSFSheet sheetnum = wb.getSheetAt(0);
+   XSSFRow row = sheet.getRow(0);
+   XSSFRow rownum = sheetnum.getRow(0);
+   XSSFCell cell = row.getCell(3);
+   XSSFCell cellnum = rownum.getCell(3);
+   System.out.println(cell.getStringCellValue());
+   System.out.println(cellnum.getStringCellValue());
+//修改
+final String filename = "xls07.xlsx";
+ XSSFWorkbook wb = new XSSFWorkbook(POIXMLDocument
+     .openPackage(filename));
+ XSSFSheet sheet = wb.createSheet("test1");
+ XSSFRow row1 = sheet.createRow(0);
+ XSSFRow row2 = sheet.createRow(1);
+XSSFRow row3 = sheet.createRow(2);
+XSSFCell cellA1 = row1.createCell(0);
+XSSFCell cellZH = row1.createCell(2);
+XSSFCell cellZH2 = row1.createCell(3);
+XSSFCell cellDate = row1.createCell(4);
+XSSFCell cellA2 = row2.createCell(0);
+XSSFCell cellA3 = row3.createCell(0);
+cellA1.setCellValue(1);
+row1.createCell(1).setCellValue(2);
+cellZH.setCellValue("lie1");
+cellZH2.setCellValue("lie2");
+cellDate.setCellValue(new Date());
+XSSFCellStyle styleDate = wb.createCellStyle();
+// styleDate.setDataFormat(xssfDataFormat
+// .getBuiltinFormat("m/d/yy h:mm"));
+cellDate.setCellStyle(styleDate);
+cellA2.setCellValue(2);
+XSSFCellStyle style = wb.createCellStyle();
+// style.setDataFormat(xssfDataFormat
+ // .getBuiltinFormat("($#,##0_);[Red]($#,##0)"));
+// style.setFillBackgroundColor(XSSFColor);
+style.setFillPattern(XSSFCellStyle.BIG_SPOTS);
+XSSFFont font = wb.createFont();
+font.setColor(XSSFFont.COLOR_RED);
+font.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+style.setFont(font);
+cellA3.setCellStyle(style);
+cellA3.setCellFormula("SUM(A1:A2)");
+FileOutputStream fo = new FileOutputStream("xls07.xlsx");
+wb.write(fo);
+fo.close();
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+
+
+java核心技术学习
+xsl读取属性
+
+//读取合法属性集 final String filename = "E:/xls07.xlsx";
+  POIFSReader r = new POIFSReader();
+  r.registerListener(new MyPOIFSReaderListener(),
+    "\005SummaryInformation");
+  try {
+   r.read(new FileInputStream(filename));  } catch (FileNotFoundException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (IOException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } //读取摘要信息属性集 final String filename = "E:/xls07.xlsx";
+  POIFSReader r = new POIFSReader();
+  r.registerListener(new MyPOIFSReaderListener(),
+    "\005DocumentSummaryInformation");
+  try {
+   r.read(new FileInputStream(filename));  } catch (FileNotFoundException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (IOException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } 
+//读取属性的监听类
+ class MyPOIFSReaderListener implements POIFSReaderListener { public void processPOIFSReaderEvent(POIFSReaderEvent event) {
+  SummaryInformation si = null;
+  try {
+   si = (SummaryInformation) PropertySetFactory.create(event
+     .getStream());
+  } catch (NoPropertySetStreamException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (MarkUnsupportedException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (UnsupportedEncodingException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  } catch (IOException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+  }
+  final String title = si.getTitle();
+  if (title != null) {
+   System.out.println(title);
+  } else {   System.out.println("no title");
+  }
+ }
+}
+ Copyright ©2011 lyt. All Rights Reserved.
+
+
+
+
+

@@ -1,0 +1,2015 @@
+
+java核心技术学习
+ibatiS基础
+
+iBatis 应用中的多数据库支持
+在 iBatis 应用中，开发者仍需自己编写具体的 SQL 语句，iBatis 只是隐藏和简化了 JDBC 的相关调用。
+实际开发中，我们不免需要就 SQL 语句针对各种特定的数据库进行特殊优化，以期获取更好的执行性能，随之而来的一个问题是，如何应对新的数据库平台支持的需求。
+一般的做法是，修改 SQL 映射文件，提供一些新的针对新数据库平台的 SQL 语句版本，然后修改程序代码，添加相应调用。继续上面的例子。上面的例子中，对于 SQL 语句 GETMOSTPOPULARBLOG 的定义，我们使用了 DB2 特有的 SQL 方言“FETCH FIRST n ROWS ONLY”，对于这样的程序，如果希望增加对 MYSQL 的支持，按照一般的做法，需要：
+1．修改 SQLMAP.XML，增加语句定义“GETMOSTPOPULARBLOG_MYSQL”。
+清单 5. 增加语句定义
+                  ......   select * from blogs order by rating desc fetch first $size$ rows only   select * from blogs order by rating desc limit 0, $size$  ...... 
+ 2．搜索程序代码，在每一个调用 iBatis “GETMOSTPOPULARBLOG”的地方，增加检测 MYSQL 数据库引擎的代码，并添加对“GETMOSTPOPULARBLOG_MYSQL”的 iBatis 调用。
+清单 6. 增加检测数据库引擎的代码
+                  ......   SqlMapClient client = ...;  ......  // 查询  Map params = new HashMap();  params.put(size, 5);  List l = null;  Connection conn = client.getCurrentConnection();  String prodName = conn.getMetaData().getDatabaseProductName().toLowerCase();  if (prodName.indexOf("mysql") > - 1) {    //Microsoft SQL Server    l = client. queryForList("GETMOSTPOPULARBLOG_MYSQL", params);  } else {    l = client. queryForList("GETMOSTPOPULARBLOG", params);  }    ...... 
+ 
+每增加一个新的数据库支持，增加了一些新的针对新数据库平台的 SQL 语句版本，我们就不得不搜索源代码，找出所有受到影响的 iBatis 调用，修改并增加针对新数据库的特殊调用。代码维护时，每次涉及使用数据库方言的 SQL 语句，我们也都必须记住小心谨慎地处理所有相关的数据库特化调用。这样的工作乏味且容易出错。
+本文，我们试图在分析 iBatis 源码的基础上，通过适当扩展 iBatis，提供一个高效方便的解决方案。
+ 
+ 扩展 SqlMapConfigParser
+在 iBatis 应用中，SqlMapConfigParser 负责解析 iBatis 配置文件，加载所有的 SQL 映射文件，生成 SqlMapClient 实例，这是持久化调用的入口。
+SqlMapConfigParser 的实现并不复杂。成员函数 parser 将传入的配置文件 XML 输入流交给一个 XML 解析器。XML 解析器解析 XML 输入，并针对每一个 XML Fragment 调用合适的处理器处理。所有的处理器都在 SqlMapConfigParser 类实例初始化时预先被注册到 XML 解析器上，其中，对于 iBatis 配置中的 SQL 映射声明，只是简单地调用类 SqlMapParser 中的 parser 方法，解析并加载相应的 SQL 映射定义文件。
+
+清单 7. SqlMapConfigParser 实现
+                  public class SqlMapConfigParser {    //XML 解析器    protected final NodeletParser parser = new NodeletParser();      public SqlMapConfigParser() {      ......        // 注册 XML 处理器      addSqlMapNodelets();      ...... // more    }      public SqlMapClient parse(Reader reader) {      ......      // 调用 XML 解析器解析传入的配置文件 XML 输入流      parser.parse(reader);      return vars.client;    }      protected void addSqlMapNodelets() {      //XML 处理器，处理 XPath:"/sqlMapConfig/sqlMap"，即 SQL 映射声明      parser.addNodelet("/sqlMapConfig/sqlMap", new Nodelet() {        public void process(Node node)throws Exception {          Properties attributes = NodeletUtils.parseAttributes(node);           String resource = attributes.getProperty("resource");           Reader reader = Resources.getResourceAsReader(resource);           new SqlMapParser(vars).parse(reader); // 调用 SqlMapParser.parser 方法          // 解析并加载 SQL 映射文件          ......        }      }      );    }    ......  } 
+ 
+我们继承 iBatis 原有的配置文件解析器实现 SqlMapConfigParser，重写其中对 SQL 映射声明的处理。
+首先，我们重写 SqlMapConfigParser 的成员函数 addSqlMapNodelets。对于从 XML 解析器传入的 SQL 映射声明节点，我们并不立即进行解析处理，而只是将它们记录下来。
+
+清单 8. 重写 addSqlMapNodelets 方法
+                  public class SqlMapConfigParserEx extends SqlMapConfigParser {   List sqlMapNodeList = new ArrayList();    .......     protected void addSqlMapNodelets() {    //XML 处理器，处理 XPath:”/sqlMapConfig/sqlMap”，即 SQL 映射声明      parser.addNodelet("/sqlMapConfig/sqlMap", new Nodelet() {        public void process(Node node)throws Exception {          sqlMapNodeList.addNode(node);        }      }     );    }    ......  } 
+ 
+这些 SQL 映射声明被放到最后处理，此时 SqlMapClient 实例已经基本构造完毕，至少，我们可以安全地调用它的相关方法，打开数据库连接，查询数据库引擎相关信息。对于每个 SQL 映射声明，SqlMapConfigParserEx 调用其成员函数方法 handleSqlMapNode 进行相应的 SQL 映射文件解析和加载处理，数据库引擎支持的 SQL 方言版本信息作为参数被一并传入。
+
+清单 9. 重写 parse 方法
+                  public interface DialectMapping {    public String getDialect(String productName);    // 返回数据库平台支持的 SQL 方言信息  }    public class SqlMapConfigParserEx extends SqlMapConfigParser {    List sqlMapNodeList = new ArrayList();    DialectMapping dialectMapping = ...;    .......     public SqlMapClient parse(Reader reader) {      ......       super.parse(reader);      String sqlDialect = null;      SqlMapClient client = vars.client;      Connection conn = client.getDataSource().getConnection();      DatabaseMetaData dbMetaData = conn.getMetaData();      String productName = dbMetaData.getDatabaseProductName();      sqlDialect = dialectMapping.getDialect(productName);      conn.close();        for (Iterator iter = sqlMapNodeList.iterator(); iter.hasNext();) {        handleSqlMapNode((Node)iter.next(), sqlDialect);      }        return client;    }    ......  } 
+ 
+对于传入的 SQL 映射声明，除了解析并加载 SQL 映射声明中指定的 SQL 映射文件，handleSqlMapNode 还根据传入的 SQL 方言版本信息，以一定的路径规则，寻找针对该 SQL 方言的 SQL 映射文件定制版本，将它们一并解析加载。
+
+清单 10. handleSqlMapNode 方法
+                  public interface SqlMapStreamMerger {    public void addInput(InputStream input);    public InputStream merge();    ......  }    public class SqlMapConfigParserEx extends SqlMapConfigParser {    SqlMapStreamMerger sqlMapStreamMerger = ...;    .......         public void handleSqlMapNode(Node node, String sqlDialect) {      Properties attributes = NodeletUtils.parseAttributes(node);      String resource = attributes.getProperty("resource");      // 读取 SQL 映射声明指定的 SQL 映射文件      InputStream is = Resources.getResourceAsStream(resource);      sqlMapStreamMerger.addInput(is);      // 寻找并试图读取针对 SQL 方言 sqlDialect 的 SQL 映射文件定制版本      int idx = resource.lastIndexOf('/');      resource = resource.substring(0, idx) + "/" + sqlDialect +        resource.substring(idx);      is = Resources.getResourceAsStream(resource);      if (is != null) {        sqlMapStreamMerger.addInput(is);      }      // 将读取到的 SQL 映射文件，包括基本的 SQL 映射文件，以及为特定数据库的定制版本，      // 合成一个 SQL 映射文件 XML 数据流交给 SqlMapParser 解析处理      Reader reader = new InputStreamReader(sqlMapStreamMerger.merge());      new SqlMapParser(vars).parse(reader);    }        ......  } 
+ 
+成员函数 handleSqlMapNode 将找到的 SQL 映射文件，包括 SQL 映射声明中指定的基本的 SQL 映射文件，以及以一定路径规则找到的针对特定数据库的 SQL 映射文件定制版本，通过 SqlMapStreamMerge 对象整合成一个 SQL 映射文件，才递交给 SqlMapParser 解析处理。SqlMapStreamMerge 确保：
+结果 SQL 映射文件中不存在重复 ID 的 SQL 映射配置块（statement、insert、update、delete、sql、resultMap 等）。如果基本的 SQL 映射文件与针对特定数据库的 SQL 映射文件定制版本之间存在重复 ID 的 SQL 映射配置块定义，SqlMapStreamMerge 保留后者覆盖前者；
+结果 SQL 映射文件中的配置块按引用依赖顺序有序排列。即所有的 resultMap 声明都位于引用它们的 statement 声明之前，被继承的 resultMap 声明都位于继承的 resultMap 声明之前等。
+先 Merge 再解析，这是必要的，因为 SqlMapParser 本身并不支持 SQL 映射定义的方法重写。
+ 
+ 使用
+使用扩展的 SqlMapConfigParser 实现 —— SqlMapConfigParserEx，可以大大简化应用程序中多数据库支持问题的解决。
+还是之前那个例子。
+首先，我们使用 SqlMapConfigParserEx 替换程序中的 SqlMapConfigParser 使用。
+
+清单 11. 在应用代码中使用扩展的 SqlMapConfigParserEx
+                  String cfg = "SQLMAPCONFIG.XML";  Reader r = Resources.getResourceAsReader(cfg);    // old code  // SqlMapClient client = new SqlMapConfigParser().parse(r);    // new code  SqlMapClient client = new SqlMapConfigParserEx().parse(r);  ... 
+ 
+现在，要增加对 MySQL 的支持，只需建立一个新的 SQL 映射文件 /mysql/SQLMAP.XML，重写 SQLMAP.XML 中 GETMOSTPOPULARBLOG 的 SQL 定义。Java 代码可以继续保持数据库平台透明性，无需作出任何修改。
+
+清单 12. 针对 MySQL 的配置文件 /mysql/SQLMAP.XML
+                        select * from blogs order by rating desc limit 0, $size$   
+ 
+运行时，SqlMapConfigParserEx 会自动检测数据库引擎版本信息，读取文件 /mysql/SQLMAP.XML，使用其中的（针对 MYSQL 定制的）GETMOSTPOPULARBLOG 定义覆盖 SQLMAP.XML 中的 DB2 方言版本，从而确保程序行为的正确性。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+sqlMapClient
+
+String resource = "sqlMapConfig.xml";
+Reader reader = Resources.getResourceAsReader(resource);
+sqlMapClient = SqlMapClientBuilder.buildSqlMapClient(reader);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+分页查询
+
+// 总记录数
+int rowCount = worklogDAO.countByExample(new WorklogExample());
+// 起始位置
+int startIndex = pageSize * (pageNo - 1);
+// 分页条件
+WorklogExample example = new WorklogExample();
+Criteria criteria = example.createCriteria();
+criteria.andUsernameEqualTo(username);
+example.setOrderByClause("year desc,month desc,day desc");
+example.setLimitClauseStart(String.valueOf(startIndex));
+example.setLimitClauseCount(String.valueOf(pageSize));
+List<?> result = worklogDAO.selectByExample(example);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+基本语句
+
+查询一条记录smsDAO.selectByPrimaryKey(Long.valueOf(id.toString()));
+修改一条记录smsDAO.updateByPrimaryKey(record);
+插入一条记录smsDAO.insert(record)
+删除一条记录smsDAO.deleteByPrimaryKey(Long.valueOf(id.toString())) 
+sqlMapClient.queryForObject( "DEMO_SCHEDULE.abatorgenerated_countByExample", example);
+UpdateByExampleParms parms = new UpdateByExampleParms(record, example);
+ sqlMapClient .update("DEMO_SCHEDULE.abatorgenerated_updateByExampleSelective",parms)
+sqlMapClient.delete( "DEMO_SCHEDULE.abatorgenerated_deleteByPrimaryKey", key); 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+java核心技术学习
+SQL 映射文件—— SQLMAP.XML
+
+insert into blogs(id, name, rating) values(#id#, #name#, #rating#)
+       update blogs set name = #name#, rating = #rating# where id = #id# 
+       delete from blogs where id = #id# 
+       select * from blogs order by rating desc fetch first $size$ rows only 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+SQL 访问示例
+
+String cfg = "SQLMAPCONFIG.XML"; 
+ Reader r = Resources.getResourceAsReader(cfg);
+  SqlMapClient client = new SqlMapConfigParser().parse(r);  ... 
+// 插入 
+BlogData o = new BlogData(); 
+o.setId("id"); 
+o.setName("test");
+  client.insert("SAVEBLOG", o);  ... 
+// 更新 
+o.setRating(10);  client.update("UPDATEBLOG", o);  ... 
+// 删除 
+ client.delete("REMOVEBLOG", "id");  ... 
+// 查询 
+Map params = new HashMap(); 
+params.put(size, 5); 
+ List l = client. queryForList("GETMOSTPOPULARBLOG", params, 0, 5);
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+ibatiS配置文件
+
+手写Sqlmap分表配置文件
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="user">
+    <select id="getUser" resultClass="com.demo.ibatis.beans.User">
+        SELECT * FROM user
+        WHERE username = #username#
+    </select>
+</sqlMap>
+ 
+Sqlmap配置文件
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMapConfig     
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"     
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings enhancementEnabled="true" useStatementNamespaces="true"
+        cacheModelsEnabled="true" lazyLoadingEnabled="true" />
+ 
+    <transactionManager type="JDBC">
+ 
+        <dataSource type="SIMPLE">
+            <property name="JDBC.Driver" value="com.mysql.jdbc.Driver" />
+            <property name="JDBC.ConnectionURL"
+                value="jdbc:mysql://localhost:3306/demo" />
+            <property name="JDBC.Username" value="root" />
+            <property name="JDBC.Password" value="123" />
+            <property name="Pool.MaximumActiveConnections" value="10" />
+            <property name="Pool.MaximumIdleConnections" value="5" />
+            <property name="Pool.MaximumCheckoutTime" value="120000" />
+            <property name="Pool.TimeToWait" value="500" />
+            <property name="Pool.PingQuery" value="select 1 from user" />
+            <property name="Pool.PingEnabled" value="false" />
+            <property name="Pool.PingConnectionsOlderThan" value="1" />
+            <property name="Pool.PingConnectionsNotUsedFor" value="1" />
+        </dataSource>
+    </transactionManager>
+ 
+    <sqlMap resource="com/demo/ibatis/beans/user_SqlMap.xml" />
+ 
+</sqlMapConfig>
+ 
+ 
+ 
+Ibator生成sqlmap配置文件
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+<abatorConfiguration >
+  <abatorContext generatorSet="Java5">
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/demo" userId="root" password="123" >
+      <classPathEntry location="D:\workspace\iBATORTest\lib\mysql-connector-java-5.0.8-bin.jar" />
+    </jdbcConnection>
+    <javaModelGenerator targetPackage="com.demo.ibatis.beans" targetProject="iBATORTest" />
+    <sqlMapGenerator targetPackage="com.demo.ibatis.beans" targetProject="iBATORTest" />
+    <daoGenerator targetPackage="com.demo.ibatis.dao" targetProject="iBATORTest" type="GENERIC-SI" />
+ 
+    <table schema="demo" tableName="user" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+  </abatorContext>
+</abatorConfiguration>
+ 
+ 
+sqlmap工厂类
+import java.io.Reader;
+ 
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
+ 
+public class SqlMapClientFactory {
+private static final SqlMapClient sqlMapClient;
+static {
+String resource = "sqlMapConfig.xml";
+Reader read = Resources.getResourceAsReader(resource);
+sqlMapClient = SqlMapClientBuilder.buildSqlMapClient(read);
+   
+}
+public static SqlMapClient getSqlMapClient() {
+        return sqlMapClient;
+    }
+}
+ 
+ 
+Sqlmap工厂使用
+UserDAOImpl userDAO = new UserDAOImpl();
+userDAO.setSqlMapClient(SqlMapClientFactory.getSqlMapClient());
+UserExample example = new UserExample();
+Criteria criteria = example.createCriteria();
+criteria.andUsernameEqualTo("admin");
+List<User> list = userDAO.selectByExample(example);
+Ibator多表
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+<abatorConfiguration >
+  <abatorContext generatorSet="Java5">
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/demo" userId="root" password="123" >
+      <classPathEntry location="D:\workspace\ibatismysql\lib\mysql-connector-java-5.0.8-bin.jar" />
+    </jdbcConnection>
+    <javaModelGenerator targetPackage="com.demo.ibatis.beans" targetProject="ibatismysql" />
+    <sqlMapGenerator targetPackage="com.demo.ibatis.beans" targetProject="ibatismysql" />
+    <daoGenerator targetPackage="com.demo.ibatis.dao" targetProject="ibatismysql" type="GENERIC-SI" />
+ 
+    <table schema="demo" tableName="user" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="address" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="sms" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="schedule" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="worklog" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="notice" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+    <table schema="demo" tableName="meeting" >
+        <generatedKey column="id" sqlStatement="MYSQL" identity="true" type="post"/>
+    </table>
+  </abatorContext>
+</abatorConfiguration>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+事务类型
+
+1. PROPAGATION_REQUIRED: 如果存在一个事务，则支持当前事务。如果没有事务则开启
+2. PROPAGATION_SUPPORTS: 如果存在一个事务，支持当前事务。如果没有事务，则非事务的执行
+3. PROPAGATION_MANDATORY: 如果已经存在一个事务，支持当前事务。如果没有一个活动的事务，则抛出异常。
+4. PROPAGATION_REQUIRES_NEW: 总是开启一个新的事务。如果一个事务已经存在，则将这个存在的事务挂起。
+5. PROPAGATION_NOT_SUPPORTED: 总是非事务地执行，并挂起任何存在的事务。
+6. PROPAGATION_NEVER: 总是非事务地执行，如果存在一个活动事务，则抛出异常
+7. PROPAGATION_NESTED：如果一个活动的事务存在，则运行在一个嵌套的事务中. 如果没有活动事务, 则按TransactionDefinition.PROPAGATION_REQUIRED 属性执行
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+sqlMapConfig
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+ <settings enhancementEnabled="true" useStatementNamespaces="true"
+  cacheModelsEnabled="true" lazyLoadingEnabled="true" />
+ <transactionManager type="JDBC">
+  <dataSource type="SIMPLE">
+   <property name="JDBC.Driver" value="oracle.jdbc.driver.OracleDriver" />
+   <property name="JDBC.ConnectionURL"
+    value="jdbc:oracle:thin:@localhost:1521:dbhouse" />
+   <property name="JDBC.Username" value="demo" />
+   <property name="JDBC.Password" value="demo" />
+   <property name="Pool.MaximumActiveConnections" value="10" />
+   <property name="Pool.MaximumIdleConnections" value="5" />
+   <property name="Pool.MaximumCheckoutTime" value="120000" />
+   <property name="Pool.TimeToWait" value="500" />
+   <property name="Pool.PingQuery" value="select 1 from users" />
+   <property name="Pool.PingEnabled" value="false" />
+   <property name="Pool.PingConnectionsOlderThan" value="1" />
+   <property name="Pool.PingConnectionsNotUsedFor" value="1" />
+  </dataSource>
+ </transactionManager>
+ <sqlMap resource="com/demo/ibatis/beans/DEMO_USERS_SqlMap.xml" />
+ <sqlMap resource="com/demo/ibatis/beans/DEMO_ADDRESS_SqlMap.xml" />
+</sqlMapConfig>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+sqlmap配置
+
+一、Mapped Statements
+Mapped statements可以是任何一个SQL statement，并且可以指定输入参数的map和输出结果的map。
+简单的情况下，mapped statement可以直接指定一个类来做为输入参数和输出结果参数。mapped statement也可以使用cache model在内存中缓冲经常使用的数据。 
+<statement   id="statementName"
+                   [parameterClass="some.class.Name"]
+                   [resultClass="some.class.Name"]
+                   [parameterMap="nameOfParameterMap"]
+                   [resultMap="nameOfResultMap"]
+                   [cacheModel="nameOfCache"]>
+     select * from PRODUCT where PRD_ID = [?|#propertyName#] order by [$simpleDynamic$]
+</statement>
+在上面的statement的配置中，放在[]中的配置参数是可选的，所以下面的Mapped Statement是完全合法的。
+<statement id="insertTestProduct">
+     insert into PRODUCT (PRD_ID, PRD_DESCRIPTION) values (1, "Shih Tzu")
+</statement>
+下面逐一介绍各个标签的含义以及使用方法：
+1. Statement 类型
+下表中列出了所有的Statement，以及他们的属性和所支持的特征。
+Statement Element
+ 
+Attributes
+ 
+Child Elements
+ 
+Methods
+ 
+<statement>
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+cacheModel
+xmlResultName
+All dynamic elements
+insert
+update
+delete
+All query methods
+<insert>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+<selectKey>
+insert
+update
+delete
+<update>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+ 
+insert
+update
+delete
+<delete>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+insert
+update
+delete
+<select>
+ 
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+cacheModel
+All dynamic elements
+All query methods
+<procedure>
+ 
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+xmlResultName
+All dynamic elements
+insert
+update
+delete
+All query methods
+ 
+<statement id="statementName"
+              [parameterClass="some.class.Name"]
+              [resultClass="some.class.Name"]
+              [parameterMap="nameOfParameterMap"]
+              [resultMap="nameOfResultMap"]
+              [cacheModel="nameOfCache"]>
+   select * from PRODUCT where PRD_ID = [?|#propertyName#] order by [$simpleDynamic$]
+</statement>
+2. the SQL
+sql语句无疑是map中最重要的组成部分，你可以使用任何的sql语句，只要你的数据库和JDBC驱动支持就行。你也可以使用数据库和驱动支持的任何函数。因为你是将sql语句写在了XML文档中，为了区别Sql中的"<>"和XML中的"<>"，在写Sql时，可以用<![CDATA[ SQL ]]>来写。
+3. 自增
+很多关系型数据库都支持主键的自增，SQL Map可以通过<insert>标签中的<selectKey>来支持自增。预生成（如Oracle）和后生成（如Sql Server）都支持，下面是例子： 
+<!—Oracle SEQUENCE Example -->
+<insert id="insertProduct-ORACLE" parameterClass="com.domain.Product">
+     <selectKey resultClass="int" keyProperty="id" >
+         SELECT STOCKIDSEQUENCE.NEXTVAL AS ID FROM DUAL
+     </selectKey>
+     insert into PRODUCT (PRD_ID,PRD_DESCRIPTION) values (#id#,#description#)
+</insert>
+ 
+<!— Microsoft SQL Server IDENTITY Column Example -->
+<insert id="insertProduct-MS-SQL" parameterClass="com.domain.Product">
+     insert into PRODUCT (PRD_DESCRIPTION) values (#description#)
+     <selectKey resultClass="int" keyProperty="id" >
+         SELECT @@IDENTITY AS ID
+     </selectKey>
+</insert>
+ 
+4. 存储过程：
+通过<procedure>标签来支持存储过程，下面的例子显示了如何使用带有输出参数的存储过程。
+<parameterMap id="swapParameters" class="map" >
+     <parameter property="email1" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="email2" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<procedure id="swapEmailAddresses" parameterMap="swapParameters" >
+     {call swap_email_address (?, ?)}
+</procedure>
+ 
+调用上面的存储过程会在数据表的两列间交换Email地址，而且在对应的参数对象中的也会交换。记住：当parameter mapping的mode为INOUT或OUT的时候，
+你输入的参数对象才会改变。很显然，不变的参数对象也是不会改变的，比如说String对象。
+ 
+记住：一定要使用标准的JDBC存储过程的语法。请参见JDBC CallableStatement documentation以获取更多信息。
+statement中的参数简介：
+1. parameterClass
+parameterClass 属性的值是Java类的全限定名（即包括类的包名）。parameterClass属性是可选的，目的是限制输入参数的类型为指定的Java 类。虽然Parameter-class属性是可选的，建议你为每一个SQL都指定parameterClass。如果不指定parameterClass 参数，任何带有合适属性（get/set 方法）的Java Bean 都可以作为输入参数。如果你使用了parameterMap, 那么你就不需要再使用parameterClass属性了。
+下面是例子：
+例1：
+<insert id="insertAuthor2" parameterClass="Author">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name#,#age#,#telephone#,#address#)
+</insert>
+ 
+在上面的语句中，你指定的parameterClass=Author，那么在你的Author类中要有name,age,telephone和address属性，并且要有相应的get和set方法
+例2：
+你可以使用基本类型作为parameterClass，如：
+<delete id="deleteAuthor" parameterClass="int">
+     delete from author WHERE auth_id = #id#
+</delete>
+例3：
+你可以使用HashMap作为parameterClass，如：
+<insert id="insertAuthor3" parameterClass="java.util.HashMap">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name#,#age#,#telephone#,#address#)
+</insert>
+这时候，在你调用insertAuthor3的时候，你首先应该给传入的Map对象赋值，调用代码如下：
+     HashMap paramMap = new HashMap();
+     paramMap.put("name", "作者三");
+     paramMap.put("age",new Integer(31));
+     paramMap.put("address","南京");
+     paramMap.put("telephone","025-987654321");
+     sqlMapClient.insert("insertAuthor3", paramMap);
+ 
+2. parameterMap
+parameterMap 定义一系列有次序的参数用于匹配PreparedStatement 的JDBC值符号。
+parameterMap属性很少使用，parameterMap 属性的值等于指定的parameterMap元素的name属性值。通常（和缺省的）的方法是使用inline parameters。
+注意！动态mapped statement 只支持inline parameter，不支持parameter map。关于动态mapped statement，将在后文中介绍。
+例如：
+<parameterMap id="authorParameter" class="Author">
+     <parameter property="name" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="age" jdbcType="INTEGER" javaType="java.lang.Integer" mode="INOUT"/>
+     <parameter property="telephone" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="address" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<insert id="insertAuthor1" parameterMap="authorParameter">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (?,?,?,?)
+</insert>
+ 
+上面的例子中，parameterMap的参数按次序匹配SQL语句中的值符号（?）。因此，第一个"?"号将被"name"属性的值替换，而第二个"?"号将被"age"属性的值替换，依此类推。
+记住：使用parameterMap的时候，SQL中的参数用"?"来代替，并且每个"?"的顺序要与parameterMap中的定义完全匹配；如果使用parameterClass，那么SQL中的参数用"#parameterName#"来代替，如果传入的参数类为Bean，那么要有get和set这个参数名的方法。
+3. resultClass
+resultClass 属性可以让您指定一个Java 类，根据ResultSetMetaData 将其自动映射到JDBC ResultSet。只要是JavaBean 的属性、方法名称和ResultSet的列名匹配，属性自动赋值列值。 
+例1：
+<select id="getAuthor1" parameterClass="int" resultClass="Author">
+    SELECT auth_id as id,auth_name as name,auth_age as age,auth_tel as telephone,auth_address as address FROM author WHERE auth_id = #id#
+</select>
+在上面的语句中，你指定的resultClass=Author，那么在你的Author类中要有id,name,age,telephone和address属性，并且要有相应的get和set方法。
+如果你写成：
+<select id="getAuthor1" parameterClass="int" resultClass="Author">
+    SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_id = #id#
+</select>
+那么在你的Author类中，要有auth_id,auth_name,auth_age,auth_tel,auth_address属性，并且要有相应的get和set方法。
+例2：
+你还可以使用基本类型作为resultClass，如：
+<statement id="getAuthorNumber" resultClass="int">
+     <![CDATA[SELECT count(auth_id) as totalAuthor FROM author]]>
+</statement>
+例3：
+你还可以使用HashMap作为resultClass，如：
+<select id="getAuthor4" resultClass="java.util.HashMap">
+    SELECT a.auth_id as authorid,a.auth_name as authname,a.auth_age as authage,a.auth_tel as authtel,a.auth_address as authaddress,b.art_title as arttitle FROM author a, article b WHERE a.auth_id=b.art_author
+</select>
+下面是调用代码：
+List authorList = (List)sqlMapClient.queryForList("getAuthor4",null);
+showMethod("getAllAuthor");
+for(int i=0;i<authorList.size();i++)
+{
+     HashMap authMap = (HashMap)authorList.get(i);
+   System.out.println("auth_id="+authMap.get("authid")+"；auth_name= "+authMap.get("authname")+"； auth_age="+authMap.get("authage")+"； auth_tel="+authMap.get("authtel")+"； auth_address="+authMap.get("authaddress")+"；auth_article="+authMap.get("arttitle"));
+}
+但是，使用resultClass 的自动映射存在一些限制，无法指定输出字段的数据类型，无法自动装入相关的数据（复杂属性），并且因为需要ResultSetMetaData的信息，会对性能有轻微的不利影响。但使用resultMap，这些限制都可以很容易解决。
+4. resultMap:
+使用resultMap 属性可以控制数据如何从结果集中取出，以及哪一个属性匹配哪一个字段。不象上面使用resultClass 属性的自动映射方法，resultMap属性可以允许指定字段的数据类型，NULL 的替代值。
+例如：
+<resultMap id="authorResult" class="Author">
+     <result property="id" column="auth_id"/> 
+     <result property="age" column="auth_age"/>
+     <result property="name" column="auth_name"/>
+     <result property="telephone" column="auth_tel"/>
+     <result property="address" column="auth_address"/>
+</resultMap> 
+<select id="getAuthor3" resultMap="authorResult">
+    SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+或
+<statement id="getAllAuthor" resultMap="authorResult">
+     SELECT * FROM author
+</statement> 
+在上面的语句中，你指定的resultClass=Author，那么在你的Author类中要有id,name,age,telephone和address属性，并且要有相应的get和set方法。
+ 
+通过resultMap 的定义，查询语句得到的ResultSet 被映射成Author对象。resultMap定义"id"属性值将赋予"auth_id"字段值，而"telephone"属性值将赋予"auth_tel"字段值，依次类推。
+注意：在resultMap中所指定的字段必须是下面的select中的子集。
+也就是说，你不能写成
+<select id="getAuthor3" resultMap="authorResult">
+     SELECT auth_address FROM author WHERE auth_address like #%address%#
+</select>
+但是你可以在resultMap中去掉<result property="id" column="auth_id"/>这行，仍然可以执行下面的语句：
+<select id="getAuthor3" resultMap="authorResult">
+     SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+这样的话，你就无法取得auth_id的值。 
+5. cacheModel
+定义查询mapped statement 的缓存。每一个查询mapped statement 可以使用不同或相同的cacheModel。
+<cacheModel id="author-cache" imlementation="LRU">
+     <flushInterval hours="24"/>
+     <flushOnExecute statement="insertProduct"/>
+     <flushOnExecute statement="updateProduct"/>
+     <flushOnExecute statement="deleteProduct"/>
+     <property name="size" value="1000" />
+</cacheModel>
+<select id="getAuthor3" resultMap="authorResult" cacheModel="author-cache">
+     SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+上面的配置说明："getAuthor3"的缓存使用WEAK引用类型，当你通过调用"getAuthor3"的时候，Ibatis将会把结果缓存起来。每24 小时缓存刷新一次，或当更新的操作(即上面配置的insertProduct、updateProduct或deleteProduct)发生时刷新。
+当你对某些表中的记录操作频繁时，可以考虑使用缓冲，但是如果数据量过大的话，最好另想办法。
+6. xmlResultName
+当映射结果指向一个XML文档的时候，xmlResultName的值是指那个XML文档的root标签的名字。例如：
+<select id="getAuthor1" parameterClass="int" resultClass="Author" xmlResultName="author">
+    SELECT auth_id as id,auth_name as name,auth_age as age,auth_tel as telephone,auth_address as address FROM author WHERE auth_id = #id#
+</select>
+上面的select将产生如下的XML对象：
+<author>
+     <id>1</id>
+     <name>作者三</name>
+     <age>31</age>
+     <telephone>025-987654321</telephone>
+     <address>南京</address>
+</author>
+file:///c:/config/Customer.xml " />
+<sqlMap url="file:///c:/config/Account.xml " />
+<sqlMap url="file:///c:/config/Product.xml" />
+sqlMap所包含的标签：
+<sqlMap id="Product">
+     <cacheModel id="productCache" type="LRU">
+         <flushInterval hours="24"/>
+         <property name="size" value="1000" />
+     </cacheModel>
+     <typeAlias alias="product" type="com.ibatis.example.Product" />
+     <parameterMap id="productParam" class="product">
+         <parameter property="id"/>
+     </parameterMap>
+     <resultMap id="productResult" class="product">
+         <result property="id" column="PRD_ID"/>
+         <result property="description" column="PRD_DESCRIPTION"/>
+     </resultMap>
+     <select id="getProduct" parameterMap="productParam" resultMap="productResult" cacheModel="product-cache">
+         select * from PRODUCT where PRD_ID = ?
+     </select>
+</sqlMap>
+The SQL Map XML File
+( http://www.ibatis.com/dtd/sql-map-config-2.dtd)
+一、Mapped Statements
+Mapped statements可以是任何一个SQL statement，并且可以指定输入参数的map和输出结果的map。
+简单的情况下，mapped statement可以直接指定一个类来做为输入参数和输出结果参数。mapped statement也可以使用cache model在内存中缓冲经常使用的数据。 
+<statement         id="statementName"
+                   [parameterClass="some.class.Name"]
+                   [resultClass="some.class.Name"]
+                   [parameterMap="nameOfParameterMap"]
+                   [resultMap="nameOfResultMap"]
+                   [cacheModel="nameOfCache"]>
+     select * from PRODUCT where PRD_ID = [?|#propertyName#] order by [$simpleDynamic$]
+</statement>
+在上面的statement的配置中，放在[]中的配置参数是可选的，所以下面的Mapped Statement是完全合法的。
+<statement id="insertTestProduct">
+     insert into PRODUCT (PRD_ID, PRD_DESCRIPTION) values (1, "Shih Tzu")
+</statement>
+下面逐一介绍各个标签的含义以及使用方法：
+1. Statement 类型
+下表中列出了所有的Statement，以及他们的属性和所支持的特征。
+Statement Element
+ 
+Attributes
+ 
+Child Elements
+ 
+Methods
+ 
+<statement>
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+cacheModel
+xmlResultName
+All dynamic elements
+insert
+update
+delete
+All query methods
+<insert>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+<selectKey>
+insert
+update
+delete
+<update>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+ 
+insert
+update
+delete
+<delete>
+ 
+id
+parameterClass
+parameterMap
+All dynamic elements
+insert
+update
+delete
+<select>
+ 
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+cacheModel
+All dynamic elements
+All query methods
+<procedure>
+ 
+id
+parameterClass
+resultClass
+parameterMap
+resultMap
+xmlResultName
+All dynamic elements
+insert
+update
+delete
+All query methods
+ 
+<statement id="statementName"
+              [parameterClass="some.class.Name"]
+              [resultClass="some.class.Name"]
+              [parameterMap="nameOfParameterMap"]
+              [resultMap="nameOfResultMap"]
+              [cacheModel="nameOfCache"]>
+   select * from PRODUCT where PRD_ID = [?|#propertyName#] order by [$simpleDynamic$]
+</statement>
+2. the SQL
+sql语句无疑是map中最重要的组成部分，你可以使用任何的sql语句，只要你的数据库和JDBC驱动支持就行。你也可以使用数据库和驱动支持的任何函数。因为你是将sql语句写在了XML文档中，为了区别Sql中的"<>"和XML中的"<>"，在写Sql时，可以用<![CDATA[ SQL ]]>来写。
+3. 自增
+很多关系型数据库都支持主键的自增，SQL Map可以通过<insert>标签中的<selectKey>来支持自增。预生成（如Oracle）和后生成（如Sql Server）都支持，下面是例子： 
+<!—Oracle SEQUENCE Example -->
+<insert id="insertProduct-ORACLE" parameterClass="com.domain.Product">
+     <selectKey resultClass="int" keyProperty="id" >
+         SELECT STOCKIDSEQUENCE.NEXTVAL AS ID FROM DUAL
+     </selectKey>
+     insert into PRODUCT (PRD_ID,PRD_DESCRIPTION) values (#id#,#description#)
+</insert>
+ 
+<!— Microsoft SQL Server IDENTITY Column Example -->
+<insert id="insertProduct-MS-SQL" parameterClass="com.domain.Product">
+     insert into PRODUCT (PRD_DESCRIPTION) values (#description#)
+     <selectKey resultClass="int" keyProperty="id" >
+         SELECT @@IDENTITY AS ID
+     </selectKey>
+</insert>
+ 
+4. 存储过程：
+通过<procedure>标签来支持存储过程，下面的例子显示了如何使用带有输出参数的存储过程。
+<parameterMap id="swapParameters" class="map" >
+     <parameter property="email1" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="email2" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<procedure id="swapEmailAddresses" parameterMap="swapParameters" >
+     {call swap_email_address (?, ?)}
+</procedure>
+ 
+调用上面的存储过程会在数据表的两列间交换Email地址，而且在对应的参数对象中的也会交换。记住：当parameter mapping的mode为INOUT或OUT的时候，
+你输入的参数对象才会改变。很显然，不变的参数对象也是不会改变的，比如说String对象。
+ 
+记住：一定要使用标准的JDBC存储过程的语法。请参见JDBC CallableStatement documentation以获取更多信息。
+statement中的参数简介：
+1. parameterClass
+parameterClass 属性的值是Java类的全限定名（即包括类的包名）。parameterClass属性是可选的，目的是限制输入参数的类型为指定的Java 类。虽然Parameter-class属性是可选的，建议你为每一个SQL都指定parameterClass。如果不指定parameterClass 参数，任何带有合适属性（get/set 方法）的Java Bean 都可以作为输入参数。如果你使用了parameterMap, 那么你就不需要再使用parameterClass属性了。
+下面是例子：
+例1：
+<insert id="insertAuthor2" parameterClass="Author">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name#,#age#,#telephone#,#address#)
+</insert>
+ 
+在上面的语句中，你指定的parameterClass=Author，那么在你的Author类中要有name,age,telephone和address属性，并且要有相应的get和set方法
+例2：
+你可以使用基本类型作为parameterClass，如：
+<delete id="deleteAuthor" parameterClass="int">
+     delete from author WHERE auth_id = #id#
+</delete>
+例3：
+你可以使用HashMap作为parameterClass，如：
+<insert id="insertAuthor3" parameterClass="java.util.HashMap">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name#,#age#,#telephone#,#address#)
+</insert>
+这时候，在你调用insertAuthor3的时候，你首先应该给传入的Map对象赋值，调用代码如下：
+     HashMap paramMap = new HashMap();
+     paramMap.put("name", "作者三");
+     paramMap.put("age",new Integer(31));
+     paramMap.put("address","南京");
+     paramMap.put("telephone","025-987654321");
+     sqlMapClient.insert("insertAuthor3", paramMap);
+ 
+2. parameterMap
+parameterMap 定义一系列有次序的参数用于匹配PreparedStatement 的JDBC值符号。
+parameterMap属性很少使用，parameterMap 属性的值等于指定的parameterMap元素的name属性值。通常（和缺省的）的方法是使用inline parameters。
+ 
+注意！动态mapped statement 只支持inline parameter，不支持parameter map。关于动态mapped statement，将在后文中介绍。
+ 
+例如：
+<parameterMap id="authorParameter" class="Author">
+     <parameter property="name" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="age" jdbcType="INTEGER" javaType="java.lang.Integer" mode="INOUT"/>
+     <parameter property="telephone" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+     <parameter property="address" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<insert id="insertAuthor1" parameterMap="authorParameter">
+     INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (?,?,?,?)
+</insert>
+ 
+上面的例子中，parameterMap的参数按次序匹配SQL语句中的值符号（?）。因此，第一个"?"号将被"name"属性的值替换，而第二个"?"号将被"age"属性的值替换，依此类推。
+ 
+记住：使用parameterMap的时候，SQL中的参数用"?"来代替，并且每个"?"的顺序要与parameterMap中的定义完全匹配；如果使用parameterClass，那么SQL中的参数用"#parameterName#"来代替，如果传入的参数类为Bean，那么要有get和set这个参数名的方法。
+ 
+3. resultClass
+resultClass 属性可以让您指定一个Java 类，根据ResultSetMetaData 将其自动映射到JDBC ResultSet。只要是JavaBean 的属性、方法名称和ResultSet的列名匹配，属性自动赋值列值。
+ 
+例1：
+<select id="getAuthor1" parameterClass="int" resultClass="Author">
+    SELECT auth_id as id,auth_name as name,auth_age as age,auth_tel as telephone,auth_address as address FROM author WHERE auth_id = #id#
+</select>
+在上面的语句中，你指定的resultClass=Author，那么在你的Author类中要有id,name,age,telephone和address属性，并且要有相应的get和set方法。
+如果你写成：
+<select id="getAuthor1" parameterClass="int" resultClass="Author">
+    SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_id = #id#
+</select>
+那么在你的Author类中，要有auth_id,auth_name,auth_age,auth_tel,auth_address属性，并且要有相应的get和set方法。
+例2：
+你还可以使用基本类型作为resultClass，如：
+<statement id="getAuthorNumber" resultClass="int">
+     <![CDATA[SELECT count(auth_id) as totalAuthor FROM author]]>
+</statement>
+例3：
+你还可以使用HashMap作为resultClass，如：
+<select id="getAuthor4" resultClass="java.util.HashMap">
+    SELECT a.auth_id as authorid,a.auth_name as authname,a.auth_age as authage,a.auth_tel as authtel,a.auth_address as authaddress,b.art_title as arttitle FROM author a, article b WHERE a.auth_id=b.art_author
+</select>
+下面是调用代码：
+List authorList = (List)sqlMapClient.queryForList("getAuthor4",null);
+showMethod("getAllAuthor");
+for(int i=0;i<authorList.size();i++)
+{
+     HashMap authMap = (HashMap)authorList.get(i);
+    System.out.println("auth_id="+authMap.get("authid")+"； auth_name="+authMap.get("authname")+"； auth_age="+authMap.get("authage")+"； auth_tel="+authMap.get("authtel")+"； auth_address="+authMap.get("authaddress")+"；auth_article="+authMap.get("arttitle"));
+}
+但是，使用resultClass 的自动映射存在一些限制，无法指定输出字段的数据类型，无法自动装入相关的数据（复杂属性），并且因为需要ResultSetMetaData的信息，会对性能有轻微的不利影响。但使用resultMap，这些限制都可以很容易解决。
+4. resultMap:
+使用resultMap 属性可以控制数据如何从结果集中取出，以及哪一个属性匹配哪一个字段。不象上面使用resultClass 属性的自动映射方法，resultMap属性可以允许指定字段的数据类型，NULL 的替代值。
+例如：
+<resultMap id="authorResult" class="Author">
+     <result property="id" column="auth_id"/> 
+     <result property="age" column="auth_age"/>
+     <result property="name" column="auth_name"/>
+     <result property="telephone" column="auth_tel"/>
+     <result property="address" column="auth_address"/>
+</resultMap> 
+<select id="getAuthor3" resultMap="authorResult">
+    SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+或
+<statement id="getAllAuthor" resultMap="authorResult">
+     SELECT * FROM author
+</statement> 
+在上面的语句中，你指定的resultClass=Author，那么在你的Author类中要有id,name,age,telephone和address属性，并且要有相应的get和set方法。
+ 
+通过resultMap 的定义，查询语句得到的ResultSet 被映射成Author对象。resultMap定义"id"属性值将赋予"auth_id"字段值，而"telephone"属性值将赋予"auth_tel"字段值，依次类推。
+注意：在resultMap中所指定的字段必须是下面的select中的子集。
+也就是说，你不能写成
+<select id="getAuthor3" resultMap="authorResult">
+     SELECT auth_address FROM author WHERE auth_address like #%address%#
+</select>
+但是你可以在resultMap中去掉<result property="id" column="auth_id"/>这行，仍然可以执行下面的语句：
+<select id="getAuthor3" resultMap="authorResult">
+     SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+这样的话，你就无法取得auth_id的值。 
+5. cacheModel
+定义查询mapped statement 的缓存。每一个查询mapped statement 可以使用不同或相同的cacheModel。
+<cacheModel id="author-cache" imlementation="LRU">
+     <flushInterval hours="24"/>
+     <flushOnExecute statement="insertProduct"/>
+     <flushOnExecute statement="updateProduct"/>
+     <flushOnExecute statement="deleteProduct"/>
+     <property name="size" value="1000" />
+</cacheModel>
+<select id="getAuthor3" resultMap="authorResult" cacheModel="author-cache">
+     SELECT auth_id,auth_name,auth_age,auth_tel,auth_address FROM author WHERE auth_address like #%address%#
+</select>
+上面的配置说明："getAuthor3"的缓存使用WEAK引用类型，当你通过调用"getAuthor3"的时候，Ibatis将会把结果缓存起来。每24 小时缓存刷新一次，或当更新的操作(即上面配置的insertProduct、updateProduct或deleteProduct)发生时刷新。
+当你对某些表中的记录操作频繁时，可以考虑使用缓冲，但是如果数据量过大的话，最好另想办法。
+6. xmlResultName
+当映射结果指向一个XML文档的时候，xmlResultName的值是指那个XML文档的root标签的名字。例如：
+<select id="getAuthor1" parameterClass="int" resultClass="Author" xmlResultName="author">
+    SELECT auth_id as id,auth_name as name,auth_age as age,auth_tel as telephone,auth_address as address FROM author WHERE auth_id = #id#
+</select>
+上面的select将产生如下的XML对象：
+<author>
+     <id>1</id>
+     <name>作者三</name>
+     <age>31</age>
+     <telephone>025-987654321</telephone>
+     <address>南京</address>
+</author>
+<parameterMap id="parameterMapName" [class="Author"]>
+         <parameter property ="propertyName" [jdbcType="VARCHAR"] [javaType="string"]
+         [nullValue="NUMERIC"] [null="-9999999"]/>
+         <parameter …… />
+         <parameter …… />
+</parameterMap>
+括号[]中是可选的属性。parameterMap 元素的id 属性作为唯一标识，在同一个SQL Map XML 文件中不能重名。一个parameterMap 可包含任意多的property 元素。
+property属性是指传入mapped statement中的JavaBean参数对象的属性名。这个属性名可以使用多次，这要看在这个statement中，这个属性名要出现多少次。例如：
+<parameterMap id="authorParameter3" class="Author">
+         <parameter property="name" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+         <parameter property="name" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<update id="updateAuthor2" parameterMap="authorParameter2">
+         UPDATE author set auth_name=? WHERE auth_name = ?
+</update>
+但是如果使用这样的方法的话，调用代码应该是：
+Author author = new Author();
+author.setName("作者三");
+sqlMapClient.update("updateAuthor2", paraMap);
+那么它其实执行的是：
+UPDATE author set auth_name='作者三' WHERE auth_name = '作者三'
+这样的话，就根本没有了意义，因为，你只能传进一个Author对象，而这个Author对象的name属性值将会被用在整个Sql语句中，而一般的情况下是不应该相同的，也就是说，我们的本意可能是想：
+UPDATE author set auth_name='作者N' WHERE auth_name = '作者三'
+方法倒是有，不过我觉得不太好。
+<parameterMap id="authorParameter2" class="java.util.HashMap">
+         <parameter property="name1" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+         <parameter property="name2" jdbcType="VARCHAR" javaType="java.lang.String" mode="INOUT"/>
+</parameterMap>
+<update id="updateAuthor2" parameterMap="authorParameter2">
+         UPDATE author set auth_name=? WHERE auth_name = ?
+</update>
+调用代码为：
+HashMap paraMap = new HashMap();
+paraMap.put("name1", "作者N");
+paraMap.put("name2", "作者三");
+sqlMapClient.update("updateAuthor2", paraMap);
+如果你想到更好的方法解决这个问题的话，请不吝赐教。
+jdbcType用于指明数据库的字段类型。如果不说明字段类型的话，一些JDBC驱动程序就无法确定要操作的字段类型。例如：PreparedStatement.setNull(int parameterIndex, int sqlType)方法，要求指定数据类型。如果不指定数据类型，某些Driver 可能指定为Types.Other 或Types.Null。但是，不能保证所有的Driver 都表现一致。对于这种情况，SQL Map API 允许使用parameterMap 元素的jdbcType 属性指定数据类型。
+正常情况下，只有当字段可以为NULL或日期时间类型时才需要type 属性。因为Java 只有一个Date 类型（java.util.Date），而大多数SQL 数据库有多个－通常至少有3 种。因此，需要指定字段类型是DATE 还是DATETIME。
+Type 属性可以是JDBC Types 类中定义的任意参数的字符串值。虽然如此，还是有某些类型不支持（即BLOB）。
+注意！大多数JDBC Driver 只有在字段可以为NULL 时需要指定type 属性。因此，对于这些Driver，只是在字段可以为NULL 时才需要指定type 属性。
+注意！当使用Oracle Driver 时，如果没有给可以为NULL 的字段指定type 属性，当试图给这些字段赋值NULL 时，会出现"Invalid column。 type"错误。
+javaType用于指明作为参数传递的java bean的属性的类型。通常情况下，这可以通过反射机制从java bean中获取类型，但是一些特定的映射，比如说MAP和XML的映射就无法将类型信息传递给框架了。如果java type没有设置而且框架无法获知类型的话，那么这个类型会被指定为Object。
+属性 nullValue的值可以是对于property 类型来说合法的任意值，用于指定NULL 的替换值。就是说，当Java Bean的属性值等于指定值时，相应的字段将赋值NULL。这个特性允许在应用中给不支持null的数据类型（即int，double，float等）赋值null。当这些数据类型的属性值匹配nullValue值（即匹配-9999）时，NULL 将代替nullValue 值写入数据库。
+例如：
+<parameterMap id="authorParameter" class="Author">
+         <parameter property="name" jdbcType="VARCHAR" javaType="java.lang.String" nullValue="NO_ENTRY" mode="INOUT"/>
+         <parameter property="age" jdbcType="INTEGER" javaType="java.lang.Integer" nullValue="-999" mode="INOUT"/>
+         <parameter property="telephone" jdbcType="VARCHAR" javaType="java.lang.String" nullValue="NO_ENTRY" mode="INOUT"/>
+        <parameter property="address" jdbcType="VARCHAR" javaType="java.lang.String" nullValue="NO_ENTRY" mode="INOUT"/>
+</parameterMap>
+<insert id="insertAuthor1" parameterMap="authorParameter">
+         INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (?,?,?,?)
+</insert>
+您可以在另一个SQL Map XML 文件中引用parameterMap。例如，要在另一个文件中引用上面的parameterMap，可以使用名称"Product.insert-product-param"。
+使用Inline Parameter Maps，可以把Java Bean 的属性名称嵌在mapped-statement 的定义中（即直接写在SQL 语句中）。
+例如：
+<insert id="insertAuthor1" parameterClass="Author">
+         INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name#,#age#,#telephone#,#address#)
+</insert>
+这样，在你的Author类中，要有name,age,telephone,address的属性以及相应的get和set方法，这样做可以避免使用另外定义parameterMap的麻烦。
+你也可以在内嵌参数中指定数据类型和nullValue，例如：
+<insert id="insertAuthor1" parameterClass="Author">
+        INSERT INTO author (auth_name,auth_age,auth_tel,auth_address) VALUES (#name:VARCHAR:NO_ENTRY#,#age:INTEGER:-999#,#telephone:VARCHAR:NO_ENTRY#,#address:VARCHAR:NO_ENTRY#)
+</insert>
+注意！在内嵌参数中，要指定NULL 的替代值，必须要先指定数据类型。
+注意！如需要在查询时也使用NULL 替代值，必须同时在resultMap 中定义。
+注意！如果您需要指定很多的数据类型和NULL 替代值，可以使用外部的parameterMap元素，这样会使代码更清晰。
+在SQL Map 架构中，Result Map 是极其重要的组件。在执行查询Mapped Statement 时，resultMap 负责将结果集的列值映射成Java Bean 的属性值。resultMap 的结构如下：
+<resultMap id="resultMapName" class="some.domain.Class" [extends="parent-resultMap"]>
+         <result property="propertyName" column="COLUMN_NAME"
+                            [columnIndex="1"] [javaType="int"] [jdbcType="NUMERIC"]
+                            [nullValue="-999999"] [select="someOtherStatement"]
+                            />
+         <result ……/>
+         <result ……/>
+         <result ……/>
+</resultMap>
+括号[]中是可选的属性resultMap 也有class 属性，是Java 类的全限定名（即包括包的名称）或该类的别名。该Java 类初始化并根据定义填充数据。
+Extends 是可选的属性，可以设定成以为基础的另外一个resultMap 的名字。和在Java 中继承一个类相似，父resultMap 的属性将作为子resultMap 的一部分。父resultMap 的属性总是加到子resultMap 属性的前面，并且父resultMap 必须要在子resultMap 之前定义。父resultMap 和子resultMap 的class 属性不一定要一致，它们可以没有任何关系。
+resultMap 可以包括任意多的property 映射，将查询结果集的列值映射成Java Bean 的属性。属性的映射按它们在resultMap中定义的顺序进行。属性class 必须符合Java Bean 规范，每一属性都必须拥有get/set 方法。
+注意！ResultSet 的列值按它们在resultMap 中定义的顺序读取。
+property属性是指从mapped statement中返回的JavaBean对象的属性名。这个属性名也可以使用多次。
+column属性值是ResultSet中的列名字，即字段名，取得的这个字段的值将赋给property所指的bean属性。
+可选属性，用于改善性能。属性columnIndex 的值是ResultSet 中用于赋值Java Bean属性的字段次序号。在99％的应用中，不太可能需要牺牲可读性来换取性能。使用columnIndex，某些JDBC Driver可以大幅提高性能，某些则没有任何效果。
+同ParameterMap中的jdbcType
+同ParameterMap中的javaType
+属性nullValue指定数据库中NULL的替代值。因此，如果从ResultSet中读出NULL值，JavaBean属性将被赋值为属性nullValue指定的替代值。
+如果数据库中存在NULLABLE 属性的字段，但您想在你的应用程序中用指定的常量代替NULL，您可以这样做：
+<resultMap id="get-product-result" class="Author">
+         <result property="id" column="auth_id"/>    
+         <result property="age" column="auth_age"/>
+         <result property="name" column="auth_name" nullValue="you have no name"/>
+</resultMap>
+在上例中，如果取得的记录中auth_name字段的值为NULL，那么在赋给java bean的时候，name属性将被赋为"you have no name"。
+如果在一个类与另一个类之间是关联关系的话，那么当你用JDBC取得记录的时候，这个关联关系是如何实现的呢？例如这样的关系：一个作者可能会有多个文章发表，那么作者与文章之间就是很强的关联关系，而且是一对多的关系，在Author的Bean中是这样写的：
+public class Author
+{
+    private int id;
+.....
+    private List articleList;
+         public int getId()
+    {
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id=id;
+    }
+         ... ...
+       public List getArticleList()
+    {
+        return articleList;
+    }
+   
+    public void setArticleList(List articleList)
+    {
+        this.articleList=articleList;
+    }
+}
+当你执行一条sql语句从数据表author中取出相应的数据的时候，在上面的java bean中，articleList如何赋值呢？这时候，就需要使用select属性。
+我们先假设在author和article之间使用1:1的关系，虽然在真实世界中是不正确的，我们只是做个例子，那么Author和article的bean代码如下：
+public class Author
+{
+    private int id;
+    private int age;
+    private String name;  
+    private String address;
+    private String telephone;
+    private Article article;
+      
+    public int getId()
+    {
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id=id;
+    }
+    public int getAge()
+    {
+        return age;
+    }
+    public void setAge(int age)
+    {
+        this.age=age;
+    }
+    public String getName()
+    {
+        return name;
+    }
+    public void setName(String name)
+    {
+        this.name=name;
+    }
+    public String getAddress()
+    {
+        return address;
+    }
+    public void setAddress(String address)
+    {
+        this.address=address;
+    }
+    public String getTelephone()
+    {
+        return telephone;
+    }
+    public void setTelephone(String telephone)
+    {
+        this.telephone=telephone;
+    }
+ 
+         public Article getArticle()
+    {
+        return this.article;
+    }
+   
+    public void setArticle(Article article)
+    {
+        this.article=article;
+    }
+} 
+public class Article
+{
+    private int id;
+    private String title;
+    private Date createtime;
+    private int author;
+   
+    public int getId()
+    {
+        return id;
+    }
+    public void setId(int id)
+    {
+        this.id=id;
+    }
+    public String getTitle()
+    {
+        return title;
+    }
+    public void setTitle(String title)
+    {
+        this.title=title;
+    }
+    public Date getCreatetime()
+    {
+        return createtime;
+    }
+    public void setCreatetime(Date createtime)
+    {
+        this.createtime=createtime;
+    }
+    public int getAuthor()
+    {
+        return author;
+    }
+    public void setAuthor(int author)
+    {
+        this.author=author;
+    }
+}
+在author.xml的配置如下：
+<resultMap id="linkResultMap1" class="Author">
+         <result property="id" column="auth_id"/>    
+         <result property="age" column="auth_age"/>
+         <result property="name" column="auth_name"/>
+         <result property="telephone" column="auth_tel"/>
+         <result property="address" column="auth_address"/>
+         <result property="article" column="auth_id" select="getLinkArticle1"/>
+</resultMap>
+<select id="getAuthor5" resultMap="linkResultMap1" parameterClass="int">
+         SELECT * FROM author WHERE auth_id = #id#
+</select>
+<select id="getLinkArticle1" resultClass="com.ibatis.beans.Article" parameterClass="int">
+         SELECT art_id as id,art_title as title,art_createtime as createtime,art_author as author FROM article WHERE art_id = #id#
+</select>
+调用代码如下：
+Author author = (Author)sqlMapClient.queryForObject("getAuthor5", new Integer(1));
+System.out.println(author.getName()+"'s article is :"+author.getArticle().getTitle());
+你可以看到，对于Author类中的article属性，IBatis是将取得的记录的auth_id字段值作为参数传入到id="getLinkArticle1"的语句中，并将取得的结果封装成Article对象，并赋给Author的article属性。上面的调用代码实际执行的两条sql语句是：
+SELECT * FROM author WHERE auth_id = 1
+SELECT art_id as id,art_title as title,art_createtime as createtime,art_author as author FROM article WHERE art_id = 1
+在第二条语句中，将取得的记录封装成Article对象，并赋给Author的article属性，所以，你可以直接使用author.getArticle().getTitle()获得文章的标题。
+上面的方法显示了如何实现1:1的关联关系，但是上面的方法并不好，原因是可能会执行很多次查询！
+（1）避免 N+1 Selects (1:1)
+如果上面的配置如下：
+<resultMap id="linkResultMap1" class="Author">
+         <result property="id" column="auth_id"/>    
+         <result property="age" column="auth_age"/>
+         <result property="name" column="auth_name"/>
+         <result property="telephone" column="auth_tel"/>
+         <result property="address" column="auth_address"/>
+         <result property="article" column="auth_id" select="getLinkArticle1"/>
+</resultMap>
+<select id="getAuthor5" resultMap="linkResultMap1" parameterClass="int">
+         SELECT * FROM author WHERE auth_id > #id#
+</select>
+<select id="getLinkArticle1" resultClass="com.ibatis.beans.Article" parameterClass="int">
+         SELECT art_id as id,art_title as title,art_createtime as createtime,art_author as author FROM article WHERE art_id = #id#
+</select>
+调用代码如下：
+Author author = (Author)sqlMapClient.queryForList("getAuthor5", new Integer(1));
+如果SELECT * FROM author WHERE auth_id > 1的记录有N条，那么将对id="getLinkArticle1"的语句执行N次查询，这样所有的查询总数将为N+1次，执行效率会很低。
+这时，可以使用下面的联合查询的方法来解决：
+<resultMap id="linkResultMap2" class="Author">
+         <result property="id" column="auth_id"/>    
+         <result property="age" column="auth_age"/>
+         <result property="name" column="auth_name"/>
+         <result property="telephone" column="auth_tel"/>
+         <result property="address" column="auth_address"/>
+         <result property="article.title" column="art_title"/>
+</resultMap>
+<select id="getAuthor6" resultMap="linkResultMap2" parameterClass="int">
+         <![CDATA[ SELECT a.auth_id,a.auth_age,a.auth_name,a.auth_tel,a.auth_address,b.art_title FROM author a,article b WHERE a.auth_id > #id# and a.auth_id = b.art_id]]>
+</select>
+调用代码为：
+Author author = (Author)sqlMapClient.queryForList("getAuthor6", new Integer(1));
+这样只用一条Sql语句就可以解决。
+下面我们讨论1:M的关系，一个author可能有多个article，所以，author与article之间是一对多的关系。那么我们在Author类中加入如下代码(在省略号间的是要加入的代码)：
+public class Author
+{
+... ...
+         private List articleList;
+    public List getArticleList()
+    {
+        return articleList;
+    }
+   
+    public void setArticleList(List articleList)
+    {
+        this.articleList=articleList;
+    }
+... ...
+}
+配置如下：
+<resultMap id="linkResultMap3" class="Author">
+         <result property="id" column="auth_id"/>    
+         <result property="age" column="auth_age"/>
+         <result property="name" column="auth_name"/>
+         <result property="telephone" column="auth_tel"/>
+         <result property="address" column="auth_address"/>
+         <result property="articleList" column="auth_id" select="getLinkArticle3"/>
+</resultMap>
+<select id="getAuthor7" resultMap="linkResultMap3" parameterClass="int">
+         SELECT * FROM author WHERE auth_id = #id#
+</select>
+<select id="getLinkArticle3" resultClass="com.ibatis.beans.Article" parameterClass="int">
+         SELECT art_id as id,art_title as title,art_createtime as createtime,art_author as author FROM article WHERE art_author = #id#
+</select>
+调用代码为：
+Author author = (Author)sqlMapClient.queryForObject("getAuthor7", new Integer(1));
+System.out.println(author.getName()+"的文章有：");
+for(int i=0;i<author.getArticleList().size();i++)
+{
+         int num=i+1;
+         Article art = (Article)author.getArticleList().get(i);
+         System.out.println(num+". "+art.getTitle());
+}
+从上面的实现可以看出，你只需要在bean中加入一个java.util.List(或java.util.Collection)类型的articleList来表示所有的文章列表即可，调用部分没有什么变化，IBaits会自动从Article中取得的记录封装成Article对象并加入到一个List对象中，然后将这个List对象赋值给Author类的articleList属性。
+（1）避免 N+1 Selects (1:M and M:N)
+1:M和M:N的情况与1:1的情况相似，也会出现N+1 Selects 的情况，但是到目前位置，还没有其他的方法来解决这个问题，希望在不久的将来能够解决。
+你可能已经注意到了，上面的例子中，在resultMap中只指明了一个column属性用于id=”getLinkArticle”的statement关联。其实，Ibatis允许你指明多个column属性与id=”getLinkArticle”的statement关联，语法很简单， {param1=column1, param2=column2, …, paramN=columnN}。下面是一个例子：
+<resultMap id="linkResultMap4" class="Author">
+    <result property="id" column="auth_id"/>   
+    <result property="age" column="auth_age"/>
+    <result property="name" column="auth_name"/>
+    <result property="telephone" column="auth_tel"/>
+    <result property="address" column="auth_address"/>
+    <result property="articleList" column="{id=auth_id,address=auth_address}" select="getLinkArticle4"/>
+</resultMap>
+<select id="getAuthor8" resultMap="linkResultMap4" parameterClass="int">
+    SELECT * FROM author WHERE auth_id = #id#
+</select>
+<select id="getLinkArticle4" resultClass="com.ibatis.beans.Article" parameterClass="int">
+    SELECT art_id as id,art_title as title,art_createtime as createtime,art_author as author FROM article WHERE art_author = #id# and art_publish_add=#address#
+</select>
+你也可以只写字段的名称，只要按照所关联的statement中所对应的字段顺序即可，象这样：
+{auth_id,auth_address}
+上面的这个例子我在Mysql的环境中运行没有通过，报出的错误是：Column'{auth_id,auth_address}' not found.
+这个错误是与JDBC驱动无关的，而是在做XML解析的时候发生的错误，不知道是什么原因，如果您有这样的成功经历的话，希望能共同分享，我的Email是：tenwang1977@163.com
+注意：有些JDBC驱动不支持同时打开多个ResultSets(单个连接)。所以说，这样的驱动不能完成复杂对象的映射，因为JDBC驱动需要多个ResultSets的连接，这时候，只能使用一个关联查询解决问题。
+如果你使用Microsoft SQL Server 2000 的JDBC驱动的话，你需要在配置url的时候，在url后加上SelectMethod=Cursor。
+Java Type
+JavaBean/Map
+Property Mapping
+Result Class /
+Parameter Class***
+Type Alias**
+boolean
+YES
+NO
+boolean
+java.lang.Boolean
+YES
+YES
+boolean
+byte
+YES
+NO
+byte
+java.lang.Byte
+YES
+YES
+byte
+short
+YES
+NO
+short
+java.lang.Short
+YES
+YES
+short
+int
+YES
+NO
+Int/ Integer
+java.lang.Integer
+YES
+YES
+Int/ Integer
+long
+YES
+NO
+long
+java.lang.Long
+YES
+YES
+long
+float
+YES
+NO
+float
+java.lang.Float
+YES
+YES
+float
+double
+YES
+NO
+double
+java.lang.Double
+YES
+YES
+double
+java.lang.String
+YES
+YES
+string
+java.util.Date
+YES
+YES
+date
+java.math.BigDecimal
+YES
+YES
+decimal
+* java.sql.Date
+YES
+YES
+N/A
+* java.sql.Time
+YES
+YES
+N/A
+* java.sql.Timestamp
+YES
+YES
+N/A
+<cacheModel id="product-cache" type ="LRU" readOnly=”true” serialize=”false”>
+<flushInterval hours="24"/>
+<flushOnExecute statement="insertProduct"/>
+<flushOnExecute statement="updateProduct"/>
+<flushOnExecute statement="deleteProduct"/>
+<property name=”cache-size” value=”1000” />
+</cacheModel>
+上面的cache model 创建了一个名为“product-cache”的缓存，使用“最近最少使用”（LRU）实现，每24小时，缓冲区将刷新一次，而且在执行insertProduct、updateProduct和deleteProduct的statement时，缓冲区也将刷新，设定的时间可以设定为hours, minutes, seconds 或 milliseconds。一些Cache的实现需要附加的属性，比如说上例中的cache-size
+ 属性，cache的大小指明了可以存放在cache中的实体的个数。type属性的名称要么是全限定的类名，要么是缓存实现的别名。Cache Model 使用插件的形式来支持不同的缓存算法。它的实现在cache-model 元素的type属性中指定（如上所示）。
+Ibatis支持只读和可读写的Cache，只读的Cache可以在所有的用户间共享，所以它可以提供更大的操作空间。但是从只读缓冲中读取的对象不能够被修改。如果你要对你取得的对象进行修改的话，那么你只能用可读写的缓冲。readOnly=”true”为只读缓冲；readOnly=”false”为可读写缓冲。
+要使用Serializable Read/Write Caches，设置readOnly=”false”， serialize=”true”。默认情况下，采用的是readOnly=” true”， serialize=”false”。
+目前包括以下的4 个缓冲类型实现：
+1. “MEMORY” (com.ibatis.db.sqlmap.cache.memory.MemoryCacheController)
+MEMORY cache 实现使用reference 类型来管理cache 的行为。垃圾收集器可以根据reference 类型判断是否要回收cache 中的数据。MEMORY 实现适用于没有统一的对象重用模式的应用，或内存不足的应用。
+MEMORY 实现可以这样配置：
+<cache-model name="product-cache" implementation ="MEMORY">
+         <flush-interval hours="24"/>
+         <flush-on-execute statement="insertProduct"/>
+         <flush-on-execute statement="updateProduct"/>
+         <flush-on-execute statement="deleteProduct"/>
+         <cache-property name=”reference-type” value=”WEAK” />
+</cache-model>
+MEMORY cache 实现只认识一个<cache-property>元素。这个名为“reference-type”属性的值必须是STRONG，SOFT 和WEAK 三者其一。这三个值分别对应于JVM 不同的内存reference 类型。
+(1) WEAK（缺省）
+大多数情况下，WEAK类型是最佳选择。如果不指定类型，缺省类型就是WEAK。它能大大提高常用查询的性能。但是对于当前不被使用的查询结果数据，将被清除以释放内存用来分配其他对象。
+(2) SOFT
+在查询结果对象数据不被使用，同时需要内存分配其他对象的情况下，SOFT类型将减少内存不足的可能性。然而，这不是最具侵入性的reference类型，结果数据依然可能被清除。
+(3) STRONG
+确保查询结果数据一直保留在内存中，除非Cache被刷新（例如，到了刷新的时间或执行了更新数据的操作）。
+对于下面的情况，这是理想的选择：
+1” 结果内容数据很少
+2” 完全静态的数据
+3” 频繁使用的数据
+优点是对于这类查询性能非常好。缺点是，如果需要分配其他对象，内存无法释放（可能是更重要的数据对象）。
+2. “LRU” (com.ibatis.db.sqlmap.cache.lru.LruCacheController)
+LRU Cache 实现用“最近最少使用”原则来确定如何从Cache 中清除对象。当Cache溢出时，最近最少使用的对象将被从Cache 中清除。
+<cache-model name="product-cache" implementation ="LRU">
+         <flush-interval hours="24"/>
+         <flush-on-execute statement="insertProduct"/>
+         <flush-on-execute statement="updateProduct"/>
+         <flush-on-execute statement="deleteProduct"/>
+         <cache-property name=”cache-size” value=”1000” />
+</cache-model>
+值得注意的是，这里指的对象可以是任意的，从单一的String 对象到Java Bean 的ArrayList 对象都可以。因此，不要Cache 太多的对象，以免内存不足。
+3. “FIFO” (com.ibatis.db.sqlmap.cache.fifo.FifoCacheController)
+FIFO Cache 实现用“先进先出”原则来确定如何从Cache 中清除对象。对于短时间内持续引用特定的查询而后很可能不再使用的情况，FIFO Cache 是很好的选择。
+<cache-model name="product-cache" implementation ="FIFO">
+         <flush-interval hours="24"/>
+         <flush-on-execute statement="insertProduct"/>
+         <flush-on-execute statement="updateProduct"/>
+         <flush-on-execute statement="deleteProduct"/>
+         <cache-property name=”cache-size” value=”1000” />
+</cache-model>
+值得注意的是，这里指的对象可以是任意的，从单一的String 对象到Java Bean 的ArrayList 对象都可以。因此，不要Cache 太多的对象，以免内存不足。
+4. “OSCACHE” (com.ibatis.db.sqlmap.cache.oscache.OSCacheController)
+OSCACHE Cache 实现是OSCache2.0 缓存引擎的一个Plugin。它具有高度的可配置性，分布式，高度的灵活性。
+<cache-model name="product-cache" implementation ="OSCACHE">
+         <flush-interval hours="24"/>
+         <flush-on-execute statement="insertProduct"/>
+         <flush-on-execute statement="updateProduct"/>
+         <flush-on-execute statement="deleteProduct"/>
+</cache-model>
+OSCACHE 实现不使用cache-property 元素。而是在类路径的根路径中使用标准的oscache.properties 文件进行配置。在oscache.properties 文件中，您可以配置Cache 的算法（和上面讨论的算法很类似），Cache 的大小，持久化方法（内存，文件等）和集群方法
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+sql-map元素
+
+<sql-map>元素
+sqlMap元素用于包括SQL Map 映射文件和其他的SQL Map 配置文件。每个SqlMapClient
+对象使用的SQL Map 映射文件都要在此声明。映射文件作为stream resource 从类路径或URL中读入。您必须相对于类路径或URL来指定所有的SQL Map 文件。
+下面是几个例子：
+<!-- CLASSPATH RESOURCES -->
+<sqlMap resource="com/ibatis/examples/sql/Customer.xml" />
+<sqlMap resource="com/ibatis/examples/sql/Account.xml" />
+<sqlMap resource="com/ibatis/examples/sql/Product.xml" />
+<!-- URL RESOURCES -->
+<sqlMap url="file:///c:/config/Customer.xml " />
+<sqlMap url="file:///c:/config/Account.xml " />
+<sqlMap url="file:///c:/config/Product.xml" />
+sqlMap所包含的标签：
+<sqlMap id="Product">
+     <cacheModel id="productCache" type="LRU">
+         <flushInterval hours="24"/>
+         <property name="size" value="1000" />
+     </cacheModel>
+     <typeAlias alias="product" type="com.ibatis.example.Product" />
+     <parameterMap id="productParam" class="product">
+         <parameter property="id"/>
+     </parameterMap>
+     <resultMap id="productResult" class="product">
+         <result property="id" column="PRD_ID"/>
+         <result property="description" column="PRD_DESCRIPTION"/>
+     </resultMap>
+     <select id="getProduct" parameterMap="productParam" resultMap="productResult" cacheModel="product-cache">
+         select * from PRODUCT where PRD_ID = ?
+     </select>
+</sqlMap>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+setting元素
+
+<setting>元素
+<setting>元素用于配置和优化利用XML配置文件创建的SqlMapClient实例。<settings>元素及其所有的属性都是可选的。下面列出了<setting>元素支持的属性和功能：
+1. maxExecute
+同时执行一个Sql statement的最大线程数，大于这个值的线程将阻塞直到另一个线程退出。不同的DBMS 有不同的限制值。
+例子：maxExecute="256"
+缺省值：512
+一般情况下，这个值要大于10，而且要同时比maxSessions和maxTransactions参数设定的值大。通常情况下，减少最大同时访问次数可以提高执行的效率。
+2. maxSessions
+是指在一个给定时间内处于活动状态的session（或客户端）的数量。这个值一般要大于或等于maxTransactions的参数值，同时要小于maxRequests的参数值
+例子： maxSessions="64"
+缺省值：128
+3. maxTransaction
+同时进入SqlMapClient.startTransaction()的最大线程数。大于这个值的线程将阻塞直到另一个线程退出。不同的DBMS 有不同的限制值。这个值应该总是小于或等于maxSessions，而且要比maxRequests小的多。通常情况下，减少这个值可以提高执行的效率。
+例子：maxTransaction="16"
+缺省值：32
+4. cacheModelsEnabled
+启用或禁用SqlMapClient所有的cache models。调试程序时有用。
+例子：cacheModelsEnabled="true"
+缺省值：true
+5. lazyLoadingEnabled
+启用或禁用SqlMapClient所有的lazy loading。调试程序时有用。
+例子：lazyLoadingEnabled="true"
+缺省值：true
+6. enhancementEnabled
+This setting enables runtime bytecode enhancement to facilitate optimized JavaBean property access as well as enhanced lazy loading.
+例子 enhancementEnabled="true"
+缺省值： false (disabled)
+7. useStatementNamespaces
+这个选项如果启用，你就必须使用全限定名来引用mapped statements，这个全名是由sqlMap的名字和statement的名字组成的。
+例如：queryForObject("sqlMapName.statementName");
+例子: useStatementNamespaces="false"
+缺省值: false (disabled)
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+java核心技术学习
+typeAlias元素
+
+<typeAlias>元素
+<typeAlias>允许你指定别名。这样你就可以通过你指定的短名字来代替冗长的名字了。
+例如：<typeAlias alias="shortname" type="com.long.class.path.Class"/>
+下面是在SqlMap中预定义的别名：
+1. Transaction Manager Aliases
+JDBC  com.ibatis.sqlmap.engine.transaction.jdbc.JdbcTransactionConfig
+JTA  com.ibatis.sqlmap.engine.transaction.jta.JtaTransactionConfig
+EXTERNAL com.ibatis.sqlmap.engine.transaction.external.ExternalTransactionConfig
+2. Data Source Factory Aliases
+SIMPLE  com.ibatis.sqlmap.engine.datasource.SimpleDataSourceFactory
+DBCP  com.ibatis.sqlmap.engine.datasource.DbcpDataSourceFactory
+JNDI  com.ibatis.sqlmap.engine.datasource.JndiDataSourceFactory
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+transactionManager元素
+
+<transactionManager>元素
+注意：在Sql Map 1.0版本中，允许同时配置多个数据源，这样会导致一些问题。所以从2.0的版本开始，只允许配置一个数据源，如果你有配置多个数据源的需求的话，建议你使用多个不同配置的属性文件，或者在build Sql Map的时候，作为一个参数传进来。
+<transactionManager>元素允许你为SQL Map配置事务管理服务。type属性用来指明使用哪种事务管理，值既可以是一个类名字，也可以是一个别名。
+在框架中已经包含了三种事务管理：JDBC, JTA 和 EXTERNAL
+ 
+1. JDBC
+允许用JDBC通过Connection 的commit()和rollback()方法来控制事务。
+2. JTA
+这种事务管理使用一个JTA的全局事务将SQL Map的activities作为一个wider scope事务的一部分而包含进来，这个事务可能包含其他的数据库或事务
+源。这个配置需要一个UserTransaction属性来通过JNDI resource设置本地的user transaction。
+3. EXTERNAL
+允许你自己管理事务。你仍然可以配置一个数据源，但是事务不会在框架生命周期中被提交或回滚。这意味着你必须要用自己的程序来控制事务。这个设置对于非事务型数据库是非常有用的。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+datasource元素
+
+<datasource>元素
+<datasource>标签及其属性是<transactionManager>的配置的一部分，它也是用于配置你的SQL Map所使用的数据源的。
+目前本框架提供三种数据源工厂，但是你也可以自己写一个。下面是每一种数据源工厂的配置举例：
+1. SimpleDataSourceFactory
+SimpleDataSourceFactory 为池化的DataSource提供了一个基本的实现，适用于在没有容器提供数据源的情况。
+<transactionManager type="JDBC">
+ <dataSource type="SIMPLE">
+  <property name="JDBC.Driver" value="org.postgresql.Driver"/>
+  <property name="JDBC.ConnectionURL" value="jdbc:postgresql://server:5432/dbname"/>
+  <property name="JDBC.Username" value="user"/>
+  <property name="JDBC.Password" value="password"/>
+  <!-- OPTIONAL PROPERTIES BELOW -->
+  <property name="Pool.MaximumActiveConnections" value="10"/>
+  <property name="Pool.MaximumIdleConnections" value="5"/>
+  <property name="Pool.MaximumCheckoutTime" value="120000"/>
+  <property name="Pool.TimeToWait" value="10000"/>
+  <property name="Pool.PingQuery" value="select * from dual"/>
+  <property name="Pool.PingEnabled" value="false"/>
+  <property name="Pool.PingConnectionsOlderThan" value="0"/>
+  <property name="Pool.PingConnectionsNotUsedFor" value="0"/>
+ </dataSource>
+</transactionManager>
+2. DbcpDataSourceFactory
+DbcpDataSourceFactory 实现使用Jakarta DBCP（Database Connection Pool）的DataSource
+API 提供连接池服务。适用于Web 容器不提供DataSource 服务的情况，或执行一个单独的应用。DbcpDataSourceFactory 中必须要配置的参数例子如下：
+<transactionManager type="JDBC">
+ <dataSource type="DBCP">
+  <property name="JDBC.Driver" value="${driver}"/>
+  <property name="JDBC.ConnectionURL" value="${url}"/>
+  <property name="JDBC.Username" value="${username}"/>
+  <property name="JDBC.Password" value="${password}"/>
+  <!-- OPTIONAL PROPERTIES BELOW -->
+  <property name="Pool.MaximumActiveConnections" value="10"/>
+  <property name="Pool.MaximumIdleConnections" value="5"/>
+  <property name="Pool.MaximumWait" value="60000"/>
+  <!-- Use of the validation query can be problematic.
+  If you have difficulty, try without it. -->
+  <property name="Pool.ValidationQuery" value="select * from ACCOUNT"/>
+  <property name="Pool.LogAbandoned" value="false"/>
+  <property name="Pool.RemoveAbandoned" value="false"/>
+  <property name="Pool.RemoveAbandonedTimeout" value="50000"/>
+ </datasource>
+</transactionManager>
+3. JndiDataSourceFactory
+JndiDataSourceFactory 在应用服务器的容器中从JNDI Context 中查找DataSource 实现。当使用应用
+服务器，并且服务器提供了容器管理的连接池和相关的DataSource 实现的情况下，可以使用
+JndiDataSourceFactory。使用JDBC DataSource 的标准方法是通过JNDI 来查找。
+JndiDataSourceFactory必须要配置的属性如下：
+<transactionManager type="JDBC" >
+ <dataSource type="JNDI">
+  <property name="DataSource" value="java:comp/env/jdbc/jpetstore"/>
+ </dataSource>
+</transactionManager>
+注意：上面的配置是使用标准的JDBC事务管理。但是，在一个容器管理的数据源中，你也可能想为全局的事务做如下配置：
+<transactionManager type="JTA" >
+ <property name="UserTransaction" value="java:/ctx/con/UserTransaction"/>
+ <dataSource type="JNDI">
+  <property name="DataSource" value="java:comp/env/jdbc/jpetstore"/>
+ </dataSource>
+</transactionManager>
+注意：UserTransaction属性指向一个JNDI的位置，你可以通过这个JNDI找到一个UserTransaction实例。这个在JTA的事务管理中是需要的，这样可以使你的SQL MAP参与到包含有其他数据库和事务源的事务中。
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+调用存储过程1
+
+1。调用普通的存储过程
+PROCEDURE [dbo].[PinFang] 
+  @id int
+AS
+BEGIN
+ SET NOCOUNT ON;
+ select * from user where id=@id
+END 
+配置文件相应为
+ <procedure id="pinfun" parameterClass="int" resultClass="user">
+  {call PinFang(?)}
+ </procedure> 
+代码中为
+User obj=(User)DataManage.getInstance().queryForObject("pinfun", new Integer(id)) 
+2。调用有返回值的存储过程
+PROCEDURE [dbo].[PinFang] 
+  @num int
+AS
+BEGIN
+ SET NOCOUNT ON;
+ return @num*@num
+END 
+配置文件相应为
+ <parameterMap id="pinfunP" class="map"> 
+  <parameter property="result" jdbcType="INTEGER" javaType="java.lang.Integer"
+   mode="OUT"   /> 
+  <parameter property="num" jdbcType="INTEGER" javaType="java.lang.Integer"
+   mode="IN"   /> 
+ </parameterMap>
+ <procedure id="pinfun" parameterMap="pinfunP" >
+  {?=call PinFang(?)}
+ </procedure>
+代码中为
+map.pub("result",new Integer(0))
+map.pub("num",new Integer(3))
+ DataManage.getInstance().queryForObject("pinfun",map)
+map.get("result")
+ 3。调用有输出参数的存储过程
+PROCEDURE [dbo].[PinFang] 
+  @num int OUTPUT
+AS
+BEGIN
+ SET NOCOUNT ON;
+ SET @num=@num*@num
+END
+配置文件相应为
+ <parameterMap id="pinfunP" class="map"> 
+  <parameter property="num" jdbcType="INTEGER" javaType="java.lang.Integer"
+   mode="INOUT"   /> 
+ </parameterMap>
+  <procedure id="pinfun" parameterMap="pinfunP" >
+  {call PinFang(?)}
+ </procedure> 
+代码中为 
+map.pub("num",new Integer(3))
+ DataManage.getInstance().queryForObject("pinfun",map)
+map.get("num")
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+调用存储过程2
+
+
+Ibatis调用存储过程 
+
+procedure.xml的ibatis配置文件如下： 
+
+<?xml version="1.0" encoding="UTF-8"?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd"> 
+<sqlMap namespace="PROCEDURE"> 
+
+<!-- 
+- ======================================================= 
+- 授权用户某个设备得权限 
+- ======================================================= 
+--> 
+<parameterMap class="map" id="proPermissionDevicePerson"> 
+   <parameter property="deviceId" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> 
+   <parameter property="deviceType" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> 
+   <parameter property="permissionType" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> 
+   <parameter property="userId" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/> 
+   <parameter property="result" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/> 
+</parameterMap> 
+
+<procedure id="shareDeviceToPerson" parameterMap="proPermissionDevicePerson"> 
+   <![CDATA[ 
+      {call share_dev_prv_to_person (?,?,?,?,?)} 
+   ]]> 
+</procedure> 
+</sqlMap> 
+
+
+JAVA调用实现PermissionDAOIbatisImpl.java如下： 
+
+// 授权设备给用户 
+public static final String SHARE_DEVICE_TO_PERSON = "PROCEDURE.shareDeviceToPerson"; 
+
+/** 
+* 授权某个设备给某个用户 
+* @param userPermission 
+*/ 
+public boolean shareDeviceToPerson(UserPermission userPermission) { 
+Map map = new HashMap(); 
+boolean flag = false; 
+map.put("deviceId", userPermission.getDeviceId()); 
+map.put("deviceType", userPermission.getDeviceType()); 
+map.put("userId", userPermission.getUserId()); 
+map.put("permissionType", userPermission.getPermissionType()); 
+try { 
+   getSqlMapClientTemplate().insert(SHARE_DEVICE_TO_PERSON, map); 
+   String result = (String) map.get("result"); 
+   //得到返回值 
+   if (StringUtil.isNotBlank(result) && "2".equalsIgnoreCase(result)) { 
+    flag = true; 
+   } 
+} catch (Exception e) { 
+   throw new DaoException("DAOException: " + e); 
+} 
+return flag; 
+} 
+
+存储过程的实现代码，嘿嘿。完全不了解，以后有机会学习一下存储过程 
+
+create or replace procedure share_dev_prv_to_person(deviceId   in varchar2, 
+                                                    type       in varchar2, 
+                                                    permission in varchar2, 
+                                                    userId     in varchar2, 
+                                                    result     out varchar2) as 
+
+/** 
+deviceId 设备id 
+tyoe      设备类型 
+permission 权限类型 
+userId     用户id 
+*/ 
+
+v_role_id         varchar2(31); 
+v_organ_id        varchar2(31); 
+v_permission_id   varchar2(31); 
+v_type            varchar2(31); 
+v_permission_type varchar2(200); 
+v_is_exists       int; 
+begin 
+
+result := '1'; 
+
+select encodeID(TROLE_SEQ.nextval) into v_role_id from dual; 
+
+--convert type 
+if type = 1 then 
+    v_type := 'general_camera_vic'; 
+elsif type = 2 then 
+    v_type := 'ip_camera_vic'; 
+elsif type = 3 then 
+    v_type := 'alarm_input_channel'; 
+elsif type = 4 then 
+    v_type := 'alarm_output_channel'; 
+end if; 
+
+--convert permission type 
+if permission = 1 then 
+    v_permission_type := 'vic_realtime_video_play_operation'; 
+elsif permission = 2 then 
+    v_permission_type := 'aic_operation'; 
+elsif permission = 3 then 
+    v_permission_type := 'aoc_open_close_operation'; 
+end if; 
+
+-- insert role 
+begin 
+    select id 
+      into v_role_id 
+      from T_ROLE 
+     where F_NAME = deviceId || '角色' || type || '_' || permission; 
+
+    select 1 
+      into v_is_exists 
+      from permission        pp, 
+           T_ROLE            role, 
+           R_USER_ROLE       ru, 
+           R_ROLE_PERMISSION rrp 
+     where role.f_name = deviceId || '角色' || type || '_' || permission 
+       and ru.user_id = userId 
+       and rrp.ROLE_ID = role.id 
+       and rrp.PERMISSION_ID = pp.id; 
+
+exception 
+    when No_data_found then 
+      dbms_output.put_line('no role founed!!'); 
+    
+      select organ_id into v_organ_id from t_user where id = userId; 
+    
+      INSERT INTO T_ROLE 
+        (ID, F_NAME, NOTE, ORGAN_ID, CREATE_PERSON) 
+      VALUES 
+        (v_role_id, 
+         deviceId || '角色' || type || '_' || permission, 
+         deviceId || '角色' || type || '_' || permission, 
+         v_organ_id, 
+         userId); 
+    
+      -- grant role permission 
+      select id 
+        into v_permission_id 
+        from permission t 
+       where t.resource_id = deviceId 
+         and t.operation = v_permission_type 
+         and t.resource_type = v_type; 
+    
+      INSERT INTO R_ROLE_PERMISSION 
+        (PERMISSION_ID, ROLE_ID) 
+      VALUES 
+        (v_permission_id, v_role_id); 
+    
+      -- grant role to other person 
+      INSERT INTO R_USER_ROLE 
+        (ROLE_ID, USER_ID) 
+      VALUES 
+        (v_role_id, userId); 
+end; 
+
+commit; 
+
+result := '2'; 
+
+end; 
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+调用存储过程3
+
+众所周知,Ibatis的核心就在于映射文件(Data Map XML File),在调用存储过程返回取得返回参数的过程中，最有可能出错的地方，就是映身文件的配置
+我的开发环境地是(VS2008(.Net2.0)+Win2003Server+Oracle 10g)
+直接进入主题，先来看一个资料
+调用存储过程只能用到<procedure>（当然，我在博客园也见到一些朋友介绍说可以使用<statement>标签，但经过小弟在测试调用Oracle数据库一直报错String类型没有长度限制，后来改成<procedure>就正常了）
+<statements>
+<procedure id="testProcedure" parametersMap="paramMap">
+    Test.TestProcedure
+</procedure>
+</statements>
+
+<parameterMaps>
+    <parameterMap id="paramMap" class="Hashtable">
+     <parameter property="ID" column="PS_ID" />
+     <parameter property="UserName" column="PS_USERNAME" />
+      <parameter property="PassWord" column="PS_PASSWORD" />
+      <parameter property="returnValue" column="PS_RETURNVALUE" direction="Output" />
+   </parameterMap>
+</parameterMaps>
+ 
+class一定设置class="Hashtable"，当然也可以根据你的实际情况填写；在本文中是以Hashtable为例
+Column属性一定要全部大写，否则会报错，找不到该参数（Oracle）
+Hashtable map = new Hashtable();
+map.Add("ID", 1);
+map.Add("UserName", "user");
+map.Add("PassWord", "pwd");
+map.Add("returnValue", -1);
+
+mapper.Insert("testProcedure", map);
+
+Console.WriteLine(map["returnValue"].ToString());
+ 
+ Ibatis使用简单，就是配置要注意，注意大小写敏感，一般是不会出错的~
+ 
+1、更新类型的存储过程
+sp_InsertAccount：
+CREATE PROCEDURE [dbo].[sp_InsertAccount]
+   -- Add the parameters for the stored procedure here
+  @Account_ID int,
+  @Account_FirstName varchar(32),
+  @Account_LastName varchar(32)AS
+BEGIN
+insert into accounts (account_id, account_firstname, account_lastname) 
+  values (@Account_ID,@Account_FirstName,@Account_LastName )
+END
+Map配置文件：
+      <procedure id="InsertAccountViaStoreProcedure" parameterMap="insert-params_new">
+         sp_InsertAccount
+      </procedure>
+  <parameterMap id="insert-params_new" class="Account">
+    <parameter property="Id" />
+    <parameter property="FirstName" />
+     <parameter property="LastName" />
+  </parameterMap>
+这里要注意的就是ParameterMap中的参数个数和顺序要和sp_InsertAccount存储过程中的一致
+Ado中的调用代码：
+     public void InsertAccountViaStoreProcedure(Account account)
+      {
+           try
+          {
+               sqlMap.Insert("InsertAccountViaStoreProcedure", account);
+           }
+           catch (DataAccessException ex)
+          {
+               throw new DataAccessException("Error executing InsertAccountViaStoreProcedure. Cause :" + ex.Message, ex);
+           }
+      }
+这里使用的是sqlMap.Insert的方法，为了看起来直观一点，其实使用sqlMap.QueryForObject方法的话效果也是一样的:)
+
+2、查询类型的存储过程
+GetAccountByName：
+CREATE PROCEDURE [dbo].[GetAccountByName]
+   @name varchar(32)
+AS
+BEGIN
+select * from accounts where Account_FirstName like '%' + @name + '%'
+END
+
+Map配置文件：
+   <procedure id="GetAccountByNameViaStoreProcedure" resultMap="account-result" parameterMap="selectpro-params">
+     GetAccountByName
+    </procedure>
+   <parameterMap id="selectpro-params" class="string">
+    <parameter property="name"/>
+ </parameterMap>
+这里parameterMap也是和上面的要求一样，至于property的名字在这里没有实际作用，可以任意取名的
+
+Ado中的调用代码：
+     public ArrayList GetAccountByNameViaStoreProcedure(string strName)
+  {
+         try
+      {
+              ArrayList list = (ArrayList)sqlMap.QueryForList("GetAccountByNameViaStoreProcedure", strName);
+             return list;
+           }
+         catch (DataAccessException ex)
+        {
+               throw new DataAccessException("Error executing SqlAccountViaSqlMapDao.GetAccountById. Cause :" + ex.Message, ex);
+        }
+       }
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+java核心技术学习
+abatorConfig
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+<abatorConfiguration >
+  <abatorContext generatorSet="Java5">
+    <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@localhost:1521:dbhouse" userId="demo" password="demo" >
+      <classPathEntry location="D:\workspace\ibatisoracle\lib\classes12.jar" />
+    </jdbcConnection>
+    <javaModelGenerator targetPackage="com.demo.ibatis.beans" targetProject="ibatisoracle" />
+    <sqlMapGenerator targetPackage="com.demo.ibatis.beans" targetProject="ibatisoracle" />
+    <daoGenerator targetPackage="com.demo.ibatis.dao" targetProject="ibatisoracle" type="GENERIC-SI" />
+    <table schema="demo" catalog="demo" tableName="users" domainObjectName="User">
+  <generatedKey column="id" sqlStatement="ORACLE" identity="false" type="pre" />
+    </table>
+    <table schema="demo" tableName="address" >
+  <generatedKey column="id" sqlStatement="ORACLE" identity="false" type="pre"/>
+    </table>
+    <table schema="demo" tableName="sms" >
+  <generatedKey column="id" sqlStatement="ORACLE" identity="false" type="pre"/>
+    </table>
+      </abatorContext>
+</abatorConfiguration>
+ Copyright ©2011 lyt. All Rights Reserved.
+ 
+ 
+ 
+ 
+ 
+java核心技术学习
+spring+ibatis 解决clob，nclob字段乱码及写入问题
+
+一、修改spring-dao.xml文件
+    <!-- 配置事务特性 -->
+    <tx:advice id="txAdvice" transaction-manager="txManager" >
+        <tx:attributes>
+        <tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="save*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="mod*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+        <tx:method name="*" read-only="true"/>
+       </tx:attributes>
+    </tx:advice>
+    <!-- 配置哪些类的方法需要进行事务管理 -->
+    <aop:config>
+      <aop:pointcut id="allManagerMethod2" expression="execution(* com.forlink.fkcore.service..*(..))"/>
+      <aop:pointcut id="allManagerMethod3" expression="execution(* com.forlink.repm.service..*(..))"/>
+      <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod2"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod3"/>
+    </aop:config>
+ 
+<!--根据不同的数据源选择不同的执行助手
+WebSphere 4 及以上版本的数据源 org.springframework.jdbc.support.nativejdbc.WebSphereNativeJdbcExtractor 
+WebLogic 6.1+ 及以上版本的数据源 org.springframework.jdbc.support.nativejdbc.WebLogicNativeJdbcExtractor 
+JBoss 3.2.4 及以上版本的数据源 org.springframework.jdbc.support.nativejdbc.JBossNativeJdbcExtractor 
+C3P0 数据源 org.springframework.jdbc.support.nativejdbc.C3P0NativeJdbcExtractor 
+DBCP 数据源 org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor 
+ObjectWeb 的 XAPool 数据源 org.springframework.jdbc.support.nativejdbc.XAPoolNativeJdbcExtractor
+-->
+<bean id="nativeJdbcExtractor" class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" lazy-init="true" />   
+<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">   
+     <property name="nativeJdbcExtractor">   
+         <ref local="nativeJdbcExtractor" />   
+     </property>   
+ </bean>
+ <!-- 配置Jdbc模板  -->
+ <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+  <property name="configLocation" value="sqlMapConfig.xml" />
+  <property name="sqlMapClientProperties">
+   <props>
+    <prop key="contextRealPath">${contextRealPath}</prop>
+   </props>
+  </property>
+<!--注册Clob类型-->
+  <property name="lobHandler" ref="lobHandler" />
+  <property name="dataSource" ref="dataSource" />
+ </bean>
+ <!-- 配置dao -->
+ <bean id="abstractDao" abstract="true">
+  <property name="sqlMapClient" ref="sqlMapClient" />
+ </bean>
+第二修改sqlMapConfig.xml配置文件
+<!--全局类型参数设置助手--->
+<typeHandler jdbcType="CLOB" javaType="java.lang.String" callback="org.springframework.orm.ibatis.support.ClobStringTypeHandler" />
+<typeHandler jdbcType="NCLOB" javaType="java.lang.String" callback="org.springframework.orm.ibatis.support.ClobStringTypeHandler" />
+ 
+注意：
+CLOB的操作必须在事务中进行。如果你的service不在事务中会出错的哦。
+一般报这个错：
+ --- Cause: java.lang.IllegalStateException: Spring transaction synchronization needs to be active for etting values in iBATIS TypeHandlers that delegate to a Spring LobHandler; nested exception is com.ibatis.common.jdbc.exception.NestedSQL
+Exception:
+ Copyright ©2011 lyt. All Rights Reserved.
