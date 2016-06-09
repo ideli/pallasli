@@ -21,6 +21,6 @@
 			<groupId>com.pallasli</groupId>
 			<artifactId>pallasli-study-lucene </artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency> 
   </dependencies>
 </project>

@@ -14,6 +14,8 @@
 		<module>pallasli-bpm-entity</module>
 		<module>pallasli-bpm-core-manager</module>
 		<module>pallasli-bpm-container</module>
+		<module>pallasli-bpm-test</module>
+		<module>pallasli-bpm-designer</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,7 +31,7 @@
 		<log4j.version>1.2.16</log4j.version>
 		<jbpm.version>5.4.0.Final</jbpm.version>
 		<drools.version>5.5.0.Final</drools.version>
-		<activiti.version>5.16.3</activiti.version>
+		<activiti.version>5.20.0</activiti.version>
 		<junit.version>4.10</junit.version>
 		<poi.version>3.8</poi.version>
 		<mybatis.version>3.2.5</mybatis.version>
