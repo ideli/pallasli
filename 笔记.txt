@@ -27,3 +27,11 @@ jdk8中不再需要加final修饰，但默认在局部内部类中是final的
 
 
 
+Eclipse打包工具插件 FatJAR
+
+
+
+
+
+
+

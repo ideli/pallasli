@@ -1,0 +1,207 @@
+最近在搞openwebflow的工作流节点自由跳转功能，在网上看了一些资料，感觉不是很好，总结原因如下：
+直接手动调用SqlSession的操作，感觉会漏掉一些重要的初始化操作（如：启动新节点之后加载其用户授权策略，等）；
+只有往前（往已执行过的节点）跳转的功能，没有往后节点（往还没有执行的节点）跳转的功能；
+新任务不是追加到已有执行路径上，而是覆盖老任务；
+那么就自己动手吧！操作流程其实也简单，大概如下：
+按照目标节点（activity）定义创建一个新的任务（task），这个创建过程必须和正常流程到了某个节点的时候完全一样（如：不应该忽略用户授权策略的加载，任务名称表达式的计算，等）；
+删除掉当前任务（task）；
+注意：直接删除当前节点会报错，因为它还在流程之中，所以要先解除任务与当前执行execution的关联；
+以上操作如何安全的实现呢？看了一下源码，经过多次痛苦的尝试，积累了不少教训：
+直接SqlSession操作数据库是不行的，这种方法容易擦枪走火！
+直接taskService.saveTask也是不行的，因为它实际上仅仅是针对DbSqlSession的操作！不commit一切操作都白搭！
+那么怎么办呢？我想说的是，Activiti的封装做得很厚，想完全看懂是太难的。目前我还没想完全看懂，直接吐槽一下，与后人分享其中的痛苦：
+太多的Command！一个saveTask()总会包装成SaveTask操作，关键代码总是藏得很深！
+太多的事件！
+太多的AtomicOperation！
+太多的Listener！
+太多的CommandInterceptor！隐隐约约感觉Activiti将各种CommandInterceptor组成一个chain，然后在执行核心代码的时候会一层一层的剥洋葱！
+还有就是栈式Context！看看下面这段代码就明白有多坑爹了：
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+public static void setCommandContext(CommandContext commandContext) {  
+  getStack(commandContextThreadLocal).push(commandContext);  
+}  
+
+总之，代码看得那是相当郁闷！debug的时候，调用栈极其深，而且大部分都会落在如下两段代码中：
+代码1：
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+public <T> T execute(CommandConfig config, Command<T> command) {  
+  if (!log.isDebugEnabled()) {  
+    // do nothing here if we cannot log  
+    return next.execute(config, command);  
+  }  
+  log.debug("\n");  
+  log.debug("--- starting {} --------------------------------------------------------", command.getClass().getSimpleName());  
+  try {  
+  
+    return next.execute(config, command);  
+  
+  } finally {  
+    log.debug("--- {} finished --------------------------------------------------------", command.getClass().getSimpleName());  
+    log.debug("\n");  
+  }  
+}  
+
+代码2：
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+try {  
+  // Push on stack  
+  Context.setCommandContext(context);  
+  Context.setProcessEngineConfiguration(processEngineConfiguration);  
+    
+  return next.execute(config, command);  
+    
+} catch (Exception e) {  
+      
+  context.exception(e);  
+    
+} finally {  
+  try {  
+      if (!contextReused) {  
+          context.close();  
+      }  
+  } finally {  
+      // Pop from stack  
+      Context.removeCommandContext();  
+      Context.removeProcessEngineConfiguration();  
+  }  
+}  
+
+看到那么多的next没？足够让人疯掉的*_*
+由于时间关系，我没有细细的去理解每个类，但最终还是找出了一个极妙、极安全的方法，那就是：自己写Command！然后扔给CommandExecutor()了事！
+最终形成的代码如下所示：
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+package org.openwebflow.ctrl;  
+  
+import org.activiti.engine.ProcessEngine;  
+import org.activiti.engine.TaskService;  
+import org.activiti.engine.impl.RuntimeServiceImpl;  
+import org.activiti.engine.impl.interceptor.Command;  
+import org.activiti.engine.impl.interceptor.CommandContext;  
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;  
+import org.activiti.engine.impl.persistence.entity.TaskEntity;  
+import org.activiti.engine.impl.pvm.process.ActivityImpl;  
+import org.openwebflow.util.ActivityUtils;  
+  
+public class TaskFlowControlService  
+{  
+    ProcessEngine _processEngine;  
+  
+    private String _processId;  
+  
+    public TaskFlowControlService(ProcessEngine processEngine, String processId)  
+    {  
+        _processEngine = processEngine;  
+        _processId = processId;  
+    }  
+  
+    /** 
+     * 跳转至指定活动节点 
+     *  
+     * @param targetTaskDefinitionKey 
+     * @throws Exception 
+     */  
+    public void jump(String targetTaskDefinitionKey) throws Exception  
+    {  
+        TaskEntity currentTask = (TaskEntity) _processEngine.getTaskService().createTaskQuery()  
+                .processInstanceId(_processId).singleResult();  
+        jump(currentTask, targetTaskDefinitionKey);  
+    }  
+  
+    /** 
+     *  
+     * @param currentTaskEntity 
+     *            当前任务节点 
+     * @param targetTaskDefinitionKey 
+     *            目标任务节点（在模型定义里面的节点名称） 
+     * @throws Exception 
+     */  
+    private void jump(final TaskEntity currentTaskEntity, String targetTaskDefinitionKey) throws Exception  
+    {  
+        final ActivityImpl activity = ActivityUtils.getActivity(_processEngine,  
+            currentTaskEntity.getProcessDefinitionId(), targetTaskDefinitionKey);  
+  
+        final ExecutionEntity execution = (ExecutionEntity) _processEngine.getRuntimeService().createExecutionQuery()  
+                .executionId(currentTaskEntity.getExecutionId()).singleResult();  
+  
+        final TaskService taskService = _processEngine.getTaskService();  
+  
+        //包装一个Command对象  
+        ((RuntimeServiceImpl) _processEngine.getRuntimeService()).getCommandExecutor().execute(  
+            new Command<java.lang.Void>()  
+            {  
+                @Override  
+                public Void execute(CommandContext commandContext)  
+                {  
+                    //创建新任务  
+                    execution.setActivity(activity);  
+                    execution.executeActivity(activity);  
+  
+                    //删除当前的任务  
+                    //不能删除当前正在执行的任务，所以要先清除掉关联  
+                    currentTaskEntity.setExecutionId(null);  
+                    taskService.saveTask(currentTaskEntity);  
+                    taskService.deleteTask(currentTaskEntity.getId(), true);  
+  
+                    return null;  
+                }  
+            });  
+    }  
+}  
+
+最后写了一个测试类，代码如下：
+[java] view plain copy print?在CODE上查看代码片派生到我的代码片
+@Test  
+public void testTaskSequence() throws Exception  
+{  
+    //_processDef对应于vacationRequest流程，参见https://github.com/bluejoe2008/openwebflow/blob/master/models/test.bpmn  
+    ProcessInstance instance = _processEngine.getRuntimeService().startProcessInstanceByKey(_processDef.getKey());  
+    String instanceId = instance.getId();  
+  
+    TaskService taskService = _processEngine.getTaskService();  
+    Task task1 = taskService.createTaskQuery().singleResult();  
+    Assert.assertEquals("step2", task1.getTaskDefinitionKey());  
+  
+    Map<String, Object> vars = new HashMap<String, Object>();  
+    vars.put("vacationApproved", false);  
+    vars.put("numberOfDays", 10);  
+    vars.put("managerMotivation", "get sick");  
+  
+    String taskId = taskService.createTaskQuery().taskCandidateUser("kermit").singleResult().getId();  
+    taskService.complete(taskId, vars);  
+    Task task2 = taskService.createTaskQuery().singleResult();  
+    Assert.assertEquals("adjustVacationRequestTask", task2.getTaskDefinitionKey());  
+  
+    TaskFlowControlService tfcs = new TaskFlowControlService(_processEngine, instanceId);  
+  
+    //跳回至 step2  
+    tfcs.jump("step2");  
+    Task task3 = taskService.createTaskQuery().singleResult();  
+    Assert.assertEquals("step2", task3.getTaskDefinitionKey());  
+  
+    //确认权限都拷贝过来了  
+    //management可以访问该task  
+    Assert.assertEquals(1, taskService.createTaskQuery().taskCandidateGroup("management").count());  
+    //engineering不可以访问该task  
+    Assert.assertEquals(0, taskService.createTaskQuery().taskCandidateGroup("engineering").count());  
+  
+    //确认历史轨迹里已保存  
+    List<HistoricActivityInstance> activities = _processEngine.getHistoryService()  
+            .createHistoricActivityInstanceQuery().processInstanceId(instanceId).list();  
+    Assert.assertEquals(5, activities.size());  
+    Assert.assertEquals("step1", activities.get(0).getActivityId());  
+    Assert.assertEquals("step2", activities.get(1).getActivityId());  
+    Assert.assertEquals("requestApprovedDecision", activities.get(2).getActivityId());  
+    Assert.assertEquals("adjustVacationRequestTask", activities.get(3).getActivityId());  
+    Assert.assertEquals("step2", activities.get(4).getActivityId());  
+  
+    //测试一下往前跳  
+    tfcs.jump("adjustVacationRequestTask");  
+    Task task4 = taskService.createTaskQuery().singleResult();  
+    Assert.assertEquals("adjustVacationRequestTask", task4.getTaskDefinitionKey());  
+  
+    activities = _processEngine.getHistoryService().createHistoricActivityInstanceQuery()  
+            .processInstanceId(instanceId).list();  
+    Assert.assertEquals(6, activities.size());  
+    Assert.assertEquals("adjustVacationRequestTask", activities.get(5).getActivityId());  
+    _processEngine.getRuntimeService().deleteProcessInstance(instanceId, "test");  
+}  

@@ -1335,6 +1335,192 @@ lock()和unlock()取代syncronize(){}
 
 
 
+工作中，经常会涉及到线程。比如有些任务，经常会交与线程去异步执行。抑或服务端程序为每个请求单独建立一个线程处理任务。线程之外的，比如我们用的数据库连接。这些创建销毁或者打开关闭的操作，非常影响系统性能。所以，“池”的用处就凸显出来了。
+
+1. 为什么要使用线程池
+
+在3.6.1节介绍的实现方式中，对每个客户都分配一个新的工作线程。当工作线程与客户通信结束，这个线程就被销毁。这种实现方式有以下不足之处：
+
+服务器创建和销毁工作的开销( 包括所花费的时间和系统资源 )很大。这一项不用解释，可以去查下"线程创建过程"。除了机器本身所做的工作，我们还要实例化，启动，这些都需要占用堆栈资源。
+
+除了创建和销毁线程的开销之外，活动的线程也消耗系统资源。 这个应该是对堆栈资源的消耗，猜测数据库连接数设置一个合理的值，也有这个考虑。
+
+如果线程数目固定，并且每个线程都有很长的声明周期，那么线程切换也是相对固定的。不同的操作系统有不同的切换周期，一般20ms左右。这里说的切换是在jvm以及底层操作系统的调度下，线程之间转让cpu的使用权。如果频繁创建和销毁线程，那么就将频繁的切换线程，因为一个线程销毁后，必然要让出使用权给已经就绪的线程，使该线程获得运行机会。在这种情况下，线程之间的切换就不在遵循系统的固定切换周期，切换线程的开销甚至比创建和销毁的开销还要大。
+
+相对来说，使用线程池，会预创建一些线程，它们不断的从工作队列中取出任务，然后执行该任务。当工作线程执行完一个任务后，就会继续执行工作队列中的另一个任务。优点如下：
+
+减少了创建和销毁的次数，每个工作线程都可以一直被重用，能执行多个任务。
+
+可以根据系统的承载能力，方便的调整线程池中线程的数目，防止因为消耗过量的系统资源而导致系统崩溃。
+
+2. 线程池的简单实现
+
+下面是自己写的一个简单的线程池，也是从Java网络编程这本书上直接照着敲出来的
+
+
+
+package thread;import java.util.LinkedList;/**
+ * 线程池的实现，根据常规线程池的长度，最大长度，队列长度，我们可以增加数目限制实现
+ * @author Han */public class MyThreadPool extends ThreadGroup{    //cpu 数量 ---Runtime.getRuntime().availableProcessors();    //是否关闭
+    private boolean isClosed = false;    //队列
+    private LinkedList<Runnable> workQueue;    //线程池id
+    private static int threadPoolID;    private int threadID;    public MyThreadPool(int poolSize){        super("MyThreadPool."+threadPoolID);
+        threadPoolID++;
+        setDaemon(true);
+        workQueue = new LinkedList<Runnable>();        for(int i = 0;i<poolSize;i++){            new WorkThread().start();
+        }
+    }    //这里可以换成ConcurrentLinkedQueue,就可以避免使用synchronized的效率问题
+    public synchronized void execute(Runnable task){        if(isClosed){            throw new IllegalStateException("连接池已经关闭...");
+        }else{
+            workQueue.add(task);
+            notify();
+        }
+    }    
+    protected synchronized Runnable getTask() throws InterruptedException {        while(workQueue.size() == 0){            if(isClosed){                return null;
+            }
+            wait();
+        }        return workQueue.removeFirst();
+    }    
+    public synchronized void close(){        if(!isClosed){
+            isClosed = true;
+            workQueue.clear();
+            interrupt();
+        }
+    }    
+    public void join(){        synchronized (this) {
+            isClosed = true;
+            notifyAll();
+        }
+        Thread[] threads = new Thread[activeCount()];        int count = enumerate(threads);        for(int i = 0;i<count;i++){            try {
+                threads[i].join();
+            } catch (Exception e) {
+            }
+        }
+    }    
+    class WorkThread extends Thread{        public WorkThread(){            super(MyThreadPool.this,"workThread"+(threadID++));
+            System.out.println("create...");
+        }
+        @Override        public void run() {            while(!isInterrupted()){
+                System.out.println("run..");
+                Runnable task = null;                try {                    //这是一个阻塞方法
+                    task = getTask();
+                    
+                } catch (Exception e) {
+                    
+                }                if(task != null){
+                    task.run();
+                }else{                    break;
+                }
+            }
+        }
+    }
+}
+
+
+该线程池主要定义了一个工作队列和一些预创建的线程。只要调用execute方法，就可以向线程提交任务。
+
+后面线程在没有任务的时候，会阻塞在getTask(),直到有新任务进来被唤醒。
+
+join和close都可以用来关闭线程池。不同的是，join会把队列中的任务执行完，而close则立刻清空队列，并且中断所有的工作线程。close()中的interrupt()相当于调用了ThreadGroup中包含子线程的各自的interrupt()，所以有线程处于wait或者sleep时，都会抛出InterruptException
+
+测试类如下:
+
+
+
+public class TestMyThreadPool {    public static void main(String[] args) throws InterruptedException {
+        MyThreadPool pool = new MyThreadPool(3);        for(int i = 0;i<10;i++){
+            pool.execute(new Runnable() {
+                @Override                public void run() {                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                    System.out.println("working...");
+                }
+            });
+        }
+        pool.join();        //pool.close();
+    }
+}
+
+
+3. jdk类库提供的线程池
+
+java提供了很好的线程池实现，比我们自己的实现要更加健壮以及高效，同时功能也更加强大。
+
+类图如下：
+
+
+
+关于这类线程池，前辈们已经有很好的讲解。任意百度下java线程池，都有写的非常详细的例子和教程，这里就不再赘述。
+
+java自带线程池和队列详解
+
+4. spring注入线程池
+
+在使用spring框架的时候，如果我们用java提供的方法来创建线程池，在多线程应用中非常不方便管理，而且不符合我们使用spring的思想。(虽然spring可以通过静态方法注入)
+
+其实,Spring本身也提供了很好的线程池的实现。这个类叫做ThreadPoolTaskExecutor。
+
+在spring中的配置如下：
+
+
+
+<bean id="executorService" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${threadpool.corePoolSize}" />
+        <!-- 线程池维护线程的最少数量 -->
+        <property name="keepAliveSeconds" value="${threadpool.keepAliveSeconds}" />
+        <!-- 线程池维护线程所允许的空闲时间 -->
+        <property name="maxPoolSize" value="${threadpool.maxPoolSize}" />
+        <!-- 线程池维护线程的最大数量 -->
+        <property name="queueCapacity" value="${threadpool.queueCapacity}" />
+        <!-- 线程池所使用的缓冲队列 -->
+    </bean>
+
+
+5. 使用线程池的注意事项
+
+死锁
+
+任何多线程程序都有死锁的风险，最简单的情形是两个线程AB，A持有锁1，请求锁2，B持有锁2，请求锁1。（这种情况在mysql的排他锁也会出现，不会数据库会直接报错提示）。线程池中还有另一种死锁：假设线程池中的所有工作线程都在执行各自任务时被阻塞，它们在等待某个任务A的执行结果。而任务A却处于队列中，由于没有空闲线程，一直无法得以执行。这样线程池的所有资源将一直阻塞下去，死锁也就产生了。
+
+系统资源不足
+
+如果线程池中的线程数目非常多，这些线程会消耗包括内存和其他系统资源在内的大量资源，从而严重影响系统性能。
+
+并发错误
+
+线程池的工作队列依靠wait()和notify()方法来使工作线程及时取得任务，但这两个方法难以使用。如果代码错误，可能会丢失通知，导致工作线程一直保持空闲的状态，无视工作队列中需要处理的任务。因为最好使用一些比较成熟的线程池。
+
+线程泄漏
+
+使用线程池的一个严重风险是线程泄漏。对于工作线程数目固定的线程池，如果工作线程在执行任务时抛出RuntimeException或Error，并且这些异常或错误没有被捕获，那么这个工作线程就异常终止，使线程池永久丢失了一个线程。（这一点太有意思）
+
+另一种情况是，工作线程在执行一个任务时被阻塞，如果等待用户的输入数据，但是用户一直不输入数据，导致这个线程一直被阻塞。这样的工作线程名存实亡，它实际上不执行任何任务了。如果线程池中的所有线程都处于这样的状态，那么线程池就无法加入新的任务了。
+
+任务过载
+
+当工作线程队列中有大量排队等待执行的任务时，这些任务本身可能会消耗太多的系统资源和引起资源缺乏。
+
+综上所述，使用线程池时，要遵循以下原则：
+
+如果任务A在执行过程中需要同步等待任务B的执行结果，那么任务A不适合加入到线程池的工作队列中。如果把像任务A一样的需要等待其他任务执行结果的加入到队列中，可能造成死锁
+
+如果执行某个任务时可能会阻塞，并且是长时间的阻塞，则应该设定超时时间，避免工作线程永久的阻塞下去而导致线程泄漏。在服务器才程序中，当线程等待客户连接，或者等待客户发送的数据时，都可能造成阻塞，可以通过以下方式设置时间：
+
+调用ServerSocket的setSotimeout方法，设定等待客户连接的超时时间。
+
+对于每个与客户连接的socket，调用该socket的setSoTImeout方法，设定等待客户发送数据的超时时间。
+
+了解任务的特点，分析任务是执行经常会阻塞io操作，还是执行一直不会阻塞的运算操作。前者时断时续的占用cpu，而后者具有更高的利用率。预计完成任务大概需要多长时间，是短时间任务还是长时间任务，然后根据任务的特点，对任务进行分类，然后把不同类型的任务加入到不同的线程池的工作队列中，这样就可以根据任务的特点，分配调整每个线程池
+
+调整线程池的大小。线程池的最佳大小主要取决于系统的可用cpu的数目，以及工作队列中任务的特点。假如一个具有N个cpu的系统上只有一个工作队列，并且其中全部是运算性质(不会阻塞)的任务，那么当线程池拥有N或N+1个工作线程时，一般会获得最大的cpu使用率。
+
+如果工作队列中包含会执行IO操作并经常阻塞的任务，则要让线程池的大小超过可用 cpu的数量，因为并不是所有的工作线程都一直在工作。选择一个典型的任务，然后估计在执行这个任务的工程中，等待时间与实际占用cpu进行运算的时间的比例WT/ST。对于一个具有N个cpu的系统，需要设置大约N*(1+WT/ST)个线程来保证cpu得到充分利用。
+
+当然,cpu利用率不是调整线程池过程中唯一要考虑的事项，随着线程池工作数目的增长，还会碰到内存或者其他资源的限制，如套接字，打开的文件句柄或数据库连接数目等。要保证多线程消耗的系统资源在系统承受的范围之内。
+
+避免任务过载。服务器应根据系统的承载能力，限制客户并发连接的数目。当客户的连接超过了限制值，服务器可以拒绝连接，并进行友好提示，或者限制队列长度.
+
 
 
 

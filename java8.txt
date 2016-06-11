@@ -1,0 +1,1216 @@
+JAVA8 十大新特性详解
+作者： 字体：[增加 减小] 类型：转载
+本教程将Java8的新特新逐一列出，并将使用简单的代码示例来指导你如何使用默认接口方法，lambda表达式，方法引用以及多重Annotation，之后你将会学到最新的API上的改进，比如流，函数式接口，Map以及全新的日期API
+
+“Java is still not dead—and people are starting to figure that out.”
+本教程将用带注释的简单代码来描述新特性，你将看不到大片吓人的文字。
+一、接口的默认方法
+
+Java 8允许我们给接口添加一个非抽象的方法实现，只需要使用 default关键字即可，这个特征又叫做扩展方法，示例如下：
+复制代码 代码如下:
+
+interface Formula {
+    double calculate(int a);
+    default double sqrt(int a) {
+        return Math.sqrt(a);
+    }
+}
+
+Formula接口在拥有calculate方法之外同时还定义了sqrt方法，实现了Formula接口的子类只需要实现一个calculate方法，默认方法sqrt将在子类上可以直接使用。
+复制代码 代码如下:
+
+Formula formula = new Formula() {
+    @Override
+    public double calculate(int a) {
+        return sqrt(a * 100);
+    }
+};
+formula.calculate(100);     // 100.0
+formula.sqrt(16);           // 4.0
+
+文中的formula被实现为一个匿名类的实例，该代码非常容易理解，6行代码实现了计算 sqrt(a * 100)。在下一节中，我们将会看到实现单方法接口的更简单的做法。
+译者注： 在Java中只有单继承，如果要让一个类赋予新的特性，通常是使用接口来实现，在C++中支持多继承，允许一个子类同时具有多个父类的接口与功能，在其他语言中，让一个类同时具有其他的可复用代码的方法叫做mixin。新的Java 8 的这个特新在编译器实现的角度上来说更加接近Scala的trait。 在C#中也有名为扩展方法的概念，允许给已存在的类型扩展方法，和Java 8的这个在语义上有差别。
+
+二、Lambda 表达式
+
+首先看看在老版本的Java中是如何排列字符串的：
+复制代码 代码如下:
+
+List<String> names = Arrays.asList("peter", "anna", "mike", "xenia");
+Collections.sort(names, new Comparator<String>() {
+    @Override
+    public int compare(String a, String b) {
+        return b.compareTo(a);
+    }
+});
+
+只需要给静态方法 Collections.sort 传入一个List对象以及一个比较器来按指定顺序排列。通常做法都是创建一个匿名的比较器对象然后将其传递给sort方法。
+在Java 8 中你就没必要使用这种传统的匿名对象的方式了，Java 8提供了更简洁的语法，lambda表达式：
+复制代码 代码如下:
+
+Collections.sort(names, (String a, String b) -> {
+    return b.compareTo(a);
+});
+
+看到了吧，代码变得更段且更具有可读性，但是实际上还可以写得更短：
+复制代码 代码如下:
+
+Collections.sort(names, (String a, String b) -> b.compareTo(a));
+
+对于函数体只有一行代码的，你可以去掉大括号{}以及return关键字，但是你还可以写得更短点：
+复制代码 代码如下:
+
+Collections.sort(names, (a, b) -> b.compareTo(a));
+
+Java编译器可以自动推导出参数类型，所以你可以不用再写一次类型。接下来我们看看lambda表达式还能作出什么更方便的东西来：
+
+三、函数式接口
+
+Lambda表达式是如何在java的类型系统中表示的呢？每一个lambda表达式都对应一个类型，通常是接口类型。而“函数式接口”是指仅仅只包含一个抽象方法的接口，每一个该类型的lambda表达式都会被匹配到这个抽象方法。因为 默认方法 不算抽象方法，所以你也可以给你的函数式接口添加默认方法。
+我们可以将lambda表达式当作任意只包含一个抽象方法的接口类型，确保你的接口一定达到这个要求，你只需要给你的接口添加 @FunctionalInterface 注解，编译器如果发现你标注了这个注解的接口有多于一个抽象方法的时候会报错的。
+示例如下：
+复制代码 代码如下:
+
+@FunctionalInterface
+interface Converter<F, T> {
+    T convert(F from);
+}
+Converter<String, Integer> converter = (from) -> Integer.valueOf(from);
+Integer converted = converter.convert("123");
+System.out.println(converted);    // 123
+
+需要注意如果@FunctionalInterface如果没有指定，上面的代码也是对的。
+译者注 将lambda表达式映射到一个单方法的接口上，这种做法在Java 8之前就有别的语言实现，比如Rhino JavaScript解释器，如果一个函数参数接收一个单方法的接口而你传递的是一个function，Rhino 解释器会自动做一个单接口的实例到function的适配器，典型的应用场景有 org.w3c.dom.events.EventTarget 的addEventListener 第二个参数 EventListener。
+四、方法与构造函数引用
+
+前一节中的代码还可以通过静态方法引用来表示：
+复制代码 代码如下:
+
+Converter<String, Integer> converter = Integer::valueOf;
+Integer converted = converter.convert("123");
+System.out.println(converted);   // 123
+
+Java 8 允许你使用 :: 关键字来传递方法或者构造函数引用，上面的代码展示了如何引用一个静态方法，我们也可以引用一个对象的方法：
+复制代码 代码如下:
+
+ converter = something::startsWith;
+String converted = converter.convert("Java");
+System.out.println(converted);    // "J"
+
+接下来看看构造函数是如何使用::关键字来引用的，首先我们定义一个包含多个构造函数的简单类：
+复制代码 代码如下:
+
+class Person {
+    String firstName;
+    String lastName;
+    Person() {}
+    Person(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+}
+
+接下来我们指定一个用来创建Person对象的对象工厂接口：
+复制代码 代码如下:
+
+interface PersonFactory<P extends Person> {
+    P create(String firstName, String lastName);
+}
+
+这里我们使用构造函数引用来将他们关联起来，而不是实现一个完整的工厂：
+复制代码 代码如下:
+
+PersonFactory<Person> personFactory = Person::new;
+Person person = personFactory.create("Peter", "Parker");
+
+我们只需要使用 Person::new 来获取Person类构造函数的引用，Java编译器会自动根据PersonFactory.create方法的签名来选择合适的构造函数。
+五、Lambda 作用域
+
+在lambda表达式中访问外层作用域和老版本的匿名对象中的方式很相似。你可以直接访问标记了final的外层局部变量，或者实例的字段以及静态变量。
+六、访问局部变量
+我们可以直接在lambda表达式中访问外层的局部变量：
+复制代码 代码如下:
+
+final int num = 1;
+Converter<Integer, String> stringConverter =
+        (from) -> String.valueOf(from + num);
+stringConverter.convert(2);     // 3
+
+但是和匿名对象不同的是，这里的变量num可以不用声明为final，该代码同样正确：
+复制代码 代码如下:
+
+int num = 1;
+Converter<Integer, String> stringConverter =
+        (from) -> String.valueOf(from + num);
+stringConverter.convert(2);     // 3
+
+不过这里的num必须不可被后面的代码修改（即隐性的具有final的语义），例如下面的就无法编译：
+复制代码 代码如下:
+
+int num = 1;
+Converter<Integer, String> stringConverter =
+        (from) -> String.valueOf(from + num);
+num = 3;
+
+在lambda表达式中试图修改num同样是不允许的。
+
+七、访问对象字段与静态变量
+和本地变量不同的是，lambda内部对于实例的字段以及静态变量是即可读又可写。该行为和匿名对象是一致的：
+复制代码 代码如下:
+class Lambda4 {
+    static int outerStaticNum;
+    int outerNum;
+    void testScopes() {
+        Converter<Integer, String> stringConverter1 = (from) -> {
+            outerNum = 23;
+            return String.valueOf(from);
+        };
+        Converter<Integer, String> stringConverter2 = (from) -> {
+            outerStaticNum = 72;
+            return String.valueOf(from);
+        };
+    }
+}
+
+
+八、访问接口的默认方法
+
+还记得第一节中的formula例子么，接口Formula定义了一个默认方法sqrt可以直接被formula的实例包括匿名对象访问到，但是在lambda表达式中这个是不行的。
+Lambda表达式中是无法访问到默认方法的，以下代码将无法编译：
+复制代码 代码如下:
+
+Formula formula = (a) -> sqrt( a * 100);
+Built-in Functional Interfaces
+
+JDK 1.8 API包含了很多内建的函数式接口，在老Java中常用到的比如Comparator或者Runnable接口，这些接口都增加了@FunctionalInterface注解以便能用在lambda上。
+Java 8 API同样还提供了很多全新的函数式接口来让工作更加方便，有一些接口是来自Google Guava库里的，即便你对这些很熟悉了，还是有必要看看这些是如何扩展到lambda上使用的。
+
+Predicate接口
+Predicate 接口只有一个参数，返回boolean类型。该接口包含多种默认方法来将Predicate组合成其他复杂的逻辑（比如：与，或，非）：
+复制代码 代码如下:
+
+Predicate<String> predicate = (s) -> s.length() > 0;
+predicate.test("foo");              // true
+predicate.negate().test("foo");     // false
+Predicate<Boolean> nonNull = Objects::nonNull;
+Predicate<Boolean> isNull = Objects::isNull;
+Predicate<String> isEmpty = String::isEmpty;
+Predicate<String> isNotEmpty = isEmpty.negate();
+
+
+Function 接口
+Function 接口有一个参数并且返回一个结果，并附带了一些可以和其他函数组合的默认方法（compose, andThen）：
+复制代码 代码如下:
+
+Function<String, Integer> toInteger = Integer::valueOf;
+Function<String, String> backToString = toInteger.andThen(String::valueOf);
+backToString.apply("123");     // "123"
+
+
+Supplier 接口
+
+Supplier 接口返回一个任意范型的值，和Function接口不同的是该接口没有任何参数
+复制代码 代码如下:
+
+Supplier<Person> personSupplier = Person::new;
+personSupplier.get();   // new Person
+
+
+Consumer 接口
+
+Consumer 接口表示执行在单个参数上的操作。
+复制代码 代码如下:
+
+Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+greeter.accept(new Person("Luke", "Skywalker"));
+
+
+Comparator 接口
+
+Comparator 是老Java中的经典接口， Java 8在此之上添加了多种默认方法：
+复制代码 代码如下:
+
+Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
+Person p1 = new Person("John", "Doe");
+Person p2 = new Person("Alice", "Wonderland");
+comparator.compare(p1, p2);             // > 0
+comparator.reversed().compare(p1, p2);  // < 0
+
+
+Optional 接口
+Optional 不是函数是接口，这是个用来防止NullPointerException异常的辅助类型，这是下一届中将要用到的重要概念，现在先简单的看看这个接口能干什么：
+Optional 被定义为一个简单的容器，其值可能是null或者不是null。在Java 8之前一般某个函数应该返回非空对象但是偶尔却可能返回了null，而在Java 8中，不推荐你返回null而是返回Optional。
+复制代码 代码如下:
+
+Optional<String> optional = Optional.of("bam");
+optional.isPresent();           // true
+optional.get();                 // "bam"
+optional.orElse("fallback");    // "bam"
+optional.ifPresent((s) -> System.out.println(s.charAt(0)));     // "b"
+
+
+Stream 接口
+java.util.Stream 表示能应用在一组元素上一次执行的操作序列。Stream 操作分为中间操作或者最终操作两种，最终操作返回一特定类型的计算结果，而中间操作返回Stream本身，这样你就可以将多个操作依次串起来。Stream 的创建需要指定一个数据源，比如 java.util.Collection的子类，List或者Set， Map不支持。Stream的操作可以串行执行或者并行执行。
+首先看看Stream是怎么用，首先创建实例代码的用到的数据List：
+复制代码 代码如下:
+
+List<String> stringCollection = new ArrayList<>();
+stringCollection.add("ddd2");
+stringCollection.add("aaa2");
+stringCollection.add("bbb1");
+stringCollection.add("aaa1");
+stringCollection.add("bbb3");
+stringCollection.add("ccc");
+stringCollection.add("bbb2");
+stringCollection.add("ddd1");
+
+Java 8扩展了集合类，可以通过 Collection.stream() 或者 Collection.parallelStream() 来创建一个Stream。下面几节将详细解释常用的Stream操作：
+Filter 过滤
+过滤通过一个predicate接口来过滤并只保留符合条件的元素，该操作属于中间操作，所以我们可以在过滤后的结果来应用其他Stream操作（比如forEach）。forEach需要一个函数来对过滤后的元素依次执行。forEach是一个最终操作，所以我们不能在forEach之后来执行其他Stream操作。
+复制代码 代码如下:
+
+stringCollection
+    .stream()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+// "aaa2", "aaa1"
+
+
+Sort 排序
+排序是一个中间操作，返回的是排序好后的Stream。如果你不指定一个自定义的Comparator则会使用默认排序。
+复制代码 代码如下:
+
+stringCollection
+    .stream()
+    .sorted()
+    .filter((s) -> s.startsWith("a"))
+    .forEach(System.out::println);
+// "aaa1", "aaa2"
+
+需要注意的是，排序只创建了一个排列好后的Stream，而不会影响原有的数据源，排序之后原数据stringCollection是不会被修改的：
+复制代码 代码如下:
+
+System.out.println(stringCollection);
+// ddd2, aaa2, bbb1, aaa1, bbb3, ccc, bbb2, ddd1
+
+
+Map 映射
+
+中间操作map会将元素根据指定的Function接口来依次将元素转成另外的对象，下面的示例展示了将字符串转换为大写字符串。你也可以通过map来讲对象转换成其他类型，map返回的Stream类型是根据你map传递进去的函数的返回值决定的。
+复制代码 代码如下:
+
+stringCollection
+    .stream()
+    .map(String::toUpperCase)
+    .sorted((a, b) -> b.compareTo(a))
+    .forEach(System.out::println);
+// "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
+
+
+Match 匹配
+Stream提供了多种匹配操作，允许检测指定的Predicate是否匹配整个Stream。所有的匹配操作都是最终操作，并返回一个boolean类型的值。
+复制代码 代码如下:
+
+boolean anyStartsWithA = 
+    stringCollection
+        .stream()
+        .anyMatch((s) -> s.startsWith("a"));
+System.out.println(anyStartsWithA);      // true
+boolean allStartsWithA = 
+    stringCollection
+        .stream()
+        .allMatch((s) -> s.startsWith("a"));
+System.out.println(allStartsWithA);      // false
+boolean noneStartsWithZ = 
+    stringCollection
+        .stream()
+        .noneMatch((s) -> s.startsWith("z"));
+System.out.println(noneStartsWithZ);      // true
+Count 计数
+
+计数是一个最终操作，返回Stream中元素的个数，返回值类型是long。
+复制代码 代码如下:
+
+long startsWithB = 
+    stringCollection
+        .stream()
+        .filter((s) -> s.startsWith("b"))
+        .count();
+System.out.println(startsWithB);    // 3
+
+
+Reduce 规约
+这是一个最终操作，允许通过指定的函数来讲stream中的多个元素规约为一个元素，规越后的结果是通过Optional接口表示的：
+复制代码 代码如下:
+
+Optional<String> reduced =
+    stringCollection
+        .stream()
+        .sorted()
+        .reduce((s1, s2) -> s1 + "#" + s2);
+reduced.ifPresent(System.out::println);
+// "aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2"
+
+
+并行Streams
+前面提到过Stream有串行和并行两种，串行Stream上的操作是在一个线程中依次完成，而并行Stream则是在多个线程上同时执行。
+下面的例子展示了是如何通过并行Stream来提升性能：
+首先我们创建一个没有重复元素的大表：
+复制代码 代码如下:
+
+int max = 1000000;
+List<String> values = new ArrayList<>(max);
+for (int i = 0; i < max; i++) {
+    UUID uuid = UUID.randomUUID();
+    values.add(uuid.toString());
+}
+
+然后我们计算一下排序这个Stream要耗时多久，
+串行排序：
+复制代码 代码如下:
+
+long t0 = System.nanoTime();
+long count = values.stream().sorted().count();
+System.out.println(count);
+long t1 = System.nanoTime();
+long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+System.out.println(String.format("sequential sort took: %d ms", millis));
+// 串行耗时: 899 ms
+并行排序：
+复制代码 代码如下:
+
+long t0 = System.nanoTime();
+long count = values.parallelStream().sorted().count();
+System.out.println(count);
+long t1 = System.nanoTime();
+long millis = TimeUnit.NANOSECONDS.toMillis(t1 - t0);
+System.out.println(String.format("parallel sort took: %d ms", millis));
+// 并行排序耗时: 472 ms
+上面两个代码几乎是一样的，但是并行版的快了50%之多，唯一需要做的改动就是将stream()改为parallelStream()。
+Map
+前面提到过，Map类型不支持stream，不过Map提供了一些新的有用的方法来处理一些日常任务。
+复制代码 代码如下:
+
+Map<Integer, String> map = new HashMap<>();
+for (int i = 0; i < 10; i++) {
+    map.putIfAbsent(i, "val" + i);
+}
+map.forEach((id, val) -> System.out.println(val));
+以上代码很容易理解， putIfAbsent 不需要我们做额外的存在性检查，而forEach则接收一个Consumer接口来对map里的每一个键值对进行操作。
+下面的例子展示了map上的其他有用的函数：
+复制代码 代码如下:
+
+map.computeIfPresent(3, (num, val) -> val + num);
+map.get(3);             // val33
+map.computeIfPresent(9, (num, val) -> null);
+map.containsKey(9);     // false
+map.computeIfAbsent(23, num -> "val" + num);
+map.containsKey(23);    // true
+map.computeIfAbsent(3, num -> "bam");
+map.get(3);             // val33
+
+接下来展示如何在Map里删除一个键值全都匹配的项：
+复制代码 代码如下:
+
+map.remove(3, "val3");
+map.get(3);             // val33
+map.remove(3, "val33");
+map.get(3);             // null
+
+另外一个有用的方法：
+复制代码 代码如下:
+
+map.getOrDefault(42, "not found");  // not found
+
+对Map的元素做合并也变得很容易了：
+复制代码 代码如下:
+
+map.merge(9, "val9", (value, newValue) -> value.concat(newValue));
+map.get(9);             // val9
+map.merge(9, "concat", (value, newValue) -> value.concat(newValue));
+map.get(9);             // val9concat
+
+Merge做的事情是如果键名不存在则插入，否则则对原键对应的值做合并操作并重新插入到map中。
+九、Date API
+
+Java 8 在包java.time下包含了一组全新的时间日期API。新的日期API和开源的Joda-Time库差不多，但又不完全一样，下面的例子展示了这组新API里最重要的一些部分：
+
+Clock 时钟
+Clock类提供了访问当前日期和时间的方法，Clock是时区敏感的，可以用来取代 System.currentTimeMillis() 来获取当前的微秒数。某一个特定的时间点也可以使用Instant类来表示，Instant类也可以用来创建老的java.util.Date对象。
+复制代码 代码如下:
+
+Clock clock = Clock.systemDefaultZone();
+long millis = clock.millis();
+Instant instant = clock.instant();
+Date legacyDate = Date.from(instant);   // legacy java.util.Date
+
+
+Timezones 时区
+在新API中时区使用ZoneId来表示。时区可以很方便的使用静态方法of来获取到。 时区定义了到UTS时间的时间差，在Instant时间点对象到本地日期对象之间转换的时候是极其重要的。
+复制代码 代码如下:
+
+System.out.println(ZoneId.getAvailableZoneIds());
+// prints all available timezone ids
+ZoneId zone1 = ZoneId.of("Europe/Berlin");
+ZoneId zone2 = ZoneId.of("Brazil/East");
+System.out.println(zone1.getRules());
+System.out.println(zone2.getRules());
+// ZoneRules[currentStandardOffset=+01:00]
+// ZoneRules[currentStandardOffset=-03:00]
+
+
+LocalTime 本地时间
+LocalTime 定义了一个没有时区信息的时间，例如 晚上10点，或者 17:30:15。下面的例子使用前面代码创建的时区创建了两个本地时间。之后比较时间并以小时和分钟为单位计算两个时间的时间差：
+复制代码 代码如下:
+
+LocalTime now1 = LocalTime.now(zone1);
+LocalTime now2 = LocalTime.now(zone2);
+System.out.println(now1.isBefore(now2));  // false
+long hoursBetween = ChronoUnit.HOURS.between(now1, now2);
+long minutesBetween = ChronoUnit.MINUTES.between(now1, now2);
+System.out.println(hoursBetween);       // -3
+System.out.println(minutesBetween);     // -239
+
+LocalTime 提供了多种工厂方法来简化对象的创建，包括解析时间字符串。
+复制代码 代码如下:
+
+LocalTime late = LocalTime.of(23, 59, 59);
+System.out.println(late);       // 23:59:59
+DateTimeFormatter germanFormatter =
+    DateTimeFormatter
+        .ofLocalizedTime(FormatStyle.SHORT)
+        .withLocale(Locale.GERMAN);
+LocalTime leetTime = LocalTime.parse("13:37", germanFormatter);
+System.out.println(leetTime);   // 13:37
+
+LocalDate 本地日期
+LocalDate 表示了一个确切的日期，比如 2014-03-11。该对象值是不可变的，用起来和LocalTime基本一致。下面的例子展示了如何给Date对象加减天/月/年。另外要注意的是这些对象是不可变的，操作返回的总是一个新实例。
+复制代码 代码如下:
+
+LocalDate today = LocalDate.now();
+LocalDate tomorrow = today.plus(1, ChronoUnit.DAYS);
+LocalDate yesterday = tomorrow.minusDays(2);
+LocalDate independenceDay = LocalDate.of(2014, Month.JULY, 4);
+DayOfWeek dayOfWeek = independenceDay.getDayOfWeek();
+
+System.out.println(dayOfWeek);    // FRIDAY
+从字符串解析一个LocalDate类型和解析LocalTime一样简单：
+复制代码 代码如下:
+
+DateTimeFormatter germanFormatter =
+    DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(Locale.GERMAN);
+LocalDate xmas = LocalDate.parse("24.12.2014", germanFormatter);
+System.out.println(xmas);   // 2014-12-24
+
+
+LocalDateTime 本地日期时间
+LocalDateTime 同时表示了时间和日期，相当于前两节内容合并到一个对象上了。LocalDateTime和LocalTime还有LocalDate一样，都是不可变的。LocalDateTime提供了一些能访问具体字段的方法。
+复制代码 代码如下:
+
+LocalDateTime sylvester = LocalDateTime.of(2014, Month.DECEMBER, 31, 23, 59, 59);
+DayOfWeek dayOfWeek = sylvester.getDayOfWeek();
+System.out.println(dayOfWeek);      // WEDNESDAY
+Month month = sylvester.getMonth();
+System.out.println(month);          // DECEMBER
+long minuteOfDay = sylvester.getLong(ChronoField.MINUTE_OF_DAY);
+System.out.println(minuteOfDay);    // 1439
+
+只要附加上时区信息，就可以将其转换为一个时间点Instant对象，Instant时间点对象可以很容易的转换为老式的java.util.Date。
+复制代码 代码如下:
+
+Instant instant = sylvester
+        .atZone(ZoneId.systemDefault())
+        .toInstant();
+Date legacyDate = Date.from(instant);
+System.out.println(legacyDate);     // Wed Dec 31 23:59:59 CET 2014
+
+格式化LocalDateTime和格式化时间和日期一样的，除了使用预定义好的格式外，我们也可以自己定义格式：
+复制代码 代码如下:
+
+DateTimeFormatter formatter =
+    DateTimeFormatter
+        .ofPattern("MMM dd, yyyy - HH:mm");
+LocalDateTime parsed = LocalDateTime.parse("Nov 03, 2014 - 07:13", formatter);
+String string = formatter.format(parsed);
+System.out.println(string);     // Nov 03, 2014 - 07:13
+
+和java.text.NumberFormat不一样的是新版的DateTimeFormatter是不可变的，所以它是线程安全的。
+关于时间日期格式的详细信息：http://download.java.net/jdk8/docs/api/java/time/format/DateTimeFormatter.html
+十、Annotation 注解
+
+在Java 8中支持多重注解了，先看个例子来理解一下是什么意思。
+首先定义一个包装类Hints注解用来放置一组具体的Hint注解：
+复制代码 代码如下:
+
+@interface Hints {
+    Hint[] value();
+}
+@Repeatable(Hints.class)
+@interface Hint {
+    String value();
+}
+
+Java 8允许我们把同一个类型的注解使用多次，只需要给该注解标注一下@Repeatable即可。
+例 1: 使用包装类当容器来存多个注解（老方法）
+复制代码 代码如下:
+
+@Hints({@Hint("hint1"), @Hint("hint2")})
+class Person {}
+
+例 2：使用多重注解（新方法）
+复制代码 代码如下:
+
+@Hint("hint1")
+@Hint("hint2")
+class Person {}
+
+第二个例子里java编译器会隐性的帮你定义好@Hints注解，了解这一点有助于你用反射来获取这些信息：
+复制代码 代码如下:
+
+Hint hint = Person.class.getAnnotation(Hint.class);
+System.out.println(hint);                   // null
+Hints hints1 = Person.class.getAnnotation(Hints.class);
+System.out.println(hints1.value().length);  // 2
+Hint[] hints2 = Person.class.getAnnotationsByType(Hint.class);
+System.out.println(hints2.length);          // 2
+
+即便我们没有在Person类上定义@Hints注解，我们还是可以通过 getAnnotation(Hints.class) 来获取 @Hints注解，更加方便的方法是使用 getAnnotationsByType 可以直接获取到所有的@Hint注解。
+另外Java 8的注解还增加到两种新的target上了：
+复制代码 代码如下:
+
+@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@interface MyAnnotation {}
+
+关于Java 8的新特性就写到这了，肯定还有更多的特性等待发掘。JDK 1.8里还有很多很有用的东西，比如Arrays.parallelSort, StampedLock和CompletableFuture等等。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+这篇文章是对Java 8中即将到来的改进做一个面向开发者的综合性的总结，JDK的这一特性将会在2013年9月份发布。
+在写这篇文章的时候，Java 8的开发工作仍然在紧张有序的进行中，语言特新和API仍然有可能改变，我会尽我最大的努力保持这份文档跟得到Java 8的改动。
+Java 8的预览版，也就是 “Project Lambda”，现在可以从java.net下载到。
+我使用了IntelliJ的预览版做我的IDE，在我看来他是目前支持java 8特性最好的一个IDE，你可以从这里下载到.
+由于我没有找到Oracle发布的Java 8的官方文档，所以目前Java 8的文档还只有本地版本，等Oracle公开文档的时候，我将会重新链接到官方文档。
+JeromeCui
+JeromeCui
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+接口改善
+
+现在接口里已经完全可以定义静态方法了. 举一个比较普遍的例子就是在java类库中, 对于一些接口如Foo, 都会有一个有静态方法的工具类Foos 来生成或者配合Foo对象实例来使用. 既然静态方法可以存在于接口当中, 那么大多数情况下 Foos工具类完全可以使用接口中的公共方法来代理 (或者将Foos置成package-private).
+除此之外更重要的就是, Java 8中接口可以定义默认的方法了.举个例子,一个for-each循环的方法就可以加入到java.lang.Iterable中:
+public default void forEach(Consumer<? super T> action) {
+    Objects.requireNonNull(action); for (T t : this) {
+        action.accept(t);
+    }
+}
+在过去,java类库的接口中添加方法基本上是不可能的. 在接口中添加方法意味着破坏了实现了这个接口的代码. 但是现在, 只要能够提供一个正确明智的默认的方法的实现, java类库的维护者就可以在接口中添加方法.
+Java 8中, 大量的默认方法已经被添加到核心的JDK接口中了. 稍候我会详细介绍它们.
+叫我蝴蝶吧
+叫我蝴蝶吧
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+为什么不能用默认方法来重载equals，hashCode和toString？
+
+接口不能提供对Object类的任何方法的默认实现。特别是，这意味着从接口里不能提供对equals，hashCode或toString的默认实现。
+这刚看起来挺奇怪的，但考虑到一些接口实际上是在文档里定义他们的equals行为的。List接口就是一个例子了。因此，为什么不允许这样呢？
+Brian Goetz在这个问题上的冗长的回复里给出了4个原因。我这里只说其中一个，因为那个已经足够说服我了：
+它会变得更困难来推导什么时候该调用默认的方法。现在它变得很简单了：如果一个类实现了一个方法，那总是优先于默认的实现的。一旦所有接口的实例都是Object的子类，所有接口实例都已经有对equals/hashCode/toString的非默认实现。因此，一个在接口上这些的默认版本都是没用的，它也不会被编译。
+要看更多的话，看下由Brian Goetz写的解释: 对“允许默认方法来重载Object的方法”的回复
+excepiton
+excepiton
+翻译于 2年前
+
+3人顶
+顶 翻译的不错哦!
+
+函数式接口
+
+Java 8 引入的一个核心概念是函数式接口。如果一个接口定义个唯一一个抽象方法，那么这个接口就成为函数式接口。比如，java.lang.Runnable就是一个函数式接口，因为它只顶一个一个抽象方法:
+public abstract void run();
+留意到“abstract”修饰词在这里是隐含的，因为这个方法缺少方法体。为了表示一个函数式接口，并非想这段代码一样一定需要“abstract”关键字。
+默认方法不是abstract的，所以一个函数式接口里可以定义任意多的默认方法，这取决于你。
+同时，引入了一个新的Annotation：@FunctionalInterface。可以把他它放在一个接口前，表示这个接口是一个函数式接口。加上它的接口不会被编译，除非你设法把它变成一个函数式接口。它有点像@Override，都是声明了一种使用意图，避免你把它用错。
+JoeyBlue
+JoeyBlue
+翻译于 2年前
+
+6人顶
+顶 翻译的不错哦!
+
+Lambdas
+
+一个函数式接口非常有价值的属性就是他们能够用lambdas来实例化。这里有一些lambdas的例子：
+左边是指定类型的逗号分割的输入列表，右边是带有return的代码块：
+(int x, int y) -> { return x + y; }
+左边是推导类型的逗号分割的输入列表，右边是返回值：
+(x, y) -> x + y
+左边是推导类型的单一参数，右边是一个返回值：
+x -> x * x
+左边没有输入 (官方名称: "burger arrow")，在右边返回一个值：
+() -> x
+左边是推导类型的单一参数，右边是没返回值的代码块（返回void）：
+x -> { System.out.println(x); }
+静态方法引用：
+String::valueOf
+非静态方法引用：
+Object::toString
+继承的函数引用：
+x::toString
+构造函数引用：
+ArrayList::new 
+你可以想出一些函数引用格式作为其他lambda格式的简写。
+excepiton
+excepiton
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+方法引用     等价的lambda表达式   
+String::valueOf 
+x -> String.valueOf(x)
+Object::toString    
+x -> x.toString()
+x::toString 
+() -> x.toString()
+ArrayList::new  
+() -> new ArrayList<>()
+当然，在Java里方法能被重载。类可以有多个同名但不同参数的方法。这同样对构造方法有效。ArrayList::new能够指向它的3个构造方法中任何一个。决定使用哪个方法是根据在使用的函数式接口。
+一个lambda和给定的函数式接口在“外型”匹配的时候兼容。通过“外型”，我指向输入、输出的类型和声明检查异常。
+给出两个具体有效的例子：
+Comparator<String> c = (a, b) -> Integer.compare(a.length(),
+                                                 b.length());
+一个Comparator<String>的compare方法需要输入两个阐述，然后返回一个int。这和lambda右侧的一致，因此这个任务是有效的。
+Runnable r = () -> { System.out.println("Running!"); }
+一个Runnable的run方法不需要参数也不会返回值。这和lambda右侧一致，所以任务有效。
+在抽象方法的签名里的受检查异常（如果存在）也很重要。如果函数式接口在它的签名里声明了异常，lambda只能抛出受检查异常。
+excepiton
+excepiton
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+捕获和非捕获的Lambda表达式
+
+当Lambda表达式访问一个定义在Lambda表达式体外的非静态变量或者对象时，这个Lambda表达式称为“捕获的”。比如，下面这个lambda表达式捕捉了变量x：
+int x = 5; return y -> x + y;
+为了保证这个lambda表达式声明是正确的，被它捕获的变量必须是“有效final”的。所以要么它们需要用final修饰符号标记，要么保证它们在赋值后不能被改变。
+Lambda表达式是否是捕获的和性能悄然相关。一个非不捕获的lambda通常比捕获的更高效，虽然这一点没有书面的规范说明（据我所知），而且也不能为了程序的正确性指望它做什么，非捕获的lambda只需要计算一次. 然后每次使用到它都会返回一个唯一的实例。而捕获的lambda表达式每次使用时都需要重新计算一次，而且从目前实现来看，它很像实例化一个匿名内部类的实例。
+
+JoeyBlue
+JoeyBlue
+翻译于 2年前
+
+3人顶
+顶 翻译的不错哦!
+
+lambdas不做的事
+你应该记住，有一些lambdas不提供的特性。为了Java 8它们被考虑到了，但是没有被包括进去，由于简化以及时间限制的原因。
+Non-final* 变量捕获 - 如果一个变量被赋予新的数值，它将不能被用于lambda之中。"final"关键字不是必需的，但变量必须是“有效final”的（前面讨论过）。这个代码不会被编译：
+int count = 0;
+List<String> strings = Arrays.asList("a", "b", "c");
+strings.forEach(s -> {
+    count++; // error: can't modify the value of count });
+例外的透明度 - 如果一个已检测的例外可能从lambda内部抛出，功能性的接口也必须声明已检测例外可以被抛出。这种例外不会散布到其包含的方法。这个代码不会被编译：
+void appendAll(Iterable<String> values, Appendable out) throws IOException { // doesn't help with the error values.forEach(s -> {
+        out.append(s); // error: can't throw IOException here // Consumer.accept(T) doesn't allow it });
+}
+有绕过这个的办法，你能定义自己的功能性接口，扩展Consumer的同时通过像RuntimeException之类抛出 IOException。我试图用代码写出来，但发现它令人困惑是否值得。
+控制流程 (break, early return) -在上面的 forEach例子中，传统的继续方式有可能通过在lambda之内放置 "return;"来实现。但是，没有办法中断循环或者从lambda中通过包含方法的结果返回一个数值。例如：
+final String secret = "foo"; boolean containsSecret(Iterable<String> values) {
+    values.forEach(s -> { if (secret.equals(s)) {
+            ??? // want to end the loop and return true, but can't }
+    });
+}
+进一步阅读关于这些问题的资料，看看这篇Brian Goetz写的说明：在 Block<T>中响应“已验证例外”
+super0555
+super0555
+翻译于 2年前
+
+3人顶
+顶 翻译的不错哦!
+
+其它翻译版本(1)
+为什么抽象类不能通过利用lambda实例化
+
+抽象类，哪怕只声明了一个抽象方法，也不能使用lambda来实例化。
+下面有两个类 Ordering 和 CacheLoader的例子，都带有一个抽象方法，摘自于Guava 库。那岂不是很高兴能够声明它们的实例，像这样使用lambda表达式？
+Ordering<String> order = (a, b) -> ...;
+CacheLoader<String, String> loader = (key) -> ...;
+这样做引发的最常见的争论就是会增加阅读lambda的难度。以这种方式实例化一段抽象类将导致隐藏代码的执行：抽象类的构造方法。
+另一个原因是，它抛出了lambda表达式可能的优化。在未来，它可能是这种情况，lambda表达式都不会计算到对象实例。放任用户用lambda来声明抽象类将妨碍像这样的优化。
+此外，有一个简单地解决方法。事实上，上述两个摘自Guava 库的实例类已经证明了这种方法。增加工厂方法将lambda转换成实例。
+ Ordering<String> order = Ordering.from((a, b) -> ...);
+CacheLoader<String, String> loader = CacheLoader.from((key) -> ...);
+要深入阅读，请参看由 Brian Goetz所做的说明： response to "Allow lambdas to implement abstract classes"。
+等PM
+等PM
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+java.util.function
+包概要：java.util.function
+作为Comparator 和Runnable早期的证明，在JDK中已经定义的接口恰巧作为函数接口而与lambdas表达式兼容。同样方式可以在你自己的代码中定义任何函数接口或第三方库。
+但有特定形式的函数接口，且广泛的，通用的，在之前的JD卡中并不存在。大量的接口被添加到新的java.util.function 包中。下面是其中的一些：
+Function<T, R> -T作为输入，返回的R作为输出
+Predicate<T> -T作为输入，返回的boolean值作为输出
+Consumer<T> - T作为输入，执行某种动作但没有返回值
+Supplier<T> - 没有任何输入，返回T
+BinaryOperator<T> -两个T作为输入，返回一个T作为输出，对于“reduce”操作很有用
+这些最原始的特征同样存在。他们以int，long和double的方式提供。例如：
+IntConsumer -以int作为输入，执行某种动作，没有返回值
+这里存在性能上的一些原因，主要释在输入或输出的时候避免装箱和拆箱操作。
+等PM
+等PM
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+java.util.stream
+包汇总: java.util.stream
+新的java.util.stream包提供了“支持在流上的函数式风格的值操作”（引用javadoc）的工具。可能活动一个流的最常见方法是从一个collection获取：
+Stream<T> stream = collection.stream();
+一个流就像一个地带器。这些值“流过”（模拟水流）然后他们离开。一个流可以只被遍历一次，然后被丢弃。流也可以无限使用。
+流能够是 串行的 或者 并行的。 它们可以使用其中一种方式开始，然后切换到另外的一种方式，使用stream.sequential()或stream.parallel()来达到这种切换。串行流在一个线程上连续操作。而并行流就可能一次出现在多个线程上。
+所以，你想用一个流来干什么？这里是在javadoc包里给出的例子：
+int sumOfWeights = blocks.stream().filter(b -> b.getColor() == RED)
+                                  .mapToInt(b -> b.getWeight())
+                                  .sum();
+注意：上面的代码使用了一个原始的流，以及一个只能用在原始流上的sum()方法。下面马上就会有更多关于原始流的细节。
+excepiton
+excepiton
+翻译于 2年前
+
+3人顶
+顶 翻译的不错哦!
+
+流提供了流畅的API，可以进行数据转换和对结果执行某些操作。流操作既可以是“中间的”也可以是“末端的”。
+中间的 -中间的操作保持流打开状态，并允许后续的操作。上面例子中的filter和map方法就是中间的操作。这些操作的返回数据类型是流；它们返回当前的流以便串联更多的操作。
+末端的 - 末端的操作必须是对流的最终操作。当一个末端操作被调用，流被“消耗”并且不再可用。上面例子中的sum方法就是一个末端的操作。
+通常，处理一个流涉及了这些步骤：
+从某个源头获得一个流。
+执行一个或更多的中间的操作。
+执行一个末端的操作。
+可能你想在一个方法中执行所有那些步骤。那样的话，你就要知道源头和流的属性，而且要可以保证它被正确的使用。你可能不想接受任意的Stream<T>实例作为你的方法的输入，因为它们可能具有你难以处理的特性，比如并行的或无限的。
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+有几个更普通的关于流操作的特性需要考虑：
+有状态的 - 有状态的操作给流增加了一些新的属性，比如元素的唯一性，或者元素的最大数量，或者保证元素以排序的方式被处理。这些典型的要比无状态的中间操作代价大。
+短路 - 短路操作潜在的允许对流的操作尽早停止，而不去检查所有的元素。这是对无限流的一个特殊设计的属性；如果对流的操作没有短路，那么代码可能永远也不会终止。
+对每个Sttream方法这里有一些简短的，一般的描述。查阅javadoc获取更详尽的解释。下面给出了每个操作的重载形式的链接。
+中间的操作：
+filter 1 - 排除所有与断言不匹配的元素。
+map 1 2 3 4 - 通过Function对元素执行一对一的转换。
+flatMap 1 2 3 4 5 - 通过FlatMapper将每个元素转变为无或更多的元素。
+peek 1 - 对每个遇到的元素执行一些操作。主要对调试很有用。
+distinct 1 - 根据.equals行为排除所有重复的元素。这是一个有状态的操作。
+sorted 1 2 - 确保流中的元素在后续的操作中，按照比较器（Comparator）决定的顺序访问。这是一个有状态的操作。
+limit 1 - 保证后续的操作所能看到的最大数量的元素。这是一个有状态的短路的操作。
+substream 1 2 - 确保后续的操作只能看到一个范围的（根据index）元素。像不能用于流的String.substring一样。也有两种形式，一种有一个开始索引，一种有一个结束索引。二者都是有状态的操作，有一个结束索引的形式也是一个短路的操作。
+末端的操作：
+forEach 1 - 对流中的每个元素执行一些操作。
+toArray 1 2 - 将流中的元素倾倒入一个数组。
+reduce 1 2 3 - 通过一个二进制操作将流中的元素合并到一起。
+collect 1 2 - 将流中的元素倾倒入某些容器，例如一个Collection或Map.
+min 1 - 根据一个比较器找到流中元素的最小值。
+max 1 -根据一个比较器找到流中元素的最大值。
+count 1 - 计算流中元素的数量。
+anyMatch 1 - 判断流中是否至少有一个元素匹配断言。这是一个短路的操作。
+allMatch 1 - 判断流中是否每一个元素都匹配断言。这是一个短路的操作。
+noneMatch 1 - 判断流中是否没有一个元素匹配断言。这是一个短路的操作。
+findFirst 1 - 查找流中的第一个元素。这是一个短路的操作。
+findAny 1 - 查找流中的任意元素，可能对某些流要比findFirst代价低。这是一个短路的操作。
+如 javadocs中提到的 , 中间的操作是延迟的（lazy）。只有末端的操作会立即开始流中元素的处理。在那个时刻，不管包含了多少中间的操作，元素会在一个传递中处理（通常，但并不总是）。（有状态的操作如sorted() 和distinct()可能需要对元素的二次传送。） 
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+流试图尽可能做很少的工作。有一些细微优化，如当可以判定元素已经有序的时候，省略一个sorted()操作。在包含limit(x) 或 substream(x,y)的操作中，有些时候对一些不会决定结果的元素，流可以避免执行中间的map操作。在这里我不准备实现公平判断；它通过许多细微的但却很重要的方法表现得很聪明，而且它仍在进步。
+回到并行流的概念，重要的是要意识到并行不是毫无代价的。从性能的立场它不是无代价的，你不能简单的将顺序流替换为并行流，且不做进一步思考就期望得到相同的结果。在你能（或者应该）并行化一个流以前，需要考虑很多特性，关于流、它的操作以及数据的目标方面。例如：访问顺序确实对我有影响吗？我的函数是无状态的吗？我的流有足够大，并且我的操作有足够复杂，这些能使得并行化是值得的吗？
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+有针对int,long和double的专业原始的Stream版本：
+IntStream
+LongStream
+DoubleStream
+可以在众多函数中，通过专业原始的map和flatMap函数，在一个stream对象与一个原始stream对象之间来回转换。给几个虚设例子：
+List<String> strings = Arrays.asList("a", "b", "c");
+strings.stream() // 
+Stream<String> .mapToInt(String::length) // IntStream .longs() // 
+LongStream .mapToDouble(x -> x / 10.0) // DoubleStream .boxed() // 
+Stream<Double> .mapToLong(x -> 1L) // LongStream .mapToObj(x -> "") // 
+Stream<String> ...
+原始的stream也为获得关于stream的基础数据统计提供方法，那些stream是指作为数据结构的。你可以发现count, sum, min, max, 以及元素平均值全部是来自于一个终端的操作。
+原始类型的剩余部分没有原始版本，因为这需要一个不可接受的JDK数量的膨胀。IntStream, LongStream, 和 DoubleStream被认为非常有用应当被包含进去，其他的数字型原始stream可以由这三个通过扩展的原始转换来表示。
+super0555
+super0555
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+在flatMap操作中使用的 FlatMapper 接口是具有一个抽象方法的功能性接口：
+void flattenInto(T element, Consumer<U> sink);
+在一个flatMap操作的上下文中，stream为你提供element和 sink，然后你定义该用element 和 sink做什么。element是指在stream中的当前元素，而sink代表当flatMap操作结束之后在stream中应该显示些什么。例如：
+Set<Color> colors = ...;
+List<Person> people = ...;
+Stream<Color> stream = people.stream().flatMap(
+    (Person person, Consumer<Color> sink) -> { // Map each person to the colors they like. for (Color color : colors) { if (person.likesColor(color)) {
+                sink.accept(color);
+            }
+        }
+    });
+注意上面lambda中的参数类型是指定的。在大多数其它上下文中，你可以不需要指定类型，但这里由于FlatMapper的自然特性，编译器需要你帮助判定类型。如果你在使用flatMap又迷惑于它为什么不编译，可能是因为你没有指定类型。
+最令人感到困惑，复杂而且有用的终端stream操作之一是collect。它引入了一个称为Collector的新的非功能性接口。这个接口有些难理解，但幸运的是有一个Collectors工具类可用来产生所有类型的有用的Collectors。例如：
+List<String> strings = values.stream()
+                             .filter(...)
+                             .map(...)
+                             .collect(Collectors.toList());
+如果你想将你的stream元素放进一个Collection,Map或String，那么Collectors可能具有你需要的。在javadoc中浏览那个类绝对是值得的。
+super0555
+super0555
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+泛型接口改进
+
+建议摘要：JEP 101: 通用化目标-Type 接口
+这是一个以前不能做到的，对编译器判定泛型能力的努力改进。在以前版本的Java中有许多情形编译器不能给某个方法计算出泛型，当方法处于嵌套的或串联方法调用这样的上下文的时候，即使有时候对程序员来说它看起来“很明显”。那些情况需要程序员明确的指定一个“类型见证”（type witness）。它是一种通用的特性，但吃惊的是很少有Java程序员知道（我这么说是基于私下的交流并且阅读了一些StackOverflow的问题）。它看起来像这样：
+// In Java 7: foo(Utility.<Type>bar());
+Utility.<Type>foo().bar();
+如果没有类型见证，编译器可能会将<Object>替代为泛型，而且如果需要的是一个更具体的类型，代码将编译失败。
+Java 8 极大的改进了这个状况。在更多的案例中，它可以基于上下文计算出更多的特定的泛型类型。
+// In Java 8: foo(Utility.bar());
+Utility.foo().bar();
+这项工作仍在发展中，所以我不确定建议中列出的例子有多少能真正包含进Java 8。希望是它们全部。
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+其它翻译版本(1)
+java.time
+包概要： java.time
+在Java8中新的 date/timeAPI存在于 java.time包中。如果你熟悉Joda Time，它将很容易掌握。事实上，我认为如此好的设计，以至于从未听说过 Joda Time的人也能很容易的掌握。
+几乎在API中的任何东西都是永恒的，包括值类型和格式化 。对于Date域或者处理或处理本地线程日期格式化不必太过担心。
+与传统的date/timeAPI的交叉是最小的。有一个清晰的分段：
+
+Date.toInstant()
+Date.from(Instant)
+Calendar.toInstant()
+新API对于像月份和每周的天数，喜欢枚举类型更胜过整形常量。
+那么，那是什么呢？包级别的javadocs 对额外类型的做出了非常好的阐述。我将对一些值得注意的部分做一些简短的纲要。
+非常有用的值类型：
+Instant - 与java.util.Date相似
+ZonedDateTime, ZoneId -时区很重要的时候使用
+OffsetDateTime, OffsetTime, ZoneOffset -对UTC的偏移处理
+Duration, Period - 但如果你想找到两个日期之间的时间量，你可能会寻找ChronoUnit代替（见下文）
+其他有用的类型：
+DateTimeFormatter - 将日期类型转换成字符串类型
+ChronoUnit - 计算出两点之间的时间量，例如ChronoUnit.DAYS.between(t1, t2)
+TemporalAdjuster - 例如date.with(TemporalAdjuster.firstDayOfMonth())
+大多数情况下，新的值类型由JDBC提供支持。有一小部分异常，如ZonedDateTime在SQL中没有对应的（类型）。
+等PM
+等PM
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+集合API附件
+
+实际上接口能够定义默认方法允许了JDK作者加入大量的附件到集合API接口中。默认实现在核心接口里提供，而其他更有效或更好的重载实现被加入到可适用的具体类中。
+这里是新方法的列表：
+Iterable.forEach(Consumer)
+Iterator.forEach(Consumer)
+Collection.removeAll(Predicate)
+Collection.spliterator()
+Collection.stream()
+Collection.parallelStream()
+List.sort(Comparator)
+Map.forEach(BiConsumer)
+Map.replaceAll(BiFunction)
+Map.putIfAbsent(K, V)
+Map.remove(Object, Object)
+Map.replace(K, V, V)
+Map.replace(K, V)
+Map.computeIfAbsent(K, Function)
+Map.computeIfPresent(K, BiFunction)
+Map.compute(K, BiFunction)
+Map.merge(K, V, BiFunction)
+Map.getOrDefault(Object, V)
+同样， Iterator.remove() 现在有一个默认的, 会抛出异常的实现，使得它稍微容易地去定义不可修改的迭代器。
+Collection.stream()和Collection.parallelStream()是流API的主要门户。有其他方法去生成流，但这些在以后会更为长用。
+List.sort(Comparator)的附件有点怪异。以前排序一个ArrayList的方法是：
+Collections.sort(list, comparator);
+这代码是你在Java7里唯一可选的，非常低效。它会复制list到一个数组里，排序这个数组，然后使用ListIterator来把数组插入到新list的新位置上。
+excepiton
+excepiton
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+List.sort(比较器)的默认实现仍然会做这个，但是具体的实现类可以自由的优化。例如，ArrayList.sort在ArrayList内部数组上调用了Arrays.sort。CopyOnWriteArrayList做了同样的事情。
+从这些新方法中获得的不仅仅是性能。它们也具有更多的令人满意的语义。例如， 对Collections.synchronizedList()排序是一个使用了list.sort的原子操作。你可以使用list.forEach对它的所有元素进行迭代，使之成为原子操作。
+Map.computeIfAbsent使得操作类似多重映射的结构变得容易了：
+// Index strings by length: 
+Map<Integer, List<String>> map = new HashMap<>(); for (String s : strings) {
+    map.computeIfAbsent(s.length(),
+                        key -> new ArrayList<String>())
+       .add(s);
+} // Although in this case the stream API may be a better choice:
+ Map<Integer, List<String>> map = strings.stream()
+    .collect(Collectors.groupingBy(String::length));
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+增加并发API
+
+ForkJoinPool.commonPool()
+ConcurrentHashMap(v8)
+下面的形式有并行，顺序，对象，整型，长整型和double型。
+有太多的链接可以点击，因此参看ConcurrentHashMap javadocs文档以获得更多信息。
+ConcurrentHashMap.reduce...
+ConcurrentHashMap.search...
+ConcurrentHashMap.forEach...
+ConcurrentHashMap.newKeySet()
+ConcurrentHashMap.newKeySet(int)
+CompletableFuture
+StampedLock
+LongAdder
+LongAccumulator
+DoubleAdder
+DoubleAccumulator
+CountedCompleter
+Executors.newWorkStealingPool()
+Executors.newWorkStealingPool(int)
+下面的形式有AtomicReference, AtomicInteger, AtomicLong, 和每一个原子数组的版本。 
+AtomicReference.getAndUpdate(UnaryOperator)
+AtomicReference.updateAndGet(UnaryOperator)
+AtomicReference.getAndAccumulate(V, UnaryOperator)
+AtomicReference.accumulateAndGet(V, UnaryOperator)
+ForkJoinPool.commonPool()是处理所有并行流操作的结构。当你 需要的时候，它是一个好而简单的方式去获得一个ForkJoinPool/ExecutorService/Executor对象。ConcurrentHashMap<K, V>完全重写。内部看起来它一点不像是Java7版本。从外部来看几乎相同，除了它有大量批量操作方法：多种形式的减少搜索和forEach。
+ConcurrentHashMap.newKeySet()提供了一个并发的java.util.Set实现。它基本上是Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>())的另一种方式的重写。
+等PM
+等PM
+翻译于 2年前
+
+2人顶
+顶 翻译的不错哦!
+
+StampedLock是一种新型锁的实现，很可能在大多数场景都可以替代ReentrantReadWriteLock。当作为一个简单的读写锁的时候，它比RRWL的性能要好。它也为“读优化”提供了API，通过它你获得了一个功能有点弱，但代价很小的读操作锁的版本，执行读操作，然后检查锁是否被一个写操作设定为无效。在Heinz Kabutz汇总的一系列幻灯片中，有更多关于这个类及其性能的细节（在这个系列幻灯片大约一半的地方开始的）："移相器和StampedLock演示"
+CompletableFuture<T>是Future接口的一个非常棒的实现，它提供了无数执行（和串接）异步任务的方法。它特别依赖功能性的接口；lambdas是值得增加这个类的一个重要原因。如果你正在使用Guava的 Future工具，例如Futures, ListenableFuture, 和 SettableFuture，那么你可能会希望校验CompletableFuture能否作为潜在的替代选择。
+super0555
+super0555
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+IO/NIO API的新增内容
+BufferedReader.lines()
+Files.list(Path)
+Files.walk(Path, int, FileVisitOption...)
+Files.walk(Path, FileVisitOption...)
+Files.find(Path, int, BiPredicate, FileVisitOption...)
+Files.lines(Path, Charset)
+DirectoryStream.entries()
+简单的说，这些API用于从文件和InputStreams获取java.util.stream.Stream对象。不过它们与直接从常规的collection得到的流有些不同，它们引入了两个概念：
+UncheckedIOException - 当有IO错误时抛出这个异常，不过由于Iterator/Stream的签名中不允许有IOException，所以它只能借助于unchecked异常。
+CloseableStream - 可以（并且应该）定义在 try-with-resources 语句里面的流。
+LinuxQueen
+LinuxQueen
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+反射和annotation的改动
+
+类型annotation (JSR 308)
+AnnotatedType
+Repeatable
+Method.getAnnotatedReturnType()
+Field.getAnnotationsByType(Class)
+Field.getAnnotatedType()
+Constructor.getAnnotatedReturnType()
+Parameter - 支持 parameter.getName()，等等。
+Annotation允许在更多的地方被使用，例如List<@Nullable String>。受此影响最大的可能是那些静态分析工具，如Sonar和FindBugs。
+JSR 308的网站解释了增加这些改动的动机，介绍的不错： "类型Annotation (JSR 308) 和 Checker框架"
+LinuxQueen
+LinuxQueen
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+其它翻译版本(1)
+Nashorn JavaScript 引擎
+
+提案的摘要： JEP 174: Nashorn JavaScript 引擎
+我对Nashorn没什么经验，因而我对上面提案所描述的所知甚少。简单的说，它是 Rhino 的接替者。Rhino 显得有些老了，并且有点慢，开发者决定最好还是从头做一个。
+LinuxQueen
+LinuxQueen
+翻译于 2年前
+
+0人顶
+顶 翻译的不错哦!
+
+其他新增，涉及java.lang，java.util，和java.sql
+
+ThreadLocal.withInitial(Supplier)
+String.join(CharSequence, Charsequence...)
+String.join(CharSequence, Iterable)
+下面的方法适用于所有数字的原语类型，并且作为这些类型的包装（wrapper）类的三个方法。hashCode方法除外，它们的作用是作为BinaryOperatorin的reduce操作的参数。关于这些方法还有很多的链接，更多的内容，参考 Integer, Long, Double, Float, Byte, Short, 和 Character 的javadoc。
+Primitive.min(primitive, primitive);
+Primitive.max(primitive, primitive);
+Primitive.sum(primitive, primitive);
+Primitive.hashCode(primitive)
+同样，下面新增的 Boolean 的方法可用于BinaryOperator<Boolean>：
+Boolean.logicalAnd(boolean, boolean)
+Boolean.logicalOr(boolean, boolean)
+Boolean.logicalXor(boolean, boolean)
+Optional
+OptionalInt
+OptionalLong
+OptionalDouble
+Base64
+StringJoiner
+Spliterator
+Spliterators
+Comparator.reverseOrder()
+Comparator.thenComparing(Comparator)
+Comparator.thenComparing(Function, Comparator)
+Comparator.thenComparing(Function)
+Comparator.thenComparing(ToIntFunction)
+Comparator.thenComparing(ToLongFunction)
+Comparator.thenComparing(ToDoubleFunction)
+Comparators
+下面的方法适用于数组，支持T[], int[], long[], double[]。关于这些方法有很多链接，更多信息参考 Arrays 的javadoc。
+Arrays.spliterator(array)
+Arrays.spliterator(array, int, int)
+Arrays.stream(array)
+Arrays.stream(array, int, int);
+Arrays.parallelStream(array)
+Arrays.parallelStream(array, int, int);
+Arrays.setAll(array, IntFunction)
+Arrays.parallelSetAll(array, IntFunction)
+Math.toIntExact(long)
+Math.addExact(int, int)
+Math.subtractExact(int, int)
+Math.multiplyExact(int, int)
+Math.floorDiv(int, int)
+Math.floorMod(int, int)
+Math.addExact(long, long)
+Math.subtractExact(long, long)
+Math.multiplyExact(long, long)
+Math.floorDiv(long, long)
+Math.floorMod(long, long)
+Integer.toUnsignedLong(int)
+Integer.toUnsignedString(int)
+Integer.toUnsignedString(int, int)
+Integer.parseUnsignedInt(String)
+Integer.parseUnsignedInt(String, int)
+Integer.compareUnsigned(int, int)
+Long.toUnsignedString(long, int)
+Long.toUnsignedString(long)
+Long.parseUnsignedLong(String, int)
+Long.parseUnsignedLong(String)
+Long.compareUnsigned(long, long)
+Long.divideUnsigned(long, long)
+Long.remainderUnsigned(long, long)
+BigInteger.longValueExact()
+BigInteger.intValueExact()
+BigInteger.shortValueExact()
+BigInteger.byteValueExact()
+Objects.isNull(Object) - 可用作谓词，例如stream.anyMatch(Objects::isNull)
+Objects.nonNull(Object) - 可用作谓词，stream.filter(Objects::nonNull)
+Random.ints()
+Random.longs()
+Random.doubles()
+Random.gaussians()
+BitSet.stream()
+IntSummaryStatistics
+LongSummaryStatistics
+DoubleSummaryStatistics
+Logger的杂项新增
+Locale的杂项新增
+ResultSet的杂项新增
+这里可以介绍的太多了，只能挑一些最需要注意的项目。
+ThreadLocal.withInitial(Supplier<T>) 可以在定义thread-local变量时更好的进行初始化。之前你初始化变量时是这样的：
+ThreadLocal<List<String>> strings = new ThreadLocal<List<String>>() { @Override protected List<String> initialValue() { return new ArrayList<>(); 
+        }
+    };
+现在则是这样： 
+ThreadLocal<List<String>> strings =
+    ThreadLocal.withInital(ArrayList::new);
+
+stream的API的返回值有一个可选的<T>，就像min/max， findFirst/Any， 以及reduce的某些形式。这样做是因为stream中可能没有任何元素，但是它要提供一个一致的API，既可以处理“一些结果”，也可以处理“没有结果”。你可以提供默认值，抛异常，或者只在有结果的时候执行一些动作。
+LinuxQueen
+LinuxQueen
+翻译于 2年前
+
+1人顶
+顶 翻译的不错哦!
+
+它与Guava's Optional类非常非常的相似。它一点都不像是在Scala里的操作，也不会试图成为之一，有相似的地方纯属巧合。 
+旁白：Java 8's Optional和Guava's Optional最终如此的相似是很有趣的事，尽管荒谬的辩论发生在这两个库。
+"FYI.... Optional was the cause of possibly the single greatest conflagration on the internal Java libraries discussion lists ever."
+Kevin Bourrillion在 response to "Some new Guava classes targeted for release 10"如实写到：
+"On a purely practical note, the discussions surrounding Optional have exceeded its design budget by several orders of magnitude."
+Brian Goetz 在  response to "Optional require(s) NonNull"写到。
+StringJoinerandString.join(...)来得太晚了。他们来得如此之晚以至于大多数Java开发者已经为字符串联合编写或发现了有用的工具，但这对JDK本身来说很每秒，因为最终自己实现这一点。每个人都会遇到要求字符串连接的情形，我们现在能够通过每个Java开发者（事实上的）即将知道的标准的API来阐明，这也算是一件好事。
+ComparatorsandComparator.thenComparing(...)提供了非常优秀的工具，基于链的比较和基于域的比较。像这样：
+people.sort(Comparators.comparing(Person::getLastName)
+                       .thenComparing(Person::getFirstName));
+这些新增功能提供了良好的，复杂的各种可读的简写。大多数用例由JDK里增加的 ComparisonChain和Ordering工具类来提供服务。对于什么是有价值的，我认为JDK版本比在Guava-ese里功能等效的版本的可读性好了很多。
+

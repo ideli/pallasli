@@ -1,0 +1,288 @@
+RMI 通信协议
+10.1 概述 
+RMI 协议使用另两个协议作为其在通信格式：Java 对象序列化和 HTTP。对象序 
+列化协议用于编组调用和返回数据。HTTP 协议用于“投寄”远程方法调用，并在 
+情况允许时获得返回数据。每种协议都有专门的语法文档。产品规则中的非终结 
+符号可能会引用其它协议（对象序列化或 HTTP）所管理的规则。在跨协议边界时 
+，后续产品将使用该嵌入的协议。
+关于语法符号的说明 
+我们使用与 Java 语言规范（参见 JLS 的第 2.3 节）中类似的符号。 
+流中的控制代码由十六进制形式的文字值表示。 
+语法中的有些非终结符号表示调用中提供的与应用程序有关的值。这种非终结符 
+号的定义由其 Java 类型组成。语法后面是将这些非终结字符映射到相应类型的 
+表。 
+10.2 RMI 传输协议 
+RMI 的通信格式由 Stream 表示。这里所采用的术语是从客户机的角度来讲的。 
+out 指输出消息，而 in 指输入消息。传输标题的内容并未用对象序列化进行格 
+式化。
+Stream: Out In
+RMI 所用的输入和输出流是成对出现的。每个 out 流都有相应的 in 流。在语法 
+中，out 流映射到套接字的输出流（从客户机角度）。in 流（在语法中）将与相 
+应套接字的输入流配对。由于输出与输入流是成对的，所以输入流中唯一需要的 
+标题信息就是一个表示是否理解协议的确认；其他标题信息（例如魔数和版本号 
+）都将由流对的上下文所隐含。
+10.2.1 输出流格式 
+RMI 中的输出流由传输标题信息后跟一个消息序列组成。此外，输出流也可包含 
+嵌入在 HTTP 协议中的调用。
+Out: Header Messages HttpMessage
+Header: 0x4a 0x52 0x4d 0x49 Version Protocol
+Version: 0x00 0x01
+Protocol: StreamProtocol SingleOpProtocol MultiplexProtocol
+StreamProtocol: 0x4b
+SingleOpProtocol: 0x4c
+MultiplexProtocol: 0x4d
+Messages: Message Messages Message
+Messages 将包装在 Protocol 指定的特定协议内。对于 SingleOpProtocol，He 
+ader 的后面可能只有一个 Message，且该 Message 没有包装其它数据。Single 
+OpProtocol 用于 HTTP 请求中所嵌入的调用，其中请求和响应都只能为一个。
+
+对于 StreamProtocol 和 MultiplexProtocol，服务器必须用字节 0x4e（表示支 
+持该协议）和 EndpointIdentifier（包含主机名和端口号，服务器可以看到它们 
+在被客户机使用）进行响应。如果由于安全原因而无法执行该操作，客户机即可 
+使用该信息来确定其主机名。随后，客户机必须用另一个包含接受连接的缺省端 
+点的 EndpointIdentifier 进行响应。对于MultiplexProtocol，服务器可以用它 
+来标识客户机。
+对于 StreamProtocol，本次端点协商后，将在输出流上发送 Messages，而不对 
+数据进行进一步打包。对于 MultiplexProtocol，套接字将连接用作多路复用连 
+接的具体连接，如第 10.6 节“RMI 的多路复用协议”中所述。在该多路复用连 
+接上初始化的虚拟连接由一系列 Messages 组成，如下所述。
+输出消息共有三种：Call、Ping 和 DgcAck。Call 将对方法调用进行编码。Pin 
+g 是一个传输级消息，用于测试远程虚拟机的活动性。DGCAck 是一个对服务器的 
+分布式垃圾收集器的确认，指示客户机已经接收到服务器返回值中的远程对象。
+
+Message: Call Ping DgcAck
+Call: 0x50 CallData
+Ping: 0x52
+DgcAck: 0x54 UniqueIdentifier
+10.2.2 输入流格式 
+当前输入信息共有三种：ReturnData、HttpReturn 和 PingAck。ReturnData 是 
+“正常”RMI 调用的结果。HttpReturn 是 HTTP 协议中嵌入调用的返回结果。P 
+ingAck 是对 Ping 消息的确认。
+In: ProtocolAck Returns ProtocolNotSupported HttpReturn
+ProtocolAck: 0x4e
+ProtocolNotSupported: 0x4f
+Returns: Return Returns Return
+Return: ReturnData PingAck
+ReturnData: 0x51 ReturnValue
+PingAck: 0x53 
+10.3 RMI 对对象序列化协议的使用 
+RMI 调用中的调用和返回数据将使用 Java 对象序列化协议进行格式化。每个方 
+法调用的 CallData 表示为 ObjectIdentifier（调用的目标）、Operation（代 
+表要调用方法的数字）、Hash（检验客户机 stub 与远程对象 skeleton 是否使 
+用同一 stub 协议的数字），后跟该调用的零个或多个参数列表。
+在 JDK1.1 stub 协议中，Operation 代表方法号（由 rmic 分配），而 Hash 是 
+stub/skeleton 散列，它是该 stub 的接口散列。在 JDK1.2 stub 协议（利用 
+带 -v1.2 选项的 rmic 生成 JDK1.2 stub）中，Operation 的值为 -1 且 Hash 
+代表了所要调用方法的散列。散列将在“ RemoteRef 接口”一节中介绍。
+CallData： ObjectIdentifier Operation Hash Argumentsopt
+ObjectIdentifier： ObjectNumber UniqueIdentifier
+UniqueIdentifier: Number Time Count
+Arguments： Value Arguments Value
+Value： Object Primitive
+RMI 调用的 ReturnValue 由指示正常或异常返回的返回代码、标记返回值的 Un 
+iqueIdentifier（用于在必要时发送 DGCAck）后跟以下返回结果组成：返回的值 
+或抛出的异常。
+ReturnValue： 0x01 UniqueIdentifier Valueopt 0x02 UniqueIdentifier Exc 
+eption
+
+---------------------------------------------------------------------- 
+----------
+注意 - ObjectIdentifier、UniqueIdentifier 和 EndpointIdentifier 并不是 
+用缺省序列化编写的，而是各自使用自己的 write 方法（但不是对象序列化所用 
+的 writeObject 方法）；每种标识符的 write 方法都将其组件数据连续添加到 
+输出流中。
+
+---------------------------------------------------------------------- 
+----------
+10.3.1 类注解和类加载 
+RMI 分别覆盖了 ObjectOutputStream 和 ObjectInputStream 的 annotateClas 
+s 和 resolveClass 方法。每个类都用 codebase URL（加载该类的位置）进行注 
+解。annotateClass 方法中将查询加载该类的类加载器以得到其 codebase URL。 
+如果类加载器非空且其 codebase 也为非空，则将使用 ObjectOutputStream.wr 
+iteObject 方法将该 codebase 写入流中；否则将使用 writeObject 方法将空值 
+写入流中。注意：最好不要注解“java”包中的类，因为它们对于接收者来说总 
+是可用的。
+类注解是在序列化恢复期间用 ObjectInputStream.resolveClass 方法解析的。 
+resolveClass 方法首先用 ObjectInputStream.readObject 方法读取注解。如果 
+注解（codebase URL）非空，它就获得该 URL 的类加载器并试图加载该类。利用 
+java.net.URLConnection 获取类字节，即可对该类进行加载（与 web 浏览器的 
+applet 类加载器所用的机制相同）。
+10.4 RMI 对 HTTP POST 协议的使用 
+为了通过防火墙调用远程方法，有些 RMI 调用使用了 HTTP 协议，尤其是 HTTP 
+POST。在传递标题中指定的 URL 可以为下列内容之一：
+http://:/ http://:80/cgi-bin/java-rmi?forward=
+
+第一个 URL 用于与特定 host 和 port 上的 RMI 服务器直接通信。第二种形式 
+的 URL 用于调用服务器上的“cgi”脚本，后者将把调用转发给指定 port 上的 
+服务器。
+HttpPostHeader 是 POST 请求的标准 HTTP 标题。HttpResponseHeader 是对传 
+递过程的标准 HTTP 响应。如果响应状态代码不是 200，则认为没有返回值。注 
+意一个 HTTP POST 请求中只能嵌入一个 RMI 调用。
+HttpMessage： HttpPostHeader Header Message
+HttpReturn： HttpResponseHeader Return
+---------------------------------------------------------------------- 
+----------
+注意 - 只有 SingleOpProtocol 出现在 HttpMessage 的标题中。HttpReturn 不 
+包含用于确认协议的字节。
+
+---------------------------------------------------------------------- 
+---------- 
+10.5 RMI 的与应用程序有关的值 
+本表列表出 RMI 所用的代表与应用程序有关的值的非终结符号。该表将每个符号 
+映射为相应的类型。每个符号都分别使用它所嵌入在其中的协议进行格式化。
+Count short
+Exception java.lang.Exception
+Hash long
+Hostname UTF
+Number int
+Object java.lang.Object
+ObjectNumber long
+Operation int
+PortNumber int
+Primitive byte, int, short, long...
+Time long
+10.6 RMI 的多路复用协议 
+多路复用的目的是提供一种模型，其中两个端点都可打开多个到另一端点的全双 
+工连接，而在相同环境下，使用其他工具（例如 TCP 连接）时，只有一个端点能 
+打开这样的双向连接。利用这种简单的多路复用协议，RMI 即可允许客户在某些 
+其他协议无能为力的情况下，连接到 RMI 的服务器对象上。例如，有些 applet 
+环境的安全管理器不允许创建服务器套接字监听到来的连接，以防止这种 appl 
+et 从直接套接字连接上导出 RMI 对象及提供远程调用服务。但是，如果该 app 
+let 可以打开到其 codebase 主机的正常套接字连接，它就可以在该连接上使用 
+多路复用协议，从而允许 codebase 主机调用该 applet 所导出的 RMI 对象的方 
+法。本节介绍了多路复用协议的格式和规则。
+ 
+
+10.6.1 定义 
+本节定义一些将在协议其余部分使用的术语。
+端点是用多路复用协议连接的两个用户之一。
+多路复用协议必须位于已有的双向可靠字节流之上，假设由一个端点向另一个端 
+点进行初始化。在当前的 RMI 用法中，它通常是 TCP 连接，由 java.net.Sock 
+et 对象建立。该连接称为具体连接。
+多路复用协议有助于虚拟连接的使用。虚拟连接本身就是双向的可靠字节流，代 
+表两个端点之间的特定会话。一个连接上两个端点之间的虚拟连接集组成一个多 
+路复用连接。使用多路复用协议，虚拟连接可以由任一端点打开和关闭。虚拟连 
+接相对给定端点的状态由在具体连接上发送和接收的多路复用协议元素定义。该 
+状态涉及连接是打开还是关闭、传送的实际数据及相关的流控制机制。如果没有 
+特别说明，本节中其余部分将使用术语连接表示虚拟连接。
+给定多路复用连接内的虚拟连接由一个 16 位整数标识，称为连接标识符。因而 
+，一个多路复用连接中可能存在 65,536 个虚拟连接。实现可能会限制能同时使 
+用的虚拟连接数。
+10.6.2 连接状态和流控制 
+连接由用多路复用协议定义的各种操作来控制。下面是协议所定义的操作名：OP 
+EN、CLOSE、CLOSEACK、REQUEST 和 TRANSMIT。所有操作的准确格式和规则将在 
+第 10.6.3 节 “协议格式”中详细介绍。
+OPEN、CLOSE 和 CLOSEACK 操作控制连接的打开和关闭，而 REQUEST 和 TRANSM 
+IT 操作用于在流控制机制的限制内在打开的连接上传输数据。
+连接状态 
+如果端点发送连接的 OPEN 操作或接收到连接的 OPEN 操作（且随后没有关闭它 
+），则该虚拟连接相对于该端点即为打开的。下面介绍不同的协议操作。
+如果端点发送连接的 CLOSE 操作，但随后没有接收到该连接的 CLOSE 或 CLOSE 
+ACK 操作，则该虚拟连接相对于该端点是等待关闭的。
+如果端点从来没有打开过连接或接收到连接的 CLOSE 或 CLOSEACK 操作（且随后 
+没有打开），则该虚拟连接相对于该端点是关闭的。
+流控制 
+多路复用协议使用简单的包流控制机制允许多个虚拟连接并存于同一具体连接上 
+。流控制机制的高级要求是所有虚拟连接的状态都是独立的；一个连接的状态不 
+会影响其他连接。例如，如果处理来自某个连接的数据的数据缓冲区已满，应不 
+会防碍其他连接的数据传输和处理。如果连接的继续依赖于另一个连接的结束（ 
+例如递归 RMI 调用时），则这一点将至关重要。因而，它的实际意义是实现必须 
+总能消耗和处理在具体连接上（假定它遵循该规范）准备输入的所有多路复用协 
+议数据。
+每个端点具有两个与各连接相关联的状态值：该端点已经请求但尚未接收到的数 
+据字节数（输入请求数）和另一端点请求但该端点尚未提供的数据字节数（输出 
+请求数）。
+端点的输出请求数在从其他端点接收到 REQUEST 操作时将增大，而在它发送 TR 
+ANSMIT 操作时将减小。端点的输入请求数在它发送 REQUEST 操作时将增大，而 
+在它接收到 TRANSMIT 操作时将减小。这些值如果为负就将违反协议。
+如果端点发送 REQUEST 操作而导致其输入请求数增大并超过其当前可以无阻塞处 
+理的字节数，则违反协议。但如果连接的用户在等待读取数据，则应确保其输入 
+请求数大于零。
+如果端点发送的 TRANSMIT 操作包含有比其输出请求数更多的字节，则违反协议 
+。它可以缓冲外流的数据，直到连接用户请求显式刷新写入到连接中的数据。但 
+如果因为显式的刷新或实现的输入缓冲区满而必须在连接上发送数据，则连接用 
+户可能被阻塞，直到有足够 TRANSMIT 操作。
+在满足上述规则的前提下，实现可以相对自由地发送 REQUEST 和 TRANSMIT 操作 
+。例如，如果其输入缓冲区不空，则端点可以请求连接的更多数据。
+10.6.3 协议格式 
+多路复用协议的字节流格式由连续的可变长度记录序列组成。记录的第一个字节 
+是一个操作码，它可以识别记录的操作并可确定其内容其余部分的格式。我们定 
+义了下列合法的操作码：
+值 名称
+0xE1 OPEN
+0xE2 CLOSE
+0xE3 CLOSEACK
+0xE4 REQUEST
+0xE5 TRANSMIT
+如果记录的第一个字节不是所定义的操作码，则违反协议。下面各节介绍了每种 
+操作码的记录格式。
+OPEN 操作 
+下面是 OPEN 操作的记录格式：
+大小（字节） 名字 描述
+1 opcode 操作码 (OPEN)
+2 ID 连接标识符
+端点将发送 OPEN 操作以打开指定的连接。如果ID 指向对发送端点当前已打开或 
+即将关闭的连接，则违反协议。打开连接后，连接的输入和请求数状态在两个端 
+点上都为零。
+接收到 OPEN 操作表示另一端点正在打开指定的连接。打开连接后，连接的输出 
+和请求数状态在两个端点处都为零。
+为防止两端点间的标识符冲突，有效连接标识符空间将根据最高位的值分为两半 
+。每个端点仅允许打开高位为某一特定值的连接。启动具体连接的端点必须只打 
+开高位为标识符中的连接，另一端点必须只打开高位为零的连接。例如，如果不 
+能创建服务器套接字的 RMI applet 启动了与其 codebase 主机的多路复用连接 
+，则该 applet 可以打开标识符范围为 0x8000-7FFF 的虚拟连接，而服务器可以 
+打开标识符范围为 0-0x7FFF 的虚拟连接。
+CLOSE 操作 
+以下是 CLOSE 操作的记录格式：
+大小（字节） 名字 描述
+1 opcode 操作代码 (OPEN)
+2 ID 连接标识符
+端点发送 CLOSE 操作以关闭指定的连接。如果 ID 指向对发送端点当前已关闭或 
+即将关闭的连接（如果它已发送过此连接的 CLOSE 操作，也可能是对接收端点即 
+将关闭的连接），则违反协议。 发送 CLOSE 后，连接就成为对发送端点即将关 
+闭的连接。因此，该端点将不能重新打开该连接，直到它从另一端点接收到 CLO 
+SE 或 CLOSEACK 为止。
+接收到 CLOSE 操作表示另一端点已关闭指定的连接，因此该连接已在接收端点上 
+被关闭。虽然接收端点可能不再为此连接发送其它操作（直到被再次打开），但 
+它仍应为此连接的读者提供实现的输入缓冲区中的数据。如果连接已经被打开（ 
+而不是即将关闭），则接收端点必须用 CLOSEACK 操作作为响应。
+CLOSEACK 操作 
+以下是 CLOSEACK 操作的记录格式：
+大小（字节） 名字 描述
+1 opcode 操作代码 (OPEN)
+2 ID 连接标识符
+端点发送 CLOSEACK 操作以表明已收到来自接收端点的 CLOSE 操作。如果收到操 
+作时 ID 指向的连接不是对接收端点将要关闭的连接，则违反协议。
+接收到 CLOSEACK 操作可将指定连接的状态从即将关闭改为已关闭，因此以后还 
+可重新打开连接。
+REQUEST 操作 
+以下是 REQUEST 操作的记录格式：
+大小（字节） 名字 描述
+1 opcode 操作代码 (OPEN)
+2 ID 连接标识符
+4 count 请求的额外字节数
+端点发送 REQUEST 操作以增大指定连接的输入请求数。如果 ID 未指向发送端点 
+打开的连接，则违反协议。端点的输入请求数按值 count 递增。count 的值是 
+32 位有符号整数。如果为负数或零，则违反协议。
+接收到 REQUEST 操作将使指定连接的输出请求数按 count 增加。如果接收端点 
+即将关闭连接，则将忽略 REQUEST 操作。
+TRANSMIT 操作 
+以下是 TRANSMIT 操作的记录格式。
+大小（字节） 名字 描述
+1 opcode 操作码 (OPEN)
+2 ID 连接标识符
+4 count 传输的字节数
+count data 传输数据
+端点发送 TRANSMIT 操作后，才真正在指定连接上传输数据。如果 ID 未指向对 
+发送端点打开的连接，则违反协议。端点的输出请求按值 count 递减。count 的 
+值是 32 位有符号整数。如果为负数或零，则违反协议。如果 TRANSMIT 操作导 
+致输出请求数成为负数，则也违反协议。
+接收到 TRANSMIT 操作时从连接中可读到的字节队列将增加 count 字节的数据。 
+接收端点的输入请求数按值 count 递减。如果这会使输入请求数成为零，而该连 
+接的用户却试图读取更多数据，则该端点应用另一个 REQUEST 操作作为响应。如 
+果接收端点即将关闭连接，则将忽略 TRANSMIT 操作。
+违反协议 
+如果出现上述违反协议的现象，或者在具体连接中检测到通讯错误，则多路复用 
+连接即被关闭。实际连接将被终止，而所有虚拟连接也被立即关闭。连接的用户 
+可以读取虚拟连接中已经可以读取的数据。
+ 
