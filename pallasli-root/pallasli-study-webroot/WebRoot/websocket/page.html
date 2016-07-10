@@ -3,6 +3,36 @@
 <head>
 <title>Testing websockets</title>
 </head>
+<!-- 
+
+这是一个简单的页面，包含有JavaScript代码，这些代码创建了一个websocket连接到websocket服务器端。
+onOpen 我们创建一个连接到服务器的连接时将会调用此方法。
+onError 当客户端-服务器通信发生错误时将会调用此方法。
+onMessage 当从服务器接收到一个消息时将会调用此方法。在我们的例子中，我们只是将从服务器获得的消息添加到DOM。
+我们连接到websocket 服务器端，使用构造函数 new WebSocket() 而且传之以端点URL：
+ws://localhost:8080/byteslounge/websocket
+
+测试
+现在我们可以访问测试页面对我们的应用进行测试：
+http://localhost:8080/byteslounge/page.html
+
+ WebSockets 握手
+
+客户端和服务器端TCP连接建立在HTTP协议握手发生之后。通过HTTP流量调试，很容易观察到握手。客户端一创建一个 WebSocket实例，就会出现如下请求和服务器端响应： 
+注意: 我们只录入了WebSocket握手所用到的HTTP头。
+请求:
+GET /byteslounge/websocket HTTP/1.1 
+Connection: Upgrade 
+Upgrade: websocket 
+Sec-WebSocket-Key: wVlUJ/tu9g6EBZEh51iDvQ==
+响应:
+HTTP/1.1 101 Web Socket Protocol Handshake 
+Upgrade: websocket 
+Sec-WebSocket-Accept: 2TNh+0h5gTX019lci6mnvS66PSY=
+注意：进行连接需要将通过Upgrade and Upgrade将协议升级到支持websocket HTTP头的Websocket协议。服务器响应表明请求被接受，协议将转换到WebSocket协议（HTTP状态码101）:
+HTTP/1.1 101 Web Socket Protocol Handshake
+ -->
+
 <body>
 	<div>
 		<input type="submit" value="Start" onclick="start()" />

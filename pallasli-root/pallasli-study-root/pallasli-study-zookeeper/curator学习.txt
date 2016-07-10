@@ -1,0 +1,1327 @@
+Curator是Netflix开源的一套ZooKeeper客户端框架. Netflix在使用ZooKeeper的过程中发现ZooKeeper自带的客户端太底层, 应用方在使用的时候需要自己处理很多事情, 于是在它的基础上包装了一下, 提供了一套更好用的客户端框架. Netflix在用ZooKeeper的过程中遇到的问题, 我们也遇到了, 所以开始研究一下, 首先从他在github上的源码, wiki文档以及Netflix的技术blog入手. 
+
+看完官方的文档之后, 发现Curator主要解决了三类问题: 
+封装ZooKeeper client与ZooKeeper server之间的连接处理;
+提供了一套Fluent风格的操作API;
+提供ZooKeeper各种应用场景(recipe, 比如共享锁服务, 集群领导选举机制)的抽象封装.
+
+
+Curator列举的ZooKeeper使用过程中的几个问题 
+初始化连接的问题: 在client与server之间握手建立连接的过程中, 如果握手失败, 执行所有的同步方法(比如create, getData等)将抛出异常 
+自动恢复(failover)的问题: 当client与一台server的连接丢失,并试图去连接另外一台server时, client将回到初始连接模式 
+session过期的问题: 在极端情况下, 出现ZooKeeper session过期, 客户端需要自己去监听该状态并重新创建ZooKeeper实例 . 
+对可恢复异常的处理:当在server端创建一个有序ZNode, 而在将节点名返回给客户端时崩溃, 此时client端抛出可恢复的异常, 用户需要自己捕获这些异常并进行重试 
+使用场景的问题:Zookeeper提供了一些标准的使用场景支持, 但是ZooKeeper对这些功能的使用说明文档很少, 而且很容易用错. 在一些极端场景下如何处理, zk并没有给出详细的文档说明. 比如共享锁服务, 当服务器端创建临时顺序节点成功, 但是在客户端接收到节点名之前挂掉了, 如果不能很好的处理这种情况, 将导致死锁. 
+
+Curator主要从以下几个方面降低了zk使用的复杂性: 
+重试机制:提供可插拔的重试机制, 它将给捕获所有可恢复的异常配置一个重试策略, 并且内部也提供了几种标准的重试策略(比如指数补偿). 
+连接状态监控: Curator初始化之后会一直的对zk连接进行监听, 一旦发现连接状态发生变化, 将作出相应的处理. 
+zk客户端实例管理:Curator对zk客户端到server集群连接进行管理. 并在需要的情况, 重建zk实例, 保证与zk集群的可靠连接 
+各种使用场景支持:Curator实现zk支持的大部分使用场景支持(甚至包括zk自身不支持的场景), 这些实现都遵循了zk的最佳实践, 并考虑了各种极端情况. 
+
+Curator通过以上的处理, 让用户专注于自身的业务本身, 而无需花费更多的精力在zk本身. 
+
+Curator声称的一些亮点: 
+
+日志工具 
+内部采用SLF4J 来输出日志 
+采用驱动器(driver)机制, 允许扩展和定制日志和跟踪处理 
+提供了一个TracerDriver接口, 通过实现addTrace()和addCount()接口来集成用户自己的跟踪框架 
+
+和Curator相比, 另一个ZooKeeper客户端——zkClient(https://github.com/sgroschupf/zkclient)的不足之处: 
+文档几乎没有 
+异常处理弱爆了(简单的抛出RuntimeException) 
+重试处理太难用了 
+没有提供各种使用场景的实现 
+
+对ZooKeeper自带客户端(ZooKeeper类)的"抱怨": 
+只是一个底层实现 
+要用需要自己写大量的代码 
+很容易误用 
+需要自己处理连接丢失, 重试等 
+
+Curator几个组成部分 
+Client: 是ZooKeeper客户端的一个替代品, 提供了一些底层处理和相关的工具方法.
+Framework: 用来简化ZooKeeper高级功能的使用, 并增加了一些新的功能, 比如管理到ZooKeeper集群的连接, 重试处理
+Recipes: 实现了通用ZooKeeper的recipe, 该组件建立在Framework的基础之上
+Utilities:各种ZooKeeper的工具类
+Errors: 异常处理, 连接, 恢复等.
+Extensions: recipe扩展
+
+
+Client 
+这是一个底层的API, 应用方基本对这个可以无视, 最好直接从Curator Framework入手 
+主要包括三部分: 
+不间断连接管理 
+连接重试处理 
+
+Retry Loop(循环重试) 
+一种典型的用法: 
+Java代码  收藏代码
+RetryLoop retryLoop = client.newRetryLoop();  
+while ( retryLoop.shouldContinue() )  
+{  
+   try  
+   {  
+       // perform your work  
+       ...  
+       // it's important to re-get the ZK instance as there may have been an error and the instance was re-created  
+       ZooKeeper      zk = client.getZookeeper();  
+  
+       retryLoop.markComplete();  
+   }  
+   catch ( Exception e )  
+   {  
+       retryLoop.takeException(e);  
+   }  
+}  
+
+如果在操作过程中失败, 且这种失败是可重试的, 而且在允许的次数内, Curator将保证操作的最终完成. 
+
+另一种使用Callable接口的重试做法: 
+Java代码  收藏代码
+RetryLoop.callWithRetry(client, new Callable()  
+{  
+      @Override  
+      public Void call() throws Exception  
+      {  
+          // do your work here - it will get retried if needed  
+          return null;  
+      }  
+});  
+
+
+重试策略 
+RetryPolicy接口只有一个方法(以前版本有两个方法): 
+public boolean allowRetry(int retryCount, long elapsedTimeMs); 
+在开始重试之前, allowRetry方法被调用, 其参数将指定当前重试次数, 和操作已消耗时间. 如果允许, 将继续重试, 否则抛出异常. 
+
+Curator内部实现的几种重试策略: 
+ExponentialBackoffRetry:重试指定的次数, 且每一次重试之间停顿的时间逐渐增加.
+RetryNTimes:指定最大重试次数的重试策略
+RetryOneTime:仅重试一次
+RetryUntilElapsed:一直重试直到达到规定的时间
+
+
+Framework 
+是ZooKeeper Client更高的抽象API 
+自动连接管理: 当ZooKeeper客户端内部出现异常, 将自动进行重连或重试, 该过程对外几乎完全透明 
+更清晰的API: 简化了ZooKeeper原生的方法, 事件等, 提供流程的接口 
+
+CuratorFrameworkFactory类提供了两个方法, 一个工厂方法newClient, 一个构建方法build. 使用工厂方法newClient可以创建一个默认的实例, 而build构建方法可以对实例进行定制. 当CuratorFramework实例构建完成, 紧接着调用start()方法, 在应用结束的时候, 需要调用close()方法.  CuratorFramework是线程安全的. 在一个应用中可以共享同一个zk集群的CuratorFramework. 
+
+CuratorFramework API采用了连贯风格的接口(Fluent Interface). 所有的操作一律返回构建器, 当所有元素加在一起之后, 整个方法看起来就像一个完整的句子. 比如下面的操作: 
+Java代码  收藏代码
+client.create().forPath("/head", new byte[0]);  
+client.delete().inBackground().forPath("/head");  
+client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/head/child", new byte[0]);  
+client.getData().watched().inBackground().forPath("/test");  
+
+
+方法说明: 
+create(): 发起一个create操作. 可以组合其他方法 (比如mode 或background) 最后以forPath()方法结尾
+delete(): 发起一个删除操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾
+checkExists(): 发起一个检查ZNode 是否存在的操作. 可以组合其他方法(watch 或background) 最后以forPath()方法结尾
+getData(): 发起一个获取ZNode数据的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾
+setData(): 发起一个设置ZNode数据的操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾
+getChildren(): 发起一个获取ZNode子节点的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾
+inTransaction(): 发起一个ZooKeeper事务. 可以组合create, setData, check, 和/或delete 为一个操作, 然后commit() 提交
+. 
+
+通知(Notification) 
+Curator的相关代码已经更新了, 里面的接口已经由ClientListener改成CuratorListener了, 而且接口中去掉了clientCloseDueToError方法. 只有一个方法: 
+eventReceived()            当一个后台操作完成或者指定的watch被触发时该方法被调用 
+
+UnhandledErrorListener接口用来对异常进行处理. 
+
+CuratorEvent(在以前版本为ClientEvent)是对各种操作触发相关事件对象(POJO)的一个完整封装, 而事件对象的内容跟事件类型相关, 下面是对应关系: 
+CREATE	getResultCode() and getPath()
+DELETE	getResultCode() and getPath()
+EXISTS	getResultCode(), getPath() and getStat()
+GET_DATA	getResultCode(), getPath(), getStat() and getData()
+SET_DATA	getResultCode(), getPath() and getStat()
+CHILDREN	getResultCode(), getPath(), getStat(), getChildren()
+WATCHED	getWatchedEvent()
+
+
+名称空间(Namespace) 
+因为一个zk集群会被多个应用共享, 为了避免各个应用的zk patch冲突, Curator Framework内部会给每一个Curator Framework实例分配一个namespace(可选). 这样你在create ZNode的时候都会自动加上这个namespace作为这个node path的root. 使用代码如下: 
+
+Java代码  收藏代码
+CuratorFramework    client = CuratorFrameworkFactory.builder().namespace("MyApp") ... build();  
+ …  
+client.create().forPath("/test", data);  
+// node was actually written to: "/MyApp/test"  
+
+
+
+Recipe 
+
+Curator实现ZooKeeper的所有recipe(除了两段提交) 
+选举 
+集群领导选举(leader election) 
+
+锁服务 
+共享锁: 全局同步分布式锁, 同一时间两台机器只有一台能获得同一把锁. 
+共享读写锁: 用于分布式的读写互斥处理, 同时生成两个锁:一个读锁, 一个写锁, 读锁能被多个应用持有, 而写锁只能一个独占, 当写锁未被持有时, 多个读锁持有者可以同时进行读操作 
+共享信号量: 在分布式系统中的各个JVM使用同一个zk lock path, 该path将跟一个给定数量的租约(lease)相关联, 然后各个应用根据请求顺序获得对应的lease, 相对来说, 这是最公平的锁服务使用方式. 
+多共享锁:内部构件多个共享锁(会跟一个znode path关联), 在acquire()过程中, 执行所有共享锁的acquire()方法, 如果中间出现一个失败, 则将释放所有已require的共享锁; 执行release()方法时, 则执行内部多个共享锁的release方法(如果出现失败将忽略) 
+
+队列(Queue) 
+分布式队列:采用持久顺序zk node来实现FIFO队列, 如果有多个消费者, 可以使用LeaderSelector来保证队列的消费者顺序 
+分布式优先队列: 优先队列的分布式版本 
+BlockingQueueConsumer: JDK阻塞队列的分布式版本 
+
+关卡(Barrier) 
+分布式关卡:一堆客户端去处理一堆任务, 只有所有的客户端都执行完, 所有客户端才能继续往下处理 
+双分布式关卡:同时开始, 同时结束 
+
+计数器(Counter) 
+共享计数器:所有客户端监听同一个znode path, 并共享一个最新的integer计数值 
+分布式AtomicLong(AtomicInteger): AtomicXxx的分布式版本, 先采用乐观锁更新, 若失败再采用互斥锁更新, 可以配置重试策略来处理重试 
+
+工具类 
+
+Path Cache 
+Path Cache用于监听ZNode的子节点的变化, 当add, update, remove子节点时将改变Path Cache state, 同时返回所有子节点的data和state. 
+Curator中采用了PathChildrenCache类来处理Path Cache, 状态的变化则采用PathChildrenCacheListener来监听. 
+相关用法参见TestPathChildrenCache测试类 
+
+注意: 当zk server的数据发生变化, zk client会出现不一致, 这个需要通过版本号来识别这种状态的变化 
+
+Test Server 
+用来在测试中模拟一个本地进程内ZooKeeper Server. 
+
+Test Cluster 
+用来在测试中模拟一个ZooKeeper Server集群 
+
+ZKPaths工具类 
+提供了和ZNode相关的path处理工具方法: 
+   
+getNodeFromPath: 根据给定path获取node name. i.e. "/one/two/three" -> "three"
+    mkdirs: 根据给定路径递归创建所有node
+    getSortedChildren: 根据给定路径, 返回一个按序列号排序的子节点列表
+    makePath: 根据给定的path和子节点名, 创建一个完整path
+
+
+EnsurePath工具类 
+
+直接看例子, 具体的说就是调用多次, 只会执行一次创建节点操作. 
+
+Java代码  收藏代码
+EnsurePath       ensurePath = new EnsurePath(aFullPathToEnsure);  
+...  
+String           nodePath = aFullPathToEnsure + "/foo";  
+ensurePath.ensure(zk);   // first time syncs and creates if needed  
+zk.create(nodePath, ...);  
+...  
+ensurePath.ensure(zk);   // subsequent times are NOPs  
+zk.create(nodePath, ...);  
+
+
+Notification事件处理 
+Curator对ZooKeeper的事件Watcher进行了封装处理, 然后实现了一套监听机制. 提供了几个监听接口用来处理ZooKeeper连接状态的变化 
+当连接出现异常, 将通过ConnectionStateListener接口进行监听, 并进行相应的处理, 这些状态变化包括: 
+暂停(SUSPENDED): 当连接丢失, 将暂停所有操作, 直到连接重新建立, 如果在规定时间内无法建立连接, 将触发LOST通知
+重连(RECONNECTED): 连接丢失, 执行重连时, 将触发该通知
+丢失(LOST): 连接超时时, 将触发该通知
+
+
+从com.netflix.curator.framework.imps.CuratorFrameworkImpl.validateConnection(CuratorEvent)方法中我们可以知道, Curator分别将ZooKeeper的Disconnected, Expired, SyncConnected三种状态转换成上面三种状态. 
+
+
+
+
+
+
+
+Curator框架是最好用，最流行的zookeeper的客户端。
+
+它有以下三个优点
+
+1.提供了一套非常友好的操作API;
+
+2. 提供一些高级特性（包括但不仅限于前篇文章中提到的）的封装
+
+3.易测试
+
+ 
+
+maven依赖如下
+
+ 
+
+Xml代码  收藏代码
+<dependency>  
+    <groupId>org.apache.curator</groupId>  
+    <artifactId>curator-recipes</artifactId>  
+    <version>2.5.0</version>  
+</dependency>  
+ 
+
+ 
+
+按照官方给出的文档和包结构，可以轻松的看出Curator功能分两大类，一是对zookeeper的一些基本命令的封装，比如增删改查。是他的framework模块，一个是他的高级特性，即recipes模块。
+
+ 
+
+一、framework模块
+
+Curator提供了一套Fluent风格的操作API。这在很多脚本类语言里比较流行。
+
+ 
+
+比如他创建client的代码是这样
+
+Java代码  收藏代码
+CuratorFramework client = builder.connectString("192.168.11.56:2180")  
+        .sessionTimeoutMs(30000)  
+        .connectionTimeoutMs(30000)  
+        .canBeReadOnly(false)  
+        .retryPolicy(new ExponentialBackoffRetry(1000, Integer.MAX_VALUE))  
+        .namespace(namespace)  
+        .defaultData(null)  
+        .build();  
+client.start();  
+ 一路点到底，这就是所谓的Fluent风格。 
+
+ 
+
+我们再看增删改查的
+
+Java代码  收藏代码
+public class CrudExamples {  
+    private static CuratorFramework client = ClientFactory.newClient();  
+    private static final String PATH = "/crud";  
+  
+    public static void main(String[] args) {  
+        try {  
+            client.start();  
+  
+            client.create().forPath(PATH, "I love messi".getBytes());  
+  
+            byte[] bs = client.getData().forPath(PATH);  
+            System.out.println("新建的节点，data为:" + new String(bs));  
+  
+            client.setData().forPath(PATH, "I love football".getBytes());  
+  
+            // 由于是在background模式下获取的data，此时的bs可能为null  
+            byte[] bs2 = client.getData().watched().inBackground().forPath(PATH);  
+            System.out.println("修改后的data为" + new String(bs2 != null ? bs2 : new byte[0]));  
+  
+            client.delete().forPath(PATH);  
+            Stat stat = client.checkExists().forPath(PATH);  
+  
+            // Stat就是对zonde所有属性的一个映射， stat=null表示节点不存在！  
+            System.out.println(stat);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            CloseableUtils.closeQuietly(client);  
+        }  
+    }  
+}  
+ 常用接口有
+
+create()增
+
+delete(): 删
+
+checkExists(): 判断是否存在
+
+setData():  改
+
+getData(): 查
+
+所有这些方法都以forpath()结尾，辅以watch(监听)，withMode（指定模式），和inBackground（后台运行）等方法来使用。
+
+ 
+
+ 此外，Curator还支持事务，一组crud操作同生同灭。代码如下
+
+Java代码  收藏代码
+/** 
+ * 事务操作 
+ *  
+ * @author shencl 
+ */  
+public class TransactionExamples {  
+    private static CuratorFramework client = ClientFactory.newClient();  
+  
+    public static void main(String[] args) {  
+        try {  
+            client.start();  
+            // 开启事务  
+            CuratorTransaction transaction = client.inTransaction();  
+  
+            Collection<CuratorTransactionResult> results = transaction.create()  
+                    .forPath("/a/path", "some data".getBytes()).and().setData()  
+                    .forPath("/another/path", "other data".getBytes()).and().delete().forPath("/yet/another/path")  
+                    .and().commit();  
+  
+            for (CuratorTransactionResult result : results) {  
+                System.out.println(result.getForPath() + " - " + result.getType());  
+            }  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            // 释放客户端连接  
+            CloseableUtils.closeQuietly(client);  
+        }  
+  
+    }  
+}  
+ 这段的代码的运行结果，由于最后一步delete的节点不存在，所以整个事务commit失败。失败的原因会放在Collection<CuratorTransactionResult>中，非常友好。
+
+ 
+
+好了framework部分的内容就这么多，是不是特别简单呢。下面就来看看recipes包的内容吧。。
+
+ 
+
+Recipes部分提供的功能官网列的很详细，点击这里。注意文章第一段：Curator宣称，Recipes模块实现了除二阶段提交之外的所有zookeeper特性。
+
+ 
+
+二、Recipes模块
+
+ 
+
+主要有
+
+Elections(选举)，Locks（锁），Barriers（关卡），Atomic（原子量），Caches，Queues等
+
+ 
+
+1、 Elections
+
+选举主要依赖于LeaderSelector和LeaderLatch2个类。前者是所有存活的客户端不间断的轮流做Leader，大同社会。后者是一旦选举出Leader，除非有客户端挂掉重新触发选举，否则不会交出领导权。某党？
+
+ 
+
+这两者在实现上是可以切换的，直接上代码，怎么切换注释里有。由于篇幅所限，这里仅贴出基于LeaderSelector的选举，更多代码见附件
+
+Java代码  收藏代码
+/** 
+ * 本类基于leaderSelector实现,所有存活的client会公平的轮流做leader 
+ * 如果不想频繁的变化Leader，需要在takeLeadership方法里阻塞leader的变更！ 或者使用 {@link} 
+ * LeaderLatchClient 
+ */  
+public class LeaderSelectorClient extends LeaderSelectorListenerAdapter implements Closeable {  
+    private final String name;  
+    private final LeaderSelector leaderSelector;  
+    private final String PATH = "/leaderselector";  
+  
+    public LeaderSelectorClient(CuratorFramework client, String name) {  
+        this.name = name;  
+        leaderSelector = new LeaderSelector(client, PATH, this);  
+        leaderSelector.autoRequeue();  
+    }  
+  
+    public void start() throws IOException {  
+        leaderSelector.start();  
+    }  
+  
+    @Override  
+    public void close() throws IOException {  
+        leaderSelector.close();  
+    }  
+  
+    /** 
+     * client成为leader后，会调用此方法 
+     */  
+    @Override  
+    public void takeLeadership(CuratorFramework client) throws Exception {  
+        int waitSeconds = (int) (5 * Math.random()) + 1;  
+        System.out.println(name + "是当前的leader");  
+        try {  
+            Thread.sleep(TimeUnit.SECONDS.toMillis(waitSeconds));  
+        } catch (InterruptedException e) {  
+            Thread.currentThread().interrupt();  
+        } finally {  
+            System.out.println(name + " 让出领导权\n");  
+        }  
+    }  
+ 
+
+Java代码  收藏代码
+/** 
+ * leader选举 
+ *  
+ * @author shencl 
+ */  
+public class LeaderSelectorExample {  
+  
+    public static void main(String[] args) {  
+  
+        List<CuratorFramework> clients = Lists.newArrayList();  
+        List<LeaderSelectorClient> examples = Lists.newArrayList();  
+        try {  
+            for (int i = 0; i < 10; i++) {  
+                CuratorFramework client = ClientFactory.newClient();  
+                LeaderSelectorClient example = new LeaderSelectorClient(client, "Client #" + i);  
+                clients.add(client);  
+                examples.add(example);  
+  
+                client.start();  
+                example.start();  
+            }  
+  
+            System.out.println("----------先观察一会选举的结果-----------");  
+            Thread.sleep(10000);  
+  
+            System.out.println("----------关闭前5个客户端，再观察选举的结果-----------");  
+            for (int i = 0; i < 5; i++) {  
+                clients.get(i).close();  
+            }  
+  
+            // 这里有个小技巧，让main程序一直监听控制台输入，异步的代码就可以一直在执行。不同于while(ture)的是，按回车或esc可退出  
+            new BufferedReader(new InputStreamReader(System.in)).readLine();  
+  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            for (LeaderSelectorClient exampleClient : examples) {  
+                CloseableUtils.closeQuietly(exampleClient);  
+            }  
+            for (CuratorFramework client : clients) {  
+                CloseableUtils.closeQuietly(client);  
+            }  
+        }  
+    }  
+}  
+ 
+
+2、locks
+
+curator lock相关的实现在recipes.locks包里。顶级接口都是InterProcessLock。我们直接看最有代表性的InterProcessReadWriteLock 进程内部读写锁（可重入读写锁）。什么叫可重入，什么叫读写锁。不清楚的先查好资料吧。总之读写锁一定是成对出现的。    简易传送门
+
+ 
+
+我们先定义两个任务，可并行的执行的，和互斥执行的。
+
+Java代码  收藏代码
+/** 
+ * 并行任务 
+ *  
+ * @author shencl 
+ */  
+public class ParallelJob implements Runnable {  
+  
+    private final String name;  
+  
+    private final InterProcessLock lock;  
+  
+    // 锁等待时间  
+    private final int wait_time = 5;  
+  
+    ParallelJob(String name, InterProcessLock lock) {  
+        this.name = name;  
+        this.lock = lock;  
+    }  
+  
+    @Override  
+    public void run() {  
+        try {  
+            doWork();  
+        } catch (Exception e) {  
+            // ingore;  
+        }  
+    }  
+  
+    public void doWork() throws Exception {  
+        try {  
+            if (!lock.acquire(wait_time, TimeUnit.SECONDS)) {  
+                System.err.println(name + "等待" + wait_time + "秒，仍未能获取到lock,准备放弃。");  
+            }  
+            // 模拟job执行时间0-4000毫秒  
+            int exeTime = new Random().nextInt(4000);  
+            System.out.println(name + "开始执行,预计执行时间= " + exeTime + "毫秒----------");  
+            Thread.sleep(exeTime);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            lock.release();  
+        }  
+    }  
+}  
+ 
+
+Java代码  收藏代码
+/** 
+ * 互斥任务 
+ *  
+ * @author shencl 
+ */  
+public class MutexJob implements Runnable {  
+  
+    private final String name;  
+  
+    private final InterProcessLock lock;  
+  
+    // 锁等待时间  
+    private final int wait_time = 10;  
+  
+    MutexJob(String name, InterProcessLock lock) {  
+        this.name = name;  
+        this.lock = lock;  
+    }  
+  
+    @Override  
+    public void run() {  
+        try {  
+            doWork();  
+        } catch (Exception e) {  
+            // ingore;  
+        }  
+    }  
+  
+    public void doWork() throws Exception {  
+        try {  
+            if (!lock.acquire(wait_time, TimeUnit.SECONDS)) {  
+                System.err.println(name + "等待" + wait_time + "秒，仍未能获取到lock,准备放弃。");  
+            }  
+            // 模拟job执行时间0-2000毫秒  
+            int exeTime = new Random().nextInt(2000);  
+            System.out.println(name + "开始执行,预计执行时间= " + exeTime + "毫秒----------");  
+            Thread.sleep(exeTime);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            lock.release();  
+        }  
+    }  
+}  
+ 
+
+锁测试代码
+
+ 
+
+Java代码  收藏代码
+/** 
+ * 分布式锁实例 
+ *  
+ * @author shencl 
+ */  
+public class DistributedLockExample {  
+    private static CuratorFramework client = ClientFactory.newClient();  
+    private static final String PATH = "/locks";  
+  
+    // 进程内部（可重入）读写锁  
+    private static final InterProcessReadWriteLock lock;  
+    // 读锁  
+    private static final InterProcessLock readLock;  
+    // 写锁  
+    private static final InterProcessLock writeLock;  
+  
+    static {  
+        client.start();  
+        lock = new InterProcessReadWriteLock(client, PATH);  
+        readLock = lock.readLock();  
+        writeLock = lock.writeLock();  
+    }  
+  
+    public static void main(String[] args) {  
+        try {  
+            List<Thread> jobs = Lists.newArrayList();  
+            for (int i = 0; i < 10; i++) {  
+                Thread t = new Thread(new ParallelJob("Parallel任务" + i, readLock));  
+                jobs.add(t);  
+            }  
+  
+            for (int i = 0; i < 10; i++) {  
+                Thread t = new Thread(new MutexJob("Mutex任务" + i, writeLock));  
+                jobs.add(t);  
+            }  
+  
+            for (Thread t : jobs) {  
+                t.start();  
+            }  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            CloseableUtils.closeQuietly(client);  
+        }  
+    }  
+}  
+ 
+
+看到没，用法和java concurrent包里的ReentrantReadWriteLock 是一模一样的。
+
+事实上，整个recipes包的目录结构、实现原理同java concurrent包的设置是很一致的。比如有queue，Semaphore，Barrier等类，。他整个就是模仿jdk的实现，只不过是基于分布式的！
+
+ 
+
+后边的几项，Barriers（关卡），Atomic（原子量），Caches，Queues和java concurrent包里的类的用法是一样的，就不继续贴了，有些附件里有。
+
+要说明的是：有的功能性能不是特别理想，网上也没见有大的项目的使用案例。比如基于CAS机制的atomic，在某些情况重试的效率还不如硬同步，要是zookeeper节点再一多，各个节点之间通过event触发的数据同步极其频繁。那性能可以想象。
+
+ 
+
+三、测试方法
+
+ curator提供了很好的测试工具，你甚至是可以在完全没有搭建zookeeper server端的情况下，完成测试。
+
+有2个重要的类
+
+TestingServer 模拟单点， TestingCluster模拟集群。
+
+需要使用的话，得依赖
+
+Xml代码  收藏代码
+<dependency>  
+    <groupId>org.apache.curator</groupId>  
+    <artifactId>curator-test</artifactId>  
+    <version>2.5.0</version>  
+</dependency>  
+
+
+
+哥们 DistributedAtomicIntegerExample 由于并发太大，延迟比较长，你把这一行
+counter = new DistributedAtomicInteger(client, PATH, new RetryNTimes(100, 1000));
+里的重试和等待时间加长些就行了，
+另外程序里可以用CountDownLatch来替代不确定的sleep();
+
+修改后可以这样：
+
+package com.bj58.emc.study.curator.demo.atomic;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.atomic.AtomicValue;
+import org.apache.curator.framework.recipes.atomic.DistributedAtomicInteger;
+import org.apache.curator.retry.RetryNTimes;
+import org.apache.curator.utils.CloseableUtils;
+
+import com.bj58.emc.study.curator.demo.utils.ClientFactory;
+import com.google.common.collect.Lists;
+
+/**
+* 这个类我没能运行出期待的结果来，谁检查一下我的代码？
+* 
+* @author shencl
+*/
+public class DistributedAtomicIntegerExample {
+private static final int _1000 = 1000;
+private static CuratorFramework client = ClientFactory.newClient();
+private static final String PATH = "/counter";
+public static volatile DistributedAtomicInteger counter;
+
+static {
+client.start();
+counter = new DistributedAtomicInteger(client, PATH, new RetryNTimes(100, 1000));
+}
+
+public static void main(String[] args) {
+final CountDownLatch countDownLatch = new CountDownLatch(_1000);
+try {
+counter.trySet(0);
+List<Thread> jobs = Lists.newArrayList();
+// 开1k个线程，不用同步机制，同时启动
+for (int i = 0; i < _1000; i++) {
+jobs.add(new Thread(new Runnable() {
+
+@Override
+public void run() {
+try {
+AtomicValue<Integer> rc = counter.increment();
+System.out.println("success:" + rc.succeeded() + ";before:" + rc.preValue() + ";after:" + rc.postValue());
+countDownLatch.countDown();
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}));
+
+}
+
+for (Thread t : jobs) {
+t.start();
+}
+
+// 保证线程全部执行完毕
+countDownLatch.await();
+System.out.println("计数器最终的值=" + counter.get().postValue());
+AtomicValue<Integer> rc = counter.get();
+System.out.println("success:" + rc.succeeded() + ";before:" + rc.preValue() + ";after:" + rc.postValue());
+} catch (Exception e) {
+e.printStackTrace();
+} finally {
+CloseableUtils.closeQuietly(client);
+}
+}
+}
+
+
+
+
+
+
+
+
+
+curator简介
+Netflix curator 是Netflix公司开源的一个Zookeeper client library，用于简化zookeeper客户端编程，包含一下几个模块：
+
+curator-client - zookeeper client封装，用于取代原生的zookeeper客户端，提供一些非常有用的客户端特性
+curator-framework - zookeeper api的高层封装，大大简化zookeeper客户端编程，添加了例如zookeeper连接管理、重试机制等
+curator-recipes - zookeeper recipes 基于curator-framework的实现（除2PC以外）
+maven dependency:
+
+[html] view plain copy
+<dependency>  
+    <groupId>com.netflix.curator</groupId>  
+    <artifactId>curator-recipes</artifactId>  
+    <version>0.6.4</version>  
+</dependency>  
+注意：在www.mvnrepository.com中认为0.32为最新版本，其实迄今为止最新版本为0.64，github trunk中的版本现在是0.65-SNAPSHOT
+
+
+
+curator framework 使用
+示例代码：
+
+[java] view plain copy
+              String path = "/test_path";  
+CuratorFramework client = CuratorFrameworkFactory.builder()  
+        .connectString("test:2181").namespace("/test1")  
+        .retryPolicy(new RetryNTimes(Integer.MAX_VALUE, 1000))  
+        .connectionTimeoutMs(5000).build();  
+//create a node  
+client.create().forPath("/head", new byte[0]);  
+  
+//delete a node in background  
+client.delete().inBackground().forPath("/head");  
+  
+// create a EPHEMERAL_SEQUENTIAL  
+client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath("/head/child", new byte[0]);  
+  
+// get the data   
+client.getData().watched().inBackground().forPath("/test");  
+  
+// check the path exits  
+client.checkExists().forPath(path);  
+
+curator framework使用builder模式和类似nio的chain api，代码非常简洁
+curator recipes 使用
+InterProcessMutex
+用途：进程间互斥锁
+示例代码：
+
+[java] view plain copy
+String lockName = "/lock1";  
+InterProcessLock lock1 = new InterProcessMutex(this.curator, lockName);  
+InterProcessLock lock2 = new InterProcessMutex(this.curator, lockName);  
+lock1.acquire();  
+boolean result = lock2.acquire(1, TimeUnit.SECONDS);  
+assertFalse(result);  
+lock1.release();  
+result = lock2.acquire(1, TimeUnit.SECONDS);  
+assertTrue(result);  
+
+原理：每次调用acquire在/lock1节点节点下使用CreateMode.EPHEMERAL_SEQUENTIAL 创建新的ephemeral节点，然后getChildren获取所有的children，判断刚刚创建的临时节点是否为第一个，如果是，则获取锁成功；如果不是，则删除刚刚创建的临时节点。
+
+注意： 每次accquire操作，成功，则请求zk server 2次（一次写，一次getChildren）；如果失败，则请求zk server 3次（一次写，一次getChildren，一次delete）
+
+InterProcessReadWriteLock
+示例代码：
+
+[java] view plain copy
+@Test  
+public void testReadWriteLock() throws Exception{  
+    String readWriteLockPath = "/RWLock";  
+    InterProcessReadWriteLock readWriteLock1 = new InterProcessReadWriteLock(this.curator, readWriteLockPath);  
+    InterProcessMutex writeLock1 = readWriteLock1.writeLock();  
+    InterProcessMutex readLock1 = readWriteLock1.readLock();  
+      
+    InterProcessReadWriteLock readWriteLock2 = new InterProcessReadWriteLock(this.curator, readWriteLockPath);  
+    InterProcessMutex writeLock2 = readWriteLock2.writeLock();  
+    InterProcessMutex readLock2 = readWriteLock2.readLock();  
+    writeLock1.acquire();  
+      
+    // same with WriteLock, can read  
+    assertTrue(readLock1.acquire(1, TimeUnit.SECONDS));  
+      
+    // different lock, can't read while writting  
+    assertFalse(readLock2.acquire(1, TimeUnit.SECONDS));  
+      
+    // different write lock, can't write  
+    assertFalse(writeLock2.acquire(1, TimeUnit.SECONDS));  
+      
+    // release the write lock  
+    writeLock1.release();  
+      
+    //both read lock can read  
+    assertTrue(readLock1.acquire(1, TimeUnit.SECONDS));  
+    assertTrue(readLock2.acquire(1, TimeUnit.SECONDS));  
+}  
+
+原理： 同InterProcessMutext，在ephemeral node的排序算法上做trick，write lock的排序在前。
+
+注意： 同一个InterProcessReadWriteLock如果已经获取了write lock，则获取read lock也会成功
+
+
+LeaderSelector
+示例代码：
+
+[java] view plain copy
+@Test  
+public void testLeader() throws Exception{  
+    LeaderSelectorListener listener = new LeaderSelectorListener(){  
+  
+  
+        @Override  
+        public void takeLeadership(CuratorFramework client)  
+                throws Exception {  
+            System.out.println("i'm leader");  
+        }  
+  
+        @Override  
+        public void handleException(CuratorFramework client,  
+                Exception exception) {  
+              
+        }  
+  
+        @Override  
+        public void notifyClientClosing(CuratorFramework client) {  
+              
+        }};  
+    String leaderPath = "/leader";  
+    LeaderSelector selector1 = new LeaderSelector(this.curator, leaderPath, listener);  
+    selector1.start();  
+    LeaderSelector selector2 = new LeaderSelector(this.curator, leaderPath, listener);  
+    selector2.start();  
+    assertFalse(selector2.hasLeadership());  
+}  
+
+原理：内部基于InterProcessMutex实现，具体细节参见shared lock一节
+
+
+
+
+
+
+跟着实例学习ZooKeeper的用法： 分布式锁
+
+锁
+
+分布式的锁全局同步， 这意味着任何一个时间点不会有两个客户端都拥有相同的锁。
+
+可重入锁Shared Reentrant Lock
+
+首先我们先看一个全局可重入的锁。 Shared意味着锁是全局可见的， 客户端都可以请求锁。 Reentrant和JDK的ReentrantLock类似， 意味着同一个客户端在拥有锁的同时，可以多次获取，不会被阻塞。 它是由类InterProcessMutex来实现。 它的构造函数为：
+
+public InterProcessMutex(CuratorFramework client, String path)
+
+通过acquire获得锁，并提供超时机制：
+
+public void acquire()
+Acquire the mutex - blocking until it's available. Note: the same thread can call acquire
+re-entrantly. Each call to acquire must be balanced by a call to release()
+
+public boolean acquire(long time,
+                       TimeUnit unit)
+Acquire the mutex - blocks until it's available or the given time expires. Note: the same thread can
+call acquire re-entrantly. Each call to acquire that returns true must be balanced by a call to release()
+
+Parameters:
+time - time to wait
+unit - time unit
+Returns:
+true if the mutex was acquired, false if not
+通过release()方法释放锁。 InterProcessMutex 实例可以重用。
+
+Revoking ZooKeeper recipes wiki定义了可协商的撤销机制。 为了撤销mutex, 调用下面的方法：
+
+public void makeRevocable(RevocationListener<T> listener)
+将锁设为可撤销的. 当别的进程或线程想让你释放锁是Listener会被调用。
+Parameters:
+listener - the listener
+如果你请求撤销当前的锁， 调用Revoker方法。
+
+public static void attemptRevoke(CuratorFramework client,
+                                 String path)
+                         throws Exception
+Utility to mark a lock for revocation. Assuming that the lock has been registered
+with a RevocationListener, it will get called and the lock should be released. Note,
+however, that revocation is cooperative.
+Parameters:
+client - the client
+path - the path of the lock - usually from something like InterProcessMutex.getParticipantNodes()
+错误处理 还是强烈推荐你使用ConnectionStateListener处理连接状态的改变。 当连接LOST时你不再拥有锁。
+
+首先让我们创建一个模拟的共享资源， 这个资源期望只能单线程的访问，否则会有并发问题。
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class FakeLimitedResource {
+    private final AtomicBoolean inUse = new AtomicBoolean(false);
+
+    public void use() throws InterruptedException {
+        // 真实环境中我们会在这里访问/维护一个共享的资源
+        //这个例子在使用锁的情况下不会非法并发异常IllegalStateException
+        //但是在无锁的情况由于sleep了一段时间，很容易抛出异常
+        if (!inUse.compareAndSet(false, true)) { 
+            throw new IllegalStateException("Needs to be used by one client at a time");
+        }
+        try {
+            Thread.sleep((long) (3 * Math.random()));
+        } finally {
+            inUse.set(false);
+        }
+    }
+}
+然后创建一个ExampleClientThatLocks类， 它负责请求锁， 使用资源，释放锁这样一个完整的访问过程。
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.concurrent.TimeUnit;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+
+public class ExampleClientThatLocks {
+    private final InterProcessMutex lock;
+    private final FakeLimitedResource resource;
+    private final String clientName;
+
+    public ExampleClientThatLocks(CuratorFramework client, String lockPath, FakeLimitedResource resource, String clientName) {
+        this.resource = resource;
+        this.clientName = clientName;
+        lock = new InterProcessMutex(client, lockPath);
+    }
+
+    public void doWork(long time, TimeUnit unit) throws Exception {
+        if (!lock.acquire(time, unit)) {
+            throw new IllegalStateException(clientName + " could not acquire the lock");
+        }
+        try {
+            System.out.println(clientName + " has the lock");
+            resource.use(); //access resource exclusively
+        } finally {
+            System.out.println(clientName + " releasing the lock");
+            lock.release(); // always release the lock in a finally block
+        }
+    }
+}
+最后创建主程序来测试。
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.test.TestingServer;
+import org.apache.curator.utils.CloseableUtils;
+
+public class InterProcessMutexExample {
+    private static final int QTY = 5;
+    private static final int REPETITIONS = QTY * 10;
+    private static final String PATH = "/examples/locks";
+
+    public static void main(String[] args) throws Exception {
+        final FakeLimitedResource resource = new FakeLimitedResource();
+        ExecutorService service = Executors.newFixedThreadPool(QTY);
+        final TestingServer server = new TestingServer();
+        try {
+            for (int i = 0; i < QTY; ++i) {
+                final int index = i;
+                Callable<Void> task = new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        CuratorFramework client = CuratorFrameworkFactory.newClient(server.getConnectString(), new ExponentialBackoffRetry(1000, 3));
+                        try {
+                            client.start();
+                            final ExampleClientThatLocks example = new ExampleClientThatLocks(client, PATH, resource, "Client " + index);
+                            for (int j = 0; j < REPETITIONS; ++j) {
+                                example.doWork(10, TimeUnit.SECONDS);
+                            }
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+                        } finally {
+                            CloseableUtils.closeQuietly(client);
+                        }
+                        return null;
+                    }
+                };
+                service.submit(task);
+            }
+            service.shutdown();
+            service.awaitTermination(10, TimeUnit.MINUTES);
+        } finally {
+            CloseableUtils.closeQuietly(server);
+        }
+    }
+}
+代码也很简单，生成10个client， 每个client重复执行10次 请求锁–访问资源–释放锁的过程。每个client都在独立的线程中。 结果可以看到，锁是随机的被每个实例排他性的使用。
+
+既然是可重用的，你可以在一个线程中多次调用acquire,在线程拥有锁时它总是返回true。
+
+你不应该在多个线程中用同一个InterProcessMutex， 你可以在每个线程中都生成一个InterProcessMutex实例，它们的path都一样，这样它们可以共享同一个锁。
+
+不可重入锁Shared Lock
+
+这个锁和上面的相比，就是少了Reentrant的功能，也就意味着它不能在同一个线程中重入。 这个类是InterProcessSemaphoreMutex。 使用方法和上面的类类似。
+
+首先我们将上面的例子修改一下，测试一下它的重入。 修改ExampleClientThatLocks.doWork,连续两次acquire:
+
+    public void doWork(long time, TimeUnit unit) throws Exception {
+        if (!lock.acquire(time, unit)) {
+            throw new IllegalStateException(clientName + " could not acquire the lock");
+        }
+        System.out.println(clientName + " has the lock");
+        if (!lock.acquire(time, unit)) {
+            throw new IllegalStateException(clientName + " could not acquire the lock");
+        }
+        System.out.println(clientName + " has the lock again");
+
+        try {            
+            resource.use(); //access resource exclusively
+        } finally {
+            System.out.println(clientName + " releasing the lock");
+            lock.release(); // always release the lock in a finally block
+            lock.release(); // always release the lock in a finally block
+        }
+    }
+注意我们也需要调用release两次。这和JDK的ReentrantLock用法一致。如果少调用一次release，则此线程依然拥有锁。 上面的代码没有问题，我们可以多次调用acquire，后续的acquire也不会阻塞。 将上面的InterProcessMutex换成不可重入锁InterProcessSemaphoreMutex,如果再运行上面的代码，结果就会发现线程被阻塞再第二个acquire上。 也就是此锁不是可重入的。
+
+可重入读写锁Shared Reentrant Read Write Lock
+
+类似JDK的ReentrantReadWriteLock. 一个读写锁管理一对相关的锁。 一个负责读操作，另外一个负责写操作。 读操作在写锁没被使用时可同时由多个进程使用，而写锁使用时不允许读 (阻塞)。 此锁是可重入的。一个拥有写锁的线程可重入读锁，但是读锁却不能进入写锁。 这也意味着写锁可以降级成读锁， 比如请求写锁 —>读锁 —->释放写锁。 从读锁升级成写锁是不成的。
+
+主要由两个类实现：
+
+InterProcessReadWriteLock
+InterProcessLock
+使用时首先创建一个InterProcessReadWriteLock实例，然后再根据你的需求得到读锁或者写锁， 读写锁的类型是InterProcessLock。
+
+public InterProcessLock readLock()
+public InterProcessLock writeLock()
+例子和上面的类似。
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.concurrent.TimeUnit;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.apache.curator.framework.recipes.locks.InterProcessReadWriteLock;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
+
+public class ExampleClientReadWriteLocks {
+    private final InterProcessReadWriteLock lock;
+    private final InterProcessMutex readLock;
+    private final InterProcessMutex writeLock;
+    private final FakeLimitedResource resource;
+    private final String clientName;
+
+    public ExampleClientReadWriteLocks(CuratorFramework client, String lockPath, FakeLimitedResource resource, String clientName) {
+        this.resource = resource;
+        this.clientName = clientName;
+        lock = new InterProcessReadWriteLock(client, lockPath);
+        readLock = lock.readLock();
+        writeLock = lock.writeLock();
+    }
+
+    public void doWork(long time, TimeUnit unit) throws Exception {
+        if (!writeLock.acquire(time, unit)) {
+            throw new IllegalStateException(clientName + " could not acquire the writeLock");
+        }
+        System.out.println(clientName + " has the writeLock");
+
+        if (!readLock.acquire(time, unit)) {
+            throw new IllegalStateException(clientName + " could not acquire the readLock");
+        }
+        System.out.println(clientName + " has the readLock too");
+
+        try {            
+            resource.use(); //access resource exclusively
+        } finally {
+            System.out.println(clientName + " releasing the lock");
+            readLock.release(); // always release the lock in a finally block
+            writeLock.release(); // always release the lock in a finally block
+        }
+    }
+}
+在这个类中我们首先请求了一个写锁， 然后降级成读锁。 执行业务处理，然后释放读写锁。
+
+信号量Shared Semaphore
+
+一个计数的信号量类似JDK的Semaphore。 JDK中Semaphore维护的一组许可(permits)，而Cubator中称之为租约(Lease)。 有两种方式可以决定semaphore的最大租约数。第一种方式是有用户给定的path决定。第二种方式使用SharedCountReader类。 如果不使用SharedCountReader, 没有内部代码检查进程是否假定有10个租约而进程B假定有20个租约。 所以所有的实例必须使用相同的numberOfLeases值.
+
+这次调用acquire会返回一个租约对象。 客户端必须在finally中close这些租约对象，否则这些租约会丢失掉。 但是， 但是，如果客户端session由于某种原因比如crash丢掉， 那么这些客户端持有的租约会自动close， 这样其它客户端可以继续使用这些租约。 租约还可以通过下面的方式返还：
+
+public void returnAll(Collection<Lease> leases)
+public void returnLease(Lease lease)
+注意一次你可以请求多个租约，如果Semaphore当前的租约不够，则请求线程会被阻塞。 同时还提供了超时的重载方法。
+
+public Lease acquire()
+public Collection<Lease> acquire(int qty)
+public Lease acquire(long time, TimeUnit unit)
+public Collection<Lease> acquire(int qty, long time, TimeUnit unit)
+主要类有:
+
+InterProcessSemaphoreV2
+Lease
+SharedCountReader
+下面是使用的例子：
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.Collection;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreV2;
+import org.apache.curator.framework.recipes.locks.Lease;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.test.TestingServer;
+import org.apache.curator.utils.CloseableUtils;
+
+public class InterProcessSemaphoreExample {
+    private static final int MAX_LEASE = 10;
+    private static final String PATH = "/examples/locks";
+
+    public static void main(String[] args) throws Exception {
+        FakeLimitedResource resource = new FakeLimitedResource();
+        try (TestingServer server = new TestingServer()) {
+
+            CuratorFramework client = CuratorFrameworkFactory.newClient(server.getConnectString(), new ExponentialBackoffRetry(1000, 3));
+            client.start();
+
+            InterProcessSemaphoreV2 semaphore = new InterProcessSemaphoreV2(client, PATH, MAX_LEASE);
+            Collection<Lease> leases = semaphore.acquire(5);
+            System.out.println("get " + leases.size() + " leases");
+            Lease lease = semaphore.acquire();
+            System.out.println("get another lease");
+
+            resource.use();
+
+            Collection<Lease> leases2 = semaphore.acquire(5, 10, TimeUnit.SECONDS);
+            System.out.println("Should timeout and acquire return " + leases2);
+
+            System.out.println("return one lease");
+            semaphore.returnLease(lease);
+            System.out.println("return another 5 leases");
+            semaphore.returnAll(leases);
+        }
+    }
+
+}
+首先我们先获得了5个租约， 最后我们把它还给了semaphore。 接着请求了一个租约，因为semaphore还有5个租约，所以请求可以满足，返回一个租约，还剩4个租约。 然后再请求一个租约，因为租约不够，阻塞到超时，还是没能满足，返回结果为null。
+
+上面说讲的锁都是公平锁(fair)。 总ZooKeeper的角度看， 每个客户端都按照请求的顺序获得锁。 相当公平。
+
+多锁对象 Multi Shared Lock
+
+Multi Shared Lock是一个锁的容器。 当调用acquire， 所有的锁都会被acquire，如果请求失败，所有的锁都会被release。 同样调用release时所有的锁都被release(失败被忽略)。 基本上，它就是组锁的代表，在它上面的请求释放操作都会传递给它包含的所有的锁。
+
+主要涉及两个类：
+
+InterProcessMultiLock
+InterProcessLock
+它的构造函数需要包含的锁的集合，或者一组ZooKeeper的path。
+
+public InterProcessMultiLock(List<InterProcessLock> locks)
+public InterProcessMultiLock(CuratorFramework client, List<String> paths)
+用法和Shared Lock相同。
+
+例子如下：
+
+package com.colobu.zkrecipe.lock;
+
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.locks.InterProcessLock;
+import org.apache.curator.framework.recipes.locks.InterProcessMultiLock;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.test.TestingServer;
+
+public class InterProcessMultiLockExample {
+    private static final String PATH1 = "/examples/locks1";
+    private static final String PATH2 = "/examples/locks2";
+
+    public static void main(String[] args) throws Exception {
+        FakeLimitedResource resource = new FakeLimitedResource();
+        try (TestingServer server = new TestingServer()) {
+            CuratorFramework client = CuratorFrameworkFactory.newClient(server.getConnectString(), new ExponentialBackoffRetry(1000, 3));
+            client.start();
+
+            InterProcessLock lock1 = new InterProcessMutex(client, PATH1);
+            InterProcessLock lock2 = new InterProcessSemaphoreMutex(client, PATH2);
+
+            InterProcessMultiLock lock = new InterProcessMultiLock(Arrays.asList(lock1, lock2));
+
+            if (!lock.acquire(10, TimeUnit.SECONDS)) {
+                throw new IllegalStateException("could not acquire the lock");
+            }
+            System.out.println("has the lock");
+
+            System.out.println("has the lock1: " + lock1.isAcquiredInThisProcess());
+            System.out.println("has the lock2: " + lock2.isAcquiredInThisProcess());
+
+            try {            
+                resource.use(); //access resource exclusively
+            } finally {
+                System.out.println("releasing the lock");
+                lock.release(); // always release the lock in a finally block
+            }
+            System.out.println("has the lock1: " + lock1.isAcquiredInThisProcess());
+            System.out.println("has the lock2: " + lock2.isAcquiredInThisProcess());
+        }
+    }
+
+}
+新建一个InterProcessMultiLock， 包含一个重入锁和一个非重入锁。 调用acquire后可以看到线程同时拥有了这两个锁。 调用release看到这两个锁都被释放了。
+
+再重申以便， 强烈推荐使用ConnectionStateListener监控连接的状态。
+
+
+
+
+
+
+
+
+
+跟着实例学习ZooKeeper的用法： 临时节点
+跟着实例学习ZooKeeper的用法： Barrier
+跟着实例学习ZooKeeper的用法： Leader选举
+跟着实例学习ZooKeeper的用法： 队列
+跟着实例学习ZooKeeper的用法： 计数器
+跟着实例学习ZooKeeper的用法： 缓存
+跟着实例学习ZooKeeper的用法： Curator扩展库
+跟着实例学习ZooKeeper的用法： Curator框架应用
+并发实战题（一）
+Oracle官方并发教程之锁对象
+Bug:StampedLock的中断问题导致CPU爆满
+《Java并发编程从入门到精通》显示锁Lock和ReentrantLock
+并发工具类（四）两个线程进行数据交换的Exchanger
+定制并发类（九）实现一个自定义的Lock类
+ReentrantLock(重入锁)以及公平性
+
+
+
+
+
+
+
+
+
+

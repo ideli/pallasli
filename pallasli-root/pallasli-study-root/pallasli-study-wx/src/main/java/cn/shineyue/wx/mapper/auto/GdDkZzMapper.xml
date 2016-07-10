@@ -1,0 +1,1569 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.shineyue.wx.mapper.auto.GdDkZzMapper" >
+  <resultMap id="BaseResultMap" type="cn.shineyue.wx.po.auto.GdDkZz" >
+    <id column="E001" property="e001" jdbcType="VARCHAR" />
+    <result column="G000" property="g000" jdbcType="VARCHAR" />
+    <result column="E021" property="e021" jdbcType="VARCHAR" />
+    <result column="E022" property="e022" jdbcType="VARCHAR" />
+    <result column="E023" property="e023" jdbcType="DECIMAL" />
+    <result column="E025" property="e025" jdbcType="DECIMAL" />
+    <result column="E026" property="e026" jdbcType="DECIMAL" />
+    <result column="E090" property="e090" jdbcType="DECIMAL" />
+    <result column="E027" property="e027" jdbcType="DECIMAL" />
+    <result column="E028" property="e028" jdbcType="VARCHAR" />
+    <result column="E029" property="e029" jdbcType="DATE" />
+    <result column="E030" property="e030" jdbcType="DECIMAL" />
+    <result column="E031" property="e031" jdbcType="DECIMAL" />
+    <result column="E032" property="e032" jdbcType="DECIMAL" />
+    <result column="E033" property="e033" jdbcType="DECIMAL" />
+    <result column="E034" property="e034" jdbcType="DECIMAL" />
+    <result column="E035" property="e035" jdbcType="DECIMAL" />
+    <result column="E036" property="e036" jdbcType="DECIMAL" />
+    <result column="E037" property="e037" jdbcType="DECIMAL" />
+    <result column="E040" property="e040" jdbcType="DECIMAL" />
+    <result column="E041" property="e041" jdbcType="DATE" />
+    <result column="E042" property="e042" jdbcType="DECIMAL" />
+    <result column="E043" property="e043" jdbcType="VARCHAR" />
+    <result column="E044" property="e044" jdbcType="DATE" />
+    <result column="E045" property="e045" jdbcType="DECIMAL" />
+    <result column="E046" property="e046" jdbcType="DECIMAL" />
+    <result column="E047" property="e047" jdbcType="DECIMAL" />
+    <result column="E051" property="e051" jdbcType="DATE" />
+    <result column="E053" property="e053" jdbcType="DECIMAL" />
+    <result column="E039" property="e039" jdbcType="DECIMAL" />
+    <result column="E054" property="e054" jdbcType="VARCHAR" />
+    <result column="E056" property="e056" jdbcType="DECIMAL" />
+    <result column="E057" property="e057" jdbcType="DECIMAL" />
+    <result column="E058" property="e058" jdbcType="DECIMAL" />
+    <result column="E059" property="e059" jdbcType="VARCHAR" />
+    <result column="E060" property="e060" jdbcType="DECIMAL" />
+    <result column="E061" property="e061" jdbcType="DATE" />
+    <result column="E063" property="e063" jdbcType="DATE" />
+    <result column="E065" property="e065" jdbcType="DECIMAL" />
+    <result column="E066" property="e066" jdbcType="DECIMAL" />
+    <result column="E067" property="e067" jdbcType="DECIMAL" />
+    <result column="E070" property="e070" jdbcType="DATE" />
+    <result column="E071" property="e071" jdbcType="DECIMAL" />
+    <result column="E072" property="e072" jdbcType="DECIMAL" />
+    <result column="E073" property="e073" jdbcType="DECIMAL" />
+    <result column="E074" property="e074" jdbcType="DATE" />
+    <result column="E079" property="e079" jdbcType="DECIMAL" />
+    <result column="E080" property="e080" jdbcType="DECIMAL" />
+    <result column="E095" property="e095" jdbcType="DECIMAL" />
+    <result column="E096" property="e096" jdbcType="DECIMAL" />
+    <result column="E097" property="e097" jdbcType="DECIMAL" />
+    <result column="E098" property="e098" jdbcType="DECIMAL" />
+    <result column="E109" property="e109" jdbcType="DATE" />
+    <result column="E093" property="e093" jdbcType="VARCHAR" />
+    <result column="E110" property="e110" jdbcType="DECIMAL" />
+    <result column="E111" property="e111" jdbcType="DECIMAL" />
+    <result column="E184" property="e184" jdbcType="DECIMAL" />
+    <result column="E185" property="e185" jdbcType="DATE" />
+    <result column="E183" property="e183" jdbcType="VARCHAR" />
+    <result column="E541" property="e541" jdbcType="DECIMAL" />
+    <result column="E539" property="e539" jdbcType="DECIMAL" />
+    <result column="E540" property="e540" jdbcType="DECIMAL" />
+    <result column="E284" property="e284" jdbcType="DECIMAL" />
+    <result column="E285" property="e285" jdbcType="DATE" />
+    <result column="E290" property="e290" jdbcType="DATE" />
+    <result column="E283" property="e283" jdbcType="VARCHAR" />
+    <result column="A073" property="a073" jdbcType="VARCHAR" />
+    <result column="A075" property="a075" jdbcType="VARCHAR" />
+    <result column="P015" property="p015" jdbcType="VARCHAR" />
+    <result column="P017" property="p017" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="WF_PZID" property="wfPzid" jdbcType="DECIMAL" />
+    <result column="WF_PROCESSUNID" property="wfProcessunid" jdbcType="CHAR" />
+    <result column="E053_NAME" property="e053Name" jdbcType="VARCHAR" />
+    <result column="E073_NAME" property="e073Name" jdbcType="VARCHAR" />
+    <result column="E080_NAME" property="e080Name" jdbcType="VARCHAR" />
+    <result column="E082_NAME" property="e082Name" jdbcType="VARCHAR" />
+    <result column="E084_NAME" property="e084Name" jdbcType="VARCHAR" />
+    <result column="E184_NAME" property="e184Name" jdbcType="VARCHAR" />
+    <result column="E284_NAME" property="e284Name" jdbcType="VARCHAR" />
+    <result column="E288_NAME" property="e288Name" jdbcType="VARCHAR" />
+    <result column="EAM_ID" property="eamId" jdbcType="VARCHAR" />
+    <result column="E024" property="e024" jdbcType="DECIMAL" />
+    <result column="E082" property="e082" jdbcType="DECIMAL" />
+    <result column="E084" property="e084" jdbcType="DECIMAL" />
+    <result column="E288" property="e288" jdbcType="DECIMAL" />
+    <result column="E083" property="e083" jdbcType="DECIMAL" />
+    <result column="E081" property="e081" jdbcType="DECIMAL" />
+    <result column="E068" property="e068" jdbcType="DECIMAL" />
+    <result column="E052" property="e052" jdbcType="VARCHAR" />
+    <result column="E102" property="e102" jdbcType="VARCHAR" />
+    <result column="E112" property="e112" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    E001, G000, E021, E022, E023, E025, E026, E090, E027, E028, E029, E030, E031, E032, 
+    E033, E034, E035, E036, E037, E040, E041, E042, E043, E044, E045, E046, E047, E051, 
+    E053, E039, E054, E056, E057, E058, E059, E060, E061, E063, E065, E066, E067, E070, 
+    E071, E072, E073, E074, E079, E080, E095, E096, E097, E098, E109, E093, E110, E111, 
+    E184, E185, E183, E541, E539, E540, E284, E285, E290, E283, A073, A075, P015, P017, 
+    ID, WF_PZID, WF_PROCESSUNID, E053_NAME, E073_NAME, E080_NAME, E082_NAME, E084_NAME, 
+    E184_NAME, E284_NAME, E288_NAME, EAM_ID, E024, E082, E084, E288, E083, E081, E068, 
+    E052, E102, E112
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.shineyue.wx.po.auto.GdDkZzExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.GD_DK_ZZ
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.GD_DK_ZZ
+    where E001 = #{e001,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WASYS350_NEWBPM.GD_DK_ZZ
+    where E001 = #{e001,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.shineyue.wx.po.auto.GdDkZzExample" >
+    delete from WASYS350_NEWBPM.GD_DK_ZZ
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.shineyue.wx.po.auto.GdDkZz" >
+    insert into WASYS350_NEWBPM.GD_DK_ZZ (E001, G000, E021, 
+      E022, E023, E025, E026, 
+      E090, E027, E028, E029, 
+      E030, E031, E032, E033, 
+      E034, E035, E036, E037, 
+      E040, E041, E042, E043, 
+      E044, E045, E046, E047, 
+      E051, E053, E039, E054, 
+      E056, E057, E058, E059, 
+      E060, E061, E063, E065, 
+      E066, E067, E070, E071, 
+      E072, E073, E074, E079, 
+      E080, E095, E096, E097, 
+      E098, E109, E093, E110, 
+      E111, E184, E185, E183, 
+      E541, E539, E540, E284, 
+      E285, E290, E283, A073, 
+      A075, P015, P017, ID, 
+      WF_PZID, WF_PROCESSUNID, E053_NAME, 
+      E073_NAME, E080_NAME, E082_NAME, 
+      E084_NAME, E184_NAME, E284_NAME, 
+      E288_NAME, EAM_ID, E024, 
+      E082, E084, E288, E083, 
+      E081, E068, E052, E102, 
+      E112)
+    values (#{e001,jdbcType=VARCHAR}, #{g000,jdbcType=VARCHAR}, #{e021,jdbcType=VARCHAR}, 
+      #{e022,jdbcType=VARCHAR}, #{e023,jdbcType=DECIMAL}, #{e025,jdbcType=DECIMAL}, #{e026,jdbcType=DECIMAL}, 
+      #{e090,jdbcType=DECIMAL}, #{e027,jdbcType=DECIMAL}, #{e028,jdbcType=VARCHAR}, #{e029,jdbcType=DATE}, 
+      #{e030,jdbcType=DECIMAL}, #{e031,jdbcType=DECIMAL}, #{e032,jdbcType=DECIMAL}, #{e033,jdbcType=DECIMAL}, 
+      #{e034,jdbcType=DECIMAL}, #{e035,jdbcType=DECIMAL}, #{e036,jdbcType=DECIMAL}, #{e037,jdbcType=DECIMAL}, 
+      #{e040,jdbcType=DECIMAL}, #{e041,jdbcType=DATE}, #{e042,jdbcType=DECIMAL}, #{e043,jdbcType=VARCHAR}, 
+      #{e044,jdbcType=DATE}, #{e045,jdbcType=DECIMAL}, #{e046,jdbcType=DECIMAL}, #{e047,jdbcType=DECIMAL}, 
+      #{e051,jdbcType=DATE}, #{e053,jdbcType=DECIMAL}, #{e039,jdbcType=DECIMAL}, #{e054,jdbcType=VARCHAR}, 
+      #{e056,jdbcType=DECIMAL}, #{e057,jdbcType=DECIMAL}, #{e058,jdbcType=DECIMAL}, #{e059,jdbcType=VARCHAR}, 
+      #{e060,jdbcType=DECIMAL}, #{e061,jdbcType=DATE}, #{e063,jdbcType=DATE}, #{e065,jdbcType=DECIMAL}, 
+      #{e066,jdbcType=DECIMAL}, #{e067,jdbcType=DECIMAL}, #{e070,jdbcType=DATE}, #{e071,jdbcType=DECIMAL}, 
+      #{e072,jdbcType=DECIMAL}, #{e073,jdbcType=DECIMAL}, #{e074,jdbcType=DATE}, #{e079,jdbcType=DECIMAL}, 
+      #{e080,jdbcType=DECIMAL}, #{e095,jdbcType=DECIMAL}, #{e096,jdbcType=DECIMAL}, #{e097,jdbcType=DECIMAL}, 
+      #{e098,jdbcType=DECIMAL}, #{e109,jdbcType=DATE}, #{e093,jdbcType=VARCHAR}, #{e110,jdbcType=DECIMAL}, 
+      #{e111,jdbcType=DECIMAL}, #{e184,jdbcType=DECIMAL}, #{e185,jdbcType=DATE}, #{e183,jdbcType=VARCHAR}, 
+      #{e541,jdbcType=DECIMAL}, #{e539,jdbcType=DECIMAL}, #{e540,jdbcType=DECIMAL}, #{e284,jdbcType=DECIMAL}, 
+      #{e285,jdbcType=DATE}, #{e290,jdbcType=DATE}, #{e283,jdbcType=VARCHAR}, #{a073,jdbcType=VARCHAR}, 
+      #{a075,jdbcType=VARCHAR}, #{p015,jdbcType=VARCHAR}, #{p017,jdbcType=VARCHAR}, #{id,jdbcType=DECIMAL}, 
+      #{wfPzid,jdbcType=DECIMAL}, #{wfProcessunid,jdbcType=CHAR}, #{e053Name,jdbcType=VARCHAR}, 
+      #{e073Name,jdbcType=VARCHAR}, #{e080Name,jdbcType=VARCHAR}, #{e082Name,jdbcType=VARCHAR}, 
+      #{e084Name,jdbcType=VARCHAR}, #{e184Name,jdbcType=VARCHAR}, #{e284Name,jdbcType=VARCHAR}, 
+      #{e288Name,jdbcType=VARCHAR}, #{eamId,jdbcType=VARCHAR}, #{e024,jdbcType=DECIMAL}, 
+      #{e082,jdbcType=DECIMAL}, #{e084,jdbcType=DECIMAL}, #{e288,jdbcType=DECIMAL}, #{e083,jdbcType=DECIMAL}, 
+      #{e081,jdbcType=DECIMAL}, #{e068,jdbcType=DECIMAL}, #{e052,jdbcType=VARCHAR}, #{e102,jdbcType=VARCHAR}, 
+      #{e112,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.shineyue.wx.po.auto.GdDkZz" >
+    insert into WASYS350_NEWBPM.GD_DK_ZZ
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="e001 != null" >
+        E001,
+      </if>
+      <if test="g000 != null" >
+        G000,
+      </if>
+      <if test="e021 != null" >
+        E021,
+      </if>
+      <if test="e022 != null" >
+        E022,
+      </if>
+      <if test="e023 != null" >
+        E023,
+      </if>
+      <if test="e025 != null" >
+        E025,
+      </if>
+      <if test="e026 != null" >
+        E026,
+      </if>
+      <if test="e090 != null" >
+        E090,
+      </if>
+      <if test="e027 != null" >
+        E027,
+      </if>
+      <if test="e028 != null" >
+        E028,
+      </if>
+      <if test="e029 != null" >
+        E029,
+      </if>
+      <if test="e030 != null" >
+        E030,
+      </if>
+      <if test="e031 != null" >
+        E031,
+      </if>
+      <if test="e032 != null" >
+        E032,
+      </if>
+      <if test="e033 != null" >
+        E033,
+      </if>
+      <if test="e034 != null" >
+        E034,
+      </if>
+      <if test="e035 != null" >
+        E035,
+      </if>
+      <if test="e036 != null" >
+        E036,
+      </if>
+      <if test="e037 != null" >
+        E037,
+      </if>
+      <if test="e040 != null" >
+        E040,
+      </if>
+      <if test="e041 != null" >
+        E041,
+      </if>
+      <if test="e042 != null" >
+        E042,
+      </if>
+      <if test="e043 != null" >
+        E043,
+      </if>
+      <if test="e044 != null" >
+        E044,
+      </if>
+      <if test="e045 != null" >
+        E045,
+      </if>
+      <if test="e046 != null" >
+        E046,
+      </if>
+      <if test="e047 != null" >
+        E047,
+      </if>
+      <if test="e051 != null" >
+        E051,
+      </if>
+      <if test="e053 != null" >
+        E053,
+      </if>
+      <if test="e039 != null" >
+        E039,
+      </if>
+      <if test="e054 != null" >
+        E054,
+      </if>
+      <if test="e056 != null" >
+        E056,
+      </if>
+      <if test="e057 != null" >
+        E057,
+      </if>
+      <if test="e058 != null" >
+        E058,
+      </if>
+      <if test="e059 != null" >
+        E059,
+      </if>
+      <if test="e060 != null" >
+        E060,
+      </if>
+      <if test="e061 != null" >
+        E061,
+      </if>
+      <if test="e063 != null" >
+        E063,
+      </if>
+      <if test="e065 != null" >
+        E065,
+      </if>
+      <if test="e066 != null" >
+        E066,
+      </if>
+      <if test="e067 != null" >
+        E067,
+      </if>
+      <if test="e070 != null" >
+        E070,
+      </if>
+      <if test="e071 != null" >
+        E071,
+      </if>
+      <if test="e072 != null" >
+        E072,
+      </if>
+      <if test="e073 != null" >
+        E073,
+      </if>
+      <if test="e074 != null" >
+        E074,
+      </if>
+      <if test="e079 != null" >
+        E079,
+      </if>
+      <if test="e080 != null" >
+        E080,
+      </if>
+      <if test="e095 != null" >
+        E095,
+      </if>
+      <if test="e096 != null" >
+        E096,
+      </if>
+      <if test="e097 != null" >
+        E097,
+      </if>
+      <if test="e098 != null" >
+        E098,
+      </if>
+      <if test="e109 != null" >
+        E109,
+      </if>
+      <if test="e093 != null" >
+        E093,
+      </if>
+      <if test="e110 != null" >
+        E110,
+      </if>
+      <if test="e111 != null" >
+        E111,
+      </if>
+      <if test="e184 != null" >
+        E184,
+      </if>
+      <if test="e185 != null" >
+        E185,
+      </if>
+      <if test="e183 != null" >
+        E183,
+      </if>
+      <if test="e541 != null" >
+        E541,
+      </if>
+      <if test="e539 != null" >
+        E539,
+      </if>
+      <if test="e540 != null" >
+        E540,
+      </if>
+      <if test="e284 != null" >
+        E284,
+      </if>
+      <if test="e285 != null" >
+        E285,
+      </if>
+      <if test="e290 != null" >
+        E290,
+      </if>
+      <if test="e283 != null" >
+        E283,
+      </if>
+      <if test="a073 != null" >
+        A073,
+      </if>
+      <if test="a075 != null" >
+        A075,
+      </if>
+      <if test="p015 != null" >
+        P015,
+      </if>
+      <if test="p017 != null" >
+        P017,
+      </if>
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="wfPzid != null" >
+        WF_PZID,
+      </if>
+      <if test="wfProcessunid != null" >
+        WF_PROCESSUNID,
+      </if>
+      <if test="e053Name != null" >
+        E053_NAME,
+      </if>
+      <if test="e073Name != null" >
+        E073_NAME,
+      </if>
+      <if test="e080Name != null" >
+        E080_NAME,
+      </if>
+      <if test="e082Name != null" >
+        E082_NAME,
+      </if>
+      <if test="e084Name != null" >
+        E084_NAME,
+      </if>
+      <if test="e184Name != null" >
+        E184_NAME,
+      </if>
+      <if test="e284Name != null" >
+        E284_NAME,
+      </if>
+      <if test="e288Name != null" >
+        E288_NAME,
+      </if>
+      <if test="eamId != null" >
+        EAM_ID,
+      </if>
+      <if test="e024 != null" >
+        E024,
+      </if>
+      <if test="e082 != null" >
+        E082,
+      </if>
+      <if test="e084 != null" >
+        E084,
+      </if>
+      <if test="e288 != null" >
+        E288,
+      </if>
+      <if test="e083 != null" >
+        E083,
+      </if>
+      <if test="e081 != null" >
+        E081,
+      </if>
+      <if test="e068 != null" >
+        E068,
+      </if>
+      <if test="e052 != null" >
+        E052,
+      </if>
+      <if test="e102 != null" >
+        E102,
+      </if>
+      <if test="e112 != null" >
+        E112,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="e001 != null" >
+        #{e001,jdbcType=VARCHAR},
+      </if>
+      <if test="g000 != null" >
+        #{g000,jdbcType=VARCHAR},
+      </if>
+      <if test="e021 != null" >
+        #{e021,jdbcType=VARCHAR},
+      </if>
+      <if test="e022 != null" >
+        #{e022,jdbcType=VARCHAR},
+      </if>
+      <if test="e023 != null" >
+        #{e023,jdbcType=DECIMAL},
+      </if>
+      <if test="e025 != null" >
+        #{e025,jdbcType=DECIMAL},
+      </if>
+      <if test="e026 != null" >
+        #{e026,jdbcType=DECIMAL},
+      </if>
+      <if test="e090 != null" >
+        #{e090,jdbcType=DECIMAL},
+      </if>
+      <if test="e027 != null" >
+        #{e027,jdbcType=DECIMAL},
+      </if>
+      <if test="e028 != null" >
+        #{e028,jdbcType=VARCHAR},
+      </if>
+      <if test="e029 != null" >
+        #{e029,jdbcType=DATE},
+      </if>
+      <if test="e030 != null" >
+        #{e030,jdbcType=DECIMAL},
+      </if>
+      <if test="e031 != null" >
+        #{e031,jdbcType=DECIMAL},
+      </if>
+      <if test="e032 != null" >
+        #{e032,jdbcType=DECIMAL},
+      </if>
+      <if test="e033 != null" >
+        #{e033,jdbcType=DECIMAL},
+      </if>
+      <if test="e034 != null" >
+        #{e034,jdbcType=DECIMAL},
+      </if>
+      <if test="e035 != null" >
+        #{e035,jdbcType=DECIMAL},
+      </if>
+      <if test="e036 != null" >
+        #{e036,jdbcType=DECIMAL},
+      </if>
+      <if test="e037 != null" >
+        #{e037,jdbcType=DECIMAL},
+      </if>
+      <if test="e040 != null" >
+        #{e040,jdbcType=DECIMAL},
+      </if>
+      <if test="e041 != null" >
+        #{e041,jdbcType=DATE},
+      </if>
+      <if test="e042 != null" >
+        #{e042,jdbcType=DECIMAL},
+      </if>
+      <if test="e043 != null" >
+        #{e043,jdbcType=VARCHAR},
+      </if>
+      <if test="e044 != null" >
+        #{e044,jdbcType=DATE},
+      </if>
+      <if test="e045 != null" >
+        #{e045,jdbcType=DECIMAL},
+      </if>
+      <if test="e046 != null" >
+        #{e046,jdbcType=DECIMAL},
+      </if>
+      <if test="e047 != null" >
+        #{e047,jdbcType=DECIMAL},
+      </if>
+      <if test="e051 != null" >
+        #{e051,jdbcType=DATE},
+      </if>
+      <if test="e053 != null" >
+        #{e053,jdbcType=DECIMAL},
+      </if>
+      <if test="e039 != null" >
+        #{e039,jdbcType=DECIMAL},
+      </if>
+      <if test="e054 != null" >
+        #{e054,jdbcType=VARCHAR},
+      </if>
+      <if test="e056 != null" >
+        #{e056,jdbcType=DECIMAL},
+      </if>
+      <if test="e057 != null" >
+        #{e057,jdbcType=DECIMAL},
+      </if>
+      <if test="e058 != null" >
+        #{e058,jdbcType=DECIMAL},
+      </if>
+      <if test="e059 != null" >
+        #{e059,jdbcType=VARCHAR},
+      </if>
+      <if test="e060 != null" >
+        #{e060,jdbcType=DECIMAL},
+      </if>
+      <if test="e061 != null" >
+        #{e061,jdbcType=DATE},
+      </if>
+      <if test="e063 != null" >
+        #{e063,jdbcType=DATE},
+      </if>
+      <if test="e065 != null" >
+        #{e065,jdbcType=DECIMAL},
+      </if>
+      <if test="e066 != null" >
+        #{e066,jdbcType=DECIMAL},
+      </if>
+      <if test="e067 != null" >
+        #{e067,jdbcType=DECIMAL},
+      </if>
+      <if test="e070 != null" >
+        #{e070,jdbcType=DATE},
+      </if>
+      <if test="e071 != null" >
+        #{e071,jdbcType=DECIMAL},
+      </if>
+      <if test="e072 != null" >
+        #{e072,jdbcType=DECIMAL},
+      </if>
+      <if test="e073 != null" >
+        #{e073,jdbcType=DECIMAL},
+      </if>
+      <if test="e074 != null" >
+        #{e074,jdbcType=DATE},
+      </if>
+      <if test="e079 != null" >
+        #{e079,jdbcType=DECIMAL},
+      </if>
+      <if test="e080 != null" >
+        #{e080,jdbcType=DECIMAL},
+      </if>
+      <if test="e095 != null" >
+        #{e095,jdbcType=DECIMAL},
+      </if>
+      <if test="e096 != null" >
+        #{e096,jdbcType=DECIMAL},
+      </if>
+      <if test="e097 != null" >
+        #{e097,jdbcType=DECIMAL},
+      </if>
+      <if test="e098 != null" >
+        #{e098,jdbcType=DECIMAL},
+      </if>
+      <if test="e109 != null" >
+        #{e109,jdbcType=DATE},
+      </if>
+      <if test="e093 != null" >
+        #{e093,jdbcType=VARCHAR},
+      </if>
+      <if test="e110 != null" >
+        #{e110,jdbcType=DECIMAL},
+      </if>
+      <if test="e111 != null" >
+        #{e111,jdbcType=DECIMAL},
+      </if>
+      <if test="e184 != null" >
+        #{e184,jdbcType=DECIMAL},
+      </if>
+      <if test="e185 != null" >
+        #{e185,jdbcType=DATE},
+      </if>
+      <if test="e183 != null" >
+        #{e183,jdbcType=VARCHAR},
+      </if>
+      <if test="e541 != null" >
+        #{e541,jdbcType=DECIMAL},
+      </if>
+      <if test="e539 != null" >
+        #{e539,jdbcType=DECIMAL},
+      </if>
+      <if test="e540 != null" >
+        #{e540,jdbcType=DECIMAL},
+      </if>
+      <if test="e284 != null" >
+        #{e284,jdbcType=DECIMAL},
+      </if>
+      <if test="e285 != null" >
+        #{e285,jdbcType=DATE},
+      </if>
+      <if test="e290 != null" >
+        #{e290,jdbcType=DATE},
+      </if>
+      <if test="e283 != null" >
+        #{e283,jdbcType=VARCHAR},
+      </if>
+      <if test="a073 != null" >
+        #{a073,jdbcType=VARCHAR},
+      </if>
+      <if test="a075 != null" >
+        #{a075,jdbcType=VARCHAR},
+      </if>
+      <if test="p015 != null" >
+        #{p015,jdbcType=VARCHAR},
+      </if>
+      <if test="p017 != null" >
+        #{p017,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="wfPzid != null" >
+        #{wfPzid,jdbcType=DECIMAL},
+      </if>
+      <if test="wfProcessunid != null" >
+        #{wfProcessunid,jdbcType=CHAR},
+      </if>
+      <if test="e053Name != null" >
+        #{e053Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e073Name != null" >
+        #{e073Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e080Name != null" >
+        #{e080Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e082Name != null" >
+        #{e082Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e084Name != null" >
+        #{e084Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e184Name != null" >
+        #{e184Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e284Name != null" >
+        #{e284Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e288Name != null" >
+        #{e288Name,jdbcType=VARCHAR},
+      </if>
+      <if test="eamId != null" >
+        #{eamId,jdbcType=VARCHAR},
+      </if>
+      <if test="e024 != null" >
+        #{e024,jdbcType=DECIMAL},
+      </if>
+      <if test="e082 != null" >
+        #{e082,jdbcType=DECIMAL},
+      </if>
+      <if test="e084 != null" >
+        #{e084,jdbcType=DECIMAL},
+      </if>
+      <if test="e288 != null" >
+        #{e288,jdbcType=DECIMAL},
+      </if>
+      <if test="e083 != null" >
+        #{e083,jdbcType=DECIMAL},
+      </if>
+      <if test="e081 != null" >
+        #{e081,jdbcType=DECIMAL},
+      </if>
+      <if test="e068 != null" >
+        #{e068,jdbcType=DECIMAL},
+      </if>
+      <if test="e052 != null" >
+        #{e052,jdbcType=VARCHAR},
+      </if>
+      <if test="e102 != null" >
+        #{e102,jdbcType=VARCHAR},
+      </if>
+      <if test="e112 != null" >
+        #{e112,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.shineyue.wx.po.auto.GdDkZzExample" resultType="java.lang.Integer" >
+    select count(*) from WASYS350_NEWBPM.GD_DK_ZZ
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WASYS350_NEWBPM.GD_DK_ZZ
+    <set >
+      <if test="record.e001 != null" >
+        E001 = #{record.e001,jdbcType=VARCHAR},
+      </if>
+      <if test="record.g000 != null" >
+        G000 = #{record.g000,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e021 != null" >
+        E021 = #{record.e021,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e022 != null" >
+        E022 = #{record.e022,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e023 != null" >
+        E023 = #{record.e023,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e025 != null" >
+        E025 = #{record.e025,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e026 != null" >
+        E026 = #{record.e026,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e090 != null" >
+        E090 = #{record.e090,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e027 != null" >
+        E027 = #{record.e027,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e028 != null" >
+        E028 = #{record.e028,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e029 != null" >
+        E029 = #{record.e029,jdbcType=DATE},
+      </if>
+      <if test="record.e030 != null" >
+        E030 = #{record.e030,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e031 != null" >
+        E031 = #{record.e031,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e032 != null" >
+        E032 = #{record.e032,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e033 != null" >
+        E033 = #{record.e033,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e034 != null" >
+        E034 = #{record.e034,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e035 != null" >
+        E035 = #{record.e035,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e036 != null" >
+        E036 = #{record.e036,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e037 != null" >
+        E037 = #{record.e037,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e040 != null" >
+        E040 = #{record.e040,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e041 != null" >
+        E041 = #{record.e041,jdbcType=DATE},
+      </if>
+      <if test="record.e042 != null" >
+        E042 = #{record.e042,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e043 != null" >
+        E043 = #{record.e043,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e044 != null" >
+        E044 = #{record.e044,jdbcType=DATE},
+      </if>
+      <if test="record.e045 != null" >
+        E045 = #{record.e045,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e046 != null" >
+        E046 = #{record.e046,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e047 != null" >
+        E047 = #{record.e047,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e051 != null" >
+        E051 = #{record.e051,jdbcType=DATE},
+      </if>
+      <if test="record.e053 != null" >
+        E053 = #{record.e053,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e039 != null" >
+        E039 = #{record.e039,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e054 != null" >
+        E054 = #{record.e054,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e056 != null" >
+        E056 = #{record.e056,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e057 != null" >
+        E057 = #{record.e057,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e058 != null" >
+        E058 = #{record.e058,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e059 != null" >
+        E059 = #{record.e059,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e060 != null" >
+        E060 = #{record.e060,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e061 != null" >
+        E061 = #{record.e061,jdbcType=DATE},
+      </if>
+      <if test="record.e063 != null" >
+        E063 = #{record.e063,jdbcType=DATE},
+      </if>
+      <if test="record.e065 != null" >
+        E065 = #{record.e065,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e066 != null" >
+        E066 = #{record.e066,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e067 != null" >
+        E067 = #{record.e067,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e070 != null" >
+        E070 = #{record.e070,jdbcType=DATE},
+      </if>
+      <if test="record.e071 != null" >
+        E071 = #{record.e071,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e072 != null" >
+        E072 = #{record.e072,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e073 != null" >
+        E073 = #{record.e073,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e074 != null" >
+        E074 = #{record.e074,jdbcType=DATE},
+      </if>
+      <if test="record.e079 != null" >
+        E079 = #{record.e079,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e080 != null" >
+        E080 = #{record.e080,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e095 != null" >
+        E095 = #{record.e095,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e096 != null" >
+        E096 = #{record.e096,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e097 != null" >
+        E097 = #{record.e097,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e098 != null" >
+        E098 = #{record.e098,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e109 != null" >
+        E109 = #{record.e109,jdbcType=DATE},
+      </if>
+      <if test="record.e093 != null" >
+        E093 = #{record.e093,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e110 != null" >
+        E110 = #{record.e110,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e111 != null" >
+        E111 = #{record.e111,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e184 != null" >
+        E184 = #{record.e184,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e185 != null" >
+        E185 = #{record.e185,jdbcType=DATE},
+      </if>
+      <if test="record.e183 != null" >
+        E183 = #{record.e183,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e541 != null" >
+        E541 = #{record.e541,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e539 != null" >
+        E539 = #{record.e539,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e540 != null" >
+        E540 = #{record.e540,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e284 != null" >
+        E284 = #{record.e284,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e285 != null" >
+        E285 = #{record.e285,jdbcType=DATE},
+      </if>
+      <if test="record.e290 != null" >
+        E290 = #{record.e290,jdbcType=DATE},
+      </if>
+      <if test="record.e283 != null" >
+        E283 = #{record.e283,jdbcType=VARCHAR},
+      </if>
+      <if test="record.a073 != null" >
+        A073 = #{record.a073,jdbcType=VARCHAR},
+      </if>
+      <if test="record.a075 != null" >
+        A075 = #{record.a075,jdbcType=VARCHAR},
+      </if>
+      <if test="record.p015 != null" >
+        P015 = #{record.p015,jdbcType=VARCHAR},
+      </if>
+      <if test="record.p017 != null" >
+        P017 = #{record.p017,jdbcType=VARCHAR},
+      </if>
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wfPzid != null" >
+        WF_PZID = #{record.wfPzid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wfProcessunid != null" >
+        WF_PROCESSUNID = #{record.wfProcessunid,jdbcType=CHAR},
+      </if>
+      <if test="record.e053Name != null" >
+        E053_NAME = #{record.e053Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e073Name != null" >
+        E073_NAME = #{record.e073Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e080Name != null" >
+        E080_NAME = #{record.e080Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e082Name != null" >
+        E082_NAME = #{record.e082Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e084Name != null" >
+        E084_NAME = #{record.e084Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e184Name != null" >
+        E184_NAME = #{record.e184Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e284Name != null" >
+        E284_NAME = #{record.e284Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e288Name != null" >
+        E288_NAME = #{record.e288Name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eamId != null" >
+        EAM_ID = #{record.eamId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e024 != null" >
+        E024 = #{record.e024,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e082 != null" >
+        E082 = #{record.e082,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e084 != null" >
+        E084 = #{record.e084,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e288 != null" >
+        E288 = #{record.e288,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e083 != null" >
+        E083 = #{record.e083,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e081 != null" >
+        E081 = #{record.e081,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e068 != null" >
+        E068 = #{record.e068,jdbcType=DECIMAL},
+      </if>
+      <if test="record.e052 != null" >
+        E052 = #{record.e052,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e102 != null" >
+        E102 = #{record.e102,jdbcType=VARCHAR},
+      </if>
+      <if test="record.e112 != null" >
+        E112 = #{record.e112,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WASYS350_NEWBPM.GD_DK_ZZ
+    set E001 = #{record.e001,jdbcType=VARCHAR},
+      G000 = #{record.g000,jdbcType=VARCHAR},
+      E021 = #{record.e021,jdbcType=VARCHAR},
+      E022 = #{record.e022,jdbcType=VARCHAR},
+      E023 = #{record.e023,jdbcType=DECIMAL},
+      E025 = #{record.e025,jdbcType=DECIMAL},
+      E026 = #{record.e026,jdbcType=DECIMAL},
+      E090 = #{record.e090,jdbcType=DECIMAL},
+      E027 = #{record.e027,jdbcType=DECIMAL},
+      E028 = #{record.e028,jdbcType=VARCHAR},
+      E029 = #{record.e029,jdbcType=DATE},
+      E030 = #{record.e030,jdbcType=DECIMAL},
+      E031 = #{record.e031,jdbcType=DECIMAL},
+      E032 = #{record.e032,jdbcType=DECIMAL},
+      E033 = #{record.e033,jdbcType=DECIMAL},
+      E034 = #{record.e034,jdbcType=DECIMAL},
+      E035 = #{record.e035,jdbcType=DECIMAL},
+      E036 = #{record.e036,jdbcType=DECIMAL},
+      E037 = #{record.e037,jdbcType=DECIMAL},
+      E040 = #{record.e040,jdbcType=DECIMAL},
+      E041 = #{record.e041,jdbcType=DATE},
+      E042 = #{record.e042,jdbcType=DECIMAL},
+      E043 = #{record.e043,jdbcType=VARCHAR},
+      E044 = #{record.e044,jdbcType=DATE},
+      E045 = #{record.e045,jdbcType=DECIMAL},
+      E046 = #{record.e046,jdbcType=DECIMAL},
+      E047 = #{record.e047,jdbcType=DECIMAL},
+      E051 = #{record.e051,jdbcType=DATE},
+      E053 = #{record.e053,jdbcType=DECIMAL},
+      E039 = #{record.e039,jdbcType=DECIMAL},
+      E054 = #{record.e054,jdbcType=VARCHAR},
+      E056 = #{record.e056,jdbcType=DECIMAL},
+      E057 = #{record.e057,jdbcType=DECIMAL},
+      E058 = #{record.e058,jdbcType=DECIMAL},
+      E059 = #{record.e059,jdbcType=VARCHAR},
+      E060 = #{record.e060,jdbcType=DECIMAL},
+      E061 = #{record.e061,jdbcType=DATE},
+      E063 = #{record.e063,jdbcType=DATE},
+      E065 = #{record.e065,jdbcType=DECIMAL},
+      E066 = #{record.e066,jdbcType=DECIMAL},
+      E067 = #{record.e067,jdbcType=DECIMAL},
+      E070 = #{record.e070,jdbcType=DATE},
+      E071 = #{record.e071,jdbcType=DECIMAL},
+      E072 = #{record.e072,jdbcType=DECIMAL},
+      E073 = #{record.e073,jdbcType=DECIMAL},
+      E074 = #{record.e074,jdbcType=DATE},
+      E079 = #{record.e079,jdbcType=DECIMAL},
+      E080 = #{record.e080,jdbcType=DECIMAL},
+      E095 = #{record.e095,jdbcType=DECIMAL},
+      E096 = #{record.e096,jdbcType=DECIMAL},
+      E097 = #{record.e097,jdbcType=DECIMAL},
+      E098 = #{record.e098,jdbcType=DECIMAL},
+      E109 = #{record.e109,jdbcType=DATE},
+      E093 = #{record.e093,jdbcType=VARCHAR},
+      E110 = #{record.e110,jdbcType=DECIMAL},
+      E111 = #{record.e111,jdbcType=DECIMAL},
+      E184 = #{record.e184,jdbcType=DECIMAL},
+      E185 = #{record.e185,jdbcType=DATE},
+      E183 = #{record.e183,jdbcType=VARCHAR},
+      E541 = #{record.e541,jdbcType=DECIMAL},
+      E539 = #{record.e539,jdbcType=DECIMAL},
+      E540 = #{record.e540,jdbcType=DECIMAL},
+      E284 = #{record.e284,jdbcType=DECIMAL},
+      E285 = #{record.e285,jdbcType=DATE},
+      E290 = #{record.e290,jdbcType=DATE},
+      E283 = #{record.e283,jdbcType=VARCHAR},
+      A073 = #{record.a073,jdbcType=VARCHAR},
+      A075 = #{record.a075,jdbcType=VARCHAR},
+      P015 = #{record.p015,jdbcType=VARCHAR},
+      P017 = #{record.p017,jdbcType=VARCHAR},
+      ID = #{record.id,jdbcType=DECIMAL},
+      WF_PZID = #{record.wfPzid,jdbcType=DECIMAL},
+      WF_PROCESSUNID = #{record.wfProcessunid,jdbcType=CHAR},
+      E053_NAME = #{record.e053Name,jdbcType=VARCHAR},
+      E073_NAME = #{record.e073Name,jdbcType=VARCHAR},
+      E080_NAME = #{record.e080Name,jdbcType=VARCHAR},
+      E082_NAME = #{record.e082Name,jdbcType=VARCHAR},
+      E084_NAME = #{record.e084Name,jdbcType=VARCHAR},
+      E184_NAME = #{record.e184Name,jdbcType=VARCHAR},
+      E284_NAME = #{record.e284Name,jdbcType=VARCHAR},
+      E288_NAME = #{record.e288Name,jdbcType=VARCHAR},
+      EAM_ID = #{record.eamId,jdbcType=VARCHAR},
+      E024 = #{record.e024,jdbcType=DECIMAL},
+      E082 = #{record.e082,jdbcType=DECIMAL},
+      E084 = #{record.e084,jdbcType=DECIMAL},
+      E288 = #{record.e288,jdbcType=DECIMAL},
+      E083 = #{record.e083,jdbcType=DECIMAL},
+      E081 = #{record.e081,jdbcType=DECIMAL},
+      E068 = #{record.e068,jdbcType=DECIMAL},
+      E052 = #{record.e052,jdbcType=VARCHAR},
+      E102 = #{record.e102,jdbcType=VARCHAR},
+      E112 = #{record.e112,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.shineyue.wx.po.auto.GdDkZz" >
+    update WASYS350_NEWBPM.GD_DK_ZZ
+    <set >
+      <if test="g000 != null" >
+        G000 = #{g000,jdbcType=VARCHAR},
+      </if>
+      <if test="e021 != null" >
+        E021 = #{e021,jdbcType=VARCHAR},
+      </if>
+      <if test="e022 != null" >
+        E022 = #{e022,jdbcType=VARCHAR},
+      </if>
+      <if test="e023 != null" >
+        E023 = #{e023,jdbcType=DECIMAL},
+      </if>
+      <if test="e025 != null" >
+        E025 = #{e025,jdbcType=DECIMAL},
+      </if>
+      <if test="e026 != null" >
+        E026 = #{e026,jdbcType=DECIMAL},
+      </if>
+      <if test="e090 != null" >
+        E090 = #{e090,jdbcType=DECIMAL},
+      </if>
+      <if test="e027 != null" >
+        E027 = #{e027,jdbcType=DECIMAL},
+      </if>
+      <if test="e028 != null" >
+        E028 = #{e028,jdbcType=VARCHAR},
+      </if>
+      <if test="e029 != null" >
+        E029 = #{e029,jdbcType=DATE},
+      </if>
+      <if test="e030 != null" >
+        E030 = #{e030,jdbcType=DECIMAL},
+      </if>
+      <if test="e031 != null" >
+        E031 = #{e031,jdbcType=DECIMAL},
+      </if>
+      <if test="e032 != null" >
+        E032 = #{e032,jdbcType=DECIMAL},
+      </if>
+      <if test="e033 != null" >
+        E033 = #{e033,jdbcType=DECIMAL},
+      </if>
+      <if test="e034 != null" >
+        E034 = #{e034,jdbcType=DECIMAL},
+      </if>
+      <if test="e035 != null" >
+        E035 = #{e035,jdbcType=DECIMAL},
+      </if>
+      <if test="e036 != null" >
+        E036 = #{e036,jdbcType=DECIMAL},
+      </if>
+      <if test="e037 != null" >
+        E037 = #{e037,jdbcType=DECIMAL},
+      </if>
+      <if test="e040 != null" >
+        E040 = #{e040,jdbcType=DECIMAL},
+      </if>
+      <if test="e041 != null" >
+        E041 = #{e041,jdbcType=DATE},
+      </if>
+      <if test="e042 != null" >
+        E042 = #{e042,jdbcType=DECIMAL},
+      </if>
+      <if test="e043 != null" >
+        E043 = #{e043,jdbcType=VARCHAR},
+      </if>
+      <if test="e044 != null" >
+        E044 = #{e044,jdbcType=DATE},
+      </if>
+      <if test="e045 != null" >
+        E045 = #{e045,jdbcType=DECIMAL},
+      </if>
+      <if test="e046 != null" >
+        E046 = #{e046,jdbcType=DECIMAL},
+      </if>
+      <if test="e047 != null" >
+        E047 = #{e047,jdbcType=DECIMAL},
+      </if>
+      <if test="e051 != null" >
+        E051 = #{e051,jdbcType=DATE},
+      </if>
+      <if test="e053 != null" >
+        E053 = #{e053,jdbcType=DECIMAL},
+      </if>
+      <if test="e039 != null" >
+        E039 = #{e039,jdbcType=DECIMAL},
+      </if>
+      <if test="e054 != null" >
+        E054 = #{e054,jdbcType=VARCHAR},
+      </if>
+      <if test="e056 != null" >
+        E056 = #{e056,jdbcType=DECIMAL},
+      </if>
+      <if test="e057 != null" >
+        E057 = #{e057,jdbcType=DECIMAL},
+      </if>
+      <if test="e058 != null" >
+        E058 = #{e058,jdbcType=DECIMAL},
+      </if>
+      <if test="e059 != null" >
+        E059 = #{e059,jdbcType=VARCHAR},
+      </if>
+      <if test="e060 != null" >
+        E060 = #{e060,jdbcType=DECIMAL},
+      </if>
+      <if test="e061 != null" >
+        E061 = #{e061,jdbcType=DATE},
+      </if>
+      <if test="e063 != null" >
+        E063 = #{e063,jdbcType=DATE},
+      </if>
+      <if test="e065 != null" >
+        E065 = #{e065,jdbcType=DECIMAL},
+      </if>
+      <if test="e066 != null" >
+        E066 = #{e066,jdbcType=DECIMAL},
+      </if>
+      <if test="e067 != null" >
+        E067 = #{e067,jdbcType=DECIMAL},
+      </if>
+      <if test="e070 != null" >
+        E070 = #{e070,jdbcType=DATE},
+      </if>
+      <if test="e071 != null" >
+        E071 = #{e071,jdbcType=DECIMAL},
+      </if>
+      <if test="e072 != null" >
+        E072 = #{e072,jdbcType=DECIMAL},
+      </if>
+      <if test="e073 != null" >
+        E073 = #{e073,jdbcType=DECIMAL},
+      </if>
+      <if test="e074 != null" >
+        E074 = #{e074,jdbcType=DATE},
+      </if>
+      <if test="e079 != null" >
+        E079 = #{e079,jdbcType=DECIMAL},
+      </if>
+      <if test="e080 != null" >
+        E080 = #{e080,jdbcType=DECIMAL},
+      </if>
+      <if test="e095 != null" >
+        E095 = #{e095,jdbcType=DECIMAL},
+      </if>
+      <if test="e096 != null" >
+        E096 = #{e096,jdbcType=DECIMAL},
+      </if>
+      <if test="e097 != null" >
+        E097 = #{e097,jdbcType=DECIMAL},
+      </if>
+      <if test="e098 != null" >
+        E098 = #{e098,jdbcType=DECIMAL},
+      </if>
+      <if test="e109 != null" >
+        E109 = #{e109,jdbcType=DATE},
+      </if>
+      <if test="e093 != null" >
+        E093 = #{e093,jdbcType=VARCHAR},
+      </if>
+      <if test="e110 != null" >
+        E110 = #{e110,jdbcType=DECIMAL},
+      </if>
+      <if test="e111 != null" >
+        E111 = #{e111,jdbcType=DECIMAL},
+      </if>
+      <if test="e184 != null" >
+        E184 = #{e184,jdbcType=DECIMAL},
+      </if>
+      <if test="e185 != null" >
+        E185 = #{e185,jdbcType=DATE},
+      </if>
+      <if test="e183 != null" >
+        E183 = #{e183,jdbcType=VARCHAR},
+      </if>
+      <if test="e541 != null" >
+        E541 = #{e541,jdbcType=DECIMAL},
+      </if>
+      <if test="e539 != null" >
+        E539 = #{e539,jdbcType=DECIMAL},
+      </if>
+      <if test="e540 != null" >
+        E540 = #{e540,jdbcType=DECIMAL},
+      </if>
+      <if test="e284 != null" >
+        E284 = #{e284,jdbcType=DECIMAL},
+      </if>
+      <if test="e285 != null" >
+        E285 = #{e285,jdbcType=DATE},
+      </if>
+      <if test="e290 != null" >
+        E290 = #{e290,jdbcType=DATE},
+      </if>
+      <if test="e283 != null" >
+        E283 = #{e283,jdbcType=VARCHAR},
+      </if>
+      <if test="a073 != null" >
+        A073 = #{a073,jdbcType=VARCHAR},
+      </if>
+      <if test="a075 != null" >
+        A075 = #{a075,jdbcType=VARCHAR},
+      </if>
+      <if test="p015 != null" >
+        P015 = #{p015,jdbcType=VARCHAR},
+      </if>
+      <if test="p017 != null" >
+        P017 = #{p017,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        ID = #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="wfPzid != null" >
+        WF_PZID = #{wfPzid,jdbcType=DECIMAL},
+      </if>
+      <if test="wfProcessunid != null" >
+        WF_PROCESSUNID = #{wfProcessunid,jdbcType=CHAR},
+      </if>
+      <if test="e053Name != null" >
+        E053_NAME = #{e053Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e073Name != null" >
+        E073_NAME = #{e073Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e080Name != null" >
+        E080_NAME = #{e080Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e082Name != null" >
+        E082_NAME = #{e082Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e084Name != null" >
+        E084_NAME = #{e084Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e184Name != null" >
+        E184_NAME = #{e184Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e284Name != null" >
+        E284_NAME = #{e284Name,jdbcType=VARCHAR},
+      </if>
+      <if test="e288Name != null" >
+        E288_NAME = #{e288Name,jdbcType=VARCHAR},
+      </if>
+      <if test="eamId != null" >
+        EAM_ID = #{eamId,jdbcType=VARCHAR},
+      </if>
+      <if test="e024 != null" >
+        E024 = #{e024,jdbcType=DECIMAL},
+      </if>
+      <if test="e082 != null" >
+        E082 = #{e082,jdbcType=DECIMAL},
+      </if>
+      <if test="e084 != null" >
+        E084 = #{e084,jdbcType=DECIMAL},
+      </if>
+      <if test="e288 != null" >
+        E288 = #{e288,jdbcType=DECIMAL},
+      </if>
+      <if test="e083 != null" >
+        E083 = #{e083,jdbcType=DECIMAL},
+      </if>
+      <if test="e081 != null" >
+        E081 = #{e081,jdbcType=DECIMAL},
+      </if>
+      <if test="e068 != null" >
+        E068 = #{e068,jdbcType=DECIMAL},
+      </if>
+      <if test="e052 != null" >
+        E052 = #{e052,jdbcType=VARCHAR},
+      </if>
+      <if test="e102 != null" >
+        E102 = #{e102,jdbcType=VARCHAR},
+      </if>
+      <if test="e112 != null" >
+        E112 = #{e112,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where E001 = #{e001,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.shineyue.wx.po.auto.GdDkZz" >
+    update WASYS350_NEWBPM.GD_DK_ZZ
+    set G000 = #{g000,jdbcType=VARCHAR},
+      E021 = #{e021,jdbcType=VARCHAR},
+      E022 = #{e022,jdbcType=VARCHAR},
+      E023 = #{e023,jdbcType=DECIMAL},
+      E025 = #{e025,jdbcType=DECIMAL},
+      E026 = #{e026,jdbcType=DECIMAL},
+      E090 = #{e090,jdbcType=DECIMAL},
+      E027 = #{e027,jdbcType=DECIMAL},
+      E028 = #{e028,jdbcType=VARCHAR},
+      E029 = #{e029,jdbcType=DATE},
+      E030 = #{e030,jdbcType=DECIMAL},
+      E031 = #{e031,jdbcType=DECIMAL},
+      E032 = #{e032,jdbcType=DECIMAL},
+      E033 = #{e033,jdbcType=DECIMAL},
+      E034 = #{e034,jdbcType=DECIMAL},
+      E035 = #{e035,jdbcType=DECIMAL},
+      E036 = #{e036,jdbcType=DECIMAL},
+      E037 = #{e037,jdbcType=DECIMAL},
+      E040 = #{e040,jdbcType=DECIMAL},
+      E041 = #{e041,jdbcType=DATE},
+      E042 = #{e042,jdbcType=DECIMAL},
+      E043 = #{e043,jdbcType=VARCHAR},
+      E044 = #{e044,jdbcType=DATE},
+      E045 = #{e045,jdbcType=DECIMAL},
+      E046 = #{e046,jdbcType=DECIMAL},
+      E047 = #{e047,jdbcType=DECIMAL},
+      E051 = #{e051,jdbcType=DATE},
+      E053 = #{e053,jdbcType=DECIMAL},
+      E039 = #{e039,jdbcType=DECIMAL},
+      E054 = #{e054,jdbcType=VARCHAR},
+      E056 = #{e056,jdbcType=DECIMAL},
+      E057 = #{e057,jdbcType=DECIMAL},
+      E058 = #{e058,jdbcType=DECIMAL},
+      E059 = #{e059,jdbcType=VARCHAR},
+      E060 = #{e060,jdbcType=DECIMAL},
+      E061 = #{e061,jdbcType=DATE},
+      E063 = #{e063,jdbcType=DATE},
+      E065 = #{e065,jdbcType=DECIMAL},
+      E066 = #{e066,jdbcType=DECIMAL},
+      E067 = #{e067,jdbcType=DECIMAL},
+      E070 = #{e070,jdbcType=DATE},
+      E071 = #{e071,jdbcType=DECIMAL},
+      E072 = #{e072,jdbcType=DECIMAL},
+      E073 = #{e073,jdbcType=DECIMAL},
+      E074 = #{e074,jdbcType=DATE},
+      E079 = #{e079,jdbcType=DECIMAL},
+      E080 = #{e080,jdbcType=DECIMAL},
+      E095 = #{e095,jdbcType=DECIMAL},
+      E096 = #{e096,jdbcType=DECIMAL},
+      E097 = #{e097,jdbcType=DECIMAL},
+      E098 = #{e098,jdbcType=DECIMAL},
+      E109 = #{e109,jdbcType=DATE},
+      E093 = #{e093,jdbcType=VARCHAR},
+      E110 = #{e110,jdbcType=DECIMAL},
+      E111 = #{e111,jdbcType=DECIMAL},
+      E184 = #{e184,jdbcType=DECIMAL},
+      E185 = #{e185,jdbcType=DATE},
+      E183 = #{e183,jdbcType=VARCHAR},
+      E541 = #{e541,jdbcType=DECIMAL},
+      E539 = #{e539,jdbcType=DECIMAL},
+      E540 = #{e540,jdbcType=DECIMAL},
+      E284 = #{e284,jdbcType=DECIMAL},
+      E285 = #{e285,jdbcType=DATE},
+      E290 = #{e290,jdbcType=DATE},
+      E283 = #{e283,jdbcType=VARCHAR},
+      A073 = #{a073,jdbcType=VARCHAR},
+      A075 = #{a075,jdbcType=VARCHAR},
+      P015 = #{p015,jdbcType=VARCHAR},
+      P017 = #{p017,jdbcType=VARCHAR},
+      ID = #{id,jdbcType=DECIMAL},
+      WF_PZID = #{wfPzid,jdbcType=DECIMAL},
+      WF_PROCESSUNID = #{wfProcessunid,jdbcType=CHAR},
+      E053_NAME = #{e053Name,jdbcType=VARCHAR},
+      E073_NAME = #{e073Name,jdbcType=VARCHAR},
+      E080_NAME = #{e080Name,jdbcType=VARCHAR},
+      E082_NAME = #{e082Name,jdbcType=VARCHAR},
+      E084_NAME = #{e084Name,jdbcType=VARCHAR},
+      E184_NAME = #{e184Name,jdbcType=VARCHAR},
+      E284_NAME = #{e284Name,jdbcType=VARCHAR},
+      E288_NAME = #{e288Name,jdbcType=VARCHAR},
+      EAM_ID = #{eamId,jdbcType=VARCHAR},
+      E024 = #{e024,jdbcType=DECIMAL},
+      E082 = #{e082,jdbcType=DECIMAL},
+      E084 = #{e084,jdbcType=DECIMAL},
+      E288 = #{e288,jdbcType=DECIMAL},
+      E083 = #{e083,jdbcType=DECIMAL},
+      E081 = #{e081,jdbcType=DECIMAL},
+      E068 = #{e068,jdbcType=DECIMAL},
+      E052 = #{e052,jdbcType=VARCHAR},
+      E102 = #{e102,jdbcType=VARCHAR},
+      E112 = #{e112,jdbcType=VARCHAR}
+    where E001 = #{e001,jdbcType=VARCHAR}
+  </update>
+</mapper>

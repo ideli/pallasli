@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8">
+	<title>伟奥公积金移动平台</title> 
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.4.min.css" />
+	<link rel="stylesheet" href="../css/buttons.css" />
+	<script src="../jquery/jquery-1.11.1.min.js"></script>
+	<script src="../js/jquery.noty.packaged.min.js"></script>
+	<script src="../js/atwaMobileUtil.js"></script>
+	<script src="../js/calcDkjs.js"></script>
+	<script src="../jquery/jquery.mobile-1.4.4.min.js"></script> 
+	</head> 
+<body> 
+
+<div data-role="page" id="calcDkjsPage" data-theme="a">
+            <div data-role="header">
+                <h1>贷款额度计算器</h1>
+            </div>
+            <div data-role="content">
+                <form name="calcDkjs" id="calcDkjs" method="get">
+                <div data-role="fieldcontain">
+                    
+						<label for="grxb" class="select">
+							借款人性别:
+						</label>
+						<select name="grxb" id="grxb">
+							<option value="0">男
+							</option>
+							<option value="1">女
+							</option>
+						</select>
+					
+                    
+                        <label for="age">借款人年龄:</label>
+                        <input type="number" name="age" id="age" value="" placeholder="年龄18-60岁" data-theme="d"/>
+                    
+                    
+                        <label for="gzye">借款人公积金余额:</label>
+                        <input type="number" name="gzye" id="gzye" value="" placeholder="单位(元)" data-theme="d"/>
+                    
+                    
+                        <label for="hage">配偶年龄:</label>
+                        <input type="number" name="hage" id="hage" value="" placeholder="18-55(可选)" data-theme="d"/>
+                    
+                    
+                        <label for="hgzye">配偶公积金余额:</label>
+                        <input type="number" name="hgzye" id="hgzye" value="" placeholder="单位(元),可选" data-theme="d"/>
+                    
+					
+						<label for="zfqk" class="select">
+							现有住房情况:
+						</label>
+						<select name="zfqk" id="zfqk">
+							<option value="0">
+								首套房
+							</option>
+							<option value="1">
+								二套房
+							</option>
+						</select>
+					
+					
+						<label for="dkcs" class="select">
+							贷款次数:
+						</label>
+						<select name="dkcs" id="dkcs">
+							<option value="0">
+								首次贷款
+							</option>
+							<option value="1">
+								二次贷款
+							</option>
+						</select>
+					
+					
+						<label for="fwlx" class="select">
+							房屋类型:
+						</label>
+						<select name="fwlx" id="fwlx">
+							<option value="0">
+								商品房
+							</option>
+							<option value="1">
+								二手房
+							</option>
+						</select>
+					
+					
+                        <label for="fwzjk">房屋总价款:</label>
+                        <input type="number" name="fwzjk" id="fwzjk" value="" placeholder="单位(元)" data-theme="d"/>
+                    
+                    
+                    </div>
+                        <button type="submit" data-theme="b" name="submit">计算</button>
+                    
+                </form>
+            </div>
+        </div>
+
+<!-- Second Page/Dialog -->
+<div data-role="dialog" id="alert">
+	<div data-role="header">
+		<h1>提示</h1>
+	</div>
+	
+	<div data-role="content" data-theme="b">	
+		功能建设中,敬请期待!
+		<br><br>
+
+		<a href="#home" data-role="button" data-theme="c" data-rel="back">确定</a>
+	</div>
+</div>
+
+</body>
+</html>
+

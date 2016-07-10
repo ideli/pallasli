@@ -1,0 +1,9 @@
+<xml>
+<!-- 由于使用了spring注入，见applicationContext.xml的weixinConfig。该文件暂时不用了 -->
+    <appId>wx2c85eb05b183a2a8</appId>
+    <secret>5a27b8746063c06a0cc634629d6bdc53</secret>
+    <token>wasoft02</token>
+    <aesKey>公众号EncodingAESKey</aesKey>
+    <openId>某个加你公众号的用户的openId</openId>
+    <oauth2redirectUri>网页授权获取用户信息回调地址</oauth2redirectUri>
+</xml>

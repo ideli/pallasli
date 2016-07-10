@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.shineyue.wx.mapper.auto.TWaWxUserBlacklistMapper" >
+  <resultMap id="BaseResultMap" type="cn.shineyue.wx.po.auto.TWaWxUserBlacklist" >
+    <id column="WX_ERR_OPENID" property="wxErrOpenid" jdbcType="OTHER" />
+    <result column="BLACK_DATE" property="blackDate" jdbcType="TIMESTAMP" />
+    <result column="TO_WHITE" property="toWhite" jdbcType="DECIMAL" />
+    <result column="WHITE_DATE" property="whiteDate" jdbcType="TIMESTAMP" />
+    <result column="WHITE_COMMENT" property="whiteComment" jdbcType="OTHER" />
+    <result column="WHITE_USERID" property="whiteUserid" jdbcType="OTHER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    WX_ERR_OPENID, BLACK_DATE, TO_WHITE, WHITE_DATE, WHITE_COMMENT, WHITE_USERID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklistExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    where WX_ERR_OPENID = #{wxErrOpenid,jdbcType=OTHER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    where WX_ERR_OPENID = #{wxErrOpenid,jdbcType=OTHER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklistExample" >
+    delete from WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklist" >
+    insert into WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST (WX_ERR_OPENID, BLACK_DATE, TO_WHITE, 
+      WHITE_DATE, WHITE_COMMENT, WHITE_USERID
+      )
+    values (#{wxErrOpenid,jdbcType=OTHER}, #{blackDate,jdbcType=TIMESTAMP}, #{toWhite,jdbcType=DECIMAL}, 
+      #{whiteDate,jdbcType=TIMESTAMP}, #{whiteComment,jdbcType=OTHER}, #{whiteUserid,jdbcType=OTHER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklist" >
+    insert into WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wxErrOpenid != null" >
+        WX_ERR_OPENID,
+      </if>
+      <if test="blackDate != null" >
+        BLACK_DATE,
+      </if>
+      <if test="toWhite != null" >
+        TO_WHITE,
+      </if>
+      <if test="whiteDate != null" >
+        WHITE_DATE,
+      </if>
+      <if test="whiteComment != null" >
+        WHITE_COMMENT,
+      </if>
+      <if test="whiteUserid != null" >
+        WHITE_USERID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wxErrOpenid != null" >
+        #{wxErrOpenid,jdbcType=OTHER},
+      </if>
+      <if test="blackDate != null" >
+        #{blackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toWhite != null" >
+        #{toWhite,jdbcType=DECIMAL},
+      </if>
+      <if test="whiteDate != null" >
+        #{whiteDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="whiteComment != null" >
+        #{whiteComment,jdbcType=OTHER},
+      </if>
+      <if test="whiteUserid != null" >
+        #{whiteUserid,jdbcType=OTHER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklistExample" resultType="java.lang.Integer" >
+    select count(*) from WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <set >
+      <if test="record.wxErrOpenid != null" >
+        WX_ERR_OPENID = #{record.wxErrOpenid,jdbcType=OTHER},
+      </if>
+      <if test="record.blackDate != null" >
+        BLACK_DATE = #{record.blackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.toWhite != null" >
+        TO_WHITE = #{record.toWhite,jdbcType=DECIMAL},
+      </if>
+      <if test="record.whiteDate != null" >
+        WHITE_DATE = #{record.whiteDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.whiteComment != null" >
+        WHITE_COMMENT = #{record.whiteComment,jdbcType=OTHER},
+      </if>
+      <if test="record.whiteUserid != null" >
+        WHITE_USERID = #{record.whiteUserid,jdbcType=OTHER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    set WX_ERR_OPENID = #{record.wxErrOpenid,jdbcType=OTHER},
+      BLACK_DATE = #{record.blackDate,jdbcType=TIMESTAMP},
+      TO_WHITE = #{record.toWhite,jdbcType=DECIMAL},
+      WHITE_DATE = #{record.whiteDate,jdbcType=TIMESTAMP},
+      WHITE_COMMENT = #{record.whiteComment,jdbcType=OTHER},
+      WHITE_USERID = #{record.whiteUserid,jdbcType=OTHER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklist" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    <set >
+      <if test="blackDate != null" >
+        BLACK_DATE = #{blackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toWhite != null" >
+        TO_WHITE = #{toWhite,jdbcType=DECIMAL},
+      </if>
+      <if test="whiteDate != null" >
+        WHITE_DATE = #{whiteDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="whiteComment != null" >
+        WHITE_COMMENT = #{whiteComment,jdbcType=OTHER},
+      </if>
+      <if test="whiteUserid != null" >
+        WHITE_USERID = #{whiteUserid,jdbcType=OTHER},
+      </if>
+    </set>
+    where WX_ERR_OPENID = #{wxErrOpenid,jdbcType=OTHER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.shineyue.wx.po.auto.TWaWxUserBlacklist" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_BLACKLIST
+    set BLACK_DATE = #{blackDate,jdbcType=TIMESTAMP},
+      TO_WHITE = #{toWhite,jdbcType=DECIMAL},
+      WHITE_DATE = #{whiteDate,jdbcType=TIMESTAMP},
+      WHITE_COMMENT = #{whiteComment,jdbcType=OTHER},
+      WHITE_USERID = #{whiteUserid,jdbcType=OTHER}
+    where WX_ERR_OPENID = #{wxErrOpenid,jdbcType=OTHER}
+  </update>
+</mapper>

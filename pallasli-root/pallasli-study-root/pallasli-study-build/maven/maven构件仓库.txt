@@ -133,3 +133,23 @@ POM.XML 配置：
 MavenTest-0.0.1-release.jar           --.class文件
 MavenTest-0.0.1-release-sources.jar    --.Java 文件
 MavenTest-0.0.1-release-javadoc.jar   --doc 文件
+
+
+
+
+
+
+
+js测试jasmine测试报告
+<plugin>
+    <groupId>com.github.searls</groupId>
+    <artifactId>jasmine-maven-plugin</artifactId>
+    <version>2.1</version>
+    <executions>
+      <execution>
+        <goals>
+          <goal>test</goal>
+        </goals>
+      </execution>
+    </executions>
+  </plugin>

@@ -1,0 +1,49 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	<bean id="springUtils" class="cn.shineyue.wx.context.SpringContextUtils"/>
+	
+	<bean id="applicationParameters" class="cn.shineyue.wx.ApplicationParameters">
+		<property name="deployedUrl" value="http://atwasoft.wicp.net/wx" />
+		<property name="customerName" value="customerName" />
+		<property name="customerAddress" value="customerAddress" />
+		<property name="customerTel" value="customerTel" />
+		<property name="customerEmail" value="customerEmail" />
+		<property name="customerProfile" value="customerProfile" />
+		<property name="wxTips" >
+			<list>
+				<value>wxTips1</value>
+				<value>wxTips2</value>
+				<value>wxTips3</value>
+			</list>
+		</property>	
+	</bean>
+	
+	<!-- 微信公众账号信息配置注入，这些数据根据 微信公众平台登陆进入后的 开发中心里的值设置 -->
+	<bean id="wxConfig" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
+		<property name="appId" value="wx2c85eb05b183a2a8" />
+		<property name="secret" value="5a27b8746063c06a0cc634629d6bdc53"/>
+		<property name="token" value="wasoft02"/>
+	</bean>
+	
+	<!-- 核心服务注入 -->
+	<bean id="wxService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">
+		<property name="wxMpConfigStorage" ref="wxConfig" />
+	</bean>
+
+	
+
+
+</beans>

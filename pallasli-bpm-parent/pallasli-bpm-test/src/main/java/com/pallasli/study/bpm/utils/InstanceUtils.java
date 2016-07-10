@@ -4,6 +4,11 @@ import org.activiti.engine.runtime.ProcessInstance;
 
 import com.pallasli.study.bpm.model.Instance;
 
+/**
+ * 
+ * @author lyt1987
+ *
+ */
 public class InstanceUtils {
 	public static Instance convertActInstToMyInst(ProcessInstance proInstance) {
 		if (proInstance == null) {

@@ -1,0 +1,882 @@
+集合：
+
+FluentIterable类：
+
+使用FluentIterable.filter过滤, 即利用Predicate实现：
+Iterable<Person> adults = FluentIterable.from(ps).filter(
+	new Predicate<Person>() {
+		@Override
+		public boolean apply(Person p) {
+			return p.getAge() >= 18; // 年龄>18
+		}
+	});
+使用FluentIterable.transform()转换，即利用Function实现：
+FluentIterable.from(ps).transform(new Function<Person, String>() {
+	@Override
+	public String apply(Person p) {
+	     return Joiner.on('#').join(p.getName(), p.getAge());
+	}
+});
+Lists类：
+
+使用Lists.newArrayList创建列表：
+ps = Lists.newArrayList(
+	new Person("person1", 22),
+	new Person("person2", 23),
+	new Person("person3", 17)
+);
+使用Lists.partition()方法分割列表：
+//[a, b, c, d, e] --> [[a, b], [c, d, e]] -
+List<List<Person>> subList = Lists.partition(ps, 2);
+Sets类：
+
+Sets.difference()求S1-S2
+Set<String> s1 = Sets.newHashSet("1", "2", "3");
+Set<String> s2 = Sets.newHashSet("2", "3", "4");
+Sets.difference(s1, s2); //[1]
+Sets.intersection()求S1,S2交集
+Set<String> s1 = Sets.newHashSet("1", "2", "3");
+Set<String> s2 = Sets.newHashSet("3", "2", "4");
+Sets.SetView<String> sv = Sets.intersection(s1, s2); // [2, 3]
+Sets.union()求合集
+ Set<String> s1 = Sets.newHashSet("1", "2", "3");
+Set<String> s2 = Sets.newHashSet("3", "2", "4");
+Sets.SetView<String> sv = Sets.union(s1, s2); // [3, 2, 1 ,4]
+Maps类：
+
+Maps.uniqueIndex()将列表转换为map
+//iterator各个元素作为Map.values, key为Function.apply返回值
+Maps.uniqueIndex(ps.iterator(), new Function<Person, String>() {
+	@Override
+	public String apply(Person p) {
+		return p.getName();
+	}
+});
+Maps.asMap()，<K, V>和Maps.uniqueIndex()相反
+Maps.asMap(ps, new Function<Person, String>() {
+	@Override
+	public String apply(Person p) {
+		return p.getName();
+	}
+});
+Maps Transform API:
+Maps.transformEntries(map, new Maps.EntryTransformer<String, Boolean, String>() {
+    @Override
+    public String transformEntry(String key, Boolean value) {
+        return value ? "yes" : "no";
+    }
+}); 将Map<String, Boolean> --> Map<String, String>, 其他的还有Maps.transformValues转换值
+Multimaps:
+
+一个key对应多个value。
+ArrayListMultiMap:
+
+ArrayListMultimap<String, String> multiMap = ArrayListMultimap.create();
+multiMap.put("Foo", "1");
+multiMap.put("Foo", "2");
+multiMap.put("Foo", "3");
+System.out.println(multiMap); // {Foo=[1,2,3]}
+当出现重复值时，依然会被添加，因为ArrayListMultiMap的value时一个ArrayList:
+ArrayListMultimap<String, String> multiMap = ArrayListMultimap.create();
+multiMap.put("Bar", "1");
+multiMap.put("Bar", "2");
+multiMap.put("Bar", "3");
+multiMap.put("Bar", "3");
+multiMap.put("Bar", "3");
+System.out.println(multiMap); //{Bar=[1, 2, 3, 3, 3]}，相同的value会重复，value内部是一个List
+HashMultiMap:
+
+HashMultimap<String, String> multiMap = HashMultimap.create();
+multiMap.put("Bar", "1");
+multiMap.put("Bar", "2");
+multiMap.put("Bar", "3");
+multiMap.put("Bar", "3");
+multiMap.put("Bar", "3");
+System.out.println(multiMap); //{Bar=[3, 2, 1]}, 相同的value不会重复，value内部是一个Set
+其他一些MultiMap:
+
+LinkedHashMultimap //顺序的HashMultimap, 形如LinkedHashMap
+TreeMultimap //可排序的MultiMap, 形如TreeMap
+//一些不可变的map
+ImmutableListMultimap
+ImmutableMultimap
+ImmutableSetMultimap
+BiMap:
+
+其限制value是唯一的，且通过value可以找到key
+BiMap<String,String> biMap = HashBiMap.create();
+biMap.put("1","Tom");         
+biMap.put("2","Tom"); //抛出异常
+BiMap.forcePut()强制放入value相等的entry:
+BiMap<String, String> biMap = HashBiMap.create();
+biMap.put("1", "Tom");
+biMap.forcePut("2", "Tom");
+System.out.println(biMap); //{2=Tom}
+BiMap.inverse()反转key-value
+BiMap<String, String> biMap = HashBiMap.create();
+biMap.put("1", "Tom");
+biMap.put("2", "Harry");
+BiMap<String, String> inverseMap = biMap.inverse();
+System.out.println(biMap); //{2=Harry, 1=Tom}
+System.out.println(inverseMap); //{Harry=2, Tom=1
+Table:
+
+它具有2个key[行, 列]，对应一个值。
+HashBasedTable:
+
+通用操作
+HashBasedTable<Integer, Integer, String> table = HashBasedTable.create();
+table.put(1, 1, "Rook");
+table.put(1, 2, "Knight");
+table.put(1, 3, "Bishop");
+System.out.println(table.contains(1, 1)); //true
+System.out.println(table.containsColumn(2)); //true
+System.out.println(table.containsRow(1)); //true
+System.out.println(table.containsValue("Rook")); //true
+System.out.println(table.remove(1, 3)); //Bishop
+System.out.println(table.get(3, 4)); //null
+Table views，表行列视图
+Map<Integer,String> columnMap = table.column(1);
+Map<Integer,String> rowMap = table.row(2);
+其他table
+ArrayTable //二维数组实现
+ImmutableTable //不可变table，创建后不能改变
+TreeBasedTable //对行列排序的table
+Range:
+
+代表一种范围的类。
+Range<Integer> numberRange = Range.closed(1, 10); //包括首尾
+System.out.println(numberRange.contains(10)); //true
+System.out.println(numberRange.contains(1)); //true
+		
+Range<Integer> numberRange1 = Range.open(1,10); //除去首尾
+System.out.println(numberRange1.contains(10)); //false
+System.out.println(numberRange1.contains(1)); //false
+Range和Function组合成Predicate的过滤条件
+Range<Integer> ageRange = Range.closed(35, 50);
+//Person到age转换的function
+Function<Person, Integer> ageFunction = new Function<Person, Integer>() {
+	@Override
+	public Integer apply(Person person) {
+		return person.getAge();
+	}
+};
+//这样得到年龄再[35, 50]之间的人
+Predicate<Person> predicate = Predicates.compose(ageRange,ageFunction);
+创建不可变的集合
+MultiMap<Integer,String> map = new ImmutableListMultimap.Builder<Integer,String>()
+                                   .put(1,"Foo").putAll(2,"Foo","Bar","Baz")
+                                   .putAll(4,"Huey","Duey","Luey")
+                                   .put(3,"Single").build();
+Ordering:
+
+Ordering提供了一些简单强大的排序功能。
+/**
+ * 城市人口比较器
+ */
+public class CityByPopluation implements Comparator<City> {
+	@Override
+	public int compare(City city1, City city2) {
+		return Ints.compare(city1.getPopulation(), city2.getPopulation());
+	}
+}
+反序
+Ordering.from(cityByPopluation).reverse();
+处理Null
+Ordering.from(comparator).nullsFirst();//null值最小放在前面
+二次排序
+/**
+ * 雨量比较器
+ */
+public class CityByRainfall implements Comparator<City> {
+	@Override
+	public int compare(City city1, City city2) {
+		return Doubles.compare(city1.getAverageRainfall(),
+				city2.getAverageRainfall());
+	}
+}
+Ordering<City> secondaryOrdering = Ordering.from(cityByPopulation).compound(cityByRainfall);//组合比较器
+Collections.sort(cities,secondaryOrdering); //排序
+获取最大最小
+Ordering<City> ordering = Ordering.from(cityByPopluation);
+List<City> topFive = ordering.greatestOf(cityList,5); //前5个
+List<City> bottomThree = ordering.leastOf(cityList,3); //最后3个
+看来Guava在集合方面还是很给力的。
+
+
+
+
+
+
+
+
+
+
+
+
+并发：
+
+Guava集合处理是很强大的(这些在jdk8中都有些引入)，但Guava发光的地方是并发。
+Monitor
+
+Monitor实现同步
+/**
+ * 通过Monitor的Guard进行条件阻塞
+ */
+public class MonitorSample {
+	private List<String> list = new ArrayList<String>();
+	private static final int MAX_SIZE = 10;
+	private Monitor monitor = new Monitor();
+	
+	private Monitor.Guard listBelowCapacity = new Monitor.Guard(monitor) {
+		@Override
+		public boolean isSatisfied() {
+			return list.size() < MAX_SIZE;
+		}
+	};
+
+	public void addToList(String item) throws InterruptedException {
+		monitor.enterWhen(listBelowCapacity); //Guard(形如Condition)，不满足则阻塞，而且我们并没有在Guard进行任何通知操作
+		try {
+			list.add(item);
+		} finally {
+			monitor.leave();
+		}
+	}
+}
+Monitor就像java本土的synchronized, ReentrantLock一样，每次只运行一个线程占用，且可重占用，每一次占用会对应一次退出占用。
+Monitor最佳实践：
+
+就如上面，我们通过if条件来判断是否可进入Monitor代码块，并再try/finally中释放：
+if (monitor.enterIf(guardCondition)) {
+        try {
+              doWork();
+    } finally {
+           monitor.leave();
+       }
+}
+其他的Monitor访问方法：
+
+Monitor.enter //进入Monitor块，将阻塞其他线程知道Monitor.leave
+Monitor.tryEnter //尝试进入Monitor块，true表示可以进入, false表示不能，并且不会一直阻塞
+Monitor.tryEnterIf //根据条件尝试进入Monitor块
+这些方法都有对应的限时版本。
+
+ListenableFuture类
+
+jdk5之后有了Future这种异步执行的结构
+ExecutorService executor = Executors.newCachedThreadPool();
+   Future<Integer> future = executor.submit(new Callable<Integer>(){
+                                public Integer call() throws Exception{
+                                   return service.getCount();
+} });
+//Retrieve the value of computation
+Integer count = future.get();
+ListenableFuture对Future进行了扩展，允许注册一个回调函数，task执行完后自动调用。
+获取ListableFuture对象。
+正如我们获取Future对象要通过ExecutorService.submit(Callable)来获取一样，我们可以这样创建ListenableFuture对象：
+
+executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(NUM_THREADS)); //包装Executors创建的线程池
+ListenableFuture<String> listenableFuture = executorService.submit(new Callable<String>()...); //获取ListableFuture对象
+listenableFuture.addListener(new Runnable() {
+      @Override
+      public void run() {
+          methodToRunOnFutureTaskCompletion();
+      }
+}, executorService); //注册回调函数
+FutureCallback类
+
+FutureCallback定义了onSuccess和onFailure方法，onSuccess方法会接收一个Future对象，这样我们就可以获取Future的结果。
+首先需要一个FutureCallback实现类。
+/**
+ * 定义一个FutureCallBack实现类
+ */
+public class FutureCallbackImpl implements FutureCallback<String> {
+	private StringBuilder builder = new StringBuilder();
+
+	@Override
+	public void onSuccess(String result) {
+		builder.append(result).append(" successfully");
+	}
+
+	@Override
+	public void onFailure(Throwable t) {
+		builder.append(t.toString());
+	}
+
+	public String getCallbackResult() {
+		return builder.toString();
+	}
+}
+使用实例：
+ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+ListenableFuture<String> futureTask = executorService.submit(new Callable<String>() { //创建ListenaleFuture对象
+					@Override
+					public String call() throws Exception {
+						return "Task completed";
+					}
+				});
+FutureCallbackImpl callback = new FutureCallbackImpl();
+Futures.addCallback(futureTask, callback); //添加回调
+callback.getCallbackResult(); //获取结果
+如果CallBack是一个耗时操作，你应该选择另一个注册CallBack:
+Futures.addCallback(futureTask,callback,executorService); //提供另一个线程池来执行性回调
+SettableFuture类：
+
+SettableFuture可以用来设置要返回得值：
+
+
+SettableFuture<String> sf = SettableFuture.create();
+//Set a value to return
+sf.set("Success");
+//Or set a failure Exception
+sf.setException(someException);
+AsyncFunction：
+
+该接口与函数式编程密切相关, 类似Function, 但apply方法会转换成一个ListenableFuture封装的范型对象。
+public class AsyncFuntionSample implements AsyncFunction<Long, String> {
+	private ConcurrentMap<Long, String> map = Maps.newConcurrentMap();
+	private ListeningExecutorService listeningExecutorService;
+
+	@Override
+	public ListenableFuture<String> apply(final Long input) throws Exception {
+		if (map.containsKey(input)) {
+			SettableFuture<String> listenableFuture = SettableFuture.create(); //构建一个SettableFuture
+			listenableFuture.set(map.get(input));
+			return listenableFuture;
+		} else {
+			return listeningExecutorService.submit(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					String retrieved = //compute to get the data;
+					map.putIfAbsent(input, retrieved);
+					return retrieved;
+				}
+			});
+		}
+	}
+}
+FutureFallback类：
+
+FutureFallback用于异常恢复的备份。
+/**
+ * 当Future任务失败后, 作为备份的Future
+ */
+public class FutureFallbackImpl implements FutureFallback<String> {
+	@Override
+	public ListenableFuture<String> create(Throwable t) throws Exception {
+		if (t instanceof FileNotFoundException) {
+			SettableFuture<String> settableFuture = SettableFuture.create();
+			settableFuture.set("Not Found");
+			return settableFuture;
+		}
+		throw new Exception(t);
+	}
+}
+Futures类:
+
+Futures类是有关Future实例的一个工具类。
+异步转换：
+
+ListenableFuture<Person> lf = Futures.transform(ListenableFuture<String> f,AsyncFunction<String,Person> af);
+使用FutureFallbacks:
+
+ListenableFuture<String> lf = Futures.withFallback(ListenableFuture<String> f,FutureFallback<String> fb);
+RateLimiter:
+
+RateLimiter限制访问每秒访问资源的线程数。有点类似信号量Semaphore。
+RateLimiter limiter = RateLimiter.create(4.0); //每秒不超过4个任务被提交
+limiter.acquire();  //请求RateLimiter, 超过permits会被阻塞
+executor.submit(runnable); //提交任务
+也有非阻塞式地尝试：
+If(limiter.tryAcquire()){ //未请求到limiter则立即返回false
+    doSomething();
+}else{
+    doSomethingElse();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+缓存：
+
+MapMaker类
+
+MapMaker作为大多数基本缓存功能地提供者。
+ConcurrentMap<String,Book> books = new MapMaker().concurrencyLevel(2) //并发级别,即允许最多2个线程并发更新, 默认值为4
+                                                 .softValues() //使用SoftReference引用对象包装value
+                                                 .makeMap(); //构建Map对象
+Guava缓存：
+
+Cache类：
+
+基本操作
+put(key,value); //存放key-value
+V value = cache.get(key, Callable<? Extends V> value); //获取key对应的缓存对象，不存在或调用Callable实例的call方法来返回key对应的值
+上面的cache.get有效代替了我们通常的操作：
+value = cache.get(key);
+   if(value == null){
+       value = someService.retrieveValue();
+       cache.put(key,value);
+   }
+上面通过Callable获取值是一个异步过程，我们也可以通过非异步来获取值：
+cache.get(key,Callables.returning(someService.retrieveValue()); //同步方式获取不存在的key缓存
+同样我们也可以使缓存的数据失效：
+invalidate(key) //废弃key对应的缓存
+invalidateAll() //废弃所有的缓存
+invalidateAll(Iterable<?> keys) //废弃keys对应的缓存
+LoadingCache类：
+
+LoadingCache是Cache的扩展类，具有自加载功能。
+基本操作。
+Book book = loadingCache.get(id); //获取key为id的缓存
+ImmutableMap<key,value> map = cache.getAll(Iterable<? Extends key>); //获取多个key的缓存，并返回不可变map对象
+refresh(key); //刷新key对应的缓存
+CacheBuilder类：
+
+CacheBuilder通过构建器模式构建Cache和LoadingCache实例。
+构建LoadingCache对象实例一。
+LoadingCache<String, TradeAccount> traLoadingCache =
+				CacheBuilder.newBuilder()
+					.expireAfterAccess(5L, TimeUnit.MINUTES) //5分钟后缓存失效
+					.maximumSize(5000L) //最大缓存5000个对象
+					.removalListener(new TradeAccountRemovalListener()) //注册缓存对象移除监听器
+					.ticker(Ticker.systemTicker()) //定义缓存对象失效的时间精度为纳秒级
+					.build(new CacheLoader<String, TradeAccount>(){ 
+						@Override
+						public TradeAccount load(String key) throws Exception {
+							// load a new TradeAccount not exists in cache
+							return null;
+						}
+					});
+通过SoftReference对象实现自动回收
+LoadingCache<String, TradeAccount> traLoadingCache =
+				CacheBuilder.newBuilder()
+					.expireAfterAccess(5L, TimeUnit.MINUTES) //5分钟后缓存失效
+					.softValues() //使用SoftReference对象封装value, 使得内存不足时，自动回收
+					.removalListener(new TradeAccountRemovalListener()) //注册缓存对象移除监听器
+					.ticker(Ticker.systemTicker()) //定义缓存对象失效的时间精度为纳秒级
+					.build(new CacheLoader<String, TradeAccount>(){ 
+						@Override
+						public TradeAccount load(String key) throws Exception {
+							// load a new TradeAccount not exists in cache
+							return null;
+						}
+					});
+构建一个可自动刷新缓存的LoadingCache
+LoadingCache<String, TradeAccount> traLoadingCache =
+				CacheBuilder.newBuilder()
+					.concurrencyLevel(10) //允许同时最多10个线程并发修改
+					.refreshAfterWrite(5L, TimeUnit.SECONDS) //5秒中后自动刷新
+					.removalListener(new TradeAccountRemovalListener()) //注册缓存对象移除监听器
+					.ticker(Ticker.systemTicker()) //定义缓存对象失效的时间精度为纳秒级
+					.build(new CacheLoader<String, TradeAccount>(){ 
+						@Override
+						public TradeAccount load(String key) throws Exception {
+							// load a new TradeAccount not exists in cache
+							return null;
+						}
+					});
+CacheBuilderSpec:
+
+CacheBuilderSpec可以用于构建CacheBuilder时的配置描述。
+String configString = "concurrencyLevel=10,refreshAfterWrite=5s"
+通过CacheBuilderSpec构建LoadingCache:
+String spec = "concurrencyLevel=10,expireAfterAccess=5m,softValues";
+CacheBuilderSpec cacheBuilderSpec = CacheBuilderSpec.parse(spec);
+CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.from(cacheBuilderSpec);
+LoadingCache<String, TradeAccount> traLoadingCache = cacheBuilder
+		.ticker(Ticker.systemTicker())
+		.removalListener(new TradeAccountRemovalListener())
+		.build(new CacheLoader<String, TradeAccount>(){ 
+			@Override
+			public TradeAccount load(String key) throws Exception {
+				// load a new TradeAccount not exists in cache
+				return null;
+			}
+});
+CacheLoader类：
+
+构建CacheLoader
+//用Function构建CacheLoader, 将输入转换成输出
+CacheLoader<Key,value> cacheLoader = CacheLoader.from(Function<Key,Value> func);
+//通过Supplier构建CacheLoader
+CacheLoader<Object,Value> cacheLoader = CacheLoader.from(Supplier<Value> supplier);
+CacheStats类：
+
+用于收集一些缓存信息。
+LoadingCache<String,TradeAccount> tradeAccountCache = CacheBuilder.newBuilder().recordStats() //开启记录状态
+获取CacheStat对象
+CacheStats cacheStats = cache.stats();
+通过CacheStat可以获取的信息
+1.加载新值消耗的平均时间
+2.命中次数
+3.未命中次数
+...
+RemovalListener类：
+
+用于监听Cache中的key被移除时。
+RemovalNotification类：
+
+用于接收触发RemovalListener的onRemoval的参数传入，可获取对应key,value等。
+通过RemovalNotification.getCause()还可以知道该对象被移除的原因.
+public enum RemovalCause {
+  //用户手动移除
+  EXPLICIT,
+  //用户手动替换
+  REPLACED,
+  //被垃圾回收
+  COLLECTED,
+  //超时过期
+  EXPIRED,
+  //由于缓存大小限制
+  SIZE;
+}
+RemovalListeners类：
+
+我们可以异步执行RemovalListener的onRemoval触发动作
+RemovalListener<String,TradeAccount> myRemovalListener = new RemovalListener<String, TradeAccount>() {
+           @Override
+           public void onRemoval(RemovalNotification<String,TradeAccount> notification) {
+               //Do something here
+           }
+       };
+RemovalListener<String,TradeAccount> removalListener =
+                        RemovalListeners.asynchronous(myRemovalListener,executorService);
+上面的步骤必须在我们注册RemovalListener到 CacheBuilder之前。
+
+
+
+
+
+
+
+
+
+EventBus:
+
+创建EventBus实例：
+
+EventBus eventBus = new EventBus();
+//或者
+EventBus eventBus = new EventBus(TradeAccountEvent.class.getName());//带标识符,用于日志记录
+订阅事件：
+
+模拟一个交易过程。
+事件类：
+/**
+ * 事件类
+ */
+public class TradeAccountEvent {
+	private double amount;
+	private Date tradeExecutionTime;
+	private TradeType tradeType;
+	private TradeAccount tradeAccount;
+
+	public TradeAccountEvent(TradeAccount account, double amount,
+			Date tradeExecutionTime, TradeType tradeType) {
+		this.amount = amount;
+		this.tradeExecutionTime = tradeExecutionTime;
+		this.tradeAccount = account;
+		this.tradeType = tradeType;
+	}
+}
+
+/**
+ * 购买事件
+ */
+public class BuyEvent extends TradeAccountEvent {
+	public BuyEvent(TradeAccount tradeAccount, double amount,
+			Date tradExecutionTime) {
+		super(tradeAccount, amount, tradExecutionTime, TradeType.BUY);
+	}
+}
+
+/**
+ * 卖出事件
+ */
+public class SellEvent extends TradeAccountEvent {
+	public SellEvent(TradeAccount tradeAccount, double amount,
+			Date tradExecutionTime) {
+		super(tradeAccount, amount, tradExecutionTime, TradeType.SELL);
+	}
+}
+订阅者
+/**
+ * 卖出和购买审计，即订阅者
+ */
+public class AllTradesAuditor {
+	private List<BuyEvent> buyEvents = Lists.newArrayList();
+	private List<SellEvent> sellEvents = Lists.newArrayList();
+
+	public AllTradesAuditor(EventBus eventBus) {
+		eventBus.register(this);
+	}
+
+	/**
+	 * 订阅卖出事件
+	 */
+	@Subscribe
+	public void auditSell(SellEvent sellEvent) {
+		sellEvents.add(sellEvent);
+		System.out.println("Received TradeSellEvent " + sellEvent);
+	}
+
+	/**
+	 * 订阅购买事件
+	 */
+	@Subscribe
+	public void auditBuy(BuyEvent buyEvent) {
+		buyEvents.add(buyEvent);
+		System.out.println("Received TradeBuyEvent " + buyEvent);
+	}
+}
+发布者
+/**
+ * 执行交易, 即发布者
+ */
+public class SimpleTradeExecutor {
+	private EventBus eventBus;
+
+	public SimpleTradeExecutor(EventBus eventBus) {
+		this.eventBus = eventBus;
+	}
+
+	/**
+	 * 执行交易
+	 */
+	public void executeTrade(TradeAccount tradeAccount, double amount,
+			TradeType tradeType) {
+		TradeAccountEvent tradeAccountEvent = processTrade(tradeAccount,
+				amount, tradeType);
+		eventBus.post(tradeAccountEvent); // 发布事件
+	}
+
+	/**
+	 * 处理交易
+	 * 
+	 * @return 交易事件
+	 */
+	private TradeAccountEvent processTrade(TradeAccount tradeAccount,
+			double amount, TradeType tradeType) {
+		Date executionTime = new Date();
+		String message = String.format(
+				"Processed trade for %s of amount %n type %s @ %s",
+				tradeAccount, amount, tradeType, executionTime);
+		TradeAccountEvent tradeAccountEvent;
+		if (tradeType.equals(TradeType.BUY)) { //购买动作
+			tradeAccountEvent = new BuyEvent(tradeAccount, amount,
+					executionTime);
+		} else { //卖出动作
+			tradeAccountEvent = new SellEvent(tradeAccount, amount,
+					executionTime);
+		}
+		System.out.println(message);
+		return tradeAccountEvent;
+	}
+}
+测试用例
+EventBus eventBus = new EventBus();
+AllTradesAuditor auditor = new AllTradesAuditor(eventBus);
+SimpleTradeExecutor tradeExecutor = new SimpleTradeExecutor(eventBus);
+tradeExecutor.executeTrade(new TradeAccount(), 1000, TradeType.SELL);
+tradeExecutor.executeTrade(new TradeAccount(), 2000, TradeType.BUY);
+取消订阅：
+
+订阅者来取消注册
+public void unregister(){
+      this.eventBus.unregister(this);
+}
+AsyncEventBus类
+
+闻其名，就是异步事件总线，当处理耗时的处理时很有用，我们要依赖Executors来实现异步事件总线
+AsyncEventBus asyncEventBus = new AsyncEventBus(executorService);
+DeadEvents:
+
+当总线接收到发布者发布的信息时，但这时没有订阅者，那么该事件会被包装为DeadEvent事件
+public class DeadEventSubscriber {
+	private static final Logger logger = 
+			Logger.getLogger(DeadEventSubscriber.class.getName());
+
+	public DeadEventSubscriber(EventBus eventBus) {
+		eventBus.register(this);
+	}
+	
+	/**
+	 * 没有订阅者时被触发
+	 */
+	@Subscribe
+	public void handleUnsubscribedEvent(DeadEvent event){
+		logger.warning("No subscribers for "+event.getEvent());
+	}
+}
+依赖注入
+
+我们可以通过DI框架(Spring或Guice)来注入同样的EventBus
+@Component
+public class SimpleTradeExecutor {
+       private EventBus eventBus;
+       @Autowired
+       public SimpleTradeExecutor(EventBus eventBus) {
+           this.eventBus = checkNotNull(eventBus, "EventBus can't be null");                                             }
+}
+@Component
+public class SimpleTradeAuditor {
+       private List<TradeAccountEvent> tradeEvents =
+    Lists.newArrayList();
+    @Autowired
+    public SimpleTradeAuditor(EventBus eventBus){
+           checkNotNull(eventBus,"EventBus can't be null");
+           eventBus.register(this);
+   }
+}
+以上就介绍了Guava的EventBus。
+
+
+
+
+
+
+
+
+
+
+
+文件操作：
+
+复制文件
+File original  = new File("path/to/original");
+File copy = new File("path/to/copy");
+Files.copy(original, copy);
+文件移动/重命名
+File original = new File("src/main/resources/copy.txt");
+File newFile = new File("src/main/resources/newFile.txt");
+try{
+   Files.move(original, newFile); //移动或重命名文件，类似Unix中的mv
+}catch (IOException e){
+   e.printStackTrace();
+}
+将文件读取为字符串列表
+List<String> readLines = Files.readLines(file, Charsets.UTF_8);
+为文件生成hash值
+File file = new File("src/main/resources/sampleTextFileOne.txt");
+HashCode hashCode = Files.hash(file, Hashing.md5());
+System.out.println(hashCode);
+写或追加文件
+File file = new File("quote1.txt");
+String hamletQuoteStart = "To be, or not to be";
+Files.write(hamletQuoteStart,file, Charsets.UTF_8);//写文件
+         
+String hamletQuoteEnd = ",that is the question";
+Files.append(hamletQuoteEnd,file,Charsets.UTF_8); //追加文件
+         
+String overwrite = "Overwriting the file";
+Files.write(overwrite, file, Charsets.UTF_8); //重写文件
+ByteSource类
+
+ByteSource代表一个可读的字节源
+从文件创建ByteSource
+File f1 = new File("quote1.txt");
+ByteSource byteSource = Files.asByteSource(f1);
+byte[] readBytes = byteSource.read();
+System.out.println(readBytes);
+ByteSink类
+
+ByteSink代表一个可写的字节源
+创建ByteSink
+File dest = new File("destfile.txt");
+ByteSink byteSink = Files.asByteSink(dest);
+File file = new File("srcfile.txt");
+byteSink.write(Files.toByteArray(file));
+将ByteSource复制到ByteSink
+File dest = new File("destfile.txt");
+File source = new File("srcfile.txt");
+ByteSource byteSource = Files.asByteSource(source);
+ByteSink byteSink = Files.asByteSink(dest);
+byteSource.copyTo(byteSink);
+ByteStreams和CharStreams
+
+限制输入流大小
+ByteStreams.limit(inputStream, 10)
+合并CharStreams
+@Test
+public void joinCharStreamsTest() throws Exception {
+	File f1 = new File("file1.txt");
+	File f2 = new File("file2.txt");
+	File f3 = new File("file3.txt");
+	File joinedOutput = new File("file123.txt");
+
+	List<InputSupplier<InputStreamReader>> inputSuppliers = getInputSuppliers(f1, f2, f3);
+       InputSupplier<Reader> joinedSupplier = CharStreams.join(inputSuppliers);
+	OutputSupplier<OutputStreamWriter> outputSupplier = Files.newWriterSupplier(joinedOutput, Charsets.UTF_8);
+	CharStreams.copy(joinedSupplier, outputSupplier);
+	String joinedOutputString = joinFiles(joinedOutput);
+	System.out.println(joinedOutputString);
+}
+//将多个文件合并为字符串
+private String joinFiles(File... files) throws IOException {
+	StringBuilder builder = new StringBuilder();
+	for (File file : files) {
+		builder.append(Files.toString(file, Charsets.UTF_8));
+	}
+	return builder.toString();
+}
+//将多个文件转换为InputSuppler<InputStreamReader>类型的列表
+private List<InputSupplier<InputStreamReader>> getInputSuppliers(File... files) {
+	List<InputSupplier<InputStreamReader>> list = Lists.newArrayList();
+	for (File file : files) {
+		list.add(Files.newReaderSupplier(file, Charsets.UTF_8));
+	}
+	return list;
+}
+Closer类
+
+Closer可以保证注册的Closable对象，在Closer关闭时，注册的Closable对象也会被关闭。
+Closer closer = Closer.create();
+try {
+	File destination = new File("destfile.txt");
+	BufferedReader reader = new BufferedReader(new FileReader("srcfile.txt"));
+	BufferedWriter writer = new BufferedWriter(new FileWriter(destination));
+	closer.register(reader);
+	closer.register(writer);
+	String line;
+	while ((line = reader.readLine()) != null) {
+		writer.write(line);
+	}
+} catch (Throwable t) {
+	throw closer.rethrow(t);
+} finally {
+	closer.close();
+}
+BaseEncoding类
+
+BaseEncoding针对字节码的编码工作。
+一些用例
+@Test
+public void encodeDecodeTest() throws Exception {
+	File file = new File("srcfile.txt");
+	byte[] bytes = Files.toByteArray(file);
+	BaseEncoding baseEncoding = BaseEncoding.base64();
+	String encoded = baseEncoding.encode(bytes); // 将字节以Base64编码
+}
+
+@Test
+public void encodeByteSinkTest() throws Exception {
+	File srcFile = new File("srcfile.txt");
+	File encodedFile = new File("encodedfile.txt");
+	CharSink charSink = Files.asCharSink(encodedFile, Charsets.UTF_8);
+	BaseEncoding baseEncoding = BaseEncoding.base64();
+	ByteSink byteSink = baseEncoding.encodingSink(charSink); //将charSink转为ByteSink
+	ByteSource byteSource = Files.asByteSource(srcFile);
+	byteSource.copyTo(byteSink); //copy ByteSource to ByteSink
+	String encodedBytes = baseEncoding.encode(byteSource.read());
+}
+以上就是Guava的文件处理。

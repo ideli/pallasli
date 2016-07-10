@@ -10,16 +10,16 @@ import com.google.common.hash.PrimitiveSink;
 public class GuavaHashStudy {
 	public static void main(String[] args) {
 		HashFunction hf = Hashing.md5();
-		Funnel<? super Person> personFunnel = new Funnel<Person>() {
+		Funnel<? super Author> personFunnel = new Funnel<Author>() {
 
-			public void funnel(Person person, PrimitiveSink into) {
-				into.putInt(person.id)
-						.putString(person.firstName, Charsets.UTF_8)
+			@Override
+			public void funnel(Author person, PrimitiveSink into) {
+				into.putInt(person.id).putString(person.firstName, Charsets.UTF_8)
 						.putString(person.lastName, Charsets.UTF_8).putInt(10);
 			}
 		};
-		HashCode hc = hf.newHasher().putLong(122).putString("", Charsets.UTF_8)
-				.putObject(new Person(), personFunnel).hash();
+		HashCode hc = hf.newHasher().putLong(122).putString("", Charsets.UTF_8).putObject(new Author(), personFunnel)
+				.hash();
 
 		// Hashing类
 		// Hashing类提供了若干散列函数，以及运算HashCode对象的工具方法。

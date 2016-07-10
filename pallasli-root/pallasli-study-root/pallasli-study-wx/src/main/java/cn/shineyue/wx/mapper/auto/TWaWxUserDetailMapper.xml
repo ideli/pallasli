@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.shineyue.wx.mapper.auto.TWaWxUserDetailMapper" >
+  <resultMap id="BaseResultMap" type="cn.shineyue.wx.po.auto.TWaWxUserDetail" >
+    <id column="WX_OPENID" property="wxOpenid" jdbcType="OTHER" />
+    <result column="WX_SUBSCRIBE" property="wxSubscribe" jdbcType="DECIMAL" />
+    <result column="WX_NICKNAME" property="wxNickname" jdbcType="OTHER" />
+    <result column="WX_SEX" property="wxSex" jdbcType="DECIMAL" />
+    <result column="WX_LANGUAGE" property="wxLanguage" jdbcType="OTHER" />
+    <result column="WX_CITY" property="wxCity" jdbcType="OTHER" />
+    <result column="WX_PROVINCE" property="wxProvince" jdbcType="OTHER" />
+    <result column="WX_COUNTRY" property="wxCountry" jdbcType="OTHER" />
+    <result column="WX_HEADIMGURL" property="wxHeadimgurl" jdbcType="OTHER" />
+    <result column="WX_SUBSCRIBE_TIME" property="wxSubscribeTime" jdbcType="DECIMAL" />
+    <result column="WX_UNIONID" property="wxUnionid" jdbcType="OTHER" />
+    <result column="WX_REMARK" property="wxRemark" jdbcType="OTHER" />
+    <result column="WX_GROUPID" property="wxGroupid" jdbcType="DECIMAL" />
+    <result column="WX_IS_SUCCESS" property="wxIsSuccess" jdbcType="DECIMAL" />
+    <result column="WX_FAIL_MSG" property="wxFailMsg" jdbcType="OTHER" />
+    <result column="WX_UPDATE_DATE" property="wxUpdateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    WX_OPENID, WX_SUBSCRIBE, WX_NICKNAME, WX_SEX, WX_LANGUAGE, WX_CITY, WX_PROVINCE, 
+    WX_COUNTRY, WX_HEADIMGURL, WX_SUBSCRIBE_TIME, WX_UNIONID, WX_REMARK, WX_GROUPID, 
+    WX_IS_SUCCESS, WX_FAIL_MSG, WX_UPDATE_DATE
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    where WX_OPENID = #{wxOpenid,jdbcType=OTHER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    where WX_OPENID = #{wxOpenid,jdbcType=OTHER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetailExample" >
+    delete from WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetail" >
+    insert into WASYS350_NEWBPM.T_WA_WX_USER_DETAIL (WX_OPENID, WX_SUBSCRIBE, WX_NICKNAME, 
+      WX_SEX, WX_LANGUAGE, WX_CITY, 
+      WX_PROVINCE, WX_COUNTRY, WX_HEADIMGURL, 
+      WX_SUBSCRIBE_TIME, WX_UNIONID, WX_REMARK, 
+      WX_GROUPID, WX_IS_SUCCESS, WX_FAIL_MSG, 
+      WX_UPDATE_DATE)
+    values (#{wxOpenid,jdbcType=OTHER}, #{wxSubscribe,jdbcType=DECIMAL}, #{wxNickname,jdbcType=OTHER}, 
+      #{wxSex,jdbcType=DECIMAL}, #{wxLanguage,jdbcType=OTHER}, #{wxCity,jdbcType=OTHER}, 
+      #{wxProvince,jdbcType=OTHER}, #{wxCountry,jdbcType=OTHER}, #{wxHeadimgurl,jdbcType=OTHER}, 
+      #{wxSubscribeTime,jdbcType=DECIMAL}, #{wxUnionid,jdbcType=OTHER}, #{wxRemark,jdbcType=OTHER}, 
+      #{wxGroupid,jdbcType=DECIMAL}, #{wxIsSuccess,jdbcType=DECIMAL}, #{wxFailMsg,jdbcType=OTHER}, 
+      #{wxUpdateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetail" >
+    insert into WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wxOpenid != null" >
+        WX_OPENID,
+      </if>
+      <if test="wxSubscribe != null" >
+        WX_SUBSCRIBE,
+      </if>
+      <if test="wxNickname != null" >
+        WX_NICKNAME,
+      </if>
+      <if test="wxSex != null" >
+        WX_SEX,
+      </if>
+      <if test="wxLanguage != null" >
+        WX_LANGUAGE,
+      </if>
+      <if test="wxCity != null" >
+        WX_CITY,
+      </if>
+      <if test="wxProvince != null" >
+        WX_PROVINCE,
+      </if>
+      <if test="wxCountry != null" >
+        WX_COUNTRY,
+      </if>
+      <if test="wxHeadimgurl != null" >
+        WX_HEADIMGURL,
+      </if>
+      <if test="wxSubscribeTime != null" >
+        WX_SUBSCRIBE_TIME,
+      </if>
+      <if test="wxUnionid != null" >
+        WX_UNIONID,
+      </if>
+      <if test="wxRemark != null" >
+        WX_REMARK,
+      </if>
+      <if test="wxGroupid != null" >
+        WX_GROUPID,
+      </if>
+      <if test="wxIsSuccess != null" >
+        WX_IS_SUCCESS,
+      </if>
+      <if test="wxFailMsg != null" >
+        WX_FAIL_MSG,
+      </if>
+      <if test="wxUpdateDate != null" >
+        WX_UPDATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wxOpenid != null" >
+        #{wxOpenid,jdbcType=OTHER},
+      </if>
+      <if test="wxSubscribe != null" >
+        #{wxSubscribe,jdbcType=DECIMAL},
+      </if>
+      <if test="wxNickname != null" >
+        #{wxNickname,jdbcType=OTHER},
+      </if>
+      <if test="wxSex != null" >
+        #{wxSex,jdbcType=DECIMAL},
+      </if>
+      <if test="wxLanguage != null" >
+        #{wxLanguage,jdbcType=OTHER},
+      </if>
+      <if test="wxCity != null" >
+        #{wxCity,jdbcType=OTHER},
+      </if>
+      <if test="wxProvince != null" >
+        #{wxProvince,jdbcType=OTHER},
+      </if>
+      <if test="wxCountry != null" >
+        #{wxCountry,jdbcType=OTHER},
+      </if>
+      <if test="wxHeadimgurl != null" >
+        #{wxHeadimgurl,jdbcType=OTHER},
+      </if>
+      <if test="wxSubscribeTime != null" >
+        #{wxSubscribeTime,jdbcType=DECIMAL},
+      </if>
+      <if test="wxUnionid != null" >
+        #{wxUnionid,jdbcType=OTHER},
+      </if>
+      <if test="wxRemark != null" >
+        #{wxRemark,jdbcType=OTHER},
+      </if>
+      <if test="wxGroupid != null" >
+        #{wxGroupid,jdbcType=DECIMAL},
+      </if>
+      <if test="wxIsSuccess != null" >
+        #{wxIsSuccess,jdbcType=DECIMAL},
+      </if>
+      <if test="wxFailMsg != null" >
+        #{wxFailMsg,jdbcType=OTHER},
+      </if>
+      <if test="wxUpdateDate != null" >
+        #{wxUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetailExample" resultType="java.lang.Integer" >
+    select count(*) from WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <set >
+      <if test="record.wxOpenid != null" >
+        WX_OPENID = #{record.wxOpenid,jdbcType=OTHER},
+      </if>
+      <if test="record.wxSubscribe != null" >
+        WX_SUBSCRIBE = #{record.wxSubscribe,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wxNickname != null" >
+        WX_NICKNAME = #{record.wxNickname,jdbcType=OTHER},
+      </if>
+      <if test="record.wxSex != null" >
+        WX_SEX = #{record.wxSex,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wxLanguage != null" >
+        WX_LANGUAGE = #{record.wxLanguage,jdbcType=OTHER},
+      </if>
+      <if test="record.wxCity != null" >
+        WX_CITY = #{record.wxCity,jdbcType=OTHER},
+      </if>
+      <if test="record.wxProvince != null" >
+        WX_PROVINCE = #{record.wxProvince,jdbcType=OTHER},
+      </if>
+      <if test="record.wxCountry != null" >
+        WX_COUNTRY = #{record.wxCountry,jdbcType=OTHER},
+      </if>
+      <if test="record.wxHeadimgurl != null" >
+        WX_HEADIMGURL = #{record.wxHeadimgurl,jdbcType=OTHER},
+      </if>
+      <if test="record.wxSubscribeTime != null" >
+        WX_SUBSCRIBE_TIME = #{record.wxSubscribeTime,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wxUnionid != null" >
+        WX_UNIONID = #{record.wxUnionid,jdbcType=OTHER},
+      </if>
+      <if test="record.wxRemark != null" >
+        WX_REMARK = #{record.wxRemark,jdbcType=OTHER},
+      </if>
+      <if test="record.wxGroupid != null" >
+        WX_GROUPID = #{record.wxGroupid,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wxIsSuccess != null" >
+        WX_IS_SUCCESS = #{record.wxIsSuccess,jdbcType=DECIMAL},
+      </if>
+      <if test="record.wxFailMsg != null" >
+        WX_FAIL_MSG = #{record.wxFailMsg,jdbcType=OTHER},
+      </if>
+      <if test="record.wxUpdateDate != null" >
+        WX_UPDATE_DATE = #{record.wxUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    set WX_OPENID = #{record.wxOpenid,jdbcType=OTHER},
+      WX_SUBSCRIBE = #{record.wxSubscribe,jdbcType=DECIMAL},
+      WX_NICKNAME = #{record.wxNickname,jdbcType=OTHER},
+      WX_SEX = #{record.wxSex,jdbcType=DECIMAL},
+      WX_LANGUAGE = #{record.wxLanguage,jdbcType=OTHER},
+      WX_CITY = #{record.wxCity,jdbcType=OTHER},
+      WX_PROVINCE = #{record.wxProvince,jdbcType=OTHER},
+      WX_COUNTRY = #{record.wxCountry,jdbcType=OTHER},
+      WX_HEADIMGURL = #{record.wxHeadimgurl,jdbcType=OTHER},
+      WX_SUBSCRIBE_TIME = #{record.wxSubscribeTime,jdbcType=DECIMAL},
+      WX_UNIONID = #{record.wxUnionid,jdbcType=OTHER},
+      WX_REMARK = #{record.wxRemark,jdbcType=OTHER},
+      WX_GROUPID = #{record.wxGroupid,jdbcType=DECIMAL},
+      WX_IS_SUCCESS = #{record.wxIsSuccess,jdbcType=DECIMAL},
+      WX_FAIL_MSG = #{record.wxFailMsg,jdbcType=OTHER},
+      WX_UPDATE_DATE = #{record.wxUpdateDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetail" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    <set >
+      <if test="wxSubscribe != null" >
+        WX_SUBSCRIBE = #{wxSubscribe,jdbcType=DECIMAL},
+      </if>
+      <if test="wxNickname != null" >
+        WX_NICKNAME = #{wxNickname,jdbcType=OTHER},
+      </if>
+      <if test="wxSex != null" >
+        WX_SEX = #{wxSex,jdbcType=DECIMAL},
+      </if>
+      <if test="wxLanguage != null" >
+        WX_LANGUAGE = #{wxLanguage,jdbcType=OTHER},
+      </if>
+      <if test="wxCity != null" >
+        WX_CITY = #{wxCity,jdbcType=OTHER},
+      </if>
+      <if test="wxProvince != null" >
+        WX_PROVINCE = #{wxProvince,jdbcType=OTHER},
+      </if>
+      <if test="wxCountry != null" >
+        WX_COUNTRY = #{wxCountry,jdbcType=OTHER},
+      </if>
+      <if test="wxHeadimgurl != null" >
+        WX_HEADIMGURL = #{wxHeadimgurl,jdbcType=OTHER},
+      </if>
+      <if test="wxSubscribeTime != null" >
+        WX_SUBSCRIBE_TIME = #{wxSubscribeTime,jdbcType=DECIMAL},
+      </if>
+      <if test="wxUnionid != null" >
+        WX_UNIONID = #{wxUnionid,jdbcType=OTHER},
+      </if>
+      <if test="wxRemark != null" >
+        WX_REMARK = #{wxRemark,jdbcType=OTHER},
+      </if>
+      <if test="wxGroupid != null" >
+        WX_GROUPID = #{wxGroupid,jdbcType=DECIMAL},
+      </if>
+      <if test="wxIsSuccess != null" >
+        WX_IS_SUCCESS = #{wxIsSuccess,jdbcType=DECIMAL},
+      </if>
+      <if test="wxFailMsg != null" >
+        WX_FAIL_MSG = #{wxFailMsg,jdbcType=OTHER},
+      </if>
+      <if test="wxUpdateDate != null" >
+        WX_UPDATE_DATE = #{wxUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where WX_OPENID = #{wxOpenid,jdbcType=OTHER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.shineyue.wx.po.auto.TWaWxUserDetail" >
+    update WASYS350_NEWBPM.T_WA_WX_USER_DETAIL
+    set WX_SUBSCRIBE = #{wxSubscribe,jdbcType=DECIMAL},
+      WX_NICKNAME = #{wxNickname,jdbcType=OTHER},
+      WX_SEX = #{wxSex,jdbcType=DECIMAL},
+      WX_LANGUAGE = #{wxLanguage,jdbcType=OTHER},
+      WX_CITY = #{wxCity,jdbcType=OTHER},
+      WX_PROVINCE = #{wxProvince,jdbcType=OTHER},
+      WX_COUNTRY = #{wxCountry,jdbcType=OTHER},
+      WX_HEADIMGURL = #{wxHeadimgurl,jdbcType=OTHER},
+      WX_SUBSCRIBE_TIME = #{wxSubscribeTime,jdbcType=DECIMAL},
+      WX_UNIONID = #{wxUnionid,jdbcType=OTHER},
+      WX_REMARK = #{wxRemark,jdbcType=OTHER},
+      WX_GROUPID = #{wxGroupid,jdbcType=DECIMAL},
+      WX_IS_SUCCESS = #{wxIsSuccess,jdbcType=DECIMAL},
+      WX_FAIL_MSG = #{wxFailMsg,jdbcType=OTHER},
+      WX_UPDATE_DATE = #{wxUpdateDate,jdbcType=TIMESTAMP}
+    where WX_OPENID = #{wxOpenid,jdbcType=OTHER}
+  </update>
+</mapper>

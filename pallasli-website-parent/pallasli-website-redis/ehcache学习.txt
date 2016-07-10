@@ -1,0 +1,610 @@
+ehcache页面缓存的特点：缓存中的元素是被压缩过的，如果客户浏览器支持压缩的话，filter 会直接返回压缩过的流，这样节省了带宽，把解压的工作交给了客户浏览器，如果客户的浏览器不支持gzip ，那么filter 会把缓存的元素拿出来解压后再返回给客户浏览器（大多数爬虫是不支持gzip 的，所以filter 也会解压后再返回流），这样做的优点是节省带宽，缺点就是增加了客户浏览器的负担
+
+1 .SimplePageCachingFilter
+
+    它ehcache-web模块下页面缓存Filter的一个简单实现，适用于可以压缩的Http响应（response），如HTML、XML、JSON等。它会使用通过CacheManager的静态方法create创建的单例CacheManager，这样如果之前已经存在CacheManager的实例了的话，这里就会直接拿来用，而不会再创建了。所以这里一般默认情况下会取类根路径下的ehcache.xml文件来创建CacheManager，但如果我们的项目中整合了Ehcache和Spring，且在Spring配置文件中指定的Ehcache的配置文件不是默认位置的话，Spring将使用指定的配置文件优先初始化CacheManager，这样SimplePageCachingFilter中要使用CacheManager时就不会再初始化了，而是直接使用Spring初始化的。页面缓存使用的key是通过SimplePageCachingFilter的calculateKey()方法获取的。其内部逻辑是获取请求时的URI及后面的查询字符串作为key进行返回，如“/user/index.jsp?name=abc”，这使得它的应用范围非常广。它不依赖于主机名和端口号，这将使得它同样适用于有多个域或多个端口请求同样内容的情况。如果有需要，我们可以对calculateKey方法进行重写，从而实现我们自己的计算key的逻辑。这个是很有必要的，因为在项目中很多页面都使用AJAX，为保证JS请求的数据不被浏览器缓存，每次请求可能都会是不同的数参数。如果使用 SimplePageCachingFilter，那么每次生成的key都不一样，缓存就没有意义了。这种情况下，我们就会覆写 calculateKey()方法。
+
+2 .SimpleCachingHeadersPageCachingFilter 提供HTTP缓存头信息，这个不介绍了用的很少。
+
+3 .SimplePageFragmentCachingFilter
+
+    SimplePageCachingFilter适用于缓存整个页面的情况，如果只需要缓存某一个片段，如使用jsp:include包含的部分，这个时候就需要用SimplePageFragmentCachingFilter。
+
+第一部分是页面整体缓存
+
+第一步：首先配置ehcache.xml指定我们的SimplePageCachingFilter缓存  ，这里指定页面缓存的生命周期是60秒，还有timeToIdleSeconds的时间爱你是120秒，这里要注意下不要设置太长时间
+
+   <!-- 页面全部缓存 -->
+   <cache name="SimplePageCachingFilter"
+           maxElementsInMemory="10"    
+           maxElementsOnDisk="10"      
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="60"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+第二步 ： 在web.xml中添加页面缓存过滤器PageCachingFilter。
+
+             注意： 如果我们在ehcache.xml中命名的页面缓存名字为SimplePageCachingFilter时，我们再web.xml中的页面缓存过滤器的cacheName是可以不用定义的，因为它是默认的；如果不是SimplePageCachingFilter，这是我就必须指定cacheName了。
+
+还有一点url-pattern的指定应该是/pageCacheController/testPageCache.do，而不是/testPageCache.do这个。
+
+    <!--ehcache 页面缓存过滤器 -->
+    <filter>
+        <filter-name>PageCachingFilter</filter-name>
+        <filter-class>net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter</filter-class>
+        <init-param>  
+            <param-name>cacheName</param-name>  
+            <param-value>SimplePageCachingFilter</param-value>  
+       </init-param>  
+    </filter>   
+    <filter-mapping>
+        <filter-name>PageCachingFilter</filter-name>
+        <url-pattern>/pageCacheController/testPageCache.do</url-pattern>
+    </filter-mapping>
+第三步 ： 编写controller测试类
+
+@Controller
+@RequestMapping("pageCacheController")
+public class PageCacheController {
+
+    private final static Logger log = Logger.getLogger(PageCacheController.class);
+    
+    @RequestMapping("testPageCache")
+    public ModelAndView testPageCache(){
+        ModelMap model = new ModelMap();
+        Date date = new Date();
+        model.addAttribute("date", date.toLocaleString() );
+        log.info("我来访问controller了");
+        return new ModelAndView("testPageCache",model);
+    }
+}
+
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>测试</title>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery-1.11.1.min.js"></script>
+    
+    <script type="text/javascript">
+
+    </script>
+  </head>
+  
+  <body>
+  <h1>这是一个页面缓存的练习</h1>
+  <font style="color:green;font-weight:bold;font-size: 18px">${date}</font><br><br>
+  </body>
+</html>
+View Code
+上面这个是testPageCache.jsp页面
+
+第四步 ： 访问/pageCacheController/testPageCache.do观察页面时间并查看控制台输出，在该缓存的生命周期内，即60秒之间刷新页面，页面上的时间是不会变化的，当过了缓存的生命周期在访问，时间立马改变。下面看看图。
+
+
+
+在60秒内刷新页面观看控制台。发现“我来访问controller了”没有打印出来，也就是说在缓存生命周期内我们第二次访问时，只经过了page-filter-action-service-dao-db 中的page-filter其余的部分都没有访问。如果你亲自做过的话你会对控制台打印的信息会产生兴趣的，我这里给指出一个重要的Cache-control-> max-age=0，这个你们可以研究研究，我就不说了。
+
+
+
+到这里页面整体缓存的简单例子就完成了，当然实际项目中肯定比这复杂，但是道理是一样的。只要你明白其中的原理，那么一切OK！
+
+第二部分是页面局部缓存
+
+ 道理跟上面的一样我就简单说了
+
+配置ehcache.xml
+
+  <!-- 页面局部缓存 -->
+   <cache name="SimplePageFragmentCachingFilter"
+           maxElementsInMemory="10"    
+           maxElementsOnDisk="10"      
+           eternal="false"
+           overflowToDisk="false"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="60"
+           memoryStoreEvictionPolicy="LFU">
+    </cache>
+ 
+
+配置web.xml,这里需要注意几点，我们include的jsp页面在filter中要指定<dispatcher>INCLUDE</dispatcher>，如果没有指定任何< dispatcher >元素，默认值是REQUEST就不会拦截了。我这里有新增加了一个页面作为include的页面
+
+ <!--ehcache 页面局部缓存 -->
+    <filter>
+        <filter-name>PageFragmentCachingFilter</filter-name>
+        <filter-class>net.sf.ehcache.constructs.web.filter.SimplePageFragmentCachingFilter</filter-class>
+        <init-param>  
+            <param-name>cacheName</param-name>  
+            <param-value>SimplePageFragmentCachingFilter</param-value>  
+       </init-param>  
+    </filter>   
+    <!-- This is a filter chain. They are executed in the order below.Do not change the order. -->
+    <filter-mapping>
+        <filter-name>PageFragmentCachingFilter</filter-name>
+        <url-pattern>/page/testPageFragmentCache.jsp</url-pattern>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+testPageFragmentCache.jsp页面，为了方便我还是调用了上边的controller方法来观察时间。如果你是按照我的做法一步一步做的话，要测试局部缓存时，需要把页面整体缓存的filter注释掉，实际中不需要，只是我为了偷懒用了相同访问地址
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>测试</title>
+  </head>  
+  <body>
+  <h1>这是include的jsp页面</h1>
+  <font style="color:green;font-weight:bold;font-size: 18px">${date}</font><br><br>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+一、缓存系统简介
+
+EhCache 是一个纯 Java 的进程内缓存框架，具有快速、精干等特点，是 Hibernate 中默认的 CacheProvider。
+
+EhCache 应用架构图，下图是 EhCache 在应用程序中的位置：
+
+clip_image002
+
+EhCache 的主要特性有：
+
+1. 快速、精干；
+
+2. 简单；
+
+3. 多种缓存策略；
+
+4. 缓存数据有两级：内存和磁盘，因此无需担心容量问题；
+
+5. 缓存数据会在虚拟机重启的过程中写入磁盘；
+
+6. 可以通过 RMI、可插入 API 等方式进行分布式缓存；
+
+7. 具有缓存和缓存管理器的侦听接口；
+
+8. 支持多缓存管理器实例，以及一个实例的多个缓存区域；
+
+9. 提供 Hibernate 的缓存实现；
+
+由于 EhCache 是进程中的缓存系统，一旦将应用部署在集群环境中，每一个节点维护各自的缓存数据，当某个节点对缓存数据进行更新，这些更新的数据无法在其它节点中共享，这不仅会降低节点运行的效率，而且会导致数据不同步的情况发生。例如某个网站采用 A、B 两个节点作为集群部署，当 A 节点的缓存更新后，而 B 节点缓存尚未更新就可能出现用户在浏览页面的时候，一会是更新后的数据，一会是尚未更新的数据，尽管我们也可以通过 Session Sticky 技术来将用户锁定在某个节点上，但对于一些交互性比较强或者是非 Web 方式的系统来说，Session Sticky 显然不太适合。
+
+所以就需要用到 EhCache 的集群解决方案。
+
+从1.2版本开始，Ehcache可以使用分布式的缓存了。EhCache 从 1.7 版本开始，支持五种集群方案，分别是：
+
+• Terracotta
+
+• RMI
+
+• JMS
+
+• JGroups
+
+• EhCache Server
+
+其中的三种最为常用集群方式，分别是 RMI、JGroups 以及 EhCache Server 。本文主要介绍RMI的方式。
+
+分布式这个特性是以plugin的方式实现的。Ehcache自带了一些默认的分布式缓存插件实现，这些插件可以满足大部分应用的需要。如果需要使用其他的插件那就需要自己开发了，开发者可以通过查看distribution包里的源代码及JavaDoc来实现它。尽管不是必须的，在使用分布式缓存时理解一些ehcahce的设计思想也是有帮助的。这可以参看分布式缓存设计的页面。以下的部分将展示如何让分布式插件同ehcache一起工作。
+
+下面列出的是一些分布式缓存中比较重要的方面：
+
+• 你如何知道集群环境中的其他缓存？
+
+• 分布式传送的消息是什么形式？
+
+• 什么情况需要进行复制？增加（Puts），更新（Updates）或是失效（Expiries）？
+
+• 采用什么方式进行复制？同步还是异步方式？
+
+为了安装分布式缓存，你需要配置一个PeerProvider、一个CacheManagerPeerListener，
+
+它们对于一个CacheManager来说是全局的。每个进行分布式操作的cache都要添加一个cacheEventListener来传送消息。
+
+ 
+
+二、集群缓存概念及其配置
+
+正确的元素类型
+
+只有可序列化的元素可以进行复制。一些操作，比如移除，只需要元素的键值而不用整个元素；在这样的操作中即使元素不是可序列化的但键值是可序列化的也可以被复制。
+
+成员发现（Peer Discovery）
+
+Ehcache进行集群的时候有一个cache组的概念。每个cache都是其他cache的一个peer，没有主cache的存在。刚才我们问了一个问题：你如何知道集群环境中的其他缓存？这个问题可以命名为成员发现（Peer Discovery）。
+
+Ehcache提供了两种机制用来进行成员发现，就像一辆汽车：手动档和自动档。要使用一个内置的成员发现机制要在ehcache的配置文件中指定cacheManagerPeerProviderFactory元素的class属性为
+
+net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory。
+
+自动的成员发现
+
+自动的发现方式用TCP广播机制来确定和维持一个广播组。它只需要一个简单的配置可以自动的在组中添加和移除成员。在集群中也不需要什么优化服务器的知识，这是默认推荐的。
+
+成员每秒向群组发送一个“心跳”。如果一个成员 5秒种都没有发出信号它将被群组移除。如果一个新的成员发送了一个“心跳”它将被添加进群组。
+
+任何一个用这个配置安装了复制功能的cache都将被其他的成员发现并标识为可用状态。
+
+要设置自动的成员发现，需要指定ehcache配置文件中cacheManagerPeerProviderFactory元素的properties属性，就像下面这样：
+peerDiscovery=automatic
+
+multicastGroupAddress=multicast address | multicast host name
+
+multicastGroupPort=port
+
+timeToLive=0-255 (timeToLive属性详见常见问题部分的描述)
+
+示例
+
+假设你在集群中有两台服务器。你希望同步sampleCache1和sampleCache2。每台独立的服务器都要有这样的配置：
+配置server1和server2
+
+<cacheManagerPeerProviderFactory
+class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1,
+multicastGroupPort=4446, timeToLive=32"/>
+手动进行成员发现
+
+进行手动成员配置要知道每个监听器的IP地址和端口。成员不能在运行时动态地添加和移除。在技术上很难使用广播的情况下就可以手动成员发现，例如在集群的服务器之间有一个不能传送广播报文的路由器。你也可以用手动成员发现进行单向的数据复制，只让server2知道server1，而server1不知道server2。
+
+配置手动成员发现，需要指定ehcache配置文件中cacheManagerPeerProviderFactory的properties属性，像下面这样：
+peerDiscovery=manual rmiUrls=//server:port/cacheName, //server:port/cacheName ...
+rmiUrls配置的是服务器cache peers的列表。注意不要重复配置。
+
+示例
+
+假设你在集群中有两台服务器。你要同步sampleCache1和sampleCache2。下面是每个服务器需要的配置：
+配置server1
+
+<cacheManagerPeerProviderFactory
+class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+properties="peerDiscovery=manual,
+rmiUrls=//server2:40001/sampleCache11|//server2:40001/sampleCache12"/>
+ 
+
+配置server2
+
+<cacheManagerPeerProviderFactory
+class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+properties="peerDiscovery=manual,
+rmiUrls=//server1:40001/sampleCache11|//server1:40001/sampleCache12"/>
+配置CacheManagerPeerListener
+
+每个CacheManagerPeerListener监听从成员们发向当前CacheManager的消息。配置CacheManagerPeerListener需要指定一个CacheManagerPeerListenerFactory，它以插件的机制实现，用来创建CacheManagerPeerListener。
+
+cacheManagerPeerListenerFactory的属性有：
+class – 一个完整的工厂类名。
+properties – 只对这个工厂有意义的属性，使用逗号分隔。
+
+Ehcache有一个内置的基于RMI的分布系统。它的监听器是RMICacheManagerPeerListener，这个监听器可以用
+
+RMICacheManagerPeerListenerFactory来配置。
+
+<cacheManagerPeerListenerFactory
+class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+properties="hostName=localhost, port=40001,
+socketTimeoutMillis=2000"/>
+有效的属性是：
+hostname (可选) – 运行监听器的服务器名称。标明了做为集群群组的成员的地址，同时也是你想要控制的从集群中接收消息的接口。
+
+在CacheManager初始化的时候会检查hostname是否可用。
+
+如果hostName不可用，CacheManager将拒绝启动并抛出一个连接被拒绝的异常。
+
+如果指定，hostname将使用InetAddress.getLocalHost().getHostAddress()来得到。
+
+警告：不要将localhost配置为本地地址127.0.0.1，因为它在网络中不可见将会导致不能从远程服务器接收信息从而不能复制。在同一台机器上有多个CacheManager的时候，你应该只用localhost来配置。
+
+port – 监听器监听的端口。
+socketTimeoutMillis (可选) – Socket超时的时间。默认是2000ms。当你socket同步缓存请求地址比较远，不是本地局域网。你可能需要把这个时间配置大些，不然很可能延时导致同步缓存失败。
+
+配置CacheReplicators
+
+每个要进行同步的cache都需要设置一个用来向CacheManagerr的成员复制消息的缓存事件监听器。这个工作要通过为每个cache的配置增加一个cacheEventListenerFactory元素来完成。
+
+<!-- Sample cache named sampleCache2. -->
+<cache name="sampleCache2"
+maxElementsInMemory="10"
+eternal="false"
+timeToIdleSeconds="100"
+timeToLiveSeconds="100"
+overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+properties="replicateAsynchronously=true,replicatePuts=true, replicateUpdates=true, replicateUpdatesViaCopy=false, replicateRemovals=true "/>
+</cache>
+class – 使用net.sf.ehcache.distribution.RMICacheReplicatorFactory
+
+这个工厂支持以下属性：
+replicatePuts=true | false – 当一个新元素增加到缓存中的时候是否要复制到其他的peers. 默认是true。
+replicateUpdates=true | false – 当一个已经在缓存中存在的元素被覆盖时是否要进行复制。默认是true。
+replicateRemovals= true | false – 当元素移除的时候是否进行复制。默认是true。
+replicateAsynchronously=true | false – 复制方式是异步的（指定为true时）还是同步的（指定为false时）。默认是true。
+replicatePutsViaCopy=true | false – 当一个新增元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+replicateUpdatesViaCopy=true | false – 当一个元素被拷贝到其他的cache中时是否进行复制（指定为true时为复制），默认是true。
+
+你可以使用ehcache的默认行为从而减少配置的工作量，默认的行为是以异步的方式复制每件事；你可以像下面的例子一样减少RMICacheReplicatorFactory的属性配置：
+
+<!-- Sample cache named sampleCache4. All missing RMICacheReplicatorFactory properties default to true -->
+<cache name="sampleCache4"
+maxElementsInMemory="10"
+eternal="true"
+overflowToDisk="false"
+memoryStoreEvictionPolicy="LFU">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"/>
+</cache>
+ 
+
+常见的问题
+
+Windows上的Tomcat
+
+有一个Tomcat或者是JDK的bug，在tomcat启动时如果tomcat的安装路径中有空格的话，在启动时RMI监听器会失败。参见http://archives.java.sun.com/cgi-bin/wa?A2=ind0205&L=rmi-users&P=797和http://www.ontotext.com/kim/doc/sys-doc/faq-howto-bugs/known-bugs.html。
+
+由于在Windows上安装Tomcat默认是装在“Program Files”文件夹里的，所以这个问题经常发生。
+
+广播阻断
+
+自动的peer discovery与广播息息相关。广播可能被路由阻拦，像Xen和VMWare这种虚拟化的技术也可以阻拦广播。如果这些都打开了，你可能还在要将你的网卡的相关配置打开。一个简单的办法可以告诉广播是否有效，
+
+那就是使用ehcache remote debugger来看“心跳”是否可用。
+
+广播传播的不够远或是传得太远
+
+你可以通过设置badly misnamed time to live来控制广播传播的距离。用广播IP协议时，timeToLive的值指的是数据包可以传递的域或是范围。约定如下：
+
+0是限制在同一个服务器
+
+1是限制在同一个子网
+
+32是限制在同一个网站
+
+64是限制在同一个region
+
+128是限制在同一个大洲
+
+255是不限制
+
+译者按：上面这些资料翻译的不够准确，请读者自行寻找原文理解吧。
+
+在Java实现中默认值是1，也就是在同一个子网中传播。改变timeToLive属性可以限制或是扩展传播的范围。
+
+ 
+
+三、 RMI方式缓存集群/配置分布式缓存
+
+RMI 是 Java 的一种远程方法调用技术，是一种点对点的基于 Java 对象的通讯方式。EhCache 从 1.2 版本开始就支持 RMI 方式的缓存集群。在集群环境中 EhCache 所有缓存对象的键和值都必须是可序列化的，也就是必须实现 java.io.Serializable 接口，这点在其它集群方式下也是需要遵守的。
+
+ 
+
+     下图是 RMI 集群模式的结构图：
+
+      clip_image004
+
+采用 RMI 集群模式时，集群中的每个节点都是对等关系，并不存在主节点或者从节点的概念，因此节点间必须有一个机制能够互相认识对方，必须知道其它节点的信息，包括主机地址、端口号等。EhCache 提供两种节点的发现方式：手工配置和自动发现。手工配置方式要求在每个节点中配置其它所有节点的连接信息，一旦集群中的节点发生变化时，需要对缓存进行重新配置。
+
+由于 RMI 是 Java 中内置支持的技术，因此使用 RMI 集群模式时，无需引入其它的 Jar 包，EhCache 本身就带有支持 RMI 集群的功能。使用 RMI 集群模式需要在 ehcache.xml 配置文件中定义 cacheManagerPeerProviderFactory 节点。
+
+ 
+
+      分布式同步缓存要让这边的cache知道对方的cache，叫做Peer Discovery（成员发现） EHCache实现成员发现的方式有两种：
+
+1、手动查找
+
+A、 在ehcache.xml中配置PeerDiscovery成员发现对象
+
+      Server1配置，配置本地hostName、port是400001，分别监听192.168.8.32:400002的mobileCache和192.168.5.231:400003 的mobileCache。注意这里的mobileCache是缓存的名称，分别对应着server2、server3的cache的配置。
+
+<?xml version="1.0" encoding="gbk"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd">
+    <diskStore path="java.io.tmpdir"/>
+ 
+    <!-- 
+        集群多台服务器中的缓存，这里是要同步一些服务器的缓存
+        server1 hostName:192.168.8.9 port:400001 cacheName:mobileCache
+        server2 hostName:192.168.8.32 port:400002 cacheName:mobileCache
+        server3 hostName:192.168.8.231 port:400003 cacheName:mobileCache
+        注意：每台要同步缓存的服务器的RMI通信socket端口都不一样，在配置的时候注意设置
+    -->
+    
+    <!-- server1 的cacheManagerPeerProviderFactory配置 -->
+    <cacheManagerPeerProviderFactory 
+        class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" 
+        properties="hostName=localhost,
+        port=400001,
+        socketTimeoutMillis=2000,
+        peerDiscovery=manual,
+        rmiUrls=//192.168.8.32:400002/mobileCache|//192.168.5.231:400003/mobileCache"
+    />
+</ehcache>
+以上注意cacheManagerPeerProviderFactory元素出现的位置在diskStore下
+
+ 
+
+同样在你的另外2台服务器上增加配置
+
+Server2，配置本地host，port为400002，分别同步192.168.8.9:400001的mobileCache和192.168.5.231:400003的mobileCache
+
+<!-- server2 的cacheManagerPeerProviderFactory配置 -->
+<cacheManagerPeerProviderFactory 
+    class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" 
+    properties="hostName=localhost,
+    port=400002,
+    socketTimeoutMillis=2000,
+    peerDiscovery=manual,
+    rmiUrls=//192.168.8.9:400001/mobileCache|//192.168.5.231:400003/mobileCache"
+/>
+Server3，配置本地host，port为400003，分别同步192.168.8.9:400001的mobileCache缓存和192.168.8.32:400002的mobileCache缓存
+
+<!-- server3 的cacheManagerPeerProviderFactory配置 -->
+<cacheManagerPeerProviderFactory 
+    class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" 
+    properties="hostName=localhost,
+    port=400003,
+    socketTimeoutMillis=2000,
+    peerDiscovery=manual,
+    rmiUrls=//192.168.8.9:400001/mobileCache|//192.168.8.32:400002/mobileCache"
+/>
+这样就在三台不同的服务器上配置了手动查找cache的PeerProvider成员发现的配置了。 值得注意的是你在配置rmiUrls的时候要特别注意url不能重复出现，并且端口、地址都是对的。
+
+如果指定，hostname将使用InetAddress.getLocalHost().getHostAddress()来得到。
+
+警告：不要将localhost配置为本地地址127.0.0.1，因为它在网络中不可见将会导致不能从远程服务器接收信息从而不能复制。在同一台机器上有多个CacheManager的时候，你应该只用localhost来配置。
+
+ 
+
+B、 下面配置缓存和缓存同步监听，需要在每台服务器中的ehcache.xml文件中增加cache配置和cacheEventListenerFactory、cacheLoaderFactory的配置
+
+<defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="30" timeToLiveSeconds="30" overflowToDisk="false"/>
+<!-- 
+    配置自定义缓存
+    maxElementsInMemory：缓存中允许创建的最大对象数
+    eternal：缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期。
+    timeToIdleSeconds：缓存数据空闲的最大时间，也就是说如果有一个缓存有多久没有被访问就会被销毁，如果该值是 0 就意味着元素可以停顿无穷长的时间。
+    timeToLiveSeconds：缓存数据存活的时间，缓存对象最大的的存活时间，超过这个时间就会被销毁，这只能在元素不是永久驻留时有效，如果该值是0就意味着元素可以停顿无穷长的时间。
+    overflowToDisk：内存不足时，是否启用磁盘缓存。
+    memoryStoreEvictionPolicy：缓存满了之后的淘汰算法。
+    
+    每一个小时更新一次缓存（1小时过期） 
+-->
+<cache name="mobileCache"
+    maxElementsInMemory="10000"
+    eternal="false"
+    overflowToDisk="true"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    memoryStoreEvictionPolicy="LFU">
+    <!-- 
+        RMI缓存分布同步查找 class使用net.sf.ehcache.distribution.RMICacheReplicatorFactory
+        这个工厂支持以下属性：
+        replicatePuts=true | false – 当一个新元素增加到缓存中的时候是否要复制到其他的peers。默认是true。
+        replicateUpdates=true | false – 当一个已经在缓存中存在的元素被覆盖时是否要进行复制。默认是true。
+        replicateRemovals= true | false – 当元素移除的时候是否进行复制。默认是true。
+        replicateAsynchronously=true | false – 复制方式是异步的指定为true时，还是同步的，指定为false时。默认是true。
+        replicatePutsViaCopy=true | false – 当一个新增元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+        replicateUpdatesViaCopy=true | false – 当一个元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+            asynchronousReplicationIntervalMillis=1000
+        -->
+    <!-- 监听RMI同步缓存对象配置 注册相应的的缓存监听类，用于处理缓存事件，如put,remove,update,和expire -->
+    <cacheEventListenerFactory
+        class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+        properties="replicateAsynchronously=true, 
+        replicatePuts=true, 
+        replicateUpdates=true,
+        replicateUpdatesViaCopy=false, 
+        replicateRemovals=true "/>
+    <!-- 用于在初始化缓存，以及自动设置 -->
+    <bootstrapCacheLoaderFactory class="net.sf.ehcache.bootstrap.BootstrapCacheLoaderFactory"/>
+</cache>
+ 
+
+C、 这样就完成了3台服务器的配置，下面给出server1的完整的ehcache.xml的配置
+
+<?xml version="1.0" encoding="gbk"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd">
+    <diskStore path="java.io.tmpdir"/>
+ 
+    <!-- 
+        集群多台服务器中的缓存，这里是要同步一些服务器的缓存
+        server1 hostName:192.168.8.9 port:400001 cacheName:mobileCache
+        server2 hostName:192.168.8.32 port:400002 cacheName:mobileCache
+        server3 hostName:192.168.8.231 port:400003 cacheName:mobileCache
+        注意每台要同步缓存的服务器的RMI通信socket端口都不一样，在配置的时候注意设置
+    -->
+    
+    <!-- server1 的cacheManagerPeerProviderFactory配置 -->
+    <cacheManagerPeerProviderFactory 
+        class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" 
+        properties="hostName=localhost,
+        port=400001,
+        socketTimeoutMillis=2000,
+        peerDiscovery=manual,
+        rmiUrls=//192.168.8.32:400002/mobileCache|//192.168.5.231:400003/mobileCache"
+    />
+    
+    <defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="30" timeToLiveSeconds="30" overflowToDisk="false"/>
+    <!-- 
+        配置自定义缓存
+        maxElementsInMemory：缓存中允许创建的最大对象数
+        eternal：缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期。
+        timeToIdleSeconds：缓存数据空闲的最大时间，也就是说如果有一个缓存有多久没有被访问就会被销毁，
+                    如果该值是 0 就意味着元素可以停顿无穷长的时间。
+        timeToLiveSeconds：缓存数据存活的时间，缓存对象最大的的存活时间，超过这个时间就会被销毁，
+                    这只能在元素不是永久驻留时有效，如果该值是0就意味着元素可以停顿无穷长的时间。
+        overflowToDisk：内存不足时，是否启用磁盘缓存。
+        memoryStoreEvictionPolicy：缓存满了之后的淘汰算法。
+        
+        每一个小时更新一次缓存（1小时过期） 
+    -->
+    <cache name="mobileCache"
+        maxElementsInMemory="10000"
+        eternal="false"
+        overflowToDisk="true"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="3600"
+        memoryStoreEvictionPolicy="LFU">
+        <!-- 
+            RMI缓存分布同步查找 class使用net.sf.ehcache.distribution.RMICacheReplicatorFactory
+            这个工厂支持以下属性：
+            replicatePuts=true | false – 当一个新元素增加到缓存中的时候是否要复制到其他的peers。默认是true。
+            replicateUpdates=true | false – 当一个已经在缓存中存在的元素被覆盖时是否要进行复制。默认是true。
+            replicateRemovals= true | false – 当元素移除的时候是否进行复制。默认是true。
+            replicateAsynchronously=true | false – 复制方式是异步的指定为true时，还是同步的，指定为false时。默认是true。
+            replicatePutsViaCopy=true | false – 当一个新增元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+            replicateUpdatesViaCopy=true | false – 当一个元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+                asynchronousReplicationIntervalMillis=1000
+            -->
+        <!-- 监听RMI同步缓存对象配置 注册相应的的缓存监听类，用于处理缓存事件，如put,remove,update,和expire -->
+        <cacheEventListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+            properties="replicateAsynchronously=true, 
+            replicatePuts=true, 
+            replicateUpdates=true,
+            replicateUpdatesViaCopy=false, 
+            replicateRemovals=true "/>
+        <!-- 用于在初始化缓存，以及自动设置 -->
+        <bootstrapCacheLoaderFactory class="net.sf.ehcache.bootstrap.BootstrapCacheLoaderFactory"/>
+    </cache>
+</ehcache>
+2、自动发现
+
+自动发现配置和手动查找的方式有一点不同，其他的地方都基本是一样的。同样在ehcache.xml中增加配置，配置如下
+
+<!--
+搜索某个网段上的缓存
+timeToLive
+    0是限制在同一个服务器
+    1是限制在同一个子网
+    32是限制在同一个网站
+    64是限制在同一个region
+    128是限制在同一个大洲
+    255是不限制
+-->
+<cacheManagerPeerProviderFactory
+    class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+    properties="peerDiscovery=automatic, multicastGroupAddress=192.168.0.1,
+    multicastGroupPort=400004, timeToLive=32"
+/>
+其他的配置和手动查找方式的配置是一样的，这里就不再赘述了。关于ehcache的其他缓存配置方式这里将不再介绍，大家可以自己去研究。可以参考：
+

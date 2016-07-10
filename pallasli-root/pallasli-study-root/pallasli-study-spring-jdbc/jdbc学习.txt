@@ -1,0 +1,316 @@
+流数据
+
+PreparedStatement 对象必须具备使用输入和输出流来提供参数数据的能力。这使你能够将整个文件存储到数据库列中，这样数据库就能存储大型数据，例如 CLOB 和 BLOB 数据类型。
+
+用于流数据有下列几种方法-
+
+setAsciiStream(): 该方法是用来提供较大的 ASCII 值。
+setCharacterStream(): 该方法是用来提供较大的 UNICODE 值。
+setBinaryStream(): 该方法是用来提供较大的二进制值。
+setXXXStream()方法需要一个额外的参数，该参数是除了参数占位符的文件大小。这个参数通知驱动程序通过使用流有多少数据被发送到数据库中。
+
+//Open a FileInputStream
+      File f = new File("XML_Data.xml");
+      long fileLength = f.length();
+      FileInputStream fis = new FileInputStream(f);
+
+      //Create PreparedStatement and stream data
+      String SQL = "INSERT INTO XML_Data VALUES (?,?)";
+      pstmt = conn.prepareStatement(SQL);
+      pstmt.setInt(1,100);
+      pstmt.setAsciiStream(2,fis,(int)fileLength);
+      pstmt.execute();
+
+      //Close input stream
+      fis.close();
+
+      
+      
+      
+      
+批处理和 Statement 对象
+使用 Statement 对象来使用批处理所需要的典型步骤如下所示-
+
+使用 createStatement() 方法创建一个 Statement 对象。
+使用 setAutoCommit() 方法将自动提交设为 false。
+被创建的 Statement 对象可以使用 addBatch() 方法来添加你想要的所有SQL语句。
+被创建的 Statement 对象可以用 executeBatch() 将所有的 SQL 语句执行。
+最后，使用 commit() 方法提交所有的更改。
+      
+      
+批处理和 PrepareStatement 对象
+使用 prepareStatement 对象来使用批处理需要的典型步骤如下所示-
+
+使用占位符创建 SQL 语句。
+使用任一 prepareStatement() 方法创建 prepareStatement 对象。
+使用 setAutoCommit() 方法将自动提交设为 false。
+被创建的 Statement 对象可以使用 addBatch() 方法来添加你想要的所有 SQL 语句。
+被创建的 Statement 对象可以用 executeBatch() 将所有的 SQL 语句执行。
+最后，使用 commit() 方法提交所有的更改。
+      
+      
+      
+      
+      
+      
+      
+SQLException 方法
+SQLException 异常在驱动程序和数据库中都可能出现。当出现这个异常时，SQLException 类型的对象将被传递到 catch 子句。
+
+传递的 SQLException 对象具有以下的方法，以下的方法可用于检索该异常的额外信息-
+
+方法	描述
+getErrorCode( )	获取与异常关联的错误号。
+getMessage( )	获取 JDBC 驱动程序的错误信息，该错误是由驱动程序处理的，或者在数据库错误中获取 Oracl 错误号和错误信息。
+getSQLState( )	获取 XOPEN SQLstate 字符串。对于 JDBC 驱动程序错误，使用该方法不能返回有用的信息。对于数据库错误，返回第五位的 XOPEN SQLstate 代码。该方法可以返回 null。
+getNextException( )	获取异常链的下一个 Exception 对象。
+printStackTrace( )	打印当前异常或者抛出，其回溯到标准的流错误。
+printStackTrace(PrintStream s)	打印该抛出，其回溯到你指定的打印流。
+printStackTrace(PrintWriter w)	打印该抛出，其回溯到你指定的打印写入。
+
+
+
+
+
+
+
+
+使用还原点
+新的 JDBC 3.0 还原点接口提供了额外的事务控制。大部分现代的数据库管理系统的环境都支持设定还原点，例如 Oracle 的 PL/SQL。
+
+当你在事务中设置一个还原点来定义一个逻辑回滚点。如果在一个还原点之后发生错误，那么可以使用 rollback 方法来撤消所有的修改或在该还原点之后所做的修改。
+
+Connection 对象有两个新的方法来管理还原点-
+
+setSavepoint(String savepointName): 定义了一个新的还原点。它也返回一个 Savepoint 对象。
+
+releaseSavepoint(Savepoint savepointName): 删除一个还原点。请注意，它需要一个作为参数的 Savepoint 对象。这个对象通常是由 setSavepoint() 方法生成的一个还原点。
+有一个 rollback (String savepointName) 方法，该方法可以回滚到指定的还原点。
+
+
+
+
+
+      
+  
+  
+  
+数据类型
+
+JDBC 驱动程序在将 Java 数据类型发送到数据库之前，会将其转换为相应的 JDBC 类型。对于大多数数据类型都采用了默认的映射关系。例如，一个 Java int 数据类型转换为 SQL INTEGER。通过默认的映射关系来提供驱动程序之间的一致性。
+
+当你调用 PreparedStatement 中的 setXXX()方法或 CallableStatement 对象或 ResultSet.updateXXX()方法时， Java 数据类型会转换为默认的 JDBC 数据类型，如下表概述。
+
+SQL	JDBC/Java	setXXX	updateXXX
+VARCHAR	java.lang.String	setString	updateString
+CHAR	java.lang.String	setString	updateString
+LONGVARCHAR	java.lang.String	setString	updateString
+BIT	boolean	setBoolean	updateBoolean
+NUMERIC	java.math.BigDecimal	setBigDecimal	updateBigDecimal
+TINYINT	byte	setByte	updateByte
+SMALLINT	short	setShort	updateShort
+INTEGER	int	setInt	updateInt
+BIGINT	long	setLong	updateLong
+REAL	float	setFloat	updateFloat
+FLOAT	float	setFloat	updateFloat
+DOUBLE	double	setDouble	updateDouble
+VARBINARY	byte[ ]	setBytes	updateBytes
+BINARY	byte[ ]	setBytes	updateBytes
+DATE	java.sql.Date	setDate	updateDate
+TIME	java.sql.Time	setTime	updateTime
+TIMESTAMP	java.sql.Timestamp	setTimestamp	updateTimestamp
+CLOB	java.sql.Clob	setClob	updateClob
+BLOB	java.sql.Blob	setBlob	updateBlob
+ARRAY	java.sql.Array	setARRAY	updateARRAY
+REF	java.sql.Ref	SetRef	updateRef
+STRUCT	java.sql.Struct	SetStruct	updateStruct
+JDBC 3.0 增强了对 BLOB，CLOB，ARRAY 和 REF 数据类型的支持。 ResultSet 对象现在有 UPDATEBLOB()，updateCLOB()， updateArray()，和 updateRef()方法，通过这些方法你可以直接操作服务器上的相应数据。
+
+你能用 setXXX()方法和 updateXXX()方法将 Java 类型转换为特定的 JDBC 数据类型。你能用 setObject()方法和 updateObject()方法将绝大部分的 Java 类型映射到 JDBC 数据类型。
+
+ResultSet 对象为任一数据类型提供相应的 getXXX()方法，该方法可以获取任一数据类型的列值。上述任一方法的使用需要列名或它的顺序位置。
+
+SQL	JDBC/Java	setXXX	getXXX
+VARCHAR	java.lang.String	setString	getString
+CHAR	java.lang.String	setString	getString
+LONGVARCHAR	java.lang.String	setString	getString
+BIT	boolean	setBoolean	getBoolean
+NUMERIC	java.math.BigDecimal	setBigDecimal	getBigDecimal
+TINYINT	byte	setByte	getByte
+SMALLINT	short	setShort	getShort
+INTEGER	int	setInt	getInt
+BIGINT	long	setLong	getLong
+REAL	float	setFloat	getFloat
+FLOAT	float	setFloat	getFloat
+DOUBLE	double	setDouble	getDouble
+VARBINARY	byte[ ]	setBytes	getBytes
+BINARY	byte[ ]	setBytes	getBytes
+DATE	java.sql.Date	setDate	getDate
+TIME	java.sql.Time	setTime	getTime
+TIMESTAMP	java.sql.Timestamp	setTimestamp	getTimestamp
+CLOB	java.sql.Clob	setClob	getClob
+BLOB	java.sql.Blob	setBlob	getBlob
+ARRAY	java.sql.Array	setARRAY	getARRAY
+REF	java.sql.Ref	SetRef	getRef
+STRUCT	java.sql.Struct	SetStruct	getStruct
+
+
+
+
+
+
+
+
+
+
+结果集
+
+SQL 语句从数据库查询中获取数据，并将数据返回到结果集中。SELECT 语句是一种标准的方法，它从一个数据库中选择行记录，并显示在一个结果集中。 java.sql.ResultSet 接口表示一个数据库查询的结果集。
+
+一个 ResultSet 对象控制一个光标指向当前行的结果集。术语“结果集”是指包含在 ResultSet 对象中的行和列的数据。
+
+ResultSet 接口的方法可细分为三类-
+
+导航方法：用于移动光标。
+获取方法：用于查看当前行被光标所指向的列中的数据。
+更新方法：用于更新当前行的列中的数据。这些更新也会更新数据库中的数据。
+光标的移动基于 ResultSet 的属性。用相应的语句生成 ResultSet 对象时，同时生成 ResultSet 的属性。
+
+JDBC 提供了连接方法通过下列创建语句来生成你所需的 ResultSet 对象：
+
+createStatement(int RSType, int RSConcurrency);
+prepareStatement(String SQL, int RSType, int RSConcurrency);
+prepareCall(String sql, int RSType, int RSConcurrency);
+第一个参数表示 ResultSet 对象的类型，第二个参数是两个 ResultSet 常量之一，该常量用于判断该结果集是只读的还是可修改的。
+
+ResultSet 的类型
+可能的 RSType 如下所示。如果你不指定 ResultSet 类型，将自动获得的值是 TYPE_FORWARD_ONLY。
+
+类型	描述
+ResultSet.TYPE_FORWARD_ONLY	光标只能在结果集中向前移动。
+ResultSet.TYPE_SCROLL_INSENSITIVE	光标可以向前和向后移动。当结果集创建后，其他人对数据库的操作不会影响结果集的数据。
+ResultSet.TYPE_SCROLL_SENSITIVE.	光标可以向前和向后移动。当结果集创建后，其他人对数据库的操作会影响结果集的数据。
+ResultSet 的并发性
+RSConcurrency 的值如下所示，如果你不指定并发类型，将自动获得的值是 CONCUR_READ_ONLY。
+
+并发性	描述
+ResultSet.CONCUR_READ_ONLY	创建一个只读结果集，这是默认的值。
+ResultSet.CONCUR_UPDATABLE	创建一个可修改的结果集。
+到目前为止我们的示例可以如下所示，可以写成初始化一个 Statement 对象来创建一个只能前进，而且只读的 ResultSet 对象-
+
+try {
+   Statement stmt = conn.createStatement(
+                           ResultSet.TYPE_FORWARD_ONLY,
+                           ResultSet.CONCUR_READ_ONLY);
+}
+catch(Exception ex) {
+   ....
+}
+finally {
+   ....
+}
+导航结果集
+在 ResultSet 接口中包括如下几种方法涉及移动光标-
+
+S.N.	方法 & 描述
+1	public void beforeFirst() throws SQLException
+将光标移动到第一行之前。
+
+2	public void afterLast() throws SQLException
+将光标移动到最后一行之后。
+
+3	public boolean first() throws SQLException
+将光标移动到第一行。
+
+4	public void last() throws SQLException
+将光标移动到最后一行。
+
+5	public boolean absolute(int row) throws SQLException
+将光标移动到指定的第 row 行。
+
+6	public boolean relative(int row) throws SQLException
+将光标移动到当前指向的位置往前或往后第 row 行的位置。
+
+7	public boolean previous() throws SQLException
+将光标移动到上一行，如果超过结果集的范围则返回 false。
+
+8	public boolean next() throws SQLException
+将光标移动到下一行，如果是结果集的最后一行则返回 false。
+
+9	public int getRow() throws SQLException
+返回当前光标指向的行数的值。
+
+10	public void moveToInsertRow() throws SQLException
+将光标移动到结果集中指定的行，可以在数据库中插入新的一行。当前光标位置将被记住。
+
+11	public void moveToCurrentRow() throws SQLException
+如果光标处于插入行，则将光标返回到当前行，其他情况下，这个方法不执行任何操作。
+
+为了更好地理解，让我们研究学习导航示例代码。
+
+查看结果集
+ResultSet接口中含有几十种从当前行获取数据的方法。
+
+每个可能的数据类型都有一个 get 方法，并且每个 get 方法有两个版本-
+
+一个需要列名。
+一个需要列的索引。
+例如，如果你想查看的列包含一个 int 类型，你需要在 ResultSet 中调用 getInt()方法-
+
+S.N.	方法 & 描述
+1	public int getInt(String columnName) throws SQLException
+返回当前行中名为 columnName 的列的 int 值。
+
+2	public int getInt(int columnIndex) throws SQLException
+返回当前行中指定列的索引的 int 值。列索引从 1 开始，意味着行中的第一列是 1 ，第二列是 2 ，以此类推。
+
+同样的，在 ResultSet 接口中还有获取八个 Java 原始类型的 get 方法，以及常见的类型，比如 java.lang.String，java.lang.Object 和 java.net.URL。
+
+也有用于获取 SQL 数据类型 java.sql.Date， java.sql.Time， java.sql.Timestamp， java.sql.Clob，java.sql.Blob 中的方法。查看文档可以了解使用这些 SQL 数据类型的更多的信息。
+
+更新的结果集
+ResultSet 接口包含了一系列的更新方法，该方法用于更新结果集中的数据。
+
+用 get 方法可以有两个更新方法来更新任一数据类型-
+
+一个需要列名。
+一个需要列的索引。
+例如，要更新一个结果集的当前行的 String 列，你可以使用任一如下所示的 updateString()方法-
+
+S.N.	方法 & 描述
+1	public void updateString(int columnIndex, String s) throws SQLException
+将指定列的字符串的值改为 s。
+
+2	public void updateString(String columnName, String s) throws SQLException
+类似于前面的方法，不同之处在于指定的列是用名字来指定的，而不是它的索引。
+
+八个原始数据类型都有其更新方法，比如 String，Object，URL，和在 java.sql 包中的 SQL 数据类型。
+
+更新结果集中的行将改变当前行的列中的 ResultSet 对象，而不是基础数据库中的数据。要更新数据库中一行的数据，你需要调用以下的任一方法-
+
+S.N.	方法 & 描述
+1	public void updateRow()
+通过更新数据库中相对应的行来更新当前行。
+
+2	public void deleteRow()
+从数据库中删除当前行。
+
+3	public void refreshRow()
+在结果集中刷新数据，以反映数据库中最新的数据变化。
+
+4	public void cancelRowUpdates()
+取消对当前行的任何修改。
+
+5	public void insertRow()
+在数据库中插入一行。本方法只有在光标指向插入行的时候才能被调用。
+
+
+
+
+
+
+
+
+
+
+    

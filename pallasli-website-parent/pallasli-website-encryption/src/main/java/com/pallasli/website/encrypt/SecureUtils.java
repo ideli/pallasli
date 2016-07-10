@@ -4,7 +4,6 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 
 public class SecureUtils {
 	// MD5 单向加密：
@@ -26,48 +25,6 @@ public class SecureUtils {
 			hex.append(Integer.toHexString(h));
 		}
 		return hex.toString();
-	}
-
-	// DES 对称加密类：
-	// @Override
-	public byte[] encrypt(byte[] data) throws Exception {
-		if (secretKey == null || "".equals(secretKey)) {
-			throw new Exception("scretKey need to exists");
-		}
-
-		SecretKey md5Key = getKey(secretKey);
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, md5Key);
-		return cipher.doFinal(data);
-	}
-
-	@Override
-	public byte[] decrypt(byte[] data) throws Exception {
-		if (secretKey == null || "".equals(secretKey)) {
-			throw new Exception("scretKey need to exists");
-		}
-
-		SecretKey md5Key = getKey(secretKey);
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE, md5Key);
-		return cipher.doFinal(data);
-	}
-
-	// RSA 非对称加密。私钥加密 & 私钥解密 & 私钥签名
-	// @Override
-	public byte[] encrypt(byte[] data) throws Exception {
-		PrivateKey rsaPrivateKey = getRSAPrivateKey();
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, rsaPrivateKey);
-		return cipher.doFinal(data);
-	}
-
-	@Override
-	public byte[] decrypt(byte[] data) throws Exception {
-		PrivateKey rsaPrivateKey = getRSAPrivateKey();
-		Cipher cipher = Cipher.getInstance(ALGORITHM);
-		cipher.init(Cipher.DECRYPT_MODE, rsaPrivateKey);
-		return cipher.update(data);
 	}
 
 	/**

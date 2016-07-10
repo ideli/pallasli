@@ -1,3 +1,486 @@
+概述
+
+Log4j 是一个使用 Java 语言编写的，可靠、快速、灵活的日志框架（API），使用 Apache Software License 授权。
+
+它被移植到 C、C++、C#、Perl、Python、Ruby 和 Eiffel 语言中。
+
+Log4j 是高度可配置的，在运行期使用外部的配置文件对其进行配置。它按照优先级别记录日志，并可将日志信息定向输出到各种介质，比如数据库、文件、控制台、Unix Syslog等。
+
+Log4j 主要由三部分组成：
+
+loggers：负责采集日志信息。
+appenders：负责将日志信息发布到不同地方。
+layouts：负责以各种风格格式化日志信息。
+Log4j 的历史
+始于 1996 年，作为记录E.U. SEMPER (Secure Electronic Marketplace for Europe)项目跟踪信息的 API。
+经过大量的完善和蜕变，最初的 API 终于演进为 Log4j，一个在 Java 社区流行的日志类库。
+该类库使用 Apache Software License 授权，该授权是经开源促进协会认证的、完整的开源协议。
+最新版本的 Log4j，连同其代码、类文件和文档可通过 http://logging.apache.org/log4j/ 获取。
+Log4j 的功能
+线程安全。
+速度优化。
+基于命名的 logger 层次。
+每个 logger 支持多种输出 appender。
+支持国际化。
+不受限于预定义好的设施。
+日志记录行为可在运行期通过配置文件设置。
+设计之初就考虑了处理 Java 异常。
+使用多个日志级别：ALL、TRACE、DEBUG、INFO、WARN、ERROR、FATAL。
+通过扩展 Layout 类可轻松改变输出日志的格式。
+输出日志的目的和策略可通过实现 Appender 接口改变。
+失败即停止。虽然 Log4j 努力做到最好，但不保证每一条日志都能发送到指定目的地。
+记录日志的优缺点
+记录日志是软件开发中的重要一环。编写良好的日志代码能为运行应用提供快速的诊断信息和良好的存储结构，方便维护。
+
+记录日志也有其缺点，它会让应用变慢。假如输出太详细，可能会导致屏幕闪动。为了减轻这些影响，Log4j 被设计为可靠的，更快的和可扩展的。
+
+由于日志很少是应用程序关注的焦点，所以 Log4j API 力争做到简单并易于理解和使用。
+
+
+
+
+核心对象
+核心对象包括如下几种类型：
+
+Logger 对象
+最上一层是 Logger 对象，该对象负责获取日志信息，并存储于一个分层的命名空间之中。
+
+Layout 对象
+Layout 层提供了用于以各种风格格式化日志信息的对象，在发布日志信息之前，它为 appender 对象提供支持。
+Layout 对象对于发布日志信息非常重要，它使日志变得可读、可复用。
+
+Appender 对象
+该对象位于分层架构中的较低一层，Appender 对象负责将日志信息发布到不同目的地，比如数据库、文件、控制台、Unix Syslog 等。
+
+
+Log4j 中还有其他一些对象，同样在框架中发挥着重要作用。
+
+Level 对象
+Level 对象定义了日志信息的粒度和优先级。API 定义了七种级别：OFF、DEBUG、INFO、ERROR、WARN、FATAL、ALL。
+
+Filter 对象
+Filter 对象用来分析日志信息，进而决定该条日志是否被记录。
+一个 Appender 对象可对应多个 Filter 对象，当日志信息传给 Appender 对象时，与其关联的所有 Filter 对象需要判断是否将日志信息发布到目的地。
+
+ObjectRenderer
+ObjectRenderer 对象负责为传入日志框架的不同对象提供字符串形式的表示，Layout 对象使用该对象来准备最终的日志信息。
+
+LogManager
+LogManager 对象管理日志框架，它负责从系统级的配置文件或类中读取初始配置参数。
+
+
+
+
+
+配置
+
+上一章解释了 Log4j 的核心组件。本章讲述如何使用配置文件来配置核心组件。Log4j 的配置包括在配置文件中指定 Level、定义 Appender 和指明 Layout。
+
+Log4j.properties 文件是 Log4j 的配置文件，属性以键值对的形式定义。默认情况下，LogManager 会在 CLASSPATH 中寻找 Log4j.properties 文件。
+
+根日志的级别定义为 DEBUG，并将名为 X 的 appender 添加其上。
+将名为 X 的 appender 设置为合法的 appender。
+设置 appender X 的 layout。
+Log4j.properties 的语法
+为 appender X 定义的 Log4j.properties 的语法如下：
+
+# Define the root logger with appender X
+Log4j.rootLogger = DEBUG, X
+
+# Set the appender named X to be a File appender
+Log4j.appender.X=org.apache.Log4j.FileAppender
+
+# Define the layout for X appender
+Log4j.appender.X.layout=org.apache.Log4j.PatternLayout
+Log4j.appender.X.layout.conversionPattern=%m%n
+Log4j.properties 示例
+使用上述语法，我们在 Log4j.properties 定义如下属性：
+
+定义根日志级别为 DEBUG，并将名为 FILE 的 appender 添加其上。
+appender FILE 定义为 org.apache.Log4j.FileAppender，它将日志写入 log 目录下一个名为 log.out 的文件中。
+layout 被定义为 %m%n，即打印出来的日志信息末尾加入换行。
+# Define the root logger with appender file
+Log4j.rootLogger = DEBUG, FILE
+
+# Define the file appender
+Log4j.appender.FILE=org.apache.Log4j.FileAppender
+Log4j.appender.FILE.File=${log}/log.out
+
+# Define the layout for file appender
+Log4j.appender.FILE.layout=org.apache.Log4j.PatternLayout
+Log4j.appender.FILE.layout.conversionPattern=%m%n
+值得注意的是，Log4j 支持 Unix 风格的变量替换，比如 ${variableName}。
+
+DEBUG 级别
+两个 appender 都使用了 DEBUG 级别，所有可能的选项如下：
+
+TRACE
+DEBUG
+INFO
+WARN
+ERROR
+FATAL
+ALL
+这些级别会在本教程的后续部分讲解。
+
+Appender
+Apache Log4j 提供的 Appender 对象主要负责将日志信息打印至不同目的地，比如控制台、文件、网络套接字、NT 事件日志等。
+
+每个 Appender 对象都有不同的属性，这些属性决定了该对象的行为。
+
+属性	描述
+layout	Appender 使用 Layout 对象和与之关联的模式来格式化日志信息。
+target	目的地可以是控制台、文件，或依赖于 appender 的对象。
+level	级别用来控制过滤日志信息。
+threshold	Appender 可脱离于日志级别定义一个阀值级别，Appender 对象会忽略所有级别低于阀值级别的日志。
+filter	Filter 对象可在级别基础之上分析日志信息，来决定 Appender 对象是否处理或忽略一条日志记录。
+通过在配置文件中使用如下方法，将 Appender 对象添加至 Logger 对象：
+
+Log4j.logger.[logger-name]=level, appender1,appender..n
+也可以在 XML 中定义同样的配置：
+
+<logger name="com.apress.logging.Log4j" additivity="false">
+   <appender-ref ref="appender1"/>
+   <appender-ref ref="appender2"/>
+</logger>
+如果想在程序中添加 Appender 对象，可使用如下方法：
+
+public void addAppender(Appender appender);
+addAppender() 方法为 Logger 对象增加一个 Appender。如示例配置展示的那样，可以通过逗号分隔的列表，为 logger 添加多个 Appender，将日志信息打印到不同的目的地。
+
+在上面的例子中，我们只用到了 FileAppender，所有可用的 appender 包括：
+
+AppenderSkeleton
+AsyncAppender
+ConsoleAppender
+DailyRollingFileAppender
+ExternallyRolledFileAppender
+FileAppender
+JDBCAppender
+JMSAppender
+LF5Appender
+NTEventLogAppender
+NullAppender
+RollingFileAppender
+SMTPAppender
+SocketAppender
+SocketHubAppender
+SyslogAppender
+TelnetAppender
+WriterAppender
+我们将在使用文件记录日志一章讲解 FileAppender，在使用数据库记录日志一章讲解 JDBC Appender。
+
+Layout
+我们已经在 appender 中使用了 PatternLayout，所有选项还包括：
+
+DateLayout
+HTMLLayout
+PatternLayout
+SimpleLayout
+XMLLayout
+使用 HTMLLayout 和 XMLLayout，可以生成 HTML 和 XML 格式的日志。
+
+日志格式化
+您将在日志格式一章学习如何格式化日志信息。
+
+
+
+
+
+
+
+
+
+日志格式
+
+Apache Log4j 提供了多个 Layout 对象，每个根据布局的不同都可格式化日志数据。还可以创建一个 Layout 对象，以应用特有的方式格式化日志。
+
+所有 Layout 对象从 Appender 对象那里接收一个 LoggingEvent 对象，然后从 LoggingEvent 对象那里获取信息，并使用恰当的 ObjectRenderer 对象获取该信息的字符串形式。
+
+Layout 类型
+位于继承关系顶层的是抽象类 org.apache.Log4j.Layout，这是所有 Log4j API 中 Layout 类的基类。
+
+Layout 类是个抽象类，在应用中我们从不直接使用该类，而是使用它的子类，如下所示：
+
+DateLayout
+HTMLLayout
+PatternLayout
+SimpleLayout
+XMLLayout
+Layout 方法
+该类对于所有其他 Layout 对象的通用操作提供了框架性的实现，声明了两个抽象方法：
+
+序号	方法 & 描述
+1	public abstract boolean ignoresThrowable()
+该方法指明日志信息是否处理由日志事件传来的 java.lang.Throwable 对象，如果 Layout 对象能处理 Throwable 对象，则 Layout 对象不会忽略它，并且返回 false。
+
+2	public abstract String format(LoggingEvent event)
+各 Layout 子类实现该方法，以定义各自的格式。
+
+除了这些抽象方法，Layout 类还提供了如下的具体方法：
+
+序号	方法 & 描述
+1	public String getContentType()
+返回 Layout 对象使用的内容类型。基类返回 text/plain 作为默认内容类型。
+
+2	public String getFooter()
+返回日志信息的脚注。
+
+3	public String getHeader()
+返回日志信息的日志头。
+
+每个子类均可覆盖这些方法的实现，返回各自特有的信息。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+使用文件记录日志
+
+使用 org.apache.Log4j.FileAppender 将日志记录到文件。
+
+FileAppender 配置
+FileAppender 拥有如下配置参数：
+
+属性	描述
+immediateFlush	该标志位默认为 true，意味着每次日志追加操作都将输出流刷新至文件。
+encoding	可以使用任何编码，默认情况下使用平台相关的编码。
+threshold	appender 对象的阀值。
+Filename	日志文件名。
+fileAppend	该值默认为 true，其含义是让日志追加至文件末尾。
+bufferedIO	该标志位表示是否打开缓冲区写，缺省为 false。
+bufferSize	如果开启缓冲区 I/O，该属性指示缓冲区大小，缺省为 8 kb。
+下面是一个使用 FileAppender 的示例配置文件 Log4j.properties：
+
+# Define the root logger with appender file
+Log4j.rootLogger = DEBUG, FILE
+
+# Define the file appender
+Log4j.appender.FILE=org.apache.Log4j.FileAppender
+
+# Set the name of the file
+Log4j.appender.FILE.File=${log}/log.out
+
+# Set the immediate flush to true (default)
+Log4j.appender.FILE.ImmediateFlush=true
+
+# Set the threshold to debug mode
+Log4j.appender.FILE.Threshold=debug
+
+# Set the append to false, overwrite
+Log4j.appender.FILE.Append=false
+
+# Define the layout for file appender
+Log4j.appender.FILE.layout=org.apache.Log4j.PatternLayout
+Log4j.appender.FILE.layout.conversionPattern=%m%n
+如果您需要一个和 Log4j.properties 文件功能类似的 XML 配置文件，如下所示：
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Log4j:configuration SYSTEM "Log4j.dtd">
+<Log4j:configuration>
+
+<appender name="FILE" class="org.apache.Log4j.FileAppender">
+
+   <param name="file" value="${log}/log.out"/>
+   <param name="immediateFlush" value="true"/>
+   <param name="threshold" value="debug"/>
+   <param name="append" value="false"/>
+
+   <layout class="org.apache.Log4j.PatternLayout">
+      <param name="conversionPattern" value="%m%n"/>
+   </layout>
+</appender>
+
+<logger name="Log4j.rootLogger" additivity="false">
+   <level value="DEBUG"/>
+   <appender-ref ref="FILE"/>
+</logger>
+
+</Log4j:configuration>
+您可以使用上述配置尝试示例程序一章中的例子。
+
+使用多个文件记录日志
+您可能因为某些原因，需要将日志写入多个文件，比如当文件大小达到一定阀值时。
+
+为了将日志写入多个文件，您需要使用 org.apache.Log4j.RollingFileAppender，该类继承了 FileAppender 类，继承了它的所有属性。
+
+除了上述提到的 FileAppender 类的属性，该类还包括如下可配置的属性：
+
+属性	描述
+maxFileSize	这是文件大小的关键值，大于该值时，文件会回滚。该值默认为 10 MB。
+maxBackupIndex	该值表示备份文件的个数，默认为 1。
+下面是为 RollingFileAppender 定义的示例配置文件 Log4j.properties：
+
+# Define the root logger with appender file
+Log4j.rootLogger = DEBUG, FILE
+
+# Define the file appender
+Log4j.appender.FILE=org.apache.Log4j.RollingFileAppender
+
+# Set the name of the file
+Log4j.appender.FILE.File=${log}/log.out
+
+# Set the immediate flush to true (default)
+Log4j.appender.FILE.ImmediateFlush=true
+
+# Set the threshold to debug mode
+Log4j.appender.FILE.Threshold=debug
+
+# Set the append to false, should not overwrite
+Log4j.appender.FILE.Append=true
+
+# Set the maximum file size before rollover
+Log4j.appender.FILE.MaxFileSize=5KB
+
+# Set the the backup index
+Log4j.appender.FILE.MaxBackupIndex=2
+
+# Define the layout for file appender
+Log4j.appender.FILE.layout=org.apache.Log4j.PatternLayout
+Log4j.appender.FILE.layout.conversionPattern=%m%n
+如果您想使用 XML 配置文件，可以像上一节一样生成 XML 配置文件，只需添加和 RollingFileAppender 相关的配置即可。
+
+该示例配置文件展示了每个日志文件最大为 5 MB，如果超过该最大值，则会生成一个新的日志文件。由于 maxBackupIndex 的值为 2，当第二个文件的大小超过最大值时，会擦去第一个日志文件的内容，所有的日志都回滚至第一个日志文件。
+
+您可以使用上述配置尝试示例程序一章中的例子。
+
+逐日生成日志文件
+您也许需要逐日生成日志文件，以此更加整洁的记录日志信息。
+
+为了逐日生成日志文件，需要使用 org.apache.Log4j.DailyRollingFileAppender，，该类继承了 FileAppender 类，继承了它的所有属性。
+
+除了上述提到的 FileAppender 类的属性，该类多包含了一个重要属性：
+
+属性	描述
+DatePattern	该属性表明什么时间回滚文件，以及文件的命名约定。缺省情况下，在每天午夜回滚文件。
+DatePattern 使用如下规则控制回滚计划：
+
+DatePattern	描述
+'.' yyyy-MM	在本月末，下月初回滚文件。
+'.' yyyy-MM-dd	在每天午夜回滚文件，这是缺省值。
+'.' yyyy-MM-dd-a	在每天中午和午夜回滚文件。
+'.' yyyy-MM-dd-HH	在每个整点回滚文件。
+'.' yyyy-MM-dd-HH-mm	每分钟回滚文件。
+'.' yyyy-ww	根据地域，在每周的第一天回滚。
+下述 Log4j.properties 示例文件产生的日志文件在每天中午和午夜回滚：
+
+# Define the root logger with appender file
+Log4j.rootLogger = DEBUG, FILE
+
+# Define the file appender
+Log4j.appender.FILE=org.apache.Log4j.DailyRollingFileAppender
+
+# Set the name of the file
+Log4j.appender.FILE.File=${log}/log.out
+
+# Set the immediate flush to true (default)
+Log4j.appender.FILE.ImmediateFlush=true
+
+# Set the threshold to debug mode
+Log4j.appender.FILE.Threshold=debug
+
+# Set the append to false, should not overwrite
+Log4j.appender.FILE.Append=true
+
+# Set the DatePattern
+Log4j.appender.FILE.DatePattern='.' yyyy-MM-dd-a
+
+# Define the layout for file appender
+Log4j.appender.FILE.layout=org.apache.Log4j.PatternLayout
+Log4j.appender.FILE.layout.conversionPattern=%m%n
+如果您想使用 XML 配置文件，可以像上一节一样生成 XML 配置文件，只需添加和 DailyRollingFileAppender 相关的配置即可。
+
+
+
+
+
+使用数据库记录日志
+
+Log4j API 提供了 org.apache.Log4j.jdbc.JDBCAppender 对象，该对象可将日志信息记录到特定的数据库之中。
+
+JDBCAppender 配置
+属性	描述
+bufferSize	设置缓冲区大小，缺省为 1。
+driver	以字符串形式设置驱动类，如果未设置，缺省为 sun.jdbc.odbc.JdbcOdbcDriver。
+layout	设置 layout，缺省为 org.apache.Log4j.PatternLayout。
+password	设置数据库密码。
+sql	设置每次日志事件触发时需要执行的 SQL 语句，该语句可以是 INSERT、UPDATE 或 DELETE。
+URL	设置 JDBC URL.
+user	设置数据库用户名。
+日志表的配置
+在使用基于 JDBC 的日志之前，先要创建一张表以保存所有日志信息，下面是用来创建 LOGS 表的 SQL 语句：
+
+CREATE TABLE LOGS
+   (USER_ID VARCHAR(20)    NOT NULL,
+    DATED   DATE           NOT NULL,
+    LOGGER  VARCHAR(50)    NOT NULL,
+    LEVEL   VARCHAR(10)    NOT NULL,
+    MESSAGE VARCHAR(1000)  NOT NULL
+   );
+示例配置文件
+下面是一个为 JDBCAppender 编写的 Log4j.properties 的示例配置文件，使用该对象将日志信息记录到 LOGS 表中。
+
+# Define the root logger with appender file
+Log4j.rootLogger = DEBUG, DB
+
+# Define the DB appender
+Log4j.appender.DB=org.apache.Log4j.jdbc.JDBCAppender
+
+# Set JDBC URL
+Log4j.appender.DB.URL=jdbc:mysql://localhost/DBNAME
+
+# Set Database Driver
+Log4j.appender.DB.driver=com.mysql.jdbc.Driver
+
+# Set database user name and password
+Log4j.appender.DB.user=user_name
+Log4j.appender.DB.password=password
+
+# Set the SQL statement to be executed.
+Log4j.appender.DB.sql=INSERT INTO LOGS VALUES('%x','%d','%C','%p','%m')
+
+# Define the layout for file appender
+Log4j.appender.DB.layout=org.apache.Log4j.PatternLayout
+如果使用 MySQL 数据库，需要使用真实的 DBNAME、用户名和密码，就是刚才用来创建 LOGS 表的那些属性。SQL 语句执行 INSERT 语句，为 LOGS 表插入具体数值。
+
+JDBCAppender 不需要显示定义 layout，传入的 SQL 语句会使用 PatternLayout。
+
+如果您需要和上述 Log4j.properties 文件等价的 XML 配置文件，如下所示：
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE Log4j:configuration SYSTEM "Log4j.dtd">
+<Log4j:configuration>
+
+<appender name="DB" class="org.apache.Log4j.jdbc.JDBCAppender">
+   <param name="url" value="jdbc:mysql://localhost/DBNAME"/>
+   <param name="driver" value="com.mysql.jdbc.Driver"/>
+   <param name="user" value="user_id"/>
+   <param name="password" value="password"/>
+   <param name="sql" value="INSERT INTO LOGS VALUES('%x','%d','%C','%p','%m')"/>
+
+   <layout class="org.apache.Log4j.PatternLayout">
+   </layout>
+</appender>
+
+<logger name="Log4j.rootLogger" additivity="false">
+   <level value="DEBUG"/>
+   <appender-ref ref="DB"/>
+</logger>
+
+</Log4j:configuration>
+
+
+
+
 
 java核心技术学习
 logrootProperties

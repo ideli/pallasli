@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8">
+	<title>伟奥公积金移动平台</title> 
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.4.min.css" />
+	<link rel="stylesheet" href="../css/buttons.css" />
+	<script src="../jquery/jquery-1.11.1.min.js"></script>
+	<script src="../js/jquery.noty.packaged.min.js"></script>
+	<script src="../js/atwaMobileUtil.js"></script>
+	<script src="../js/searchGzYe.js"></script>
+	<script src="../jquery/jquery.mobile-1.4.4.min.js"></script> 
+	</head> 
+<body> 
+
+<div data-role="page" id="searchGzYePage" data-theme="a">
+            <div data-role="header">
+                <h1>公积金缴存余额</h1>
+            </div>
+            <div data-role="content">
+                <form name="searchGzYe" id="searchGzYe" method="get">
+                    
+                        <input type="hidden" name="openid" id="openid" value="" />
+                    <p>
+                        <button type="submit" data-theme="b" name="submit">查询</button>
+                    </p>
+                </form>
+                <form name="searchResult" id="searchResult" method="get">
+                    <p>
+                        <label for="uname">真实姓名&nbsp;&nbsp;:</label>
+                        <input type="text" disabled="disabled" name="uname" id="uname" value=""  data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="grbh">个人编号&nbsp;&nbsp;:</label>
+                        <input type="text" disabled="disabled" name="grbh" id="grbh" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="khrq">开户日期&nbsp;&nbsp;:</label>
+                        <input type="text" disabled="disabled" name="khrq" id="khrq" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="grjce">个人缴存额:</label>
+                        <input type="text" disabled="disabled" name="grjce" id="grjce" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="dwjce">单位缴存额:</label>
+                        <input type="text" disabled="disabled" name="dwjce" id="dwjce" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="gzye">公积金总额:</label>
+                        <input type="text" disabled="disabled" name="gzye" id="gzye" value="" data-theme="d"/>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+<!-- Second Page/Dialog -->
+<div data-role="dialog" id="alert">
+	<div data-role="header">
+		<h1>提示</h1>
+	</div>
+	
+	<div data-role="content" data-theme="b">	
+		功能建设中,敬请期待!
+		<br><br>
+
+		<a href="#home" data-role="button" data-theme="c" data-rel="back">确定</a>
+	</div>
+</div>
+
+</body>
+</html>
+

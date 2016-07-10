@@ -1,0 +1,194 @@
+前面完成了mvc基本框架，现在学习一下对表单输入的验证：
+目前我所知道的带表单验证功能的是一个协议JSR303,包括EJP、hibernate、spring和apache都有类似库
+1.使用spring自带的Validator:
+<1>建立一个"Validator" (如果验证的类中的属性是一个需要验证的类，可以将它的validator嵌入到这里,详见reference)
+<2>使用spring mvc3的validator需要在xxx-servlet.xml中做一行配置
+
+<context:component-scan base-package="com.smvc"/>
+
+@Valid需要validation-api-xxxx.jar这个包只是一个协议，还需要加一个实现包，hibernate可以作为实现包hibernate-validator-xxxx.jar否则报:org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'org.springframework.validation.beanvalidation.LocalValidatorFactoryBean#0': Invocation of init method failed; nested exception is javax.validation.ValidationException: Unable to find a default provider
+可以实现验证了，但是报错No message found under code 'name.empty.student.name' for locale 'zh_CN'.
+应该是跟错误消息提示的本地化有关系
+<3>建立信息提示文档,本地环境是中文的需要在classpath下建立一个messages_zh_CN.properties,这个可以在配置文件中xml设置
+<4>在xml做出如下配置
+ <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+  <property name="basename" value="messages"/>
+ </bean>
+<5>ValidationUtils.rejectIfEmpty(e, "name", "name.empty");当name属性为空或者空格时候，name的错误提示为配置文件中name.empty.name，也就是在第三个参数后面加上.属性名
+Errors的rejectValue(参数1，参数2).参数1是存储在errors中的名字的键值，参数2是messages_zh_CN.properties的键值，如
+ e.reject("age", "young");则会到messages_zh_CN.properties中查找young.age作为提示语,如果没有，则会使用young作为关键字查找,如果还是没有，则会找到age.int作为键值
+<6>messages_zh_CN.properties中的汉字需要使用unicode码，否则会显示乱码,转化的方法是：
+运行native2ascii,然后输入需要转换的汉字，就会显示相应的unicode码,
+对于类型不匹配的异常，会使用typeMismatch.student.age这样格式的信息键值
+需要搞清的概念field,errorcode,defaultMessage
+使用spring提供的验证处理比较简单，而且功能也比较强大
+
+StudentValidator.java
+
+[java] view plain copy
+package com.smvc.annonation.validator;  
+  
+import org.springframework.validation.Errors;  
+import org.springframework.validation.ValidationUtils;  
+import org.springframework.validation.Validator;  
+  
+import com.smvc.annonation.bean.Student;  
+public class StudentValidator implements Validator{  
+  
+    public boolean supports(Class<?> clazz) {  
+        return Student.class.equals(clazz);  
+    }  
+  
+    public void validate(Object obj, Errors e) {  
+        ValidationUtils.rejectIfEmpty(e, "name", "name.empty");  
+        ValidationUtils.rejectIfEmpty(e, "gender", "null");  
+        ValidationUtils.rejectIfEmpty(e, "age", "null");  
+        Student s = (Student)obj;  
+        if(s.getAge() < 18){  
+            e.rejectValue("age","young");  
+        }else if(s.getAge() > 50){  
+            //e.reject("age", "old");  
+        }  
+        /* 
+        if(s.getName().length() < 1){ 
+            e.reject("name", "short"); 
+        }else if(s.getName().length() > 10){ 
+            e.reject("name", "long"); 
+        } 
+        */  
+    }  
+      
+}  
+
+StudentController.java
+
+[java] view plain copy
+package com.smvc.annonation.controller;  
+  
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
+  
+import javax.servlet.http.HttpServletRequest;  
+import javax.validation.Valid;  
+import org.apache.commons.logging.Log;  
+import org.apache.commons.logging.LogFactory;  
+import org.springframework.beans.propertyeditors.CustomDateEditor;  
+import org.springframework.stereotype.Controller;  
+import org.springframework.validation.BindingResult;  
+import org.springframework.web.bind.WebDataBinder;  
+import org.springframework.web.bind.annotation.InitBinder;  
+import org.springframework.web.bind.annotation.ModelAttribute;  
+import org.springframework.web.bind.annotation.RequestMapping;  
+import org.springframework.web.bind.annotation.RequestMethod;  
+import org.springframework.web.servlet.ModelAndView;  
+import com.smvc.annonation.bean.Student;  
+import com.smvc.annonation.validator.StudentValidator;  
+  
+@Controller  
+public class StudentController {  
+    protected final Log logger = LogFactory.getLog(getClass());  
+      
+    @InitBinder  
+    public void initBinder(WebDataBinder binder) {  
+        //添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型  
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+        dateFormat.setLenient(false);  
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
+        //添加一个spring自带的validator  
+        binder.setValidator(new StudentValidator());  
+    }  
+      
+    /* 
+     * 会将一个新的Student增加到modelattribute中，名字为st2,在视图中可以使用,也许可以用在编辑页面 
+    @ModelAttribute("st2") 
+    public Student getStudent(){ 
+        System.out.println("In modelAttribute"); 
+        Student re = new Student(); 
+        re.setName("Haha"); 
+        re.setAge(30); 
+        re.setGender("male"); 
+        return re; 
+    } 
+    */  
+      
+    @RequestMapping(value="/get",method=RequestMethod.GET)  
+    public ModelAndView get(Student t) {  
+        if(t.getId() > 0) {  
+            //t = studentService.get(t.getId());  
+        }  
+        t.setBirthday(new Date());  
+        return new ModelAndView("edit");  
+    }  
+      
+    @RequestMapping(value="/studentAdd")  
+    public ModelAndView studentAdd(@Valid @ModelAttribute Student student, BindingResult br, HttpServletRequest requset){  
+        System.out.println(student);      
+        if(br.hasErrors()) {  
+                System.out.println(br);  
+                return new ModelAndView("edit");  
+            }  
+        System.out.println(br);  
+            return new ModelAndView("aa");  
+    }  
+}  
+
+study-servlet.xml
+
+[html] view plain copy
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:task="http://www.springframework.org/schema/task"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+        http://www.springframework.org/schema/task  
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">  
+          
+    <mvc:annotation-driven />  
+      
+    <context:component-scan base-package="com.smvc"/>  
+      
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">  
+        <property name="basename" value="messages"/>  
+    </bean>    
+      
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"   
+        p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>  
+</beans>  
+
+messages_zh_CN.properties
+
+[html] view plain copy
+name.empty.name=\u540d\u79f0\u4e0d\u80fd\u4e3a\u7a7a  
+null.gender=gender not null  
+null.age=nian ling bu neng wei kong  
+student.age=not good value  
+typeMismatch.student.age=typeMismatch.student.age  
+young.int=iiiii  
+old.age=age too old  
+short.name=name too short  
+long.name=name too long  
+2012-02-14编辑
+
+使用spring提供的org.springframework.validation.Validator的时候，在注册的验证器的时候注意写明这个验证器是是为哪个对象提供验证的，否则默认为所有@ModelAttribute提供验证，如果不支持(supports方法)就会报错误(类似org.springframework.web.util.NestedServletException: Request processing failed; nested exception is java.lang.IllegalStateException: Invalid target for Validator [com.smvc.annonation.validator.StudentValidator@2585e]: com.smvc.annonation.utils.ResultFilter@c378f6)，但是并不会对没有标注为@Valid的@ModelAttribute进行真正的验证。
+
+[java] view plain copy
+@InitBinder("student")  
+    public void initBinder(WebDataBinder binder) {  
+        //添加一个日期类型编辑器，也就是需要日期类型的时候，怎么把字符串转化为日期类型  
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  
+        dateFormat.setLenient(false);  
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  
+        //添加一个spring自带的validator  
+        binder.setValidator(new StudentValidator());  
+    }  
+如果没有标注@Valid就不会进行任何验证

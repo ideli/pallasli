@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8">
+	<title>伟奥公积金移动平台</title> 
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.4.min.css" />
+	<link rel="stylesheet" href="../css/buttons.css" />
+	<script src="../jquery/jquery-1.11.1.min.js"></script>
+	<script src="../js/jquery.noty.packaged.min.js"></script>
+	<script src="../js/atwaMobileUtil.js"></script>
+	<script src="../js/register.js"></script>
+	<script src="../jquery/jquery.mobile-1.4.4.min.js"></script> 
+	</head> 
+<body> 
+
+<div data-role="page" id="registrationPage" data-theme="a">
+            <div data-role="header">
+                <h1>绑定账户</h1>
+            </div>
+            <div data-role="content">
+                <form name="register" id="register" method="get">
+                    <p>
+                        <label for="uname">真实姓名:</label>
+                        <input type="text" name="uname" id="uname" value="" placeholder="必须和身份证姓名相同" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="cardNumber">身份证号:</label>
+                        <input type="text" name="cardNumber" id="cardNumber" value="" placeholder="输入真实身份证号" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="grbh">公积金账号:</label>
+                        <input type="text" name="grbh" id="grbh" value="" placeholder="输入公积金个人账号" data-theme="d"/>
+                    </p>                  
+                    <p>
+                        <input type="hidden" name="openid" id="openid" value="" />
+                    </p>
+                    <p>
+                        <button type="submit" data-theme="b" name="submit">提交</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+<!-- Second Page/Dialog -->
+<div data-role="dialog" id="alert">
+	<div data-role="header">
+		<h1>提示</h1>
+	</div>
+	
+	<div data-role="content" data-theme="b">	
+		功能建设中,敬请期待!
+		<br><br>
+
+		<a href="#home" data-role="button" data-theme="c" data-rel="back">确定</a>
+	</div>
+</div>
+
+</body>
+</html>
+

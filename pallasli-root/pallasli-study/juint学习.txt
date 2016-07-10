@@ -1,0 +1,626 @@
+测试运行器
+
+创建 Test Runner 类
+创建一个 TestRunner 类
+运用 JUnit 的 JUnitCore 类的 runClasses 方法来运行上述测试类的测试案例
+获取在 Result Object 中运行的测试案例的结果
+获取 Result Object 的 getFailures() 方法中的失败结果
+获取 Result object 的 wasSuccessful() 方法中的成功结果
+在 C:\ > JUNIT_WORKSPACE 路径下创建一个文件名为 TestRunner.java 的类来执行测试案例
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class TestRunner {
+   public static void main(String[] args) {
+      Result result = JUnitCore.runClasses(TestJunit.class);
+      for (Failure failure : result.getFailures()) {
+         System.out.println(failure.toString());
+      }
+      System.out.println(result.wasSuccessful());
+   }
+}   
+
+
+
+使用 Test Suite 类
+创建一个 java 类。
+在类中附上 @RunWith(Suite.class) 注释。
+使用 @Suite.SuiteClasses 注释给 JUnit 测试类加上引用。
+在目录 C:\ > JUNIT_WORKSPACE 创建一个 java 类文件叫做 TestSuite.java 来执行测试用例。
+
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+@RunWith(Suite.class)
+@Suite.SuiteClasses({
+   TestJunit1.class,
+   TestJunit2.class
+})
+public class JunitTestSuite {   
+}  
+
+
+
+
+
+创建 ANT Build.xml
+我们将使用 ANT 中的 任务来执行我们的 junit 测试样例。
+
+<project name="JunitTest" default="test" basedir=".">
+   <property name="testdir" location="test" />
+   <property name="srcdir" location="src" />
+   <property name="full-compile" value="true" />
+   <path id="classpath.base"/>
+   <path id="classpath.test">
+      <pathelement location="/lib/junit-4.10.jar" />
+      <pathelement location="${testdir}" />
+      <pathelement location="${srcdir}" />
+      <path refid="classpath.base" />
+   </path>
+   <target name="clean" >
+      <delete verbose="${full-compile}">
+         <fileset dir="${testdir}" includes="**/*.class" />
+      </delete>
+   </target>
+   <target name="compile" depends="clean">
+      <javac srcdir="${srcdir}" destdir="${testdir}" 
+         verbose="${full-compile}">
+         <classpath refid="classpath.test"/>
+      </javac>
+   </target>
+   <target name="test" depends="compile">
+      <junit>
+         <classpath refid="classpath.test" />
+         <formatter type="brief" usefile="false" />
+         <test name="TestMessageUtil" />
+      </junit>
+   </target>
+</project>
+
+
+
+
+
+
+
+JUnit - 参数化测试
+
+Junit 4 引入了一个新的功能参数化测试。参数化测试允许开发人员使用不同的值反复运行同一个测试。你将遵循 5 个步骤来创建参数化测试。
+
+用 @RunWith(Parameterized.class) 来注释 test 类。
+创建一个由 @Parameters 注释的公共的静态方法，它返回一个对象的集合(数组)来作为测试数据集合。
+创建一个公共的构造函数，它接受和一行测试数据相等同的东西。
+为每一列测试数据创建一个实例变量。
+用实例变量作为测试数据的来源来创建你的测试用例。
+一旦每一行数据出现测试用例将被调用。让我们看看活动中的参数化测试。
+
+创建一个类
+在 C:\ > JUNIT_WORKSPACE 创建一个叫做 PrimeNumberChecker.java 的 java 类来测试。
+public class PrimeNumberChecker {
+   public Boolean validate(final Integer primeNumber) {
+      for (int i = 2; i < (primeNumber / 2); i++) {
+         if (primeNumber % i == 0) {
+            return false;
+         }
+      }
+      return true;
+   }
+}
+创建 Parameterized Test Case 类
+创建一个叫做 PrimeNumberCheckerTest.java 的 java 类。
+在 C:> JUNIT_WORKSPACE 中创建一个文件名为 PrimeNumberCheckerTest.java 的 java 类。
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runner.RunWith;
+import static org.junit.Assert.assertEquals;
+
+@RunWith(Parameterized.class)
+public class PrimeNumberCheckerTest {
+   private Integer inputNumber;
+   private Boolean expectedResult;
+   private PrimeNumberChecker primeNumberChecker;
+
+   @Before
+   public void initialize() {
+      primeNumberChecker = new PrimeNumberChecker();
+   }
+
+   // Each parameter should be placed as an argument here
+   // Every time runner triggers, it will pass the arguments
+   // from parameters we defined in primeNumbers() method
+   public PrimeNumberCheckerTest(Integer inputNumber, 
+      Boolean expectedResult) {
+      this.inputNumber = inputNumber;
+      this.expectedResult = expectedResult;
+   }
+
+   @Parameterized.Parameters
+   public static Collection primeNumbers() {
+      return Arrays.asList(new Object[][] {
+         { 2, true },
+         { 6, false },
+         { 19, true },
+         { 22, false },
+         { 23, true }
+      });
+   }
+
+   // This test will run 4 times since we have 5 parameters defined
+   @Test
+   public void testPrimeNumberChecker() {
+      System.out.println("Parameterized Number is : " + inputNumber);
+      assertEquals(expectedResult, 
+      primeNumberChecker.validate(inputNumber));
+   }
+}
+
+
+
+
+
+
+
+
+JUnit - 时间测试
+
+Junit 提供了一个暂停的方便选项。如果一个测试用例比起指定的毫秒数花费了更多的时间，那么 Junit 将自动将它标记为失败。
+timeout 参数和 @Test 注释一起使用。现在让我们看看活动中的 @test(timeout)。
+@Test(timeout=1000)
+
+ 
+Junit 用代码处理提供了一个追踪异常的选项。你可以测试代码是否它抛出了想要得到的异常。
+expected 参数和 @Test 注释一起使用。现在让我们看看活动中的 @Test(expected)。
+
+
+
+
+
+JUnit 中的注释的列表以及他们的含义：
+
+序号	注释和描述
+1	@Test
+这个注释说明依附在 JUnit 的 public void 方法可以作为一个测试案例。
+2	@Before
+有些测试在运行前需要创造几个相似的对象。在 public void 方法加该注释是因为该方法需要在 test 方法前运行。
+3	@After
+如果你将外部资源在 Before 方法中分配，那么你需要在测试运行后释放他们。在 public void 方法加该注释是因为该方法需要在 test 方法后运行。
+4	@BeforeClass
+在 public void 方法加该注释是因为该方法需要在类中所有方法前运行。
+5	@AfterClass
+它将会使方法在所有测试结束后执行。这个可以用来进行清理活动。
+6	@Ignore
+这个注释是用来忽略有关不需要执行的测试的。
+
+
+
+JUnit - API
+
+JUnit 中的重要的 API
+JUnit 中的最重要的程序包是 junit.framework 它包含了所有的核心类。一些重要的类列示如下：
+
+序号	类的名称	类的功能
+1	Assert	assert 方法的集合
+2	TestCase	一个定义了运行多重测试的固定装置
+3	TestResult	TestResult 集合了执行测试样例的所有结果
+4	TestSuite	TestSuite 是测试的集合
+Assert 类
+下面介绍的是 org.junit.Assert 类：
+
+public class Assert extends java.lang.Object
+这个类提供了一系列的编写测试的有用的声明方法。只有失败的声明方法才会被记录。Assert 类的重要方法列式如下：
+
+序号	方法和描述
+1	void assertEquals(boolean expected, boolean actual) 
+检查两个变量或者等式是否平衡
+2	void assertFalse(boolean condition) 
+检查条件是假的
+3	void assertNotNull(Object object) 
+检查对象不是空的
+4	void assertNull(Object object) 
+检查对象是空的
+5	void assertTrue(boolean condition) 
+检查条件为真
+6	void fail() 
+在没有报告的情况下使测试不通过
+下面让我们在例子中来测试一下上面提到的一些方法。在 C:\ > JUNIT_WORKSPACE 目录下创建一个名为 TestJunit1.java 的类。
+
+import org.junit.Test;
+import static org.junit.Assert.*;
+public class TestJunit1 {
+   @Test
+   public void testAdd() {
+      //test data
+      int num= 5;
+      String temp= null;
+      String str= "Junit is working fine";
+
+      //check for equality
+      assertEquals("Junit is working fine", str);
+
+      //check for false condition
+      assertFalse(num > 6);
+
+      //check for not null value
+      assertNotNull(str);
+   }
+}
+接下来，我们在 C:\ > JUNIT_WORKSPACE 目录下创建一个文件名为 TestRunner1.java 的类来执行测试案例。
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class TestRunner1 {
+   public static void main(String[] args) {
+      Result result = JUnitCore.runClasses(TestJunit1.class);
+      for (Failure failure : result.getFailures()) {
+         System.out.println(failure.toString());
+      }
+      System.out.println(result.wasSuccessful());
+   }
+}   
+用 javac 编译 Test case 和 Test Runner 类
+
+C:\JUNIT_WORKSPACE>javac TestJunit1.java TestRunner1.java
+现在运行 Test Runner 它将运行在 Test Case 类中定义并提供的测试样例。
+
+C:\JUNIT_WORKSPACE>java TestRunner1
+检查输出结果。
+
+true
+TestCase 类
+下面介绍的是 org.junit.TestCaset 类：
+
+public abstract class TestCase extends Assert implements Test
+测试样例定义了运行多重测试的固定格式。TestCase 类的一些重要方法列式如下：
+
+序号	方法和描述
+1	int countTestCases()
+为被run(TestResult result) 执行的测试案例计数
+2	TestResult createResult()
+创建一个默认的 TestResult 对象
+3	String getName()
+获取 TestCase 的名称
+4	TestResult run()
+一个运行这个测试的方便的方法，收集由TestResult 对象产生的结果
+5	void run(TestResult result)
+在 TestResult 中运行测试案例并收集结果
+6	void setName(String name)
+设置 TestCase 的名称
+7	void setUp()
+创建固定装置，例如，打开一个网络连接
+8	void tearDown()
+拆除固定装置，例如，关闭一个网络连接
+9	String toString()
+返回测试案例的一个字符串表示
+我们在例子中尝试一下上文提到的方法。在 C:\ > JUNIT_WORKSPACE 路径下创建一个名为TestJunit2.java 的类。
+
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+public class TestJunit2 extends TestCase  {
+   protected double fValue1;
+   protected double fValue2;
+
+   @Before 
+   public void setUp() {
+      fValue1= 2.0;
+      fValue2= 3.0;
+   }
+
+   @Test
+   public void testAdd() {
+      //count the number of test cases
+      System.out.println("No of Test Case = "+ this.countTestCases());
+
+      //test getName 
+      String name= this.getName();
+      System.out.println("Test Case Name = "+ name);
+
+      //test setName
+      this.setName("testNewAdd");
+      String newName= this.getName();
+      System.out.println("Updated Test Case Name = "+ newName);
+   }
+   //tearDown used to close the connection or clean up activities
+   public void tearDown(  ) {
+   }
+}
+接下来，在 C:\ > JUNIT_WORKSPACE 路径下创建一个名为 TestRunner2.java 的类来执行测试案例。
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class TestRunner2 {
+   public static void main(String[] args) {
+      Result result = JUnitCore.runClasses(TestJunit2.class);
+      for (Failure failure : result.getFailures()) {
+         System.out.println(failure.toString());
+      }
+      System.out.println(result.wasSuccessful());
+   }
+}
+用 javac 编译 Test case 和 Test Runner 类
+
+C:\JUNIT_WORKSPACE>javac TestJunit2.java TestRunner2.java
+现在运行 Test Runner 它将运行在 Test Case 类中定义并提供的测试样例。
+
+C:\JUNIT_WORKSPACE>java TestRunner2
+检查输出结果。
+
+No of Test Case = 1
+Test Case Name = testAdd
+Updated Test Case Name = testNewAdd
+true
+TestResult 类
+下面定义的是 org.junit.TestResult 类：
+
+public class TestResult extends Object
+TestResult 类收集所有执行测试案例的结果。它是收集参数层面的一个实例。这个实验框架区分失败和错误。失败是可以预料的并且可以通过假设来检查。错误是不可预料的问题就像 ArrayIndexOutOfBoundsException。TestResult 类的一些重要方法列式如下：
+
+序号	方法和描述
+1	void addError(Test test, Throwable t)
+在错误列表中加入一个错误
+2	void addFailure(Test test, AssertionFailedError t)
+在失败列表中加入一个失败
+3	void endTest(Test test)
+显示测试被编译的这个结果
+4	int errorCount()
+获取被检测出错误的数量
+5	Enumeration errors()
+返回错误的详细信息
+6	int failureCount()
+获取被检测出的失败的数量
+7	void run(TestCase test) 运行 TestCase
+8	int int runCount()
+获得运行测试的数量
+9	void startTest(Test test)
+声明一个测试即将开始
+10	void stop()
+标明测试必须停止
+在 C:\ > JUNIT_WORKSPACE 路径下创建一个名为 TestJunit3.java 的类。
+
+import org.junit.Test;
+import junit.framework.AssertionFailedError;
+import junit.framework.TestResult;
+
+public class TestJunit3 extends TestResult {
+   // add the error
+   public synchronized void addError(Test test, Throwable t) {
+      super.addError((junit.framework.Test) test, t);
+   }
+
+   // add the failure
+   public synchronized void addFailure(Test test, AssertionFailedError t) {
+      super.addFailure((junit.framework.Test) test, t);
+   }
+   @Test
+   public void testAdd() {
+   // add any test
+   }
+
+   // Marks that the test run should stop.
+   public synchronized void stop() {
+   //stop the test here
+   }
+}
+接下来，在 C:\ > JUNIT_WORKSPACE 路径下创建一个名为 TestRunner3.java 的类来执行测试案例。
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class TestRunner3 {
+   public static void main(String[] args) {
+      Result result = JUnitCore.runClasses(TestJunit3.class);
+      for (Failure failure : result.getFailures()) {
+         System.out.println(failure.toString());
+      }
+      System.out.println(result.wasSuccessful());
+   }
+}   
+用 javac 编译 Test case 和 Test Runner 类
+
+C:\JUNIT_WORKSPACE>javac TestJunit3.java TestRunner3.java
+现在运行 Test Runner 它将运行在 Test Case 类中定义并提供的测试样例。
+
+C:\JUNIT_WORKSPACE>java TestRunner3
+检查输出结果。
+
+true
+TestSuite 类
+下面定义的是 org.junit.TestSuite 类：
+
+public class TestSuite extends Object implements Test
+TestSuite 类是测试的组成部分。它运行了很多的测试案例。TestSuite 类的一些重要方法列式如下：
+
+序号	方法和描述
+1	void addTest(Test test) 
+在套中加入测试。
+2	void addTestSuite(Class<? extends TestCase> testClass)
+将已经给定的类中的测试加到套中。
+3	int countTestCases()
+对这个测试即将运行的测试案例进行计数。
+4	String getName()
+返回套的名称。
+5	void run(TestResult result)
+在 TestResult 中运行测试并收集结果。
+6	void setName(String name)
+设置套的名称。
+7	Test testAt(int index)
+在给定的目录中返回测试。
+8	int testCount()
+返回套中测试的数量。
+9	static Test warning(String message)
+返回会失败的测试并且记录警告信息。
+在 C:\ > JUNIT_WORKSPACE 路径下创建一个名为 JunitTestSuite.java 的类。
+
+import junit.framework.*;
+public class JunitTestSuite {
+   public static void main(String[] a) {
+      // add the test's in the suite
+      TestSuite suite = new TestSuite(TestJunit1.class, TestJunit2.class, TestJunit3.class );
+      TestResult result = new TestResult();
+      suite.run(result);
+      System.out.println("Number of test cases = " + result.runCount());
+    }
+}
+用 javac 编译 Test suit
+
+C:\JUNIT_WORKSPACE>javac JunitTestSuite.java
+现在运行 Test Suit
+
+C:\JUNIT_WORKSPACE>java JunitTestSuite
+检查输出结果。
+
+No of Test Case = 1
+Test Case Name = testAdd
+Updated Test Case Name = testNewAdd
+Number of test cases = 3
+
+
+
+
+
+
+
+
+
+JUnit - 框架扩展
+
+以下是 JUnit 扩展
+
+Cactus
+JWebUnit
+XMLUnit
+MockObject
+Cactus
+Cactus 是一个简单框架用来测试服务器端的 Java 代码（Servlets, EJBs, Tag Libs, Filters）。Cactus 的设计意图是用来减小为服务器端代码写测试样例的成本。它使用 JUnit 并且在此基础上进行扩展。Cactus 实现了 in-container 的策略，意味着可以在容器内部执行测试。
+
+Cactus 系统由以下几个部分组成：
+
+Cactus Framework（Cactus 框架） 是 Cactus 的核心。它是提供 API 写 Cactus 测试代码的引擎。
+Cactus Integration Modules（Cactus 集成模块） 它是提供使用 Cactus Framework（Ant scripts, Eclipse plugin, Maven plugin）的前端和框架。
+这是使用 cactus 的样例代码。
+
+import org.apache.cactus.*;
+import junit.framework.*;
+
+public class TestSampleServlet extends ServletTestCase {
+   @Test
+   public void testServlet() {
+      // Initialize class to test
+      SampleServlet servlet = new SampleServlet();
+
+      // Set a variable in session as the doSomething()
+      // method that we are testing 
+      session.setAttribute("name", "value");
+
+      // Call the method to test, passing an 
+      // HttpServletRequest object (for example)
+      String result = servlet.doSomething(request);
+
+      // Perform verification that test was successful
+      assertEquals("something", result);
+      assertEquals("otherValue", session.getAttribute("otherName"));
+   }
+}
+JWebUnit
+JWebUnit 是一个基于 Java 的用于 web 应用的测试框架。它以一种统一、简单测试接口的方式包装了如 HtmlUnit 和 Selenium 这些已经存在的框架来允许你快速地测试 web 应用程序的正确性。
+
+JWebUnit 提供了一种高级别的 Java API 用来处理结合了一系列验证程序正确性的断言的 web 应用程序。这包括通过链接，表单的填写和提交，表格内容的验证和其他 web 应用程序典型的业务特征。
+
+这个简单的导航方法和随时可用的断言允许建立更多的快速测试而不是仅仅使用 JUnit 和 HtmlUnit。另外如果你想从 HtmlUnit 切换到其它的插件，例如 Selenium(很快可以使用)，那么不用重写你的测试样例代码。
+
+以下是样例代码。
+
+import junit.framework.TestCase;
+import net.sourceforge.jwebunit.WebTester;
+
+public class ExampleWebTestCase extends TestCase {
+   private WebTester tester;
+
+   public ExampleWebTestCase(String name) {
+        super(name);
+        tester = new WebTester();
+   }
+   //set base url
+   public void setUp() throws Exception {
+       getTestContext().setBaseUrl("http://myserver:8080/myapp");
+   }
+   // test base info
+   @Test
+   public void testInfoPage() {
+       beginAt("/info.html");
+   }
+}
+XMLUnit
+XMLUnit 提供了一个单一的 JUnit 扩展类，即 XMLTestCase，还有一些允许断言的支持类：
+
+比较两个 XML 文件的不同（通过使用 Diff 和 DetailedDiff 类）
+一个 XML 文件的验证（通过使用 Validator 类）
+使用 XSLT 转换一个 XML 文件的结果（通过使用 Transform 类）
+对一个 XML 文件 XPath 表达式的评估（通过实现 XpathEngine 接口）
+一个 XML 文件进行 DOM Traversal 后的独立结点（通过使用 NodeTest 类）
+我们假设有两个我们想要比较和断言它们相同的 XML 文件，我们可以写一个如下的简单测试类：
+
+import org.custommonkey.xmlunit.XMLTestCase;
+
+public class MyXMLTestCase extends XMLTestCase {
+
+   // this test method compare two pieces of the XML
+   @Test
+   public void testForXMLEquality() throws Exception {
+      String myControlXML = "<msg><uuid>0x00435A8C</uuid></msg>";
+      String myTestXML = "<msg><localId>2376</localId></msg>";
+      assertXMLEqual("Comparing test xml to control xml",
+      myControlXML, myTestXML);
+   }
+}
+MockObject
+在一个单元测试中，虚拟对象可以模拟复杂的，真实的（非虚拟）对象的行为，因此当一个真实对象不现实或不可能包含进一个单元测试的时候非常有用。
+
+用虚拟对象进行测试时一般的编程风格包括：
+
+创建虚拟对象的实例
+在虚拟对象中设置状态和描述
+结合虚拟对象调用域代码作为参数
+在虚拟对象中验证一致性
+以下是使用 Jmock 的 MockObject 例子。
+
+import org.jmock.Mockery;
+import org.jmock.Expectations;
+
+class PubTest extends TestCase {
+   Mockery context = new Mockery();
+   public void testSubReceivesMessage() {
+      // set up
+      final Sub sub = context.mock(Sub.class);
+
+      Pub pub = new Pub();
+      pub.add(sub);
+
+      final String message = "message";
+
+      // expectations
+      context.checking(new Expectations() {
+         oneOf (sub).receive(message);
+      });
+
+      // execute
+      pub.publish(message);
+
+      // verify
+      context.assertIsSatisfied();
+   }
+}
+
+

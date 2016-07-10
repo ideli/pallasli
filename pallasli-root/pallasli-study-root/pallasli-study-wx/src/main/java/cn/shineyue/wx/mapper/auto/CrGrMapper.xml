@@ -1,0 +1,1397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.shineyue.wx.mapper.auto.CrGrMapper" >
+  <resultMap id="BaseResultMap" type="cn.shineyue.wx.po.auto.CrGr" >
+    <id column="GRBH" property="grbh" jdbcType="VARCHAR" />
+    <result column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="DWBH" property="dwbh" jdbcType="VARCHAR" />
+    <result column="GRXM" property="grxm" jdbcType="VARCHAR" />
+    <result column="XMQP" property="xmqp" jdbcType="VARCHAR" />
+    <result column="XMJP" property="xmjp" jdbcType="VARCHAR" />
+    <result column="ZJLX" property="zjlx" jdbcType="VARCHAR" />
+    <result column="ZJHM" property="zjhm" jdbcType="VARCHAR" />
+    <result column="XB" property="xb" jdbcType="VARCHAR" />
+    <result column="CSRQ" property="csrq" jdbcType="DATE" />
+    <result column="GZRQ" property="gzrq" jdbcType="DATE" />
+    <result column="SZBM" property="szbm" jdbcType="VARCHAR" />
+    <result column="YZBM" property="yzbm" jdbcType="VARCHAR" />
+    <result column="YDDH" property="yddh" jdbcType="VARCHAR" />
+    <result column="GDDH" property="gddh" jdbcType="VARCHAR" />
+    <result column="TXDZ" property="txdz" jdbcType="VARCHAR" />
+    <result column="ZYZGBM" property="zyzgbm" jdbcType="VARCHAR" />
+    <result column="ZCBM" property="zcbm" jdbcType="VARCHAR" />
+    <result column="ZWBM" property="zwbm" jdbcType="VARCHAR" />
+    <result column="XLBM" property="xlbm" jdbcType="VARCHAR" />
+    <result column="HYZK" property="hyzk" jdbcType="VARCHAR" />
+    <result column="POXM" property="poxm" jdbcType="VARCHAR" />
+    <result column="POZJLX" property="pozjlx" jdbcType="VARCHAR" />
+    <result column="POZJHM" property="pozjhm" jdbcType="VARCHAR" />
+    <result column="ZFQK" property="zfqk" jdbcType="VARCHAR" />
+    <result column="ZFDKBZ" property="zfdkbz" jdbcType="VARCHAR" />
+    <result column="CDGXBM" property="cdgxbm" jdbcType="VARCHAR" />
+    <result column="SBZH" property="sbzh" jdbcType="VARCHAR" />
+    <result column="GRYSR" property="grysr" jdbcType="DECIMAL" />
+    <result column="JTYSR" property="jtysr" jdbcType="DECIMAL" />
+    <result column="XYDJ" property="xydj" jdbcType="VARCHAR" />
+    <result column="GJDBM" property="gjdbm" jdbcType="VARCHAR" />
+    <result column="DJRQ" property="djrq" jdbcType="DATE" />
+    <result column="DJSJ" property="djsj" jdbcType="DATE" />
+    <result column="DJCZY" property="djczy" jdbcType="DECIMAL" />
+    <result column="GRZT" property="grzt" jdbcType="VARCHAR" />
+    <result column="F_PICTURENAME" property="fPicturename" jdbcType="VARCHAR" />
+    <result column="CYM" property="cym" jdbcType="VARCHAR" />
+    <result column="YWM" property="ywm" jdbcType="VARCHAR" />
+    <result column="CSD" property="csd" jdbcType="VARCHAR" />
+    <result column="MZ" property="mz" jdbcType="VARCHAR" />
+    <result column="SG" property="sg" jdbcType="DECIMAL" />
+    <result column="TZ" property="tz" jdbcType="DECIMAL" />
+    <result column="ZYSL" property="zysl" jdbcType="DECIMAL" />
+    <result column="YYSL" property="yysl" jdbcType="DECIMAL" />
+    <result column="JTDH" property="jtdh" jdbcType="VARCHAR" />
+    <result column="HJSZD" property="hjszd" jdbcType="VARCHAR" />
+    <result column="DASZD" property="daszd" jdbcType="VARCHAR" />
+    <result column="ZZMM" property="zzmm" jdbcType="VARCHAR" />
+    <result column="ZJXY" property="zjxy" jdbcType="VARCHAR" />
+    <result column="ZY" property="zy" jdbcType="VARCHAR" />
+    <result column="BYYX" property="byyx" jdbcType="VARCHAR" />
+    <result column="RZRQ" property="rzrq" jdbcType="DATE" />
+    <result column="JTZZ" property="jtzz" jdbcType="VARCHAR" />
+    <result column="XZZ" property="xzz" jdbcType="VARCHAR" />
+    <result column="XZZDH" property="xzzdh" jdbcType="VARCHAR" />
+    <result column="JZHM" property="jzhm" jdbcType="VARCHAR" />
+    <result column="YZ" property="yz" jdbcType="VARCHAR" />
+    <result column="WYSP" property="wysp" jdbcType="VARCHAR" />
+    <result column="XX" property="xx" jdbcType="VARCHAR" />
+    <result column="AIH" property="aih" jdbcType="VARCHAR" />
+    <result column="TC" property="tc" jdbcType="VARCHAR" />
+    <result column="MQGZZT" property="mqgzzt" jdbcType="VARCHAR" />
+    <result column="DZXX" property="dzxx" jdbcType="VARCHAR" />
+    <result column="DLZT" property="dlzt" jdbcType="VARCHAR" />
+    <result column="GRLBBM" property="grlbbm" jdbcType="VARCHAR" />
+    <result column="MEM01" property="mem01" jdbcType="VARCHAR" />
+    <result column="HKLX" property="hklx" jdbcType="VARCHAR" />
+    <result column="POGJJBZ" property="pogjjbz" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.shineyue.wx.po.auto.CrGr" extends="BaseResultMap" >
+    <result column="F_PICTURE" property="fPicture" jdbcType="BLOB" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    GRBH, ID, DWBH, GRXM, XMQP, XMJP, ZJLX, ZJHM, XB, CSRQ, GZRQ, SZBM, YZBM, YDDH, GDDH, 
+    TXDZ, ZYZGBM, ZCBM, ZWBM, XLBM, HYZK, POXM, POZJLX, POZJHM, ZFQK, ZFDKBZ, CDGXBM, 
+    SBZH, GRYSR, JTYSR, XYDJ, GJDBM, DJRQ, DJSJ, DJCZY, GRZT, F_PICTURENAME, CYM, YWM, 
+    CSD, MZ, SG, TZ, ZYSL, YYSL, JTDH, HJSZD, DASZD, ZZMM, ZJXY, ZY, BYYX, RZRQ, JTZZ, 
+    XZZ, XZZDH, JZHM, YZ, WYSP, XX, AIH, TC, MQGZZT, DZXX, DLZT, GRLBBM, MEM01, HKLX, 
+    POGJJBZ
+  </sql>
+  <sql id="Blob_Column_List" >
+    F_PICTURE
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.shineyue.wx.po.auto.CrGrExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WASYS350_NEWBPM.CR_GR
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.shineyue.wx.po.auto.CrGrExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WASYS350_NEWBPM.CR_GR
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from WASYS350_NEWBPM.CR_GR
+    where GRBH = #{grbh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from WASYS350_NEWBPM.CR_GR
+    where GRBH = #{grbh,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.shineyue.wx.po.auto.CrGrExample" >
+    delete from WASYS350_NEWBPM.CR_GR
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.shineyue.wx.po.auto.CrGr" >
+    insert into WASYS350_NEWBPM.CR_GR (GRBH, ID, DWBH, 
+      GRXM, XMQP, XMJP, ZJLX, 
+      ZJHM, XB, CSRQ, GZRQ, 
+      SZBM, YZBM, YDDH, GDDH, 
+      TXDZ, ZYZGBM, ZCBM, 
+      ZWBM, XLBM, HYZK, POXM, 
+      POZJLX, POZJHM, ZFQK, 
+      ZFDKBZ, CDGXBM, SBZH, 
+      GRYSR, JTYSR, XYDJ, 
+      GJDBM, DJRQ, DJSJ, DJCZY, 
+      GRZT, F_PICTURENAME, CYM, 
+      YWM, CSD, MZ, SG, 
+      TZ, ZYSL, YYSL, JTDH, 
+      HJSZD, DASZD, ZZMM, 
+      ZJXY, ZY, BYYX, RZRQ, 
+      JTZZ, XZZ, XZZDH, JZHM, 
+      YZ, WYSP, XX, AIH, 
+      TC, MQGZZT, DZXX, DLZT, 
+      GRLBBM, MEM01, HKLX, 
+      POGJJBZ, F_PICTURE)
+    values (#{grbh,jdbcType=VARCHAR}, #{id,jdbcType=DECIMAL}, #{dwbh,jdbcType=VARCHAR}, 
+      #{grxm,jdbcType=VARCHAR}, #{xmqp,jdbcType=VARCHAR}, #{xmjp,jdbcType=VARCHAR}, #{zjlx,jdbcType=VARCHAR}, 
+      #{zjhm,jdbcType=VARCHAR}, #{xb,jdbcType=VARCHAR}, #{csrq,jdbcType=DATE}, #{gzrq,jdbcType=DATE}, 
+      #{szbm,jdbcType=VARCHAR}, #{yzbm,jdbcType=VARCHAR}, #{yddh,jdbcType=VARCHAR}, #{gddh,jdbcType=VARCHAR}, 
+      #{txdz,jdbcType=VARCHAR}, #{zyzgbm,jdbcType=VARCHAR}, #{zcbm,jdbcType=VARCHAR}, 
+      #{zwbm,jdbcType=VARCHAR}, #{xlbm,jdbcType=VARCHAR}, #{hyzk,jdbcType=VARCHAR}, #{poxm,jdbcType=VARCHAR}, 
+      #{pozjlx,jdbcType=VARCHAR}, #{pozjhm,jdbcType=VARCHAR}, #{zfqk,jdbcType=VARCHAR}, 
+      #{zfdkbz,jdbcType=VARCHAR}, #{cdgxbm,jdbcType=VARCHAR}, #{sbzh,jdbcType=VARCHAR}, 
+      #{grysr,jdbcType=DECIMAL}, #{jtysr,jdbcType=DECIMAL}, #{xydj,jdbcType=VARCHAR}, 
+      #{gjdbm,jdbcType=VARCHAR}, #{djrq,jdbcType=DATE}, #{djsj,jdbcType=DATE}, #{djczy,jdbcType=DECIMAL}, 
+      #{grzt,jdbcType=VARCHAR}, #{fPicturename,jdbcType=VARCHAR}, #{cym,jdbcType=VARCHAR}, 
+      #{ywm,jdbcType=VARCHAR}, #{csd,jdbcType=VARCHAR}, #{mz,jdbcType=VARCHAR}, #{sg,jdbcType=DECIMAL}, 
+      #{tz,jdbcType=DECIMAL}, #{zysl,jdbcType=DECIMAL}, #{yysl,jdbcType=DECIMAL}, #{jtdh,jdbcType=VARCHAR}, 
+      #{hjszd,jdbcType=VARCHAR}, #{daszd,jdbcType=VARCHAR}, #{zzmm,jdbcType=VARCHAR}, 
+      #{zjxy,jdbcType=VARCHAR}, #{zy,jdbcType=VARCHAR}, #{byyx,jdbcType=VARCHAR}, #{rzrq,jdbcType=DATE}, 
+      #{jtzz,jdbcType=VARCHAR}, #{xzz,jdbcType=VARCHAR}, #{xzzdh,jdbcType=VARCHAR}, #{jzhm,jdbcType=VARCHAR}, 
+      #{yz,jdbcType=VARCHAR}, #{wysp,jdbcType=VARCHAR}, #{xx,jdbcType=VARCHAR}, #{aih,jdbcType=VARCHAR}, 
+      #{tc,jdbcType=VARCHAR}, #{mqgzzt,jdbcType=VARCHAR}, #{dzxx,jdbcType=VARCHAR}, #{dlzt,jdbcType=VARCHAR}, 
+      #{grlbbm,jdbcType=VARCHAR}, #{mem01,jdbcType=VARCHAR}, #{hklx,jdbcType=VARCHAR}, 
+      #{pogjjbz,jdbcType=DECIMAL}, #{fPicture,jdbcType=BLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.shineyue.wx.po.auto.CrGr" >
+    insert into WASYS350_NEWBPM.CR_GR
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="grbh != null" >
+        GRBH,
+      </if>
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="dwbh != null" >
+        DWBH,
+      </if>
+      <if test="grxm != null" >
+        GRXM,
+      </if>
+      <if test="xmqp != null" >
+        XMQP,
+      </if>
+      <if test="xmjp != null" >
+        XMJP,
+      </if>
+      <if test="zjlx != null" >
+        ZJLX,
+      </if>
+      <if test="zjhm != null" >
+        ZJHM,
+      </if>
+      <if test="xb != null" >
+        XB,
+      </if>
+      <if test="csrq != null" >
+        CSRQ,
+      </if>
+      <if test="gzrq != null" >
+        GZRQ,
+      </if>
+      <if test="szbm != null" >
+        SZBM,
+      </if>
+      <if test="yzbm != null" >
+        YZBM,
+      </if>
+      <if test="yddh != null" >
+        YDDH,
+      </if>
+      <if test="gddh != null" >
+        GDDH,
+      </if>
+      <if test="txdz != null" >
+        TXDZ,
+      </if>
+      <if test="zyzgbm != null" >
+        ZYZGBM,
+      </if>
+      <if test="zcbm != null" >
+        ZCBM,
+      </if>
+      <if test="zwbm != null" >
+        ZWBM,
+      </if>
+      <if test="xlbm != null" >
+        XLBM,
+      </if>
+      <if test="hyzk != null" >
+        HYZK,
+      </if>
+      <if test="poxm != null" >
+        POXM,
+      </if>
+      <if test="pozjlx != null" >
+        POZJLX,
+      </if>
+      <if test="pozjhm != null" >
+        POZJHM,
+      </if>
+      <if test="zfqk != null" >
+        ZFQK,
+      </if>
+      <if test="zfdkbz != null" >
+        ZFDKBZ,
+      </if>
+      <if test="cdgxbm != null" >
+        CDGXBM,
+      </if>
+      <if test="sbzh != null" >
+        SBZH,
+      </if>
+      <if test="grysr != null" >
+        GRYSR,
+      </if>
+      <if test="jtysr != null" >
+        JTYSR,
+      </if>
+      <if test="xydj != null" >
+        XYDJ,
+      </if>
+      <if test="gjdbm != null" >
+        GJDBM,
+      </if>
+      <if test="djrq != null" >
+        DJRQ,
+      </if>
+      <if test="djsj != null" >
+        DJSJ,
+      </if>
+      <if test="djczy != null" >
+        DJCZY,
+      </if>
+      <if test="grzt != null" >
+        GRZT,
+      </if>
+      <if test="fPicturename != null" >
+        F_PICTURENAME,
+      </if>
+      <if test="cym != null" >
+        CYM,
+      </if>
+      <if test="ywm != null" >
+        YWM,
+      </if>
+      <if test="csd != null" >
+        CSD,
+      </if>
+      <if test="mz != null" >
+        MZ,
+      </if>
+      <if test="sg != null" >
+        SG,
+      </if>
+      <if test="tz != null" >
+        TZ,
+      </if>
+      <if test="zysl != null" >
+        ZYSL,
+      </if>
+      <if test="yysl != null" >
+        YYSL,
+      </if>
+      <if test="jtdh != null" >
+        JTDH,
+      </if>
+      <if test="hjszd != null" >
+        HJSZD,
+      </if>
+      <if test="daszd != null" >
+        DASZD,
+      </if>
+      <if test="zzmm != null" >
+        ZZMM,
+      </if>
+      <if test="zjxy != null" >
+        ZJXY,
+      </if>
+      <if test="zy != null" >
+        ZY,
+      </if>
+      <if test="byyx != null" >
+        BYYX,
+      </if>
+      <if test="rzrq != null" >
+        RZRQ,
+      </if>
+      <if test="jtzz != null" >
+        JTZZ,
+      </if>
+      <if test="xzz != null" >
+        XZZ,
+      </if>
+      <if test="xzzdh != null" >
+        XZZDH,
+      </if>
+      <if test="jzhm != null" >
+        JZHM,
+      </if>
+      <if test="yz != null" >
+        YZ,
+      </if>
+      <if test="wysp != null" >
+        WYSP,
+      </if>
+      <if test="xx != null" >
+        XX,
+      </if>
+      <if test="aih != null" >
+        AIH,
+      </if>
+      <if test="tc != null" >
+        TC,
+      </if>
+      <if test="mqgzzt != null" >
+        MQGZZT,
+      </if>
+      <if test="dzxx != null" >
+        DZXX,
+      </if>
+      <if test="dlzt != null" >
+        DLZT,
+      </if>
+      <if test="grlbbm != null" >
+        GRLBBM,
+      </if>
+      <if test="mem01 != null" >
+        MEM01,
+      </if>
+      <if test="hklx != null" >
+        HKLX,
+      </if>
+      <if test="pogjjbz != null" >
+        POGJJBZ,
+      </if>
+      <if test="fPicture != null" >
+        F_PICTURE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="grbh != null" >
+        #{grbh,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="dwbh != null" >
+        #{dwbh,jdbcType=VARCHAR},
+      </if>
+      <if test="grxm != null" >
+        #{grxm,jdbcType=VARCHAR},
+      </if>
+      <if test="xmqp != null" >
+        #{xmqp,jdbcType=VARCHAR},
+      </if>
+      <if test="xmjp != null" >
+        #{xmjp,jdbcType=VARCHAR},
+      </if>
+      <if test="zjlx != null" >
+        #{zjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="zjhm != null" >
+        #{zjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="xb != null" >
+        #{xb,jdbcType=VARCHAR},
+      </if>
+      <if test="csrq != null" >
+        #{csrq,jdbcType=DATE},
+      </if>
+      <if test="gzrq != null" >
+        #{gzrq,jdbcType=DATE},
+      </if>
+      <if test="szbm != null" >
+        #{szbm,jdbcType=VARCHAR},
+      </if>
+      <if test="yzbm != null" >
+        #{yzbm,jdbcType=VARCHAR},
+      </if>
+      <if test="yddh != null" >
+        #{yddh,jdbcType=VARCHAR},
+      </if>
+      <if test="gddh != null" >
+        #{gddh,jdbcType=VARCHAR},
+      </if>
+      <if test="txdz != null" >
+        #{txdz,jdbcType=VARCHAR},
+      </if>
+      <if test="zyzgbm != null" >
+        #{zyzgbm,jdbcType=VARCHAR},
+      </if>
+      <if test="zcbm != null" >
+        #{zcbm,jdbcType=VARCHAR},
+      </if>
+      <if test="zwbm != null" >
+        #{zwbm,jdbcType=VARCHAR},
+      </if>
+      <if test="xlbm != null" >
+        #{xlbm,jdbcType=VARCHAR},
+      </if>
+      <if test="hyzk != null" >
+        #{hyzk,jdbcType=VARCHAR},
+      </if>
+      <if test="poxm != null" >
+        #{poxm,jdbcType=VARCHAR},
+      </if>
+      <if test="pozjlx != null" >
+        #{pozjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="pozjhm != null" >
+        #{pozjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="zfqk != null" >
+        #{zfqk,jdbcType=VARCHAR},
+      </if>
+      <if test="zfdkbz != null" >
+        #{zfdkbz,jdbcType=VARCHAR},
+      </if>
+      <if test="cdgxbm != null" >
+        #{cdgxbm,jdbcType=VARCHAR},
+      </if>
+      <if test="sbzh != null" >
+        #{sbzh,jdbcType=VARCHAR},
+      </if>
+      <if test="grysr != null" >
+        #{grysr,jdbcType=DECIMAL},
+      </if>
+      <if test="jtysr != null" >
+        #{jtysr,jdbcType=DECIMAL},
+      </if>
+      <if test="xydj != null" >
+        #{xydj,jdbcType=VARCHAR},
+      </if>
+      <if test="gjdbm != null" >
+        #{gjdbm,jdbcType=VARCHAR},
+      </if>
+      <if test="djrq != null" >
+        #{djrq,jdbcType=DATE},
+      </if>
+      <if test="djsj != null" >
+        #{djsj,jdbcType=DATE},
+      </if>
+      <if test="djczy != null" >
+        #{djczy,jdbcType=DECIMAL},
+      </if>
+      <if test="grzt != null" >
+        #{grzt,jdbcType=VARCHAR},
+      </if>
+      <if test="fPicturename != null" >
+        #{fPicturename,jdbcType=VARCHAR},
+      </if>
+      <if test="cym != null" >
+        #{cym,jdbcType=VARCHAR},
+      </if>
+      <if test="ywm != null" >
+        #{ywm,jdbcType=VARCHAR},
+      </if>
+      <if test="csd != null" >
+        #{csd,jdbcType=VARCHAR},
+      </if>
+      <if test="mz != null" >
+        #{mz,jdbcType=VARCHAR},
+      </if>
+      <if test="sg != null" >
+        #{sg,jdbcType=DECIMAL},
+      </if>
+      <if test="tz != null" >
+        #{tz,jdbcType=DECIMAL},
+      </if>
+      <if test="zysl != null" >
+        #{zysl,jdbcType=DECIMAL},
+      </if>
+      <if test="yysl != null" >
+        #{yysl,jdbcType=DECIMAL},
+      </if>
+      <if test="jtdh != null" >
+        #{jtdh,jdbcType=VARCHAR},
+      </if>
+      <if test="hjszd != null" >
+        #{hjszd,jdbcType=VARCHAR},
+      </if>
+      <if test="daszd != null" >
+        #{daszd,jdbcType=VARCHAR},
+      </if>
+      <if test="zzmm != null" >
+        #{zzmm,jdbcType=VARCHAR},
+      </if>
+      <if test="zjxy != null" >
+        #{zjxy,jdbcType=VARCHAR},
+      </if>
+      <if test="zy != null" >
+        #{zy,jdbcType=VARCHAR},
+      </if>
+      <if test="byyx != null" >
+        #{byyx,jdbcType=VARCHAR},
+      </if>
+      <if test="rzrq != null" >
+        #{rzrq,jdbcType=DATE},
+      </if>
+      <if test="jtzz != null" >
+        #{jtzz,jdbcType=VARCHAR},
+      </if>
+      <if test="xzz != null" >
+        #{xzz,jdbcType=VARCHAR},
+      </if>
+      <if test="xzzdh != null" >
+        #{xzzdh,jdbcType=VARCHAR},
+      </if>
+      <if test="jzhm != null" >
+        #{jzhm,jdbcType=VARCHAR},
+      </if>
+      <if test="yz != null" >
+        #{yz,jdbcType=VARCHAR},
+      </if>
+      <if test="wysp != null" >
+        #{wysp,jdbcType=VARCHAR},
+      </if>
+      <if test="xx != null" >
+        #{xx,jdbcType=VARCHAR},
+      </if>
+      <if test="aih != null" >
+        #{aih,jdbcType=VARCHAR},
+      </if>
+      <if test="tc != null" >
+        #{tc,jdbcType=VARCHAR},
+      </if>
+      <if test="mqgzzt != null" >
+        #{mqgzzt,jdbcType=VARCHAR},
+      </if>
+      <if test="dzxx != null" >
+        #{dzxx,jdbcType=VARCHAR},
+      </if>
+      <if test="dlzt != null" >
+        #{dlzt,jdbcType=VARCHAR},
+      </if>
+      <if test="grlbbm != null" >
+        #{grlbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="mem01 != null" >
+        #{mem01,jdbcType=VARCHAR},
+      </if>
+      <if test="hklx != null" >
+        #{hklx,jdbcType=VARCHAR},
+      </if>
+      <if test="pogjjbz != null" >
+        #{pogjjbz,jdbcType=DECIMAL},
+      </if>
+      <if test="fPicture != null" >
+        #{fPicture,jdbcType=BLOB},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.shineyue.wx.po.auto.CrGrExample" resultType="java.lang.Integer" >
+    select count(*) from WASYS350_NEWBPM.CR_GR
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WASYS350_NEWBPM.CR_GR
+    <set >
+      <if test="record.grbh != null" >
+        GRBH = #{record.grbh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=DECIMAL},
+      </if>
+      <if test="record.dwbh != null" >
+        DWBH = #{record.dwbh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grxm != null" >
+        GRXM = #{record.grxm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xmqp != null" >
+        XMQP = #{record.xmqp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xmjp != null" >
+        XMJP = #{record.xmjp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zjlx != null" >
+        ZJLX = #{record.zjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zjhm != null" >
+        ZJHM = #{record.zjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xb != null" >
+        XB = #{record.xb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.csrq != null" >
+        CSRQ = #{record.csrq,jdbcType=DATE},
+      </if>
+      <if test="record.gzrq != null" >
+        GZRQ = #{record.gzrq,jdbcType=DATE},
+      </if>
+      <if test="record.szbm != null" >
+        SZBM = #{record.szbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.yzbm != null" >
+        YZBM = #{record.yzbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.yddh != null" >
+        YDDH = #{record.yddh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gddh != null" >
+        GDDH = #{record.gddh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.txdz != null" >
+        TXDZ = #{record.txdz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zyzgbm != null" >
+        ZYZGBM = #{record.zyzgbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zcbm != null" >
+        ZCBM = #{record.zcbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zwbm != null" >
+        ZWBM = #{record.zwbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xlbm != null" >
+        XLBM = #{record.xlbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hyzk != null" >
+        HYZK = #{record.hyzk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.poxm != null" >
+        POXM = #{record.poxm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pozjlx != null" >
+        POZJLX = #{record.pozjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pozjhm != null" >
+        POZJHM = #{record.pozjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zfqk != null" >
+        ZFQK = #{record.zfqk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zfdkbz != null" >
+        ZFDKBZ = #{record.zfdkbz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cdgxbm != null" >
+        CDGXBM = #{record.cdgxbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sbzh != null" >
+        SBZH = #{record.sbzh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grysr != null" >
+        GRYSR = #{record.grysr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jtysr != null" >
+        JTYSR = #{record.jtysr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.xydj != null" >
+        XYDJ = #{record.xydj,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gjdbm != null" >
+        GJDBM = #{record.gjdbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.djrq != null" >
+        DJRQ = #{record.djrq,jdbcType=DATE},
+      </if>
+      <if test="record.djsj != null" >
+        DJSJ = #{record.djsj,jdbcType=DATE},
+      </if>
+      <if test="record.djczy != null" >
+        DJCZY = #{record.djczy,jdbcType=DECIMAL},
+      </if>
+      <if test="record.grzt != null" >
+        GRZT = #{record.grzt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fPicturename != null" >
+        F_PICTURENAME = #{record.fPicturename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cym != null" >
+        CYM = #{record.cym,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ywm != null" >
+        YWM = #{record.ywm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.csd != null" >
+        CSD = #{record.csd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mz != null" >
+        MZ = #{record.mz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sg != null" >
+        SG = #{record.sg,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tz != null" >
+        TZ = #{record.tz,jdbcType=DECIMAL},
+      </if>
+      <if test="record.zysl != null" >
+        ZYSL = #{record.zysl,jdbcType=DECIMAL},
+      </if>
+      <if test="record.yysl != null" >
+        YYSL = #{record.yysl,jdbcType=DECIMAL},
+      </if>
+      <if test="record.jtdh != null" >
+        JTDH = #{record.jtdh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hjszd != null" >
+        HJSZD = #{record.hjszd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.daszd != null" >
+        DASZD = #{record.daszd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zzmm != null" >
+        ZZMM = #{record.zzmm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zjxy != null" >
+        ZJXY = #{record.zjxy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zy != null" >
+        ZY = #{record.zy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.byyx != null" >
+        BYYX = #{record.byyx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rzrq != null" >
+        RZRQ = #{record.rzrq,jdbcType=DATE},
+      </if>
+      <if test="record.jtzz != null" >
+        JTZZ = #{record.jtzz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xzz != null" >
+        XZZ = #{record.xzz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xzzdh != null" >
+        XZZDH = #{record.xzzdh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jzhm != null" >
+        JZHM = #{record.jzhm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.yz != null" >
+        YZ = #{record.yz,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wysp != null" >
+        WYSP = #{record.wysp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xx != null" >
+        XX = #{record.xx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aih != null" >
+        AIH = #{record.aih,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tc != null" >
+        TC = #{record.tc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mqgzzt != null" >
+        MQGZZT = #{record.mqgzzt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dzxx != null" >
+        DZXX = #{record.dzxx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dlzt != null" >
+        DLZT = #{record.dlzt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.grlbbm != null" >
+        GRLBBM = #{record.grlbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mem01 != null" >
+        MEM01 = #{record.mem01,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hklx != null" >
+        HKLX = #{record.hklx,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pogjjbz != null" >
+        POGJJBZ = #{record.pogjjbz,jdbcType=DECIMAL},
+      </if>
+      <if test="record.fPicture != null" >
+        F_PICTURE = #{record.fPicture,jdbcType=BLOB},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update WASYS350_NEWBPM.CR_GR
+    set GRBH = #{record.grbh,jdbcType=VARCHAR},
+      ID = #{record.id,jdbcType=DECIMAL},
+      DWBH = #{record.dwbh,jdbcType=VARCHAR},
+      GRXM = #{record.grxm,jdbcType=VARCHAR},
+      XMQP = #{record.xmqp,jdbcType=VARCHAR},
+      XMJP = #{record.xmjp,jdbcType=VARCHAR},
+      ZJLX = #{record.zjlx,jdbcType=VARCHAR},
+      ZJHM = #{record.zjhm,jdbcType=VARCHAR},
+      XB = #{record.xb,jdbcType=VARCHAR},
+      CSRQ = #{record.csrq,jdbcType=DATE},
+      GZRQ = #{record.gzrq,jdbcType=DATE},
+      SZBM = #{record.szbm,jdbcType=VARCHAR},
+      YZBM = #{record.yzbm,jdbcType=VARCHAR},
+      YDDH = #{record.yddh,jdbcType=VARCHAR},
+      GDDH = #{record.gddh,jdbcType=VARCHAR},
+      TXDZ = #{record.txdz,jdbcType=VARCHAR},
+      ZYZGBM = #{record.zyzgbm,jdbcType=VARCHAR},
+      ZCBM = #{record.zcbm,jdbcType=VARCHAR},
+      ZWBM = #{record.zwbm,jdbcType=VARCHAR},
+      XLBM = #{record.xlbm,jdbcType=VARCHAR},
+      HYZK = #{record.hyzk,jdbcType=VARCHAR},
+      POXM = #{record.poxm,jdbcType=VARCHAR},
+      POZJLX = #{record.pozjlx,jdbcType=VARCHAR},
+      POZJHM = #{record.pozjhm,jdbcType=VARCHAR},
+      ZFQK = #{record.zfqk,jdbcType=VARCHAR},
+      ZFDKBZ = #{record.zfdkbz,jdbcType=VARCHAR},
+      CDGXBM = #{record.cdgxbm,jdbcType=VARCHAR},
+      SBZH = #{record.sbzh,jdbcType=VARCHAR},
+      GRYSR = #{record.grysr,jdbcType=DECIMAL},
+      JTYSR = #{record.jtysr,jdbcType=DECIMAL},
+      XYDJ = #{record.xydj,jdbcType=VARCHAR},
+      GJDBM = #{record.gjdbm,jdbcType=VARCHAR},
+      DJRQ = #{record.djrq,jdbcType=DATE},
+      DJSJ = #{record.djsj,jdbcType=DATE},
+      DJCZY = #{record.djczy,jdbcType=DECIMAL},
+      GRZT = #{record.grzt,jdbcType=VARCHAR},
+      F_PICTURENAME = #{record.fPicturename,jdbcType=VARCHAR},
+      CYM = #{record.cym,jdbcType=VARCHAR},
+      YWM = #{record.ywm,jdbcType=VARCHAR},
+      CSD = #{record.csd,jdbcType=VARCHAR},
+      MZ = #{record.mz,jdbcType=VARCHAR},
+      SG = #{record.sg,jdbcType=DECIMAL},
+      TZ = #{record.tz,jdbcType=DECIMAL},
+      ZYSL = #{record.zysl,jdbcType=DECIMAL},
+      YYSL = #{record.yysl,jdbcType=DECIMAL},
+      JTDH = #{record.jtdh,jdbcType=VARCHAR},
+      HJSZD = #{record.hjszd,jdbcType=VARCHAR},
+      DASZD = #{record.daszd,jdbcType=VARCHAR},
+      ZZMM = #{record.zzmm,jdbcType=VARCHAR},
+      ZJXY = #{record.zjxy,jdbcType=VARCHAR},
+      ZY = #{record.zy,jdbcType=VARCHAR},
+      BYYX = #{record.byyx,jdbcType=VARCHAR},
+      RZRQ = #{record.rzrq,jdbcType=DATE},
+      JTZZ = #{record.jtzz,jdbcType=VARCHAR},
+      XZZ = #{record.xzz,jdbcType=VARCHAR},
+      XZZDH = #{record.xzzdh,jdbcType=VARCHAR},
+      JZHM = #{record.jzhm,jdbcType=VARCHAR},
+      YZ = #{record.yz,jdbcType=VARCHAR},
+      WYSP = #{record.wysp,jdbcType=VARCHAR},
+      XX = #{record.xx,jdbcType=VARCHAR},
+      AIH = #{record.aih,jdbcType=VARCHAR},
+      TC = #{record.tc,jdbcType=VARCHAR},
+      MQGZZT = #{record.mqgzzt,jdbcType=VARCHAR},
+      DZXX = #{record.dzxx,jdbcType=VARCHAR},
+      DLZT = #{record.dlzt,jdbcType=VARCHAR},
+      GRLBBM = #{record.grlbbm,jdbcType=VARCHAR},
+      MEM01 = #{record.mem01,jdbcType=VARCHAR},
+      HKLX = #{record.hklx,jdbcType=VARCHAR},
+      POGJJBZ = #{record.pogjjbz,jdbcType=DECIMAL},
+      F_PICTURE = #{record.fPicture,jdbcType=BLOB}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WASYS350_NEWBPM.CR_GR
+    set GRBH = #{record.grbh,jdbcType=VARCHAR},
+      ID = #{record.id,jdbcType=DECIMAL},
+      DWBH = #{record.dwbh,jdbcType=VARCHAR},
+      GRXM = #{record.grxm,jdbcType=VARCHAR},
+      XMQP = #{record.xmqp,jdbcType=VARCHAR},
+      XMJP = #{record.xmjp,jdbcType=VARCHAR},
+      ZJLX = #{record.zjlx,jdbcType=VARCHAR},
+      ZJHM = #{record.zjhm,jdbcType=VARCHAR},
+      XB = #{record.xb,jdbcType=VARCHAR},
+      CSRQ = #{record.csrq,jdbcType=DATE},
+      GZRQ = #{record.gzrq,jdbcType=DATE},
+      SZBM = #{record.szbm,jdbcType=VARCHAR},
+      YZBM = #{record.yzbm,jdbcType=VARCHAR},
+      YDDH = #{record.yddh,jdbcType=VARCHAR},
+      GDDH = #{record.gddh,jdbcType=VARCHAR},
+      TXDZ = #{record.txdz,jdbcType=VARCHAR},
+      ZYZGBM = #{record.zyzgbm,jdbcType=VARCHAR},
+      ZCBM = #{record.zcbm,jdbcType=VARCHAR},
+      ZWBM = #{record.zwbm,jdbcType=VARCHAR},
+      XLBM = #{record.xlbm,jdbcType=VARCHAR},
+      HYZK = #{record.hyzk,jdbcType=VARCHAR},
+      POXM = #{record.poxm,jdbcType=VARCHAR},
+      POZJLX = #{record.pozjlx,jdbcType=VARCHAR},
+      POZJHM = #{record.pozjhm,jdbcType=VARCHAR},
+      ZFQK = #{record.zfqk,jdbcType=VARCHAR},
+      ZFDKBZ = #{record.zfdkbz,jdbcType=VARCHAR},
+      CDGXBM = #{record.cdgxbm,jdbcType=VARCHAR},
+      SBZH = #{record.sbzh,jdbcType=VARCHAR},
+      GRYSR = #{record.grysr,jdbcType=DECIMAL},
+      JTYSR = #{record.jtysr,jdbcType=DECIMAL},
+      XYDJ = #{record.xydj,jdbcType=VARCHAR},
+      GJDBM = #{record.gjdbm,jdbcType=VARCHAR},
+      DJRQ = #{record.djrq,jdbcType=DATE},
+      DJSJ = #{record.djsj,jdbcType=DATE},
+      DJCZY = #{record.djczy,jdbcType=DECIMAL},
+      GRZT = #{record.grzt,jdbcType=VARCHAR},
+      F_PICTURENAME = #{record.fPicturename,jdbcType=VARCHAR},
+      CYM = #{record.cym,jdbcType=VARCHAR},
+      YWM = #{record.ywm,jdbcType=VARCHAR},
+      CSD = #{record.csd,jdbcType=VARCHAR},
+      MZ = #{record.mz,jdbcType=VARCHAR},
+      SG = #{record.sg,jdbcType=DECIMAL},
+      TZ = #{record.tz,jdbcType=DECIMAL},
+      ZYSL = #{record.zysl,jdbcType=DECIMAL},
+      YYSL = #{record.yysl,jdbcType=DECIMAL},
+      JTDH = #{record.jtdh,jdbcType=VARCHAR},
+      HJSZD = #{record.hjszd,jdbcType=VARCHAR},
+      DASZD = #{record.daszd,jdbcType=VARCHAR},
+      ZZMM = #{record.zzmm,jdbcType=VARCHAR},
+      ZJXY = #{record.zjxy,jdbcType=VARCHAR},
+      ZY = #{record.zy,jdbcType=VARCHAR},
+      BYYX = #{record.byyx,jdbcType=VARCHAR},
+      RZRQ = #{record.rzrq,jdbcType=DATE},
+      JTZZ = #{record.jtzz,jdbcType=VARCHAR},
+      XZZ = #{record.xzz,jdbcType=VARCHAR},
+      XZZDH = #{record.xzzdh,jdbcType=VARCHAR},
+      JZHM = #{record.jzhm,jdbcType=VARCHAR},
+      YZ = #{record.yz,jdbcType=VARCHAR},
+      WYSP = #{record.wysp,jdbcType=VARCHAR},
+      XX = #{record.xx,jdbcType=VARCHAR},
+      AIH = #{record.aih,jdbcType=VARCHAR},
+      TC = #{record.tc,jdbcType=VARCHAR},
+      MQGZZT = #{record.mqgzzt,jdbcType=VARCHAR},
+      DZXX = #{record.dzxx,jdbcType=VARCHAR},
+      DLZT = #{record.dlzt,jdbcType=VARCHAR},
+      GRLBBM = #{record.grlbbm,jdbcType=VARCHAR},
+      MEM01 = #{record.mem01,jdbcType=VARCHAR},
+      HKLX = #{record.hklx,jdbcType=VARCHAR},
+      POGJJBZ = #{record.pogjjbz,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.shineyue.wx.po.auto.CrGr" >
+    update WASYS350_NEWBPM.CR_GR
+    <set >
+      <if test="id != null" >
+        ID = #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="dwbh != null" >
+        DWBH = #{dwbh,jdbcType=VARCHAR},
+      </if>
+      <if test="grxm != null" >
+        GRXM = #{grxm,jdbcType=VARCHAR},
+      </if>
+      <if test="xmqp != null" >
+        XMQP = #{xmqp,jdbcType=VARCHAR},
+      </if>
+      <if test="xmjp != null" >
+        XMJP = #{xmjp,jdbcType=VARCHAR},
+      </if>
+      <if test="zjlx != null" >
+        ZJLX = #{zjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="zjhm != null" >
+        ZJHM = #{zjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="xb != null" >
+        XB = #{xb,jdbcType=VARCHAR},
+      </if>
+      <if test="csrq != null" >
+        CSRQ = #{csrq,jdbcType=DATE},
+      </if>
+      <if test="gzrq != null" >
+        GZRQ = #{gzrq,jdbcType=DATE},
+      </if>
+      <if test="szbm != null" >
+        SZBM = #{szbm,jdbcType=VARCHAR},
+      </if>
+      <if test="yzbm != null" >
+        YZBM = #{yzbm,jdbcType=VARCHAR},
+      </if>
+      <if test="yddh != null" >
+        YDDH = #{yddh,jdbcType=VARCHAR},
+      </if>
+      <if test="gddh != null" >
+        GDDH = #{gddh,jdbcType=VARCHAR},
+      </if>
+      <if test="txdz != null" >
+        TXDZ = #{txdz,jdbcType=VARCHAR},
+      </if>
+      <if test="zyzgbm != null" >
+        ZYZGBM = #{zyzgbm,jdbcType=VARCHAR},
+      </if>
+      <if test="zcbm != null" >
+        ZCBM = #{zcbm,jdbcType=VARCHAR},
+      </if>
+      <if test="zwbm != null" >
+        ZWBM = #{zwbm,jdbcType=VARCHAR},
+      </if>
+      <if test="xlbm != null" >
+        XLBM = #{xlbm,jdbcType=VARCHAR},
+      </if>
+      <if test="hyzk != null" >
+        HYZK = #{hyzk,jdbcType=VARCHAR},
+      </if>
+      <if test="poxm != null" >
+        POXM = #{poxm,jdbcType=VARCHAR},
+      </if>
+      <if test="pozjlx != null" >
+        POZJLX = #{pozjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="pozjhm != null" >
+        POZJHM = #{pozjhm,jdbcType=VARCHAR},
+      </if>
+      <if test="zfqk != null" >
+        ZFQK = #{zfqk,jdbcType=VARCHAR},
+      </if>
+      <if test="zfdkbz != null" >
+        ZFDKBZ = #{zfdkbz,jdbcType=VARCHAR},
+      </if>
+      <if test="cdgxbm != null" >
+        CDGXBM = #{cdgxbm,jdbcType=VARCHAR},
+      </if>
+      <if test="sbzh != null" >
+        SBZH = #{sbzh,jdbcType=VARCHAR},
+      </if>
+      <if test="grysr != null" >
+        GRYSR = #{grysr,jdbcType=DECIMAL},
+      </if>
+      <if test="jtysr != null" >
+        JTYSR = #{jtysr,jdbcType=DECIMAL},
+      </if>
+      <if test="xydj != null" >
+        XYDJ = #{xydj,jdbcType=VARCHAR},
+      </if>
+      <if test="gjdbm != null" >
+        GJDBM = #{gjdbm,jdbcType=VARCHAR},
+      </if>
+      <if test="djrq != null" >
+        DJRQ = #{djrq,jdbcType=DATE},
+      </if>
+      <if test="djsj != null" >
+        DJSJ = #{djsj,jdbcType=DATE},
+      </if>
+      <if test="djczy != null" >
+        DJCZY = #{djczy,jdbcType=DECIMAL},
+      </if>
+      <if test="grzt != null" >
+        GRZT = #{grzt,jdbcType=VARCHAR},
+      </if>
+      <if test="fPicturename != null" >
+        F_PICTURENAME = #{fPicturename,jdbcType=VARCHAR},
+      </if>
+      <if test="cym != null" >
+        CYM = #{cym,jdbcType=VARCHAR},
+      </if>
+      <if test="ywm != null" >
+        YWM = #{ywm,jdbcType=VARCHAR},
+      </if>
+      <if test="csd != null" >
+        CSD = #{csd,jdbcType=VARCHAR},
+      </if>
+      <if test="mz != null" >
+        MZ = #{mz,jdbcType=VARCHAR},
+      </if>
+      <if test="sg != null" >
+        SG = #{sg,jdbcType=DECIMAL},
+      </if>
+      <if test="tz != null" >
+        TZ = #{tz,jdbcType=DECIMAL},
+      </if>
+      <if test="zysl != null" >
+        ZYSL = #{zysl,jdbcType=DECIMAL},
+      </if>
+      <if test="yysl != null" >
+        YYSL = #{yysl,jdbcType=DECIMAL},
+      </if>
+      <if test="jtdh != null" >
+        JTDH = #{jtdh,jdbcType=VARCHAR},
+      </if>
+      <if test="hjszd != null" >
+        HJSZD = #{hjszd,jdbcType=VARCHAR},
+      </if>
+      <if test="daszd != null" >
+        DASZD = #{daszd,jdbcType=VARCHAR},
+      </if>
+      <if test="zzmm != null" >
+        ZZMM = #{zzmm,jdbcType=VARCHAR},
+      </if>
+      <if test="zjxy != null" >
+        ZJXY = #{zjxy,jdbcType=VARCHAR},
+      </if>
+      <if test="zy != null" >
+        ZY = #{zy,jdbcType=VARCHAR},
+      </if>
+      <if test="byyx != null" >
+        BYYX = #{byyx,jdbcType=VARCHAR},
+      </if>
+      <if test="rzrq != null" >
+        RZRQ = #{rzrq,jdbcType=DATE},
+      </if>
+      <if test="jtzz != null" >
+        JTZZ = #{jtzz,jdbcType=VARCHAR},
+      </if>
+      <if test="xzz != null" >
+        XZZ = #{xzz,jdbcType=VARCHAR},
+      </if>
+      <if test="xzzdh != null" >
+        XZZDH = #{xzzdh,jdbcType=VARCHAR},
+      </if>
+      <if test="jzhm != null" >
+        JZHM = #{jzhm,jdbcType=VARCHAR},
+      </if>
+      <if test="yz != null" >
+        YZ = #{yz,jdbcType=VARCHAR},
+      </if>
+      <if test="wysp != null" >
+        WYSP = #{wysp,jdbcType=VARCHAR},
+      </if>
+      <if test="xx != null" >
+        XX = #{xx,jdbcType=VARCHAR},
+      </if>
+      <if test="aih != null" >
+        AIH = #{aih,jdbcType=VARCHAR},
+      </if>
+      <if test="tc != null" >
+        TC = #{tc,jdbcType=VARCHAR},
+      </if>
+      <if test="mqgzzt != null" >
+        MQGZZT = #{mqgzzt,jdbcType=VARCHAR},
+      </if>
+      <if test="dzxx != null" >
+        DZXX = #{dzxx,jdbcType=VARCHAR},
+      </if>
+      <if test="dlzt != null" >
+        DLZT = #{dlzt,jdbcType=VARCHAR},
+      </if>
+      <if test="grlbbm != null" >
+        GRLBBM = #{grlbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="mem01 != null" >
+        MEM01 = #{mem01,jdbcType=VARCHAR},
+      </if>
+      <if test="hklx != null" >
+        HKLX = #{hklx,jdbcType=VARCHAR},
+      </if>
+      <if test="pogjjbz != null" >
+        POGJJBZ = #{pogjjbz,jdbcType=DECIMAL},
+      </if>
+      <if test="fPicture != null" >
+        F_PICTURE = #{fPicture,jdbcType=BLOB},
+      </if>
+    </set>
+    where GRBH = #{grbh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.shineyue.wx.po.auto.CrGr" >
+    update WASYS350_NEWBPM.CR_GR
+    set ID = #{id,jdbcType=DECIMAL},
+      DWBH = #{dwbh,jdbcType=VARCHAR},
+      GRXM = #{grxm,jdbcType=VARCHAR},
+      XMQP = #{xmqp,jdbcType=VARCHAR},
+      XMJP = #{xmjp,jdbcType=VARCHAR},
+      ZJLX = #{zjlx,jdbcType=VARCHAR},
+      ZJHM = #{zjhm,jdbcType=VARCHAR},
+      XB = #{xb,jdbcType=VARCHAR},
+      CSRQ = #{csrq,jdbcType=DATE},
+      GZRQ = #{gzrq,jdbcType=DATE},
+      SZBM = #{szbm,jdbcType=VARCHAR},
+      YZBM = #{yzbm,jdbcType=VARCHAR},
+      YDDH = #{yddh,jdbcType=VARCHAR},
+      GDDH = #{gddh,jdbcType=VARCHAR},
+      TXDZ = #{txdz,jdbcType=VARCHAR},
+      ZYZGBM = #{zyzgbm,jdbcType=VARCHAR},
+      ZCBM = #{zcbm,jdbcType=VARCHAR},
+      ZWBM = #{zwbm,jdbcType=VARCHAR},
+      XLBM = #{xlbm,jdbcType=VARCHAR},
+      HYZK = #{hyzk,jdbcType=VARCHAR},
+      POXM = #{poxm,jdbcType=VARCHAR},
+      POZJLX = #{pozjlx,jdbcType=VARCHAR},
+      POZJHM = #{pozjhm,jdbcType=VARCHAR},
+      ZFQK = #{zfqk,jdbcType=VARCHAR},
+      ZFDKBZ = #{zfdkbz,jdbcType=VARCHAR},
+      CDGXBM = #{cdgxbm,jdbcType=VARCHAR},
+      SBZH = #{sbzh,jdbcType=VARCHAR},
+      GRYSR = #{grysr,jdbcType=DECIMAL},
+      JTYSR = #{jtysr,jdbcType=DECIMAL},
+      XYDJ = #{xydj,jdbcType=VARCHAR},
+      GJDBM = #{gjdbm,jdbcType=VARCHAR},
+      DJRQ = #{djrq,jdbcType=DATE},
+      DJSJ = #{djsj,jdbcType=DATE},
+      DJCZY = #{djczy,jdbcType=DECIMAL},
+      GRZT = #{grzt,jdbcType=VARCHAR},
+      F_PICTURENAME = #{fPicturename,jdbcType=VARCHAR},
+      CYM = #{cym,jdbcType=VARCHAR},
+      YWM = #{ywm,jdbcType=VARCHAR},
+      CSD = #{csd,jdbcType=VARCHAR},
+      MZ = #{mz,jdbcType=VARCHAR},
+      SG = #{sg,jdbcType=DECIMAL},
+      TZ = #{tz,jdbcType=DECIMAL},
+      ZYSL = #{zysl,jdbcType=DECIMAL},
+      YYSL = #{yysl,jdbcType=DECIMAL},
+      JTDH = #{jtdh,jdbcType=VARCHAR},
+      HJSZD = #{hjszd,jdbcType=VARCHAR},
+      DASZD = #{daszd,jdbcType=VARCHAR},
+      ZZMM = #{zzmm,jdbcType=VARCHAR},
+      ZJXY = #{zjxy,jdbcType=VARCHAR},
+      ZY = #{zy,jdbcType=VARCHAR},
+      BYYX = #{byyx,jdbcType=VARCHAR},
+      RZRQ = #{rzrq,jdbcType=DATE},
+      JTZZ = #{jtzz,jdbcType=VARCHAR},
+      XZZ = #{xzz,jdbcType=VARCHAR},
+      XZZDH = #{xzzdh,jdbcType=VARCHAR},
+      JZHM = #{jzhm,jdbcType=VARCHAR},
+      YZ = #{yz,jdbcType=VARCHAR},
+      WYSP = #{wysp,jdbcType=VARCHAR},
+      XX = #{xx,jdbcType=VARCHAR},
+      AIH = #{aih,jdbcType=VARCHAR},
+      TC = #{tc,jdbcType=VARCHAR},
+      MQGZZT = #{mqgzzt,jdbcType=VARCHAR},
+      DZXX = #{dzxx,jdbcType=VARCHAR},
+      DLZT = #{dlzt,jdbcType=VARCHAR},
+      GRLBBM = #{grlbbm,jdbcType=VARCHAR},
+      MEM01 = #{mem01,jdbcType=VARCHAR},
+      HKLX = #{hklx,jdbcType=VARCHAR},
+      POGJJBZ = #{pogjjbz,jdbcType=DECIMAL},
+      F_PICTURE = #{fPicture,jdbcType=BLOB}
+    where GRBH = #{grbh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.shineyue.wx.po.auto.CrGr" >
+    update WASYS350_NEWBPM.CR_GR
+    set ID = #{id,jdbcType=DECIMAL},
+      DWBH = #{dwbh,jdbcType=VARCHAR},
+      GRXM = #{grxm,jdbcType=VARCHAR},
+      XMQP = #{xmqp,jdbcType=VARCHAR},
+      XMJP = #{xmjp,jdbcType=VARCHAR},
+      ZJLX = #{zjlx,jdbcType=VARCHAR},
+      ZJHM = #{zjhm,jdbcType=VARCHAR},
+      XB = #{xb,jdbcType=VARCHAR},
+      CSRQ = #{csrq,jdbcType=DATE},
+      GZRQ = #{gzrq,jdbcType=DATE},
+      SZBM = #{szbm,jdbcType=VARCHAR},
+      YZBM = #{yzbm,jdbcType=VARCHAR},
+      YDDH = #{yddh,jdbcType=VARCHAR},
+      GDDH = #{gddh,jdbcType=VARCHAR},
+      TXDZ = #{txdz,jdbcType=VARCHAR},
+      ZYZGBM = #{zyzgbm,jdbcType=VARCHAR},
+      ZCBM = #{zcbm,jdbcType=VARCHAR},
+      ZWBM = #{zwbm,jdbcType=VARCHAR},
+      XLBM = #{xlbm,jdbcType=VARCHAR},
+      HYZK = #{hyzk,jdbcType=VARCHAR},
+      POXM = #{poxm,jdbcType=VARCHAR},
+      POZJLX = #{pozjlx,jdbcType=VARCHAR},
+      POZJHM = #{pozjhm,jdbcType=VARCHAR},
+      ZFQK = #{zfqk,jdbcType=VARCHAR},
+      ZFDKBZ = #{zfdkbz,jdbcType=VARCHAR},
+      CDGXBM = #{cdgxbm,jdbcType=VARCHAR},
+      SBZH = #{sbzh,jdbcType=VARCHAR},
+      GRYSR = #{grysr,jdbcType=DECIMAL},
+      JTYSR = #{jtysr,jdbcType=DECIMAL},
+      XYDJ = #{xydj,jdbcType=VARCHAR},
+      GJDBM = #{gjdbm,jdbcType=VARCHAR},
+      DJRQ = #{djrq,jdbcType=DATE},
+      DJSJ = #{djsj,jdbcType=DATE},
+      DJCZY = #{djczy,jdbcType=DECIMAL},
+      GRZT = #{grzt,jdbcType=VARCHAR},
+      F_PICTURENAME = #{fPicturename,jdbcType=VARCHAR},
+      CYM = #{cym,jdbcType=VARCHAR},
+      YWM = #{ywm,jdbcType=VARCHAR},
+      CSD = #{csd,jdbcType=VARCHAR},
+      MZ = #{mz,jdbcType=VARCHAR},
+      SG = #{sg,jdbcType=DECIMAL},
+      TZ = #{tz,jdbcType=DECIMAL},
+      ZYSL = #{zysl,jdbcType=DECIMAL},
+      YYSL = #{yysl,jdbcType=DECIMAL},
+      JTDH = #{jtdh,jdbcType=VARCHAR},
+      HJSZD = #{hjszd,jdbcType=VARCHAR},
+      DASZD = #{daszd,jdbcType=VARCHAR},
+      ZZMM = #{zzmm,jdbcType=VARCHAR},
+      ZJXY = #{zjxy,jdbcType=VARCHAR},
+      ZY = #{zy,jdbcType=VARCHAR},
+      BYYX = #{byyx,jdbcType=VARCHAR},
+      RZRQ = #{rzrq,jdbcType=DATE},
+      JTZZ = #{jtzz,jdbcType=VARCHAR},
+      XZZ = #{xzz,jdbcType=VARCHAR},
+      XZZDH = #{xzzdh,jdbcType=VARCHAR},
+      JZHM = #{jzhm,jdbcType=VARCHAR},
+      YZ = #{yz,jdbcType=VARCHAR},
+      WYSP = #{wysp,jdbcType=VARCHAR},
+      XX = #{xx,jdbcType=VARCHAR},
+      AIH = #{aih,jdbcType=VARCHAR},
+      TC = #{tc,jdbcType=VARCHAR},
+      MQGZZT = #{mqgzzt,jdbcType=VARCHAR},
+      DZXX = #{dzxx,jdbcType=VARCHAR},
+      DLZT = #{dlzt,jdbcType=VARCHAR},
+      GRLBBM = #{grlbbm,jdbcType=VARCHAR},
+      MEM01 = #{mem01,jdbcType=VARCHAR},
+      HKLX = #{hklx,jdbcType=VARCHAR},
+      POGJJBZ = #{pogjjbz,jdbcType=DECIMAL}
+    where GRBH = #{grbh,jdbcType=VARCHAR}
+  </update>
+</mapper>

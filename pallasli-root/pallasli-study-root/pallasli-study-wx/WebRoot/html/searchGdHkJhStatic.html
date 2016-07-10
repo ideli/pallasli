@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8">
+	<title>伟奥公积金移动平台</title> 
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.4.min.css" />
+	<script src="../jquery/jquery-1.11.1.min.js"></script>
+	<script src="../jquery/jquery.mobile-1.4.4.min.js"></script>
+	<style type="text/css">
+<!--
+.STYLE28 {font-family: sans-serif; color: #333333; font-size: 8pt; }
+-->
+    </style>
+	</head> 
+<body> 
+
+<div data-role="page" id="searchInfoPage" data-theme="a">
+            <div data-role="header">
+                <h1>公积金还款计划</h1>
+            </div>
+            <div data-role="content">
+                <table border="1" bordercolor="#CCCCCC" style="font-size:60%">
+        <tr bordercolor="#F0F0F0" bgColor=F0F0F0>
+            <th bgcolor="F0F0F0" style="width: 160px;"><span class="STYLE28">应还日期</span></th>
+            <th bordercolor="" bgcolor="#F0F0F0" style="width: 160px;"><span class="STYLE28">贷款金额(元)</span></th>
+            <th bordercolor="" bgcolor="#F0F0F0" style="width: 160px;"><span class="STYLE28">年利率(%)</span></th>
+            <th bgcolor="#F0F0F0" style="width: 160px;"><span class="STYLE28">月利率(%)</span></th>
+            <th bgcolor="#F0F0F0" style="width: 160px;"><span class="STYLE28">月还款额(元)</span></th>
+            <th bordercolor="#006666" style="width: 160px;"><span class="STYLE28">总还款额(元)</span></th>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2014-11</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">16241.92</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2014-12</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">16677.06</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-01</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">17112.2</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-02</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">17547.34</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-03</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">17982.48</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-04</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">18417.62</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-05</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">18852.76</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-06</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">19287.9</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-07</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">19723.04</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-08</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">20158.18</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-09</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">20593.32</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-10</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">21028.46</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-11</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">21463.6</td>
+        </tr>
+        <tr bordercolor="#F0F0F0">
+            <td>2015-12</td>
+            <td>10000</td>
+            <td>4.2</td>
+            <td>3.5</td>
+            <td>435.14</td>
+            <td bordercolor="#006666">21898.74</td>
+        </tr>
+</table>
+            </div>
+        </div>
+
+<!-- Second Page/Dialog -->
+<div data-role="dialog" id="alert">
+	<div data-role="header">
+		<h1>提示</h1>
+	</div>
+	
+	<div data-role="content" data-theme="b">	
+		功能建设中,敬请期待!
+		<br><br>
+
+		<a href="#home" data-role="button" data-theme="c" data-rel="back">确定</a>
+	</div>
+</div>
+
+</body>
+</html>
+

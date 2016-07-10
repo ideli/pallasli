@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="utf-8">
+	<title>伟奥公积金移动平台</title> 
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" href="../jquery/jquery.mobile-1.4.4.min.css" />
+	<link rel="stylesheet" href="../css/buttons.css" />
+	<script src="../jquery/jquery-1.11.1.min.js"></script>
+	<script src="../js/jquery.noty.packaged.min.js"></script>
+	<script src="../js/atwaMobileUtil.js"></script>
+	<script src="../js/searchInfo.js"></script>
+	<script src="../jquery/jquery.mobile-1.4.4.min.js"></script> 
+	</head> 
+<body> 
+
+<div data-role="page" id="searchInfoPage" data-theme="a">
+            <div data-role="header">
+                <h1>公积金基本信息</h1>
+            </div>
+            <div data-role="content">
+                <form name="searchInfo" id="searchInfo" method="get">
+                    
+                        <input type="hidden" name="openid" id="openid" value="" />
+                    <p>
+                        <button type="submit" data-theme="b" name="submit">查询</button>
+                    </p>
+                </form>
+                <form name="searchResult" id="searchResult" method="get">
+                    <p>
+                        <label for="uname">真实姓名:</label>
+                        <input type="text" disabled="disabled" name="uname" id="uname" value=""  data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="grbh">个人编号:</label>
+                        <input type="text" disabled="disabled" name="grbh" id="grbh" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="cardNumber">证件号码:</label>
+                        <input type="text" disabled="disabled" name="cardNumber" id="cardNumber" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="csrq">出生日期:</label>
+                        <input type="text" disabled="disabled" name="csrq" id="csrq" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="grxb">性&nbsp;&nbsp;&nbsp;&nbsp;别:</label>
+                        <input type="text" disabled="disabled" name="grxb" id="grxb" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="cydz">常用住址:</label>
+                        <input type="text" disabled="disabled" name="cydz" id="cydz" value="" data-theme="d"/>
+                    </p>
+                    <p>
+                        <label for="sfdk">是否贷款:</label>
+                        <input type="text" disabled="disabled" name="sfdk" id="sfdk" value="" data-theme="d"/>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+<!-- Second Page/Dialog -->
+<div data-role="dialog" id="alert">
+	<div data-role="header">
+		<h1>提示</h1>
+	</div>
+	
+	<div data-role="content" data-theme="b">	
+		功能建设中,敬请期待!
+		<br><br>
+
+		<a href="#home" data-role="button" data-theme="c" data-rel="back">确定</a>
+	</div>
+</div>
+
+</body>
+</html>
+

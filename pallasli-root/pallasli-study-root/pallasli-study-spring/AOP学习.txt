@@ -1,0 +1,1002 @@
+Spring 框架的 AOP
+
+Spring 框架的一个关键组件是面向方面的编程(AOP)框架。面向方面的编程需要把程序逻辑分解成不同的部分称为所谓的关注点。跨一个应用程序的多个点的功能被称为横切关注点，这些横切关注点在概念上独立于应用程序的业务逻辑。有各种各样的常见的很好的方面的例子，如日志记录、审计、声明式事务、安全性和缓存等。
+
+在 OOP 中，关键单元模块度是类，而在 AOP 中单元模块度是方面。依赖注入帮助你对应用程序对象相互解耦和 AOP 可以帮助你从它们所影响的对象中对横切关注点解耦。AOP 是像编程语言的触发物，如 Perl，.NET，Java 或者其他。
+
+Spring AOP 模块提供拦截器来拦截一个应用程序，例如，当执行一个方法时，你可以在方法执行之前或之后添加额外的功能。
+
+AOP 术语
+在我们开始使用 AOP 工作之前，让我们熟悉一下 AOP 概念和术语。这些术语并不特定于 Spring，而是与 AOP 有关的。
+
+项	描述
+Aspect	一个模块具有一组提供横切需求的 APIs。例如，一个日志模块为了记录日志将被 AOP 方面调用。应用程序可以拥有任意数量的方面，这取决于需求。
+Join point	在你的应用程序中它代表一个点，你可以在插件 AOP 方面。你也能说，它是在实际的应用程序中，其中一个操作将使用 Spring AOP 框架。
+Advice	这是实际行动之前或之后执行的方法。这是在程序执行期间通过 Spring AOP 框架实际被调用的代码。
+Pointcut	这是一组一个或多个连接点，通知应该被执行。你可以使用表达式或模式指定切入点正如我们将在 AOP 的例子中看到的。
+Introduction	引用允许你添加新方法或属性到现有的类中。
+Target object	被一个或者多个方面所通知的对象，这个对象永远是一个被代理对象。也称为被通知对象。
+Weaving	Weaving 把方面连接到其它的应用程序类型或者对象上，并创建一个被通知的对象。这些可以在编译时，类加载时和运行时完成。
+通知的类型
+Spring 方面可以使用下面提到的五种通知工作：
+
+通知	描述
+前置通知	在一个方法执行之前，执行通知。
+后置通知	在一个方法执行之后，不考虑其结果，执行通知。
+返回后通知	在一个方法执行之后，只有在方法成功完成时，才能执行通知。
+抛出异常后通知	在一个方法执行之后，只有在方法退出抛出异常时，才能执行通知。
+环绕通知	在建议方法调用之前和之后，执行通知。
+实现自定义方面
+Spring 支持 @AspectJ annotation style 的方法和基于模式的方法来实现自定义方面。这两种方法已经在下面两个子节进行了详细解释。
+
+方法	描述
+XML Schema based	方面是使用常规类以及基于配置的 XML 来实现的。
+@AspectJ based	@AspectJ 引用一种声明方面的风格作为带有 Java 5 注释的常规 Java 类注释。
+
+
+
+
+
+
+
+Spring 中基于 AOP 的 XML架构
+
+为了在本节的描述中使用 aop 命名空间标签，你需要导入 spring-aop j架构，如下所述：
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+   <!-- bean definition & AOP specific configuration -->
+
+</beans>
+你还需要在你的应用程序的 CLASSPATH 中使用以下 AspectJ 库文件。这些库文件在一个 AspectJ 装置的 ‘lib’ 目录中是可用的，否则你可以在 Internet 中下载它们。
+
+aspectjrt.jar
+
+aspectjweaver.jar
+
+aspectj.jar
+
+aopalliance.jar
+　声明一个 aspect
+一个 aspect 是使用 元素声明的，支持的 bean 是使用 ref 属性引用的，如下所示：
+
+<aop:config>
+   <aop:aspect id="myAspect" ref="aBean">
+   ...
+   </aop:aspect>
+</aop:config>
+<bean id="aBean" class="...">
+...
+</bean>
+这里，“aBean” 将被配置和依赖注入，就像前面的章节中你看到的其他的 Spring bean 一样。
+
+声明一个切入点
+一个切入点有助于确定使用不同建议执行的感兴趣的连接点（即方法）。在处理基于配置的 XML 架构时，切入点将会按照如下所示定义：
+
+<aop:config>
+   <aop:aspect id="myAspect" ref="aBean">
+   <aop:pointcut id="businessService"
+      expression="execution(* com.xyz.myapp.service.*.*(..))"/>
+   ...
+   </aop:aspect>
+</aop:config>
+<bean id="aBean" class="...">
+...
+</bean>
+下面的示例定义了一个名为 “businessService” 的切入点，该切入点将与 com.tutorialspoint 包下的 Student 类中的 getName() 方法相匹配：
+
+<aop:config>
+   <aop:aspect id="myAspect" ref="aBean">
+   <aop:pointcut id="businessService"
+      expression="execution(* com.tutorialspoint.Student.getName(..))"/>
+   ...
+   </aop:aspect>
+</aop:config>
+<bean id="aBean" class="...">
+...
+</bean>
+声明建议
+你可以使用 <aop:{ADVICE NAME}> 元素在一个 中声明五个建议中的任何一个，如下所示：
+
+<aop:config>
+   <aop:aspect id="myAspect" ref="aBean">
+      <aop:pointcut id="businessService"
+         expression="execution(* com.xyz.myapp.service.*.*(..))"/>
+      <!-- a before advice definition -->
+      <aop:before pointcut-ref="businessService" 
+         method="doRequiredTask"/>
+      <!-- an after advice definition -->
+      <aop:after pointcut-ref="businessService" 
+         method="doRequiredTask"/>
+      <!-- an after-returning advice definition -->
+      <!--The doRequiredTask method must have parameter named retVal -->
+      <aop:after-returning pointcut-ref="businessService"
+         returning="retVal"
+         method="doRequiredTask"/>
+      <!-- an after-throwing advice definition -->
+      <!--The doRequiredTask method must have parameter named ex -->
+      <aop:after-throwing pointcut-ref="businessService"
+         throwing="ex"
+         method="doRequiredTask"/>
+      <!-- an around advice definition -->
+      <aop:around pointcut-ref="businessService" 
+         method="doRequiredTask"/>
+   ...
+   </aop:aspect>
+</aop:config>
+<bean id="aBean" class="...">
+...
+</bean>
+你可以对不同的建议使用相同的 doRequiredTask 或者不同的方法。这些方法将会作为 aspect 模块的一部分来定义。
+
+基于 AOP 的 XML 架构的示例
+为了理解上面提到的基于 AOP 的 XML 架构的概念，让我们编写一个示例，可以实现几个建议。为了在我们的示例中使用几个建议，让我们使 Eclipse IDE 处于工作状态，然后按照如下步骤创建一个 Spring 应用程序：
+
+步骤	描述
+1	创建一个名为 SpringExample 的项目，并且在所创建项目的 src 文件夹下创建一个名为 com.tutorialspoint 的包。
+2	使用 Add External JARs 选项添加所需的 Spring 库文件，就如在 Spring Hello World Example 章节中解释的那样。
+3	在项目中添加 Spring AOP 指定的库文件 aspectjrt.jar， aspectjweaver.jar 和 aspectj.jar。
+4	在 com.tutorialspoint 包下创建 Java 类 Logging， Student 和 MainApp。
+5	在 src 文件夹下创建 Beans 配置文件 Beans.xml。
+6	最后一步是创建所有 Java 文件和 Bean 配置文件的内容，并且按如下解释的那样运行应用程序。
+这里是 Logging.java 文件的内容。这实际上是 aspect 模块的一个示例，它定义了在各个点调用的方法。
+
+package com.tutorialspoint;
+public class Logging {
+   /** 
+    * This is the method which I would like to execute
+    * before a selected method execution.
+    */
+   public void beforeAdvice(){
+      System.out.println("Going to setup student profile.");
+   }
+   /** 
+    * This is the method which I would like to execute
+    * after a selected method execution.
+    */
+   public void afterAdvice(){
+      System.out.println("Student profile has been setup.");
+   }
+   /** 
+    * This is the method which I would like to execute
+    * when any method returns.
+    */
+   public void afterReturningAdvice(Object retVal){
+      System.out.println("Returning:" + retVal.toString() );
+   }
+   /**
+    * This is the method which I would like to execute
+    * if there is an exception raised.
+    */
+   public void AfterThrowingAdvice(IllegalArgumentException ex){
+      System.out.println("There has been an exception: " + ex.toString());   
+   }  
+}
+下面是 Student.java 文件的内容：
+
+package com.tutorialspoint;
+public class Student {
+   private Integer age;
+   private String name;
+   public void setAge(Integer age) {
+      this.age = age;
+   }
+   public Integer getAge() {
+      System.out.println("Age : " + age );
+      return age;
+   }
+   public void setName(String name) {
+      this.name = name;
+   }
+   public String getName() {
+      System.out.println("Name : " + name );
+      return name;
+   }  
+   public void printThrowException(){
+       System.out.println("Exception raised");
+       throw new IllegalArgumentException();
+   }
+}
+下面是 MainApp.java 文件的内容：
+
+package com.tutorialspoint;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class MainApp {
+   public static void main(String[] args) {
+      ApplicationContext context = 
+             new ClassPathXmlApplicationContext("Beans.xml");
+      Student student = (Student) context.getBean("student");
+      student.getName();
+      student.getAge();      
+      student.printThrowException();
+   }
+}
+下面是配置文件 Beans.xml：
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+   <aop:config>
+      <aop:aspect id="log" ref="logging">
+         <aop:pointcut id="selectAll" 
+         expression="execution(* com.tutorialspoint.*.*(..))"/>
+         <aop:before pointcut-ref="selectAll" method="beforeAdvice"/>
+         <aop:after pointcut-ref="selectAll" method="afterAdvice"/>
+         <aop:after-returning pointcut-ref="selectAll" 
+                              returning="retVal"
+                              method="afterReturningAdvice"/>
+         <aop:after-throwing pointcut-ref="selectAll" 
+                             throwing="ex"
+                             method="AfterThrowingAdvice"/>
+      </aop:aspect>
+   </aop:config>
+
+   <!-- Definition for student bean -->
+   <bean id="student" class="com.tutorialspoint.Student">
+      <property name="name"  value="Zara" />
+      <property name="age"  value="11"/>      
+   </bean>
+
+   <!-- Definition for logging aspect -->
+   <bean id="logging" class="com.tutorialspoint.Logging"/> 
+
+</beans>
+一旦你已经完成的创建了源文件和 bean 配置文件，让我们运行一下应用程序。如果你的应用程序一切都正常的话，这将会输出以下消息：
+
+Going to setup student profile.
+Name : Zara
+Student profile has been setup.
+Returning:Zara
+Going to setup student profile.
+Age : 11
+Student profile has been setup.
+Returning:11
+Going to setup student profile.
+Exception raised
+Student profile has been setup.
+There has been an exception: java.lang.IllegalArgumentException
+.....
+other exception content
+让我们来解释一下上面定义的在 com.tutorialspoint 中 选择所有方法的 。让我们假设一下，你想要在一个特殊的方法之前或者之后执行你的建议，你可以通过替换使用真实类和方法名称的切入点定义中的星号（*）来定义你的切入点来缩短你的执行。
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+   <aop:config>
+   <aop:aspect id="log" ref="logging">
+      <aop:pointcut id="selectAll" 
+      expression="execution(* com.tutorialspoint.Student.getName(..))"/>
+      <aop:before pointcut-ref="selectAll" method="beforeAdvice"/>
+      <aop:after pointcut-ref="selectAll" method="afterAdvice"/>
+   </aop:aspect>
+   </aop:config>
+
+   <!-- Definition for student bean -->
+   <bean id="student" class="com.tutorialspoint.Student">
+      <property name="name"  value="Zara" />
+      <property name="age"  value="11"/>      
+   </bean>
+
+   <!-- Definition for logging aspect -->
+   <bean id="logging" class="com.tutorialspoint.Logging"/> 
+
+</beans>
+如果你想要执行通过这些更改之后的示例应用程序，这将会输出以下消息：
+
+Going to setup student profile.
+Name : Zara
+Student profile has been setup.
+Age : 11
+Exception raised
+.....
+other exception content
+
+
+
+
+
+Spring 中基于 AOP 的 @AspectJ
+
+@AspectJ 作为通过 Java 5 注释注释的普通的 Java 类，它指的是声明 aspects 的一种风格。通过在你的基于架构的 XML 配置文件中包含以下元素，@AspectJ 支持是可用的。
+
+<aop:aspectj-autoproxy/>
+你还需要在你的应用程序的 CLASSPATH 中使用以下 AspectJ 库文件。这些库文件在一个 AspectJ 装置的 ‘lib’ 目录中是可用的，否则你可以在 Internet 中下载它们。
+
+aspectjrt.jar
+
+aspectjweaver.jar
+
+aspectj.jar
+
+aopalliance.jar
+　声明一个 aspect
+Aspects 类和其他任何正常的 bean 一样，除了它们将会用 @AspectJ 注释之外，它和其他类一样可能有方法和字段，如下所示：
+
+package org.xyz;
+import org.aspectj.lang.annotation.Aspect;
+@Aspect
+public class AspectModule {
+}
+它们将在 XML 中按照如下进行配置，就和其他任何 bean 一样：
+
+<bean id="myAspect" class="org.xyz.AspectModule">
+   <!-- configure properties of aspect here as normal -->
+</bean>
+声明一个切入点
+一个切入点有助于确定使用不同建议执行的感兴趣的连接点（即方法）。在处理基于配置的 XML 架构时，切入点的声明有两个部分：
+
+一个切入点表达式决定了我们感兴趣的哪个方法会真正被执行。
+
+一个切入点标签包含一个名称和任意数量的参数。方法的真正内容是不相干的，并且实际上它应该是空的。
+下面的示例中定义了一个名为 ‘businessService’ 的切入点，该切入点将与 com.tutorialspoint 包下的类中可用的每一个方法相匹配：
+
+import org.aspectj.lang.annotation.Pointcut;
+@Pointcut("execution(* com.xyz.myapp.service.*.*(..))") // expression 
+private void businessService() {}  // signature
+下面的示例中定义了一个名为 ‘getname’ 的切入点，该切入点将与 com.tutorialspoint 包下的 Student 类中的 getName() 方法相匹配：
+
+import org.aspectj.lang.annotation.Pointcut;
+@Pointcut("execution(* com.tutorialspoint.Student.getName(..))") 
+private void getname() {}
+声明建议
+你可以使用 @{ADVICE-NAME} 注释声明五个建议中的任意一个，如下所示。这假设你已经定义了一个切入点标签方法 businessService()：
+
+@Before("businessService()")
+public void doBeforeTask(){
+ ...
+}
+@After("businessService()")
+public void doAfterTask(){
+ ...
+}
+@AfterReturning(pointcut = "businessService()", returning="retVal")
+public void doAfterReturnningTask(Object retVal){
+  // you can intercept retVal here.
+  ...
+}
+@AfterThrowing(pointcut = "businessService()", throwing="ex")
+public void doAfterThrowingTask(Exception ex){
+  // you can intercept thrown exception here.
+  ...
+}
+@Around("businessService()")
+public void doAroundTask(){
+ ...
+}
+你可以为任意一个建议定义你的切入点内联。下面是在建议之前定义内联切入点的一个示例：
+
+@Before("execution(* com.xyz.myapp.service.*.*(..))")
+public doBeforeTask(){
+ ...
+}
+基于 AOP 的 @AspectJ 示例
+为了理解上面提到的关于基于 AOP 的 @AspectJ 的概念，让我们编写一个示例，可以实现几个建议。为了在我们的示例中使用几个建议，让我们使 Eclipse IDE 处于工作状态，然后按照如下步骤创建一个 Spring 应用程序：
+
+步骤	描述
+1	创建一个名为 SpringExample 的项目，并且在所创建项目的 src 文件夹下创建一个名为 com.tutorialspoint 的包。
+2	使用 Add External JARs 选项添加所需的 Spring 库文件，就如在 Spring Hello World Example 章节中解释的那样。
+3	在项目中添加 Spring AOP 指定的库文件 aspectjrt.jar， aspectjweaver.jar 和 aspectj.jar。
+4	在 com.tutorialspoint 包下创建 Java 类 Logging， Student 和 MainApp。
+5	在 src 文件夹下创建 Beans 配置文件 Beans.xml。
+6	最后一步是创建所有 Java 文件和 Bean 配置文件的内容，并且按如下解释的那样运行应用程序。
+这里是 Logging.java 文件的内容。这实际上是 aspect 模块的一个示例，它定义了在各个点调用的方法。
+
+package com.tutorialspoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+@Aspect
+public class Logging {
+   /** Following is the definition for a pointcut to select
+    *  all the methods available. So advice will be called
+    *  for all the methods.
+    */
+   @Pointcut("execution(* com.tutorialspoint.*.*(..))")
+   private void selectAll(){}
+   /** 
+    * This is the method which I would like to execute
+    * before a selected method execution.
+    */
+   @Before("selectAll()")
+   public void beforeAdvice(){
+      System.out.println("Going to setup student profile.");
+   }
+   /** 
+    * This is the method which I would like to execute
+    * after a selected method execution.
+    */
+   @After("selectAll()")
+   public void afterAdvice(){
+      System.out.println("Student profile has been setup.");
+   }
+   /** 
+    * This is the method which I would like to execute
+    * when any method returns.
+    */
+   @AfterReturning(pointcut = "selectAll()", returning="retVal")
+   public void afterReturningAdvice(Object retVal){
+      System.out.println("Returning:" + retVal.toString() );
+   }
+   /**
+    * This is the method which I would like to execute
+    * if there is an exception raised by any method.
+    */
+   @AfterThrowing(pointcut = "selectAll()", throwing = "ex")
+   public void AfterThrowingAdvice(IllegalArgumentException ex){
+      System.out.println("There has been an exception: " + ex.toString());   
+   }  
+}
+下面是 Student.java 文件的内容：
+
+package com.tutorialspoint;
+public class Student {
+   private Integer age;
+   private String name;
+   public void setAge(Integer age) {
+      this.age = age;
+   }
+   public Integer getAge() {
+      System.out.println("Age : " + age );
+      return age;
+   }
+   public void setName(String name) {
+      this.name = name;
+   }
+   public String getName() {
+      System.out.println("Name : " + name );
+      return name;
+   }
+   public void printThrowException(){
+      System.out.println("Exception raised");
+      throw new IllegalArgumentException();
+   }
+}
+下面是 MainApp.java 文件的内容：
+
+package com.tutorialspoint;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class MainApp {
+   public static void main(String[] args) {
+      ApplicationContext context = 
+             new ClassPathXmlApplicationContext("Beans.xml");
+      Student student = (Student) context.getBean("student");
+      student.getName();
+      student.getAge();     
+      student.printThrowException();
+   }
+}
+下面是配置文件 Beans.xml：
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+
+    <aop:aspectj-autoproxy/>
+
+   <!-- Definition for student bean -->
+   <bean id="student" class="com.tutorialspoint.Student">
+      <property name="name"  value="Zara" />
+      <property name="age"  value="11"/>      
+   </bean>
+
+   <!-- Definition for logging aspect -->
+   <bean id="logging" class="com.tutorialspoint.Logging"/> 
+
+</beans>
+一旦你已经完成的创建了源文件和 bean 配置文件，让我们运行一下应用程序。如果你的应用程序一切都正常的话，这将会输出以下消息：
+
+Going to setup student profile.
+Name : Zara
+Student profile has been setup.
+Returning:Zara
+Going to setup student profile.
+Age : 11
+Student profile has been setup.
+Returning:11
+Going to setup student profile.
+Exception raised
+Student profile has been setup.
+There has been an exception: java.lang.IllegalArgumentException
+.....
+other exception content
+
+
+
+
+
+
+
+
+
+
+AOP中的概念
+
+ 
+
+Aspect(切面):指横切性关注点的抽象即为切面,它与类相似,只是两者的关注点不一样,类是对物体特征的抽象,而切面横切性关注点的抽象. （类）
+
+
+joinpoint(连接点):所谓连接点是指那些被拦截到的点。在Spring AOP中一个连接点代表一个方法的执行 （方法）
+
+
+Pointcut(切入点):所谓切入点是指我们要对那些joinpoint进行拦截的定义. （范围）
+
+
+Advice(通知):所谓通知是指拦截到joinpoint之后所要做的事情就是通知.通知分为前置通知,后置通知,异常通知,最终通知,环绕通知 （具体实现）
+
+
+Target(目标对象):代理的目标对象 （目标对象）
+
+
+Weave(织入):指将aspects应用到target对象并导致proxy对象创建的过程称为织入.
+
+ 
+
+Introduction(引入):在不修改类代码的前提下, Introduction可以在运行期为类动态地添加一些方法或Field.
+
+ 
+
+ 
+
+
+使用Spring进行面向切面（AOP）编程
+
+
+要进行AOP编程，首先我们要在spring的配置文件中引入aop命名空间：
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+</beans>
+
+ 
+
+ 
+
+Spring提供了两种切面声明方式
+
+
+1.基于XML配置方式声明切面。
+2.基于注解方式声明切面。
+
+ 
+
+ 
+
+
+基于注解方式声明切面
+
+1、启用注解 <aop:aspectj-autoproxy/>
+2、采用Aspect定义切面
+3、在Aspect定义Pointcut和Advice
+4、Aspect类和目标对象配置到Ioc容器中，目标对象要实现接口
+
+注意：在这种方法定义中，切入点的方法是不被执行的，它存在的目的仅仅是为了重用切入点
+即Advice中通过方法名引用这个切人点
+
+
+@Aspect
+public class LogPrint {
+   // 定义Pointcut,Pointcut的名称就是anyMethod，此方法不能有返回值和参数，该方法只是
+
+   //一个 标识Pointcut的内容是一个表达式，描述那些对象的那些方法（订阅Joinpoint）
+   @Pointcut("execution(* cn.itcast.service..*.*(..))")
+   private void anyMethod() {}//声明一个切入点
+
+ 
+   // 定义Advice，标识在那个切入点何处织入此方法
+   @Before("anyMethod() && args(userName)")
+    //前置通知，拦截Pointcut指定范围的方法并且方法的参数只有1个String类型的参
+
+    //数 ,userName为方法传过来的参数
+   public void doAccessCheck(String userName) {} 
+
+ 
+
+
+
+   @AfterReturning(pointcut="anyMethod()",returning="revalue")
+   //后置通知，拦截Pointcut指定的范围的方法并且方法的返回值是1个String类型的，
+
+   //revalue   为方法传过来的返回值
+
+    public void doReturnCheck(String revalue) {}
+
+ 
+
+
+    @AfterThrowing(pointcut="anyMethod()", throwing="ex")
+    //例外通知，ex为抛出异常的信息
+    public void doExceptionAction(Exception ex) {}
+
+ 
+
+ 
+
+
+   @After("anyMethod()")
+   //最终通知
+   public void doReleaseAction() {}
+
+ 
+
+
+   @Around("anyMethod()")
+   //环绕通知 此方法的除方法名和方法参数名可变，其他默认的。只有返回pjp.proceed()，
+
+   //拦截到的方法才会执行
+   public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+        System.out.println("进入方法");
+        return pjp.proceed();
+        System.out.println("结束方法");
+   }
+
+ 
+
+
+基于基于XML配置方式声明切面
+
+public class LogPrint {
+ public void doAccessCheck() {}定义前置通知
+ public void doReturnCheck() {}定义后置通知
+ public void doExceptionAction() {}定义例外通知
+ public void doReleaseAction() {}定义最终通知
+ public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+  return pjp.proceed();环绕通知
+ }
+}
+
+<bean id="orderservice" class="cn.itcast.service.OrderServiceBean"/>
+<bean id="log" class="cn.itcast.service.LogPrint"/>
+<aop:config>
+  <aop:aspect id="myaop" ref="log">
+   <aop:pointcut id="mycut" expression="execution(* cn.itcast.service..*.*(..))"/>
+   <aop:before pointcut-ref="mycut" method="doAccessCheck"/>
+   <aop:after-returning pointcut-ref="mycut" method="doReturnCheck "/>
+   <aop:after-throwing pointcut-ref="mycut" method="doExceptionAction"/>
+   <aop:after pointcut-ref="mycut" method=“doReleaseAction"/>
+   <aop:around pointcut-ref="mycut" method="doBasicProfiling"/>
+  </aop:aspect>
+</aop:config>
+
+execution表达式的例子。
+
+
+任意公共方法的执行：
+execution（public * *（..））
+
+任何一个名字以“set”开始的方法的执行：
+execution（* set*（..））
+
+AccountService接口定义的任意方法的执行：
+execution（* com.xyz.service.AccountService.*（..））
+
+在service包中定义的任意方法的执行：
+execution（* com.xyz.service.*.*（..））
+
+在service包或其子包中定义的任意方法的执行：
+execution（* com.xyz.service..*.*（..））
+
+ 
+
+Aspect默认情况下不用实现接口，但对于目标对象，在默认情况下必须实现接口
+如果没有实现接口必须引入CGLIB库.
+
+
+ 
+
+我们可以通过Advice中添加一个JoinPoint参数，这个值会由spring自动传入，从JoinPoint中可以取得拦截到方法的参数值、方法名等等
+
+ public class SecurityHandler {
+ 
+ private void checkSecurity(JoinPoint joinPoint) {
+  Object[] args = joinPoint.getArgs(); //取得方法参数
+  for (int i=0; i<args.length; i++) {
+   System.out.println(args[i]);
+  }
+  System.out.println(joinPoint.getSignature().getName()); //取得方法名称
+  System.out.println("----------checkSecurity()---------------");
+ }
+ 
+}
+
+
+
+
+
+
+
+
+
+
+Spring实现AOP的4种方式
+ 
+
+  先了解AOP的相关术语:
+1.通知(Advice):
+通知定义了切面是什么以及何时使用。描述了切面要完成的工作和何时需要执行这个工作。
+2.连接点(Joinpoint):
+程序能够应用通知的一个“时机”，这些“时机”就是连接点，例如方法被调用时、异常被抛出时等等。
+3.切入点(Pointcut)
+通知定义了切面要发生的“故事”和时间，那么切入点就定义了“故事”发生的地点，例如某个类或方法的名称，Spring中允许我们方便的用正则表达式来指定
+4.切面(Aspect)
+通知和切入点共同组成了切面：时间、地点和要发生的“故事”
+5.引入(Introduction)
+引入允许我们向现有的类添加新的方法和属性(Spring提供了一个方法注入的功能）
+6.目标(Target)
+即被通知的对象，如果没有AOP,那么它的逻辑将要交叉别的事务逻辑，有了AOP之后它可以只关注自己要做的事（AOP让他做爱做的事）
+7.代理(proxy)
+应用通知的对象，详细内容参见设计模式里面的代理模式
+8.织入(Weaving)
+把切面应用到目标对象来创建新的代理对象的过程，织入一般发生在如下几个时机:
+(1)编译时：当一个类文件被编译时进行织入，这需要特殊的编译器才可以做的到，例如AspectJ的织入编译器
+(2)类加载时：使用特殊的ClassLoader在目标类被加载到程序之前增强类的字节代码
+(3)运行时：切面在运行的某个时刻被织入,SpringAOP就是以这种方式织入切面的，原理应该是使用了JDK的动态代理技术
+
+Spring提供了4种实现AOP的方式：
+1.经典的基于代理的AOP
+2.@AspectJ注解驱动的切面
+3.纯POJO切面
+4.注入式AspectJ切面
+
+首先看经典的基于代理的AOP:
+Spring支持五种类型的通知：
+Before(前)  org.apringframework.aop.MethodBeforeAdvice
+After-returning(返回后) org.springframework.aop.AfterReturningAdvice
+After-throwing(抛出后) org.springframework.aop.ThrowsAdvice
+Arround(周围) org.aopaliance.intercept.MethodInterceptor
+Introduction(引入) org.springframework.aop.IntroductionInterceptor
+
+值的说明的是周围通知，他是由AOP Alliance中的接口定义的而非Spring,周围通知相当于前通知、返回后通知、抛出后通知的结合（传说中的完全体？好吧，我看日和看多
+
+了）还有引入通知怎么玩我还没搞清楚，等心无杂念的时候玩玩
+
+这东西怎么玩？这么几个步骤：
+1.创建通知：实现这几个接口，把其中的方法实现了
+2.定义切点和通知者：在Spring配制文件中配置这些信息
+3.使用ProxyFactoryBean来生成代理
+
+具体做法。。。大晚上的就举个睡觉的例子吧:
+
+首先写一个接口叫Sleepable,这是一个牛X的接口,所有具有睡觉能力的东西都可以实现该接口（不光生物，包括关机选项里面的休眠）
+
+package test.spring.aop.bean
+
+public interface Sleepable{
+ 
+    void sleep(); 
+}
+
+然后写一个Human类，他实现了这个接口
+
+package test.spring.aop.bean
+
+public Human implements Sleepable{
+   
+   /*这人莫非跟寡人差不多？
+    *除了睡觉睡的比较好之外其余的什么也不会做？*/
+   public void sleep(){
+      System.out.println("睡觉了！梦中自有颜如玉！");
+   }
+
+}
+
+
+好了，这是主角，不过睡觉前后要做些辅助工作的，最基本的是脱穿衣服，失眠的人还要吃安眠药什么的,但是这些动作与纯粹的睡觉这一“业务逻辑”是不相干的，如果把
+
+这些代码全部加入到sleep方法中，是不是有违单一职责呢？，这时候我们就需要AOP了。
+
+编写一个SleepHelper类，它里面包含了睡觉的辅助工作,用AOP术语来说它就应该是通知了，我们需要实现上面的接口
+
+package test.spring.aop.bean;
+
+import java.lang.reflect.Method;
+
+import org.springframework.aop.AfterReturningAdvice;
+import org.springframework.aop.MethodBeforeAdvice;
+
+public class SleepHelper implements MethodBeforeAdvice,AfterReturningAdvice{
+
+    public void before(Method mtd, Object[] arg1, Object arg2)
+            throws Throwable {
+        System.out.println("通常情况下睡觉之前要脱衣服！");
+    }
+
+    public void afterReturning(Object arg0, Method arg1, Object[] arg2,
+            Object arg3) throws Throwable {
+        System.out.println("起床后要先穿衣服！");
+    }
+    
+}
+
+然后在spring配置文件中进行配置:
+<bean id="sleepHelper" class="test.spring.aop.bean.SleepHelper">
+</bean>
+
+OK!现在创建通知的工作就完成了.
+
+第二步是进行配置，这是很令人蛋疼的操作，尤其是这么热的天，Spring又把东西的名字起的见鬼的长！它为啥不能像usr这种风格呢？
+
+首先要做的是配置一个切点,据说切点的表示方式在Spring中有好几种，但是常用的只有两种：1.使用正则表达式 2.使用AspectJ表达式 AspectJ我不是很熟悉(我也是熟悉
+
+党 or 精通党？),我还是习惯用正则表达式
+
+Spring使用org.springframework.aop.support.JdkRegexpMethodPointcut来定义正则表达式切点
+<bean id="spleepPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+  <property name="pattern" value=".*sleep"/>
+</bean>
+
+pattern属性指定了正则表达式，它匹配所有的sleep方法
+
+切点仅仅是定义了故事发生的地点，还有故事发生的时间以及最重要的故事的内容,就是通知了，我们需要把通知跟切点结合起来，我们要使用的通知者是:
+org.springframework.aop.support.DefaultPointcutAdvisor
+
+<bean id="sleepHelperAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+     <property name="advice" ref="sleepHelper"/>
+     <property name="pointcut" ref="sleepPointcut"/>
+</bean>
+
+切入点和通知都配置完成，接下来该调用ProxyFactoryBean产生代理对象了
+
+<bean id="humanProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+     <property name="target" ref="human"/>
+     <property name="interceptorNames" value="sleepHelperAdvisor" />
+     <property name="proxyInterfaces" value="test.spring.aop.bean.Sleepable" />
+</bean>
+
+ProxyFactoryBean是一个代理，我们可以把它转换为proxyInterfaces中指定的实现该interface的代理对象:
+
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import test.spring.aop.bean.Sleepable;
+
+
+public class Test {
+
+    public static void main(String[] args){
+        ApplicationContext appCtx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Sleepable sleeper = (Sleepable)appCtx.getBean("humanProxy");
+        sleeper.sleep();
+    }
+}
+
+程序运行产生结果：
+通常情况下睡觉之前要脱衣服！
+睡觉啦~梦中自有颜如玉!
+起床后要先穿衣服！
+
+OK!这是我们想要的结果，但是上面这个过程貌似有点复杂，尤其是配置切点跟通知,Spring提供了一种自动代理的功能，能让切点跟通知自动进行匹配，修改配置文件如下:
+ <bean id="sleepHelper" class="test.spring.aop.bean.SleepHelper">
+  </bean>
+  <bean id="sleepAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+    <property name="advice" ref="sleepHelper"/>
+    <property name="pattern" value=".*sleep"/>
+  </bean>
+  <bean id="human" class="test.spring.aop.bean.Human">
+  </bean>
+  <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+执行程序：
+public class Test {
+
+    public static void main(String[] args){
+        ApplicationContext appCtx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Sleepable sleeper = (Sleepable)appCtx.getBean("human");
+        sleeper.sleep();
+    }
+}
+成功输出结果跟前面一样!
+只要我们声明了org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator(我勒个去的，名太长了)就能为方法匹配的bean自动创建代理！
+
+但是这样还是要有很多工作要做,有更简单的方式吗?有！
+
+一种方式是使用AspectJ提供的注解:
+
+package test.mine.spring.bean;
+
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+@Aspect
+public class SleepHelper {
+
+    public SleepHelper(){
+        
+    }
+    
+    @Pointcut("execution(* *.sleep())")
+    public void sleeppoint(){}
+    
+    @Before("sleeppoint()")
+    public void beforeSleep(){
+        System.out.println("睡觉前要脱衣服!");
+    }
+    
+    @AfterReturning("sleeppoint()")
+    public void afterSleep(){
+        System.out.println("睡醒了要穿衣服！");
+    }
+    
+}
+
+用@Aspect的注解来标识切面,注意不要把它漏了，否则Spring创建代理的时候会找不到它,@Pointcut注解指定了切点，@Before和@AfterReturning指定了运行时的通知，注
+
+意的是要在注解中传入切点的名称
+
+然后我们在Spring配置文件上下点功夫,首先是增加AOP的XML命名空间和声明相关schema
+命名空间:
+xmlns:aop="http://www.springframework.org/schema/aop"
+schema声明:
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+
+然后加上这个标签:
+<aop:aspectj-autoproxy/> 有了这个Spring就能够自动扫描被@Aspect标注的切面了
+
+最后是运行，很简单方便了：
+public class Test {
+
+    public static void main(String[] args){
+        ApplicationContext appCtx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Sleepable human = (Sleepable)appCtx.getBean("human");
+        human.sleep();
+    }
+}
+
+下面我们来看最后一种常用的实现AOP的方式:使用Spring来定义纯粹的POJO切面
+
+前面我们用到了<aop:aspectj-autoproxy/>标签,Spring在aop的命名空间里面还提供了其他的配置元素:
+<aop:advisor> 定义一个AOP通知者
+<aop:after> 后通知
+<aop:after-returning> 返回后通知
+<aop:after-throwing> 抛出后通知
+<aop:around> 周围通知
+<aop:aspect>定义一个切面
+<aop:before>前通知
+<aop:config>顶级配置元素，类似于<beans>这种东西
+<aop:pointcut>定义一个切点
+
+我们用AOP标签来实现睡觉这个过程:
+代码不变，只是修改配置文件,加入AOP配置即可:
+<aop:config>
+    <aop:aspect ref="sleepHelper">
+    <aop:before method="beforeSleep" pointcut="execution(* *.sleep(..))"/>
+    <aop:after method="afterSleep" pointcut="execution(* *.sleep(..))"/>
+    </aop:aspect>
+</aop:config>
+

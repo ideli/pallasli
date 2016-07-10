@@ -43,5 +43,12 @@
       <module>pallasli-study-lucene3</module>
       <module>pallasli-study-dwr</module>
       <module>pallasli-study-spring-jdbc</module>
+      <module>pallasli-study-java8</module>
+      <module>pallasli-study-springmvc-copy</module>
+      <module>pallasli-study-spring-jms</module>
+      <module>pallasli-study-shiro</module>
+      <module>pallasli-study-spring-kafka</module>
+      <module>pallasli-study-web-logtest</module>
+      <module>pallasli-study-mq</module>
   </modules>
 </project>

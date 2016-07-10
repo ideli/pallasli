@@ -1,3 +1,841 @@
+
+打开命令终端设置环境变量。
+export M2_HOME=/usr/local/apache-maven/apache-maven-3.2.5
+export M2=$M2_HOME/bin
+export MAVEN_OPTS=-Xms256m -Xmx512m
+
+export PATH=$M2:$PATH
+
+
+
+POM 代表工程对象模型。它是使用 Maven 工作时的基本组建，是一个 xml 文件。它被放在工程根目录下，文件命名为 pom.xml。
+
+POM 包含了关于工程和各种配置细节的信息，Maven 使用这些信息构建工程。
+
+POM 也包含了目标和插件。当执行一个任务或者目标时，Maven 会查找当前目录下的 POM，从其中读取所需要的配置信息，然后执行目标。能够在 POM 中设置的一些配置如下：
+
+project dependencies
+plugins
+goals
+build profiles
+project version
+developers
+mailing list
+在创建 POM 之前，我们首先确定工程组（groupId），及其名称（artifactId）和版本，在仓库中这些属性是工程的唯一标识。
+
+
+
+
+
+Maven - 构建生命周期
+
+什么是构建生命周期
+构建生命周期是一组阶段的序列（sequence of phases），每个阶段定义了目标被执行的顺序。这里的阶段是生命周期的一部分。
+
+举例说明，一个典型的 Maven 构建生命周期是由以下几个阶段的序列组成的：
+
+阶段	处理	描述
+prepare-resources	资源拷贝	本阶段可以自定义需要拷贝的资源
+compile	编译	本阶段完成源代码编译
+package	打包	本阶段根据 pom.xml 中描述的打包配置创建 JAR / WAR 包
+install	安装	本阶段在本地 / 远程仓库中安装工程包
+当需要在某个特定阶段之前或之后执行目标时，可以使用 pre 和 post 来定义这个目标。
+
+当 Maven 开始构建工程，会按照所定义的阶段序列的顺序执行每个阶段注册的目标。Maven 有以下三个标准的生命周期：
+
+clean
+default(or build)
+site
+目标表示一个特定的、对构建和管理工程有帮助的任务。它可能绑定了 0 个或多个构建阶段。没有绑定任何构建阶段的目标可以在构建生命周期之外被直接调用执行。
+
+执行的顺序依赖于目标和构建阶段被调用的顺序。例如，考虑下面的命令。clean 和 package 参数是构建阶段，而 dependency:copy-dependencies 是一个目标。
+
+mvn clean dependency:copy-dependencies package
+这里的 clean 阶段将会被首先执行，然后 dependency:copy-dependencies 目标会被执行，最终 package 阶段被执行。
+
+Clean 生命周期
+当我们执行 mvn post-clean 命令时，Maven 调用 clean 生命周期，它包含以下阶段。
+
+pre-clean
+clean
+post-clean
+Maven 的 clean 目标（clean:clean）绑定到了 clean 生命周期的 clean 阶段。它的 clean:clean 目标通过删除构建目录删除了构建输出。所以当 mvn clean 命令执行时，Maven 删除了构建目录。
+
+我们可以通过在上面的 clean 生命周期的任何阶段定义目标来修改这部分的操作行为。
+
+在下面的例子中，我们将 maven-antrun-plugin:run 目标添加到 pre-clean、clean 和 post-clean 阶段中。这样我们可以在 clean 生命周期的各个阶段显示文本信息。
+
+我们已经在 C:\MVN\project 目录下创建了一个 pom.xml 文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.companyname.projectgroup</groupId>
+<artifactId>project</artifactId>
+<version>1.0</version>
+<build>
+<plugins>
+   <plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-antrun-plugin</artifactId>
+   <version>1.1</version>
+   <executions>
+      <execution>
+         <id>id.pre-clean</id>
+         <phase>pre-clean</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>pre-clean phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+      <execution>
+         <id>id.clean</id>
+         <phase>clean</phase>
+         <goals>
+          <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>clean phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+      <execution>
+         <id>id.post-clean</id>
+         <phase>post-clean</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>post-clean phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+   </executions>
+   </plugin>
+</plugins>
+</build>
+</project>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。
+
+C:\MVN\project>mvn post-clean
+Maven 将会开始处理并显示 clean 生命周期的所有阶段。
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------
+[INFO] Building Unnamed - com.companyname.projectgroup:project:jar:1.0
+[INFO]    task-segment: [post-clean]
+[INFO] ------------------------------------------------------------------
+[INFO] [antrun:run {execution: id.pre-clean}]
+[INFO] Executing tasks
+     [echo] pre-clean phase
+[INFO] Executed tasks
+[INFO] [clean:clean {execution: default-clean}]
+[INFO] [antrun:run {execution: id.clean}]
+[INFO] Executing tasks
+     [echo] clean phase
+[INFO] Executed tasks
+[INFO] [antrun:run {execution: id.post-clean}]
+[INFO] Executing tasks
+     [echo] post-clean phase
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------
+[INFO] Total time: < 1 second
+[INFO] Finished at: Sat Jul 07 13:38:59 IST 2012
+[INFO] Final Memory: 4M/44M
+[INFO] ------------------------------------------------------------------
+你可以尝试修改 mvn clean 命令，来显示 pre-clean 和 clean，而在 post-clean 阶段不执行任何操作。
+
+Default (or Build) 生命周期
+这是 Maven 的主要生命周期，被用于构建应用。包括下面的 23 个阶段。
+
+生命周期阶段	描述
+validate	检查工程配置是否正确，完成构建过程的所有必要信息是否能够获取到。
+initialize	初始化构建状态，例如设置属性。
+generate-sources	生成编译阶段需要包含的任何源码文件。
+process-sources	处理源代码，例如，过滤任何值（filter any value）。
+generate-resources	生成工程包中需要包含的资源文件。
+process-resources	拷贝和处理资源文件到目的目录中，为打包阶段做准备。
+compile	编译工程源码。
+process-classes	处理编译生成的文件，例如 Java Class 字节码的加强和优化。
+generate-test-sources	生成编译阶段需要包含的任何测试源代码。
+process-test-sources	处理测试源代码，例如，过滤任何值（filter any values)。
+test-compile	编译测试源代码到测试目的目录。
+process-test-classes	处理测试代码文件编译后生成的文件。
+test	使用适当的单元测试框架（例如JUnit）运行测试。
+prepare-package	在真正打包之前，为准备打包执行任何必要的操作。
+package	获取编译后的代码，并按照可发布的格式进行打包，例如 JAR、WAR 或者 EAR 文件。
+pre-integration-test	在集成测试执行之前，执行所需的操作。例如，设置所需的环境变量。
+integration-test	处理和部署必须的工程包到集成测试能够运行的环境中。
+post-integration-test	在集成测试被执行后执行必要的操作。例如，清理环境。
+verify	运行检查操作来验证工程包是有效的，并满足质量要求。
+install	安装工程包到本地仓库中，该仓库可以作为本地其他工程的依赖。
+deploy	拷贝最终的工程包到远程仓库中，以共享给其他开发人员和工程。
+有一些与 Maven 生命周期相关的重要概念需要说明：
+
+当一个阶段通过 Maven 命令调用时，例如 mvn compile，只有该阶段之前以及包括该阶段在内的所有阶段会被执行。
+
+不同的 maven 目标将根据打包的类型（JAR / WAR / EAR），被绑定到不同的 Maven 生命周期阶段。
+
+在下面的例子中，我们将 maven-antrun-plugin:run 目标添加到 Build 生命周期的一部分阶段中。这样我们可以显示生命周期的文本信息。
+
+我们已经更新了 C:\MVN\project 目录下的 pom.xml 文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.companyname.projectgroup</groupId>
+<artifactId>project</artifactId>
+<version>1.0</version>
+<build>
+<plugins>
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-antrun-plugin</artifactId>
+<version>1.1</version>
+<executions>
+   <execution>
+      <id>id.validate</id>
+      <phase>validate</phase>
+      <goals>
+         <goal>run</goal>
+      </goals>
+      <configuration>
+         <tasks>
+            <echo>validate phase</echo>
+         </tasks>
+      </configuration>
+   </execution>
+   <execution>
+      <id>id.compile</id>
+      <phase>compile</phase>
+      <goals>
+         <goal>run</goal>
+      </goals>
+      <configuration>
+         <tasks>
+            <echo>compile phase</echo>
+         </tasks>
+      </configuration>
+   </execution>
+   <execution>
+      <id>id.test</id>
+      <phase>test</phase>
+      <goals>
+         <goal>run</goal>
+      </goals>
+      <configuration>
+         <tasks>
+            <echo>test phase</echo>
+         </tasks>
+      </configuration>
+   </execution>
+   <execution>
+         <id>id.package</id>
+         <phase>package</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+         <tasks>
+            <echo>package phase</echo>
+         </tasks>
+      </configuration>
+   </execution>
+   <execution>
+      <id>id.deploy</id>
+      <phase>deploy</phase>
+      <goals>
+         <goal>run</goal>
+      </goals>
+      <configuration>
+      <tasks>
+         <echo>deploy phase</echo>
+      </tasks>
+      </configuration>
+   </execution>
+</executions>
+</plugin>
+</plugins>
+</build>
+</project>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行以下 mvn 命令。
+
+C:\MVN\project>mvn compile
+Maven 将会开始处理并显示直到编译阶段的构建生命周期的各个阶段。
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------
+[INFO] Building Unnamed - com.companyname.projectgroup:project:jar:1.0
+[INFO]    task-segment: [compile]
+[INFO] ------------------------------------------------------------------
+[INFO] [antrun:run {execution: id.validate}]
+[INFO] Executing tasks
+     [echo] validate phase
+[INFO] Executed tasks
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources,
+i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory C:\MVN\project\src\main\resources
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] [antrun:run {execution: id.compile}]
+[INFO] Executing tasks
+     [echo] compile phase
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------
+[INFO] Total time: 2 seconds
+[INFO] Finished at: Sat Jul 07 20:18:25 IST 2012
+[INFO] Final Memory: 7M/64M
+[INFO] ------------------------------------------------------------------
+Site 生命周期
+Maven Site 插件一般用来创建新的报告文档、部署站点等。
+
+阶段：
+
+pre-site
+site
+post-site
+site-deploy
+在下面的例子中，我们将 maven-antrun-plugin:run 目标添加到 Site 生命周期的所有阶段中。这样我们可以显示生命周期的所有文本信息。
+
+我们已经更新了 C:\MVN\project 目录下的 pom.xml 文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.companyname.projectgroup</groupId>
+<artifactId>project</artifactId>
+<version>1.0</version>
+<build>
+<plugins>
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-antrun-plugin</artifactId>
+<version>1.1</version>
+   <executions>
+      <execution>
+         <id>id.pre-site</id>
+         <phase>pre-site</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>pre-site phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+      <execution>
+         <id>id.site</id>
+         <phase>site</phase>
+         <goals>
+         <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>site phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+      <execution>
+         <id>id.post-site</id>
+         <phase>post-site</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>post-site phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+      <execution>
+         <id>id.site-deploy</id>
+         <phase>site-deploy</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>site-deploy phase</echo>
+            </tasks>
+         </configuration>
+      </execution>
+   </executions>
+</plugin>
+</plugins>
+</build>
+</project>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行以下 mvn 命令。
+
+C:\MVN\project>mvn site
+Maven 将会开始处理并显示直到 site 阶段的 site 生命周期的各个阶段。
+
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------
+[INFO] Building Unnamed - com.companyname.projectgroup:project:jar:1.0
+[INFO]    task-segment: [site]
+[INFO] ------------------------------------------------------------------
+[INFO] [antrun:run {execution: id.pre-site}]
+[INFO] Executing tasks
+     [echo] pre-site phase
+[INFO] Executed tasks
+[INFO] [site:site {execution: default-site}]
+[INFO] Generating "About" report.
+[INFO] Generating "Issue Tracking" report.
+[INFO] Generating "Project Team" report.
+[INFO] Generating "Dependencies" report.
+[INFO] Generating "Project Plugins" report.
+[INFO] Generating "Continuous Integration" report.
+[INFO] Generating "Source Repository" report.
+[INFO] Generating "Project License" report.
+[INFO] Generating "Mailing Lists" report.
+[INFO] Generating "Plugin Management" report.
+[INFO] Generating "Project Summary" report.
+[INFO] [antrun:run {execution: id.site}]
+[INFO] Executing tasks
+     [echo] site phase
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------
+[INFO] Total time: 3 seconds
+[INFO] Finished at: Sat Jul 07 15:25:10 IST 2012
+[INFO] Final Memory: 24M/149M
+[INFO] ------------------------------------------------------------------```
+
+
+
+
+
+
+Maven - 构建配置文件
+
+什么是构建配置文件？
+构建配置文件是一组配置的集合，用来设置或者覆盖 Maven 构建的默认配置。使用构建配置文件，可以为不同的环境定制构建过程，例如 Producation 和 Development 环境。
+
+Profile 在 pom.xml 中使用 activeProfiles / profiles 元素指定，并且可以用很多方式触发。Profile 在构建时修改 POM，并且为变量设置不同的目标环境（例如，在开发、测试和产品环境中的数据库服务器路径）。
+
+Profile 类型
+Profile 主要有三种类型。
+
+类型	在哪里定义
+Per Project	定义在工程 POM 文件 pom.xml 中
+Per User	定义在 Maven 设置 xml 文件中 （%USER_HOME%/.m2/settings.xml）
+Global	定义在 Maven 全局配置 xml 文件中 （%M2_HOME%/conf/settings.xml）
+Profile 激活
+Maven 的 Profile 能够通过几种不同的方式激活。
+
+显式使用命令控制台输入
+通过 maven 设置
+基于环境变量（用户 / 系统变量）
+操作系统配置（例如，Windows family）
+现存 / 缺失 文件
+Profile 激活示例
+我们假定你的工程目录像下面这样：
+
+Maven Build Profile
+
+现在，在 src/main/resources 目录下有三个环境配置文件：
+
+文件名称	描述
+env.properties	没有配置文件时的默认配置
+env.test.properties	使用测试配置文件时的测试配置
+env.prod.properties	使用产品配置文件时的产品配置
+显式 Profile 激活
+在接下来的例子中，我们将 attach maven-antrun-plugin:run 目标添加到测试阶段中。这样可以我们在不同的 Profile 中输出文本信息。我们将使用 pom.xml 来定义不同的 Profile，并在命令控制台中使用 maven 命令激活 Profile。
+
+假定，我们在 C:\MVN\project 目录下创建了以下的 pom.xml 文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.companyname.projectgroup</groupId>
+   <artifactId>project</artifactId>
+   <version>1.0</version>
+   <profiles>
+      <profile>
+      <id>test</id>
+      <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+               <execution>
+                  <phase>test</phase>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
+                  <configuration>
+                  <tasks>
+                     <echo>Using env.test.properties</echo>
+            <copy file="src/main/resources/env.test.propertiestofile
+            ="${project.build.outputDirectory}/env.properties"/>
+                  </tasks>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+      </build>
+      </profile>
+   </profiles>
+</project>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行以下 mvn 命令。使用 -P 选项指定 Profile 的名称。
+
+C:\MVN\project>mvn test -Ptest
+Maven 将开始处理并显示 test Profile 的结果。
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------
+[INFO] Building Unnamed - com.companyname.projectgroup:project:jar:1.0
+[INFO]    task-segment: [test]
+[INFO] ------------------------------------------------------------------
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources,
+i.e. build is platform dependent!
+[INFO] Copying 3 resources
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] [resources:testResources {execution: default-testResources}]
+[WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources,
+i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory C:\MVN\project\src\test\resources
+[INFO] [compiler:testCompile {execution: default-testCompile}]
+[INFO] Nothing to compile - all classes are up to date
+[INFO] [surefire:test {execution: default-test}]
+[INFO] Surefire report directory: C:\MVN\project\target\surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+There are no tests to run.
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] [antrun:run {execution: default}]
+[INFO] Executing tasks
+     [echo] Using env.test.properties
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------
+[INFO] Total time: 1 second
+[INFO] Finished at: Sun Jul 08 14:55:41 IST 2012
+[INFO] Final Memory: 8M/64M
+[INFO] ------------------------------------------------------------------
+现在我们练习一下，你可以按照下面的步骤做：
+
+在 pom.xml 的 profiles 元素中添加另一个 profile 元素（拷贝已有的 profile 元素并粘贴到 profiles 元素结尾）。
+将此 profile 元素的 id 从 test 修改为 normal。
+将任务部分修改为 echo env.properties，以及 copy env.properties 到目标目录
+再次重复以上三个步骤，修改 id 为 prod，修改 task 部分为 env.prod.properties
+全部就这些了。现在你有了三个构建配置文件（normal / test / prod）。
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。使用 -P 选项指定 Profile 的名称。
+
+C:\MVN\project>mvn test -Pnormal
+C:\MVN\project>mvn test -Pprod
+检查构建的输出看看有什么不同。
+
+通过 Maven 设置激活 Profile
+打开 Maven 的 settings.xml 文件，该文件可以在 %USER_HOME%/.m2 目录下找到，%USER_HOME% 表示用户主目录。如果 settings.xml 文件不存在则需要创建一个。
+
+像在下面例子中展示的一样，使用 activeProfiles 节点添加 test 配置作为激活的 Profile。
+
+<settings xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+   http://maven.apache.org/xsd/settings-1.0.0.xsd">
+   <mirrors>
+      <mirror>
+         <id>maven.dev.snaponglobal.com</id>
+         <name>Internal Artifactory Maven repository</name>
+         <url>http://repo1.maven.org/maven2/</url>
+         <mirrorOf>*</mirrorOf>
+      </mirror>
+   </mirrors>
+   <activeProfiles>
+      <activeProfile>test</activeProfile>
+   </activeProfiles>
+</settings>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。不要使用 -P 选项指定 Profile 的名称。Maven 将显示被激活的 test Profile 的结果。
+
+C:\MVN\project>mvn test
+通过环境变量激活 Profile
+现在从 maven 的 settings.xml 中删除激活的 Profile，并更新 pom.xml 中的 test Profile。将下面的内容添加到 profile 元素的 activation 元素中。
+
+当系统属性 “env” 被设置为 “test” 时，test 配置将会被触发。创建一个环境变量 “env” 并设置它的值为 “test”。
+
+<profile>
+   <id>test</id>
+   <activation>
+      <property>
+         <name>env</name>
+         <value>test</value>
+      </property>
+   </activation>
+</profile>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。
+
+C:\MVN\project>mvn test
+通过操作系统激活 Profile
+activation 元素包含下面的操作系统信息。当系统为 windows XP 时，test Profile 将会被触发。
+
+<profile>
+   <id>test</id>
+   <activation>
+      <os>
+         <name>Windows XP</name>
+         <family>Windows</family>
+         <arch>x86</arch>
+         <version>5.1.2600</version>
+      </os>
+   </activation>
+</profile>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。不要使用 -P 选项指定 Profile 的名称。Maven 将显示被激活的 test Profile 的结果。
+
+C:\MVN\project>mvn test
+通过现存 / 缺失的文件激活 Profile
+现在使用 activation 元素包含下面的操作系统信息。当 target/generated-sources/axistools/wsdl2java/com/companyname/group 缺失时，test Profile 将会被触发。
+
+<profile>
+   <id>test</id>
+   <activation>
+      <file>
+         <missing>target/generated-sources/axistools/wsdl2java/
+         com/companyname/group</missing>
+      </file>
+   </activation>
+</profile>
+现在打开命令控制台，跳转到 pom.xml 所在目录，并执行下面的 mvn 命令。不要使用 -P 选项指定 Profile 的名称。Maven 将显示被激活的 test Profile 的结果。
+
+C:\MVN\project>mvn test
+
+
+
+
+Maven - 仓库
+
+什么是 Maven 仓库？
+在 Maven 的术语中，仓库是一个位置（place），例如目录，可以存储所有的工程 jar 文件、library jar 文件、插件或任何其他的工程指定的文件。
+
+Maven 仓库有三种类型：
+
+本地（local）
+中央（central）
+远程（remote）
+本地仓库
+Maven 本地仓库是机器上的一个文件夹。它在你第一次运行任何 maven 命令的时候创建。
+
+Maven 本地仓库保存你的工程的所有依赖（library jar、plugin jar 等）。当你运行一次 Maven 构建，Maven 会自动下载所有依赖的 jar 文件到本地仓库中。它避免了每次构建时都引用存放在远程机器上的依赖文件。
+
+Maven 本地仓库默认被创建在 %USER_HOME% 目录下。要修改默认位置，在 %M2_HOME%\conf 目录中的 Maven 的 settings.xml 文件中定义另一个路径。
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 
+   http://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <localRepository>C:/MyLocalRepository</localRepository>
+</settings>
+当你运行 Maven 命令，Maven 将下载依赖的文件到你指定的路径中。
+
+中央仓库
+Maven 中央仓库是由 Maven 社区提供的仓库，其中包含了大量常用的库。
+
+中央仓库的关键概念：
+
+这个仓库由 Maven 社区管理。
+不需要配置。
+需要通过网络才能访问。
+要浏览中央仓库的内容，maven 社区提供了一个 URL：http://search.maven.org/#browse。使用这个仓库，开发人员可以搜索所有可以获取的代码库。
+
+远程仓库
+如果 Maven 在中央仓库中也找不到依赖的库文件，它会停止构建过程并输出错误信息到控制台。为避免这种情况，Maven 提供了远程仓库的概念，它是开发人员自己定制仓库，包含了所需要的代码库或者其他工程中用到的 jar 文件。
+
+举例说明，使用下面的 POM.xml，Maven 将从远程仓库中下载该 pom.xml 中声明的所依赖的（在中央仓库中获取不到的）文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.companyname.projectgroup</groupId>
+   <artifactId>project</artifactId>
+   <version>1.0</version>
+   <dependencies>
+      <dependency>
+         <groupId>com.companyname.common-lib</groupId>
+         <artifactId>common-lib</artifactId>
+         <version>1.0.0</version>
+      </dependency>
+   <dependencies>
+   <repositories>
+      <repository>
+         <id>companyname.lib1</id>
+         <url>http://download.companyname.org/maven2/lib1</url>
+      </repository>
+      <repository>
+         <id>companyname.lib2</id>
+         <url>http://download.companyname.org/maven2/lib2</url>
+      </repository>
+   </repositories>
+</project>
+Maven 依赖搜索顺序
+当我们执行 Maven 构建命令时，Maven 开始按照以下顺序查找依赖的库：
+
+步骤 1 － 在本地仓库中搜索，如果找不到，执行步骤 2，如果找到了则执行其他操作。
+步骤 2 － 在中央仓库中搜索，如果找不到，并且有一个或多个远程仓库已经设置，则执行步骤 4，如果找到了则下载到本地仓库中已被将来引用。
+步骤 3 － 如果远程仓库没有被设置，Maven 将简单的停滞处理并抛出错误（无法找到依赖的文件）。
+步骤 4 － 在一个或多个远程仓库中搜索依赖的文件，如果找到则下载到本地仓库已被将来引用，否则 Maven 将停止处理并抛出错误（无法找到依赖的文件）。
+
+
+
+Maven - 插件
+
+什么是 Maven 插件？
+Maven 实际上是一个依赖插件执行的框架，每个任务实际上是由插件完成。Maven 插件通常被用来：
+
+创建 jar 文件
+创建 war 文件
+编译代码文件
+代码单元测试
+创建工程文档
+创建工程报告
+插件通常提供了一个目标的集合，并且可以使用下面的语法执行：
+
+mvn [plugin-name]:[goal-name]
+例如，一个 Java 工程可以使用 maven-compiler-plugin 的 compile-goal 编译，使用以下命令：
+
+mvn compiler:compile
+插件类型
+Maven 提供了下面两种类型的插件：
+
+类型	描述
+Build plugins	在构建时执行，并在 pom.xml 的 元素中配置。
+Reporting plugins	在网站生成过程中执行，并在 pom.xml 的 元素中配置。
+下面是一些常用插件的列表：
+
+插件	描述
+clean	构建之后清理目标文件。删除目标目录。
+compiler	编译 Java 源文件。
+surefile	运行 JUnit 单元测试。创建测试报告。
+jar	从当前工程中构建 JAR 文件。
+war	从当前工程中构建 WAR 文件。
+javadoc	为工程生成 Javadoc。
+antrun	从构建过程的任意一个阶段中运行一个 ant 任务的集合。
+例子
+我们已经在我们的例子中大量使用了 maven-antrun-plugin 来输出数据到控制台上。请查看 Maven - 构建配置文件 章节。让我们用一种更好的方式理解这部分内容，在 C:\MVN\project 目录下创建一个 pom.xml 文件。
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+    http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.companyname.projectgroup</groupId>
+<artifactId>project</artifactId>
+<version>1.0</version>
+<build>
+<plugins>
+   <plugin>
+   <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-antrun-plugin</artifactId>
+   <version>1.1</version>
+   <executions>
+      <execution>
+         <id>id.clean</id>
+         <phase>clean</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <tasks>
+               <echo>clean phase</echo>
+            </tasks>
+         </configuration>
+      </execution>     
+   </executions>
+   </plugin>
+</plugins>
+</build>
+</project>
+接下来，打开命令终端跳转到 pom.xml 所在的目录，并执行下面的 mvn 命令。
+
+C:\MVN\project>mvn clean
+Maven 将开始处理并显示 clean 生命周期的 clean 阶段。
+
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------
+[INFO] Building Unnamed - com.companyname.projectgroup:project:jar:1.0
+[INFO]    task-segment: [post-clean]
+[INFO] ------------------------------------------------------------------
+[INFO] [clean:clean {execution: default-clean}]
+[INFO] [antrun:run {execution: id.clean}]
+[INFO] Executing tasks
+     [echo] clean phase
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------
+[INFO] Total time: < 1 second
+[INFO] Finished at: Sat Jul 07 13:38:59 IST 2012
+[INFO] Final Memory: 4M/44M
+[INFO] ------------------------------------------------------------------
+上面的例子展示了以下关键概念：
+
+插件是在 pom.xml 中使用 plugins 元素定义的。
+每个插件可以有多个目标。
+你可以定义阶段，插件会使用它的 phase 元素开始处理。我们已经使用了 clean 阶段。
+你可以通过绑定到插件的目标的方式来配置要执行的任务。我们已经绑定了 echo 任务到 maven-antrun-plugin 的 run 目标。
+就是这样，Maven 将处理剩下的事情。它将下载本地仓库中获取不到的插件，并开始处理。
+
+
+
+
+
+
+
+
+
+外部依赖
+<dependency>
+             <groupId>ldapjdk</groupId>
+             <artifactId>ldapjdk</artifactId>
+             <scope>system</scope>
+             <version>1.0</version>
+             <systemPath>${basedir}\src\lib\ldapjdk.jar</systemPath>
+          </dependency>
+
+
+
+
+
+
+
+
+
 依赖范围scope用来控制依赖和编译，测试，运行的classpath的关系. 主要的是三种依赖关系如下：
 　　　　1.compile： 默认编译依赖范围。对于编译，测试，运行三种classpath都有效
 　　　　2.test：测试依赖范围。只对于测试classpath有效
