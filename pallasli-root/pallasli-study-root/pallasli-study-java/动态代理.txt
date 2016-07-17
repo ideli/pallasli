@@ -1,0 +1,88 @@
+代理，简单的说就是把一个对象最为一个代理对象的一个字段。
+动态代理运用了反射技术，让代理类不用关心被代理类的类型。
+
+Java动态代理详解
+说到动态代理，顾名思义就是动态的代理(真是废话)。
+关于代理：想必大家都并不陌生，GOF的23种设计模式之一(结构型模式)。这里暂不多做介绍，有兴趣的可以关注我关于设计模式的文章。
+什么是动态代理：
+说起动态，其实不如先说什么是静态。所谓静态代理，个人理解为自己手写的代理类，或者用工具生成的代理类，或者别人帮你写的代理类(没说一样...)。总之，就是程序运行前就已经存在的编译好的代理类。
+相反，如果代理类程序运行前并不存在，需要在程序运行时动态生成(无需手工编写代理类源码)，那就是今天要说的动态代理了。
+如何生成的：根据Java的反射机制动态生成。
+不多说了，上程序。
+目标接口TargetInterface:
+Java代码  收藏代码
+public interface TargetInterface {  
+    public int targetMethodA(int number);  
+    public int targetMethodB(int number);  
+}  
+很简单，一个普通的接口，里面有若干方法(此处写2个示范一下)
+实现该接口的委托类ConcreteClass:
+Java代码  收藏代码
+public class ConcreteClass implements TargetInterface{  
+  
+    public int targetMethodA(int number) {  
+        System.out.println("开始调用目标类的方法targetMethodA...");  
+        System.out.println("操作-打印数字:"+number);  
+        System.out.println("结束调用目标类的方法targetMethodA...");  
+        return number;  
+    }  
+      
+    public int targetMethodB(int number){  
+        System.out.println("开始调用目标类的方法targetMethodB...");  
+        System.out.println("操作-打印数字:"+number);  
+        System.out.println("结束调用目标类的方法targetMethodB...");  
+        return number;  
+    }  
+  
+}  
+很简单，一个普通的类，实现了目标接口。
+代理处理器类ProxyHandler:
+Java代码  收藏代码
+public class ProxyHandler implements InvocationHandler{  
+    private Object concreteClass;  
+      
+    public ProxyHandler(Object concreteClass){  
+        this.concreteClass=concreteClass;  
+    }  
+  
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {  
+        System.out.println("proxy:"+proxy.getClass().getName());  
+        System.out.println("method:"+method.getName());  
+        System.out.println("args:"+args[0].getClass().getName());  
+          
+        System.out.println("Before invoke method...");  
+        Object object=method.invoke(concreteClass, args);//普通的Java反射代码,通过反射执行某个类的某方法  
+        //System.out.println(((ConcreteClass)concreteClass).targetMethod(10)+(Integer)args[0]);  
+        System.out.println("After invoke method...");  
+        return object;  
+    }  
+  
+}  
+该类实现了Java反射包中的InvocationHandler接口。代理实例调用方法时，将对方法调用指派到它的代理处理器程序的invoke方法中。invoke方法内部实现预处理，对委托类方法调用，事后处理等逻辑。
+最后是入口程序:
+Java代码  收藏代码
+public class DynamicProxyExample {  
+    public static void main(String[] args){  
+         ConcreteClass c=new ConcreteClass();//元对象(被代理对象)  
+         InvocationHandler ih=new ProxyHandler(c);//代理实例的调用处理程序。  
+         //创建一个实现业务接口的代理类,用于访问业务类(见代理模式)。  
+         //返回一个指定接口的代理类实例，该接口可以将方法调用指派到指定的调用处理程序，如ProxyHandler。  
+         TargetInterface targetInterface=  
+             (TargetInterface)Proxy.newProxyInstance(c.getClass().getClassLoader(),c.getClass().getInterfaces(),ih);  
+         //调用代理类方法,Java执行InvocationHandler接口的方法.  
+         int i=targetInterface.targetMethodA(5);  
+         System.out.println(i);  
+         System.out.println();  
+         int j=targetInterface.targetMethodB(15);  
+         System.out.println(j);  
+    }  
+}  
+首先创建委托类对象，将其以构造函数传入代理处理器，代理处理器ProxyHandler中会以Java反射方式调用该委托类对应的方法。然后使用Java反射机制中的Proxy.newProxyInstance方式创建一个代理类实例，创建该实例需要指定该实例的类加载器，需要实现的接口(即目标接口)，以及处理代理实例接口调用的处理器。
+最后，调用代理类目标接口方法时，会自动将其转发到代理处理器中的invoke方法内，invoke方法内部实现预处理，对委托类方法调用，事后处理等逻辑。
+ 
+使用Java动态代理机制的好处：
+1、减少编程的工作量：假如需要实现多种代理处理逻辑，只要写多个代理处理器就可以了，无需每种方式都写一个代理类。
+2、系统扩展性和维护性增强，程序修改起来也方便多了(一般只要改代理处理器类就行了)。
+ 
+使用Java动态代理机制的限制：
+目前根据GOF的代理模式，代理类和委托类需要都实现同一个接口。也就是说只有实现了某个接口的类可以使用Java动态代理机制。但是，事实上使用中并不是遇到的所有类都会给你实现一个接口。因此，对于没有实现接口的类，目前无法使用该机制。有人说这不是废话吗，本来Proxy模式定义的就是委托类要实现接口的啊！但是没有实现接口的类，该如何实现动态代理呢？
