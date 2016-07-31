@@ -26,5 +26,6 @@ public class ThreadLocalTest {
 		String value = t.get();
 		// 输出value的值是aaa
 		System.out.println(value);
+		
 	}
 }

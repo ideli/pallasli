@@ -21,6 +21,7 @@
 		<module>pallasli-website-web-OA</module>
 		<module>pallasli-website-web-pm</module>
 		<module>pallasli-website-kafka-storm</module>
+		<module>pallasli-website-web-softmanager</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
