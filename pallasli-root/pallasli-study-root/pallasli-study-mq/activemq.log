@@ -9948,3 +9948,133 @@ java.lang.Exception: 错误消息啊
 2016-07-08 08:56:05,059 [Thread-0       ] INFO  SyncProducer                   - Disconnecting from 127.0.0.1:9093
 2016-07-08 08:56:05,062 [Thread-0       ] INFO  SyncProducer                   - Disconnecting from 172.20.21.4:9094
 2016-07-08 08:56:05,066 [Thread-0       ] INFO  SyncProducer                   - Connected to 172.20.21.4:9094 for producing
+2016-07-31 16:27:09,139 [main           ] INFO  ProducerConfig                 - ProducerConfig values: 
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	key.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	block.on.buffer.full = true
+	retry.backoff.ms = 100
+	buffer.memory = 33554432
+	batch.size = 16384
+	metrics.sample.window.ms = 30000
+	metadata.max.age.ms = 300000
+	receive.buffer.bytes = 32768
+	timeout.ms = 30000
+	max.in.flight.requests.per.connection = 5
+	bootstrap.servers = [localhost:9092, localhost:9093, localhost:9094]
+	metric.reporters = []
+	client.id = 
+	compression.type = none
+	retries = 0
+	max.request.size = 1048576
+	send.buffer.bytes = 131072
+	acks = 1
+	reconnect.backoff.ms = 10
+	linger.ms = 0
+	metrics.num.samples = 2
+	metadata.fetch.timeout.ms = 60000
+
+2016-07-31 16:27:11,659 [main           ] WARN  MessageAdapterHandler          - The processor of this queue and exchange exists, and the new one can't be add
+2016-07-31 16:27:11,771 [ad | producer-1] WARN  Selector                       - Error in I/O with localhost/127.0.0.1
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:744)
+	at org.apache.kafka.common.network.Selector.poll(Selector.java:238)
+	at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:192)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:191)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:122)
+	at java.lang.Thread.run(Thread.java:745)
+2016-07-31 16:28:25,446 [main           ] INFO  ProducerConfig                 - ProducerConfig values: 
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	key.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	block.on.buffer.full = true
+	retry.backoff.ms = 100
+	buffer.memory = 33554432
+	batch.size = 16384
+	metrics.sample.window.ms = 30000
+	metadata.max.age.ms = 300000
+	receive.buffer.bytes = 32768
+	timeout.ms = 30000
+	max.in.flight.requests.per.connection = 5
+	bootstrap.servers = [localhost:9092, localhost:9093, localhost:9094]
+	metric.reporters = []
+	client.id = 
+	compression.type = none
+	retries = 0
+	max.request.size = 1048576
+	send.buffer.bytes = 131072
+	acks = 1
+	reconnect.backoff.ms = 10
+	linger.ms = 0
+	metrics.num.samples = 2
+	metadata.fetch.timeout.ms = 60000
+
+2016-07-31 16:28:27,867 [main           ] WARN  MessageAdapterHandler          - The processor of this queue and exchange exists, and the new one can't be add
+2016-07-31 18:07:35,893 [main           ] INFO  ProducerConfig                 - ProducerConfig values: 
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	key.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+	block.on.buffer.full = true
+	retry.backoff.ms = 100
+	buffer.memory = 33554432
+	batch.size = 16384
+	metrics.sample.window.ms = 30000
+	metadata.max.age.ms = 300000
+	receive.buffer.bytes = 32768
+	timeout.ms = 30000
+	max.in.flight.requests.per.connection = 5
+	bootstrap.servers = [localhost:9092, localhost:9093, localhost:9094]
+	metric.reporters = []
+	client.id = 
+	compression.type = none
+	retries = 0
+	max.request.size = 1048576
+	send.buffer.bytes = 131072
+	acks = 1
+	reconnect.backoff.ms = 10
+	linger.ms = 0
+	metrics.num.samples = 2
+	metadata.fetch.timeout.ms = 60000
+
+2016-07-31 18:07:38,574 [main           ] WARN  MessageAdapterHandler          - The processor of this queue and exchange exists, and the new one can't be add
+2016-07-31 18:07:38,654 [ad | producer-1] WARN  Selector                       - Error in I/O with localhost/127.0.0.1
+java.net.ConnectException: Connection refused
+	at sun.nio.ch.SocketChannelImpl.checkConnect(Native Method)
+	at sun.nio.ch.SocketChannelImpl.finishConnect(SocketChannelImpl.java:744)
+	at org.apache.kafka.common.network.Selector.poll(Selector.java:238)
+	at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:192)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:191)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:122)
+	at java.lang.Thread.run(Thread.java:745)
+2016-07-31 18:09:38,655 [ad | producer-1] ERROR Sender                         - Uncaught error in kafka producer I/O thread: 
+java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.TimeoutException: Failed to update metadata after 60000 ms.
+	at org.apache.kafka.clients.producer.KafkaProducer$FutureFailure.<init>(KafkaProducer.java:437)
+	at org.apache.kafka.clients.producer.KafkaProducer.send(KafkaProducer.java:352)
+	at org.apache.kafka.clients.producer.KafkaProducer.send(KafkaProducer.java:248)
+	at kafka.producer.KafkaLog4jAppender.append(KafkaLog4jAppender.scala:73)
+	at org.apache.log4j.AppenderSkeleton.doAppend(AppenderSkeleton.java:251)
+	at org.apache.log4j.helpers.AppenderAttachableImpl.appendLoopOnAppenders(AppenderAttachableImpl.java:66)
+	at org.apache.log4j.Category.callAppenders(Category.java:206)
+	at org.apache.log4j.Category.forcedLog(Category.java:391)
+	at org.apache.log4j.Category.log(Category.java:856)
+	at org.slf4j.impl.Log4jLoggerAdapter.warn(Log4jLoggerAdapter.java:439)
+	at org.apache.kafka.common.network.Selector.poll(Selector.java:276)
+	at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:192)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:191)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:122)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.apache.kafka.common.errors.TimeoutException: Failed to update metadata after 60000 ms.
+2016-07-31 18:08:40,646 [main           ] WARN  MessageAdapterHandler          - The processor of this queue and exchange exists, and the new one can't be add
+2016-07-31 18:10:38,659 [ad | producer-1] ERROR KafkaThread                    - Uncaught exception in kafka-producer-network-thread | producer-1: 
+java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.TimeoutException: Failed to update metadata after 60000 ms.
+	at org.apache.kafka.clients.producer.KafkaProducer$FutureFailure.<init>(KafkaProducer.java:437)
+	at org.apache.kafka.clients.producer.KafkaProducer.send(KafkaProducer.java:352)
+	at org.apache.kafka.clients.producer.KafkaProducer.send(KafkaProducer.java:248)
+	at kafka.producer.KafkaLog4jAppender.append(KafkaLog4jAppender.scala:73)
+	at org.apache.log4j.AppenderSkeleton.doAppend(AppenderSkeleton.java:251)
+	at org.apache.log4j.helpers.AppenderAttachableImpl.appendLoopOnAppenders(AppenderAttachableImpl.java:66)
+	at org.apache.log4j.Category.callAppenders(Category.java:206)
+	at org.apache.log4j.Category.forcedLog(Category.java:391)
+	at org.apache.log4j.Category.log(Category.java:856)
+	at org.slf4j.impl.Log4jLoggerAdapter.error(Log4jLoggerAdapter.java:571)
+	at org.apache.kafka.clients.producer.internals.Sender.run(Sender.java:124)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: org.apache.kafka.common.errors.TimeoutException: Failed to update metadata after 60000 ms.
