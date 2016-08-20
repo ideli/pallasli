@@ -1,0 +1,37 @@
+.admin_left_navigation{
+	float: left;
+	width:20%;
+	min-width: 300px;
+	margin-left: 10px;
+	margin-top: 10px;
+	background-color: silver;
+	height: 100%;
+}
+.admin_left_navigation li{
+	padding-bottom: 5px;
+}
+.admin_main{
+	float: left;
+	margin-top: 10px;
+}
+
+.admin_roleManager_menu,
+.admin_userManager_menu,
+.admin_orgnizationManager_menu,
+.admin_resourceManager_menu,
+.admin_dataAuthorityManager_menu,
+.admin_authorityManager_menu{
+	display: inline;
+}
+
+.myHomePage_main,
+.admin_roleManager_main,
+.admin_userManager_main,
+.admin_orgnizationManager_main,
+.admin_resourceManager_main,
+.admin_dataAuthorityManager_main,
+.admin_authorityManager_main{
+	margin-top: 30px;
+	margin-left:10px; 
+	min-height: 400px;
+}

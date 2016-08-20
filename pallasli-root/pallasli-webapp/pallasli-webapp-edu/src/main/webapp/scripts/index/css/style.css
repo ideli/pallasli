@@ -1,0 +1,292 @@
+/* cloud style @St. 2013-03-19 */
+/* base */
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+textarea,
+blockquote,
+p,
+td { padding: 0; margin: 0; }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { font-weight: normal; }
+body { font-family: Microsoft YaHei, Arial; font-size: 12px; background: #d9d9d9; }
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var { font-weight: normal; font-style: normal; }
+img { border: 0px; vertical-align: top; }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { font-size: 12px; }
+/* a */
+a { color: #333; text-decoration: none; }
+a:visited { color: #999; text-decoration: none; }
+a:hover { color: orange; text-decoration: underline; }
+a:active { color: orange; }
+li { list-style-type: none; }
+ol,
+ul { list-style: none; }
+/* float */
+.left { float: left; }
+.middle { float: left; }
+.right { float: right; }
+.hide { display: none; }
+/* fB */
+.fB { font-weight: bold; }
+.fI { font-style: italic; }
+/* hidden */
+.hidden { display: none; }
+/* rel */
+.rel { position: relative; }
+/* absolute */
+.absolute { position: absolute; }
+/* blank */
+.blank1 { height: 1px; }
+.blank2 { height: 2px; }
+.blank3 { height: 3px; }
+.blank4 { height: 4px; }
+.blank5 { height: 5px; }
+.blank6 { height: 6px; }
+.blank7 { height: 7px; }
+.blank8 { height: 8px; }
+.blank9 { height: 9px; }
+.blank10 { height: 10px; }
+.blank11 { height: 11px; }
+.blank12 { height: 12px; }
+.blank13 { height: 13px; }
+.blank14 { height: 14px; }
+.blank15 { height: 15px; }
+.blank16 { height: 16px; }
+.blank17 { height: 17px; }
+.blank18 { height: 18px; }
+.blank19 { height: 19px; }
+.blank20 { height: 20px; }
+.blank21 { height: 21px; }
+.blank22 { height: 22px; }
+.blank23 { height: 23px; }
+.blank24 { height: 24px; }
+.blank25 { height: 25px; }
+.blank26 { height: 26px; }
+.blank27 { height: 27px; }
+.blank28 { height: 28px; }
+.blank29 { height: 29px; }
+.blank30 { height: 30px; }
+.blank35 { height: 35px; }
+.blank36 { height: 36px; }
+.blank37 { height: 37px; }
+.blank38 { height: 38px; }
+.blank39 { height: 39px; }
+.blank40 { height: 40px; }
+.blank1,
+.blank2,
+.blank3,
+.blank4,
+.blank5,
+.blank6,
+.blank7,
+.blank8,
+.blank9,
+.blank10,
+.blank11,
+.blank12,
+.blank13,
+.blank14,
+.blank15,
+.blank16,
+.blank17,
+.blank18,
+.blank19,
+.blank20,
+.blank21,
+.blank22,
+.blank23,
+.blank24,
+.blank25,
+.blank26,
+.blank27,
+.blank28,
+.blank29,
+.blank30,
+.blank35,
+.blank36,
+.blank37,
+.blank38,
+.blank39,
+.blank40 { clear: both; overflow: hidden; display: block; }
+.clear { height: 0px; clear: both; overflow: hidden; display: block; }
+/* btn */
+.btn,
+a.btn { background-color: #ffc100; color: #FFF; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn.tiny,
+a.btn.tiny { padding: 6px 12px; }
+button.btn { padding-bottom: 3px; line-height: 31px; }
+.btn:hover { background-color: #CCC; color: #FFF; }
+.btn:active { background-color: #FFF; color: #000; }
+/* btn2 */
+.btn2,
+a.btn2 { background-color: #e90e00; color: #FFF; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn2.tiny,
+a.btn2.tiny { padding: 6px 12px; }
+button.btn2 { padding-bottom: 3px; line-height: 31px; }
+.btn2:hover { background-color: #CCC; color: #FFF; }
+.btn2:active { background-color: #FFF; color: #000; }
+/* btn3 */
+.btn3,
+a.btn3 { background-color: #b5cc41; color: #FFF; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn3.tiny,
+a.btn3.tiny { padding: 6px 12px; }
+button.btn3 { padding-bottom: 3px; line-height: 31px; }
+.btn3:hover { background-color: #CCC; color: #FFF; }
+.btn3:active { background-color: #FFF; color: #000; }
+/* btn4 */
+.btn4,
+a.btn4 { background-color: #ffc100; color: #FFF; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn4.tiny,
+a.btn4.tiny { padding: 6px 12px; }
+button.btn4 { padding-bottom: 3px; line-height: 31px; }
+.btn4:hover { background-color: #CCC; color: #FFF; }
+.btn4:active { background-color: #FFF; color: #000; }
+/* btn5 */
+.btn5,
+a.btn5 { background-color: #4c8ecb; color: #FFF; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn5.tiny,
+a.btn5.tiny { padding: 6px 12px; }
+button.btn5 { padding-bottom: 3px; line-height: 31px; }
+.btn5:hover { background-color: #CCC; color: #FFF; }
+.btn5:active { background-color: #FFF; color: #000; }
+/* btn6 */
+.btn6,
+a.btn6 { background-color: #ededed; color: #333; line-height: 33px; padding: 6px 25px; cursor: pointer; overflow: hidden; text-align: center; font-weight: bold; font-size: 14px; text-decoration: none; border: #b7c2c9 1px solid; }
+.btn6.tiny,
+a.btn6.tiny { padding: 6px 12px; }
+button.btn6 { padding-bottom: 3px; line-height: 31px; }
+.btn6:hover { background-color: #CCC; color: #FFF; }
+.btn6:active { background-color: #FFF; color: #000; }
+/* boxAll */
+.boxAll { background: #FFF url(../images/allBoxBg.gif) repeat-x; }
+
+
+
+/* main */
+.main { width: 950px; margin: 0 auto; }
+/* leftL */
+.leftL { width: 560px; }
+.logo { width: 325px; height: 50px; padding: 29px 0 0 5px; }
+.nav { padding: 25px 0 18px 0; }
+.nav a { font-size: 14px; font-weight: bold; color: #FFF; margin-right: 40px; }
+.nav a:visited { color: #FFF; text-decoration: none; }
+.nav a:hover { color: orange; text-decoration: none; }
+.rot { width: 560px; overflow: hidden; padding-bottom: 18px; }
+/* bor */
+.bor,
+a.bor { border: #b7c2c9 1px solid; }
+.bor:active { border: #b7c2c9 1px solid; }
+.bor2,
+a.bor2 { border: #CCC 1px solid; }
+.bor2:active { border: #b7c2c9 1px solid; }
+.bor3,
+a.bor3 { border: #999 1px solid; }
+.bor3:active { border: #b7c2c9 1px solid; }
+/* rightR */
+.rightR { width: 355px; margin-top: 85px; position:relative; }
+/* others */
+.others { position:absolute; width:340px; height:30px; top:-70px; right:0px; text-align:right; padding-right:15px; color:#CCC;}
+.others a { color:#CCC;}
+.others a:hover { color:#FFF; text-decoration:none;}
+/* login */
+.lBottom { width: 355px; }
+.lTop .title,
+.note .title,
+.friend .title { display: block; width: 103px; height: 33px; font-size: 14px; font-weight: bold; text-align: right; color: #FFF; padding: 7px 7px 0 0; }
+.lTop { width: 305px; height: 45px; background: url(../images/lBgTop.jpg) no-repeat; padding: 6px 0 0 50px }
+.lTop .title { background: #e90e00; }
+.lBottom { height: 12px; background: url(../images/lBgBottom.jpg) 0 0 no-repeat; }
+.login { width: 255px; text-align: left; background: url(../images/lBgMiddle.jpg) repeat-y; padding: 28px 50px 0 50px }
+.login .l { position: relative; width: 255px; height: 35px; }
+.login .n,
+.login .i { line-height: 35px; font-size: 16px; color: #92a4bf; padding-left: 8px; }
+.login .n { position: absolute; z-index: 2; top: 0; left: 0; }
+.login .i { position: absolute; z-index: 1; top: 0; left: 0; width: 245px; height: 35px; border: #bac5d4 1px solid; border-radius: 2px; background-color: #eef3f8; }
+.login .i:focus,
+.login .f { z-index: 3; font-weight: bold; color: #000; }
+.login .i:focus,
+.login .f:focus { border: #60a4e8 1px solid; background-color: #FFF; }
+.login .txt { font-size: 16px; line-height: 37px; color: #92a4bf; padding-left: 8px; }
+.login .t { text-align: right; padding-top: 12px; }
+.login .t a { color: #999; }
+.login .t a:hover { color: orange; text-decoration: none; }
+.login .check { padding: 20px 0 20px 0; }
+.login .check .chBox,
+.login .check .chText { vertical-align: middle; }
+.login .check .chBox { width: 13px; height: 13px; }
+.login .check .chText { color: #666666; line-height: 13px; }
+/* button */
+.login .button { }
+.login .button .btn { float: left; display: block; width: 104px; height: 33px; padding: 0; }
+.login .button .btn6 { float: right; display: block; width: 104px; height: 33px; padding: 0; }
+.login .button .btnLog,
+.login .button .btnReg { width: 104px; height: 35px; background: url(../images/bBg2.gif) no-repeat; border: none; font-size: 14px; line-height: 35px; font-weight: bold; cursor: pointer; overflow: hidden; text-indent: -888px; }
+.login .button .btnLog { float: left; background: url(../images/bBg2.gif) no-repeat; border: none; color: #FFF; }
+.login .button .btnReg { float: right; display: block; background: url(../images/bBg1.gif) no-repeat; border: none; color: #000; text-decoration: none; }
+.login .button .btnLog:hover,
+.login .button .btnReg:hover { filter: alpha(opacity=80); -moz-opacity: 0.8; opacity: 0.8; }
+.login .hotLine { font-size: 12px; color: #ff9900; font-style: italic; text-align: right; /*padding: 10px 0 20px 0;*/ height: 30px; }
+.login .hotLine h3 { visibility: hidden; }
+/* note */
+.note .b,
+.friend .b { padding: 6px 0 0 42px; }
+.note,
+.friend { width: 340px; margin: 0 auto; }
+.note { background: #fcffef; min-height: 176px; *height:176px;
+_height: 176px; padding-bottom: 9px; margin-bottom: 9px; }
+.note .title { background: #b5cc41; }
+/* list */
+.list { margin: 10px 22px 0px 20px; }
+.list li { font-size: 12px; line-height: 22px; min-height: 22px; }
+.list li a { float: left; display: block; padding-left: 12px; background: url(../images/dot.gif) 0 10px no-repeat; height: auto; width: 200px; }
+.list li span.time { float: right; display: block; width: 70px; color: #c1d8ef; text-align: right; }
+/* friend */
+.friend { padding-top: 5px; }
+.friend .b.left { width: 110px; }
+.friend .title { background: #4c8ecb; }
+.friend .f { width: 320px; text-align: right; line-height: 31px; padding: 10px; }
+.friend .f .left,
+.friend .f .right { display: block; width: 47%; }
+.friend .f .left { }
+.friend .f .right { }
+.friend .f a { }
+.bottom { background: url(../images/bottomBg.gif) repeat-x; }
+.bottom .main .f { color: #999; text-align: center; line-height: 32px; padding-top: 18px; font-size: 14px; }
+.bottom .main .f a { color: #F90; margin: 0 6px; font-weight: bold; }
+.bottom .main .f a:hover { color: #333; }
+.bottom .main p { text-align: center; line-height: 20px; padding-top: 0px; padding-bottom: 22px; }
+/* hotline */
+.navHotline { background: url(../images/holine.png) right top no-repeat; }
+.navHotline .hotline { display: none; visibility: hidden; }
+

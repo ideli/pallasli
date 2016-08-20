@@ -1,0 +1,106 @@
+﻿@charset "utf-8";
+/* CSS Document */
+@import url(layout.css);
+@import url(global.css);
+
+.dotTopLine{
+	border-top:1px dotted #9e9e9e;	
+}
+/* ------------------------------------------------------- *
+ * 【iconG01】
+ * ------------------------------------------------------- */
+.iconG01{
+	display:inline-block;
+	background-image:url(/getpassword/images/iconG01.gif);
+	overflow:hidden;
+	vertical-align:middle;
+}
+.iconG01_1{
+	width:18px;
+	height:13px;
+	background-position:0 0;
+}
+.iconG01_2{
+	width:3px;
+	height:3px;
+	background-position:-28px 0;
+}
+.iconG01_3{
+	width:12px;
+	height:12px;
+	background-position:-41px 0;
+}
+.iconG01_4{
+	width:11px;
+	height:11px;
+	background-position:-63px 0;
+}
+/* ------------------------------------------------------- *
+ * 【iconG02】
+ * ------------------------------------------------------- */
+.iconG02{
+	display:inline-block;
+	background-image:url(/getpassword/images/iconG02.gif);
+	overflow:hidden;
+	vertical-align:middle;
+}
+input.iconG02{
+	border:0;
+	padding:0;
+	text-indent:-9999px;
+	*text-indent:0;
+	line-height:180px;
+	overflow:hidden;
+	cursor:pointer;
+}
+.iconG02_1{
+	width:91px;
+	height:32px;
+	background-position:0 0;
+}
+.iconG02_2{
+	width:70px;
+	height:21px;
+	background-position:0 -42px;
+}
+/* ------------------------------------------------------- *
+ * 【title】
+ * ------------------------------------------------------- */
+.title01{
+	font-size:16px;
+	color:#003366;
+	font-family:"微软雅黑";
+	font-weight:normal;
+}
+/* ------------------------------------------------------- *
+ * 【flow】
+ * ------------------------------------------------------- */
+.flow dl dt,
+.flow dl dd{
+	float:left;
+}
+.flow dl dt{
+	border:1px solid #e5e5e5;
+	padding:12px 20px;
+	color:#7094ca;
+	background-color:#fff;
+}
+.flow dl dt .num{
+	display:inline-block;
+	margin-right:3px;
+	width:16px;
+	height:16px;
+	background-color:#93b4e6;
+	color:#fff;
+	text-align:center;
+}
+.flow dl dt.on{
+	border-color:#ff9900;
+	color:#333;
+}
+.flow dl dt.on .num{
+	background-color:#ff9900;
+}
+.flow dl dd{
+	padding:15px 12px 0;
+}

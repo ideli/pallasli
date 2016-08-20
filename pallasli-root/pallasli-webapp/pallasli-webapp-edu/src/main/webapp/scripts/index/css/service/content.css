@@ -1,0 +1,269 @@
+@charset "utf-8";
+
+@import url(../../css/common.css);
+@import url(global.css);
+
+/* ------------------------------------------------------- *
+ * 首页
+ * ------------------------------------------------------- */
+/* quesCH
+ * ------------------------------------ */
+.quesCH{
+	width:340px;
+}
+.quesCH h4{
+	margin-bottom:10px;
+}
+.quesCH h4 span{
+	display:inline-block;
+	width:116px;
+	border-bottom:4px solid #4C8ECB;
+	padding:0 10px;
+}
+.quesCH ul li{
+	padding:4px 0;	
+	padding-left:12px;
+	background:url(/index/images/service/icon01.jpg) no-repeat left 9px;
+}
+.quesCH ul li a{
+	color:#666;
+	line-height:18px;
+}
+.quesCH ul li a:hover{
+	color:#000;
+	text-decoration:none;
+}
+/* quesN
+ * ------------------------------------ */
+.quesN{
+	border:1px solid #CECECE;
+	padding:10px 5px;
+	background:#EBF5FF url(/index/images/service/icon03.jpg) no-repeat 9px bottom;
+}
+.quesN h4{
+	float:left;	
+	width:130px;
+}
+.quesN ul{
+	float:left;	
+	width:550px;
+}
+.quesN ul li{
+	display:block;
+	float:left;
+	margin-right:15px;
+	width:240px;
+	padding:6px 0;	
+	padding-left:20px;
+	background:url(/index/images/service/icon02.jpg) no-repeat left 11px;
+}
+.quesN ul li a{
+	color:#0099ff;
+	line-height:18px;
+}
+.quesN ul li a:hover{
+	color:#004B7E;
+	text-decoration:none;
+}
+/* funShow
+ * ------------------------------------ */
+.funShow{
+	padding:10px 0 10px 10px;
+	background-color:#FFF0D3;	
+}
+.funShow h4{
+	margin-bottom:10px;	
+}
+.funShow ul li{
+	display:block;
+	float:left;
+	margin-right:10px;
+	width:149px;
+	border:1px solid #fff;
+	padding:9px 7px;
+	background-color:#fff;
+}
+.funShow ul li.active{
+	border-color:#B0B0AE;
+	background-color:#FAFFC9;
+}
+.funShow ul li a{
+	font-weight:bold;
+	color:#666;
+	text-decoration:none;
+}
+.funShow ul li a.iconG05_1_1{
+	margin-left:23px;
+}
+.funShow ul li a.iconG05_1_1:hover{
+	background-position:0 -33px;
+}
+/* custSer
+ * ------------------------------------ */
+.custSer h4{
+	margin-bottom:10px;	
+	border-bottom:3px solid #EFEFEF;
+	padding-bottom:3px;
+}
+.custSer ul li{
+	display:block;
+	float:left;
+	margin-right:10px;
+	width:165px;
+	overflow:hidden;
+}
+.custSer ul li p{
+	height:28px;
+}
+.custSer ul li p *{
+	vertical-align:bottom;	
+}
+.custSer ul li span{
+	border-bottom:1px dotted #7F7F7F;
+	font-size:14px;
+}
+/* ------------------------------------------------------- *
+ * 新手入门
+ * ------------------------------------------------------- */
+.quesList ul{
+	margin-left:20px;	
+}
+.quesList ul li{
+	padding:5px 0;
+	list-style-type:decimal;
+	list-style-position:outside;
+}
+.quesList ul li a{
+	color:#666;	
+}
+.quesList ul li a:hover{
+	color:#000;	
+}
+/* ------------------------------------------------------- *
+ * 常见问题
+ * ------------------------------------------------------- */
+.quesCList dt{
+	position:relative;
+	float:left;
+	width:220px;
+}
+.quesCList dt ul li{
+	_height:1%;
+	padding:8px 33px 8px 10px;
+}
+.quesCList dt ul li a{
+	padding-left:12px;
+	background:url(/index/images/service/icon04.jpg) no-repeat left 4px;
+	color:#0099ff;
+}
+.quesCList dt ul li.on{
+	border:1px solid #e2e2e2;
+	border-right:1px solid #fff;
+	background:url(/index/images/service/icon05.jpg) no-repeat 190px center;
+}
+.quesCList dt ul li.on a{
+	padding-left:0;
+	color:#666;
+	font-weight:bold;
+	background:none;
+	text-decoration:none;
+}
+.quesCList dd{
+	float:left;
+	margin-left:-1px;
+	width:728px;
+	min-height:600px;
+	height:600px;
+	border:1px solid #e2e2e2;
+}
+.quesCList dd ol{
+	margin:5px 20px 10px 40px;
+}
+.quesCList dd ol li{
+	padding:5px 0;
+	list-style-type:decimal;
+	list-style-position:outside;
+}
+.quesCList dd ol li a{
+	color:#666;	
+}
+.quesCList dd ol li a:hover{
+	color:#000;	
+}
+/* ------------------------------------------------------- *
+ * 功能演示
+ * ------------------------------------------------------- */
+/* funBox
+ * ------------------------------------ */
+.funBox{
+	width:705px;
+	padding:1px 1px 23px 1px;
+	background:#4ca9ff url(/index/images/service/bg01.jpg) no-repeat left bottom;
+}
+.funBox ul li{
+	display:block;
+	float:left;	
+}
+.funBox ul li a{
+	display:block;
+	float:left;
+	margin-left:-1px;
+	margin-top:-1px;
+	width:140px;
+	height:50px;
+	border:1px solid #eeeeee;
+	background-color:#fff;
+	line-height:50px;
+	font-family:"微软雅黑";
+	text-align:center;
+	color:#0066cc;
+	text-decoration:none;
+	overflow:hidden;
+}
+.funBox ul li a:hover{
+	background-color:#f2f2f2;	
+}
+.funBox ul li a.on{
+	background:#ffe1b7 url(/index/images/service/icon06.jpg) no-repeat 118px 28px;
+	color:#333;
+}
+/* flow
+ * ------------------------------------ */
+.flow{
+	overflow:hidden;	
+}
+.flow a{
+	display:inline-block;
+	margin-top:5px;
+	margin-bottom:10px;
+	padding:3px 10px;
+	background-color:#4DA9FF;
+	color:#fff;
+	font-weight:bold;
+	text-decoration:none;
+}
+.flow a:hover{
+	background-color:#5AB2FF;
+	color:#033;
+}
+.flow a.on{
+	margin-top:0;
+	margin-bottom:0;
+	padding-top:8px;
+	padding-bottom:13px;
+	background-color:#D6DBE1;
+	color:#333;
+}
+.flow a.on .iconG03_14{
+	background-position:-97px -80px;
+}
+.flow .iconG03_12{
+	margin:0 5px;	
+}
+.showBox{
+	border:3px solid #D4DBE1;
+}
+.showBox img{
+	width:704px;
+	overflow:hidden;
+}
