@@ -24,8 +24,15 @@
 		<module>pallasli-webapp-portal</module>
 		<module>pallasli-webapp-report</module>
 		<module>pallasli-webapp-reporttest</module>
-		<module>pallasli-webapp-servermanager</module>
-		<module>pallasli-webapp-testlog</module>
+		<module>pallasli-webapp-edu</module>
+		<module>pallasli-webapp-edu-log</module>
+		<module>pallasli-webapp-edu-database-manager</module>
+		<module>pallasli-webapp-edu-server-manager</module>
+		<module>pallasli-webapp-edu-email</module>
+		<module>pallasli-webapp-edu-im</module>
+		<module>pallasli-webapp-edu-designer</module>
+		<module>pallasli-webapp-edu-testlog</module>
+		<module>pallasli-webapp-edu-fileserver</module>
 	</modules>
 	<dependencies>
 		<dependency>
