@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pallasli.webapp.edu.mapper.UserLoginLogMapper" >
+  <resultMap id="BaseResultMap" type="com.pallasli.webapp.edu.model.UserLoginLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="login_id" property="loginId" jdbcType="VARCHAR" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+    <result column="proxy_ip" property="proxyIp" jdbcType="VARCHAR" />
+    <result column="login_date" property="loginDate" jdbcType="TIMESTAMP" />
+    <result column="logout_date" property="logoutDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, login_id, login_name, login_ip, proxy_ip, login_date, logout_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.pallasli.webapp.edu.model.UserLoginLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from user_login_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_login_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_login_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pallasli.webapp.edu.model.UserLoginLogExample" >
+    delete from user_login_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pallasli.webapp.edu.model.UserLoginLog" >
+    insert into user_login_log (id, login_id, login_name, 
+      login_ip, proxy_ip, login_date, 
+      logout_date)
+    values (#{id,jdbcType=VARCHAR}, #{loginId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
+      #{loginIp,jdbcType=VARCHAR}, #{proxyIp,jdbcType=VARCHAR}, #{loginDate,jdbcType=TIMESTAMP}, 
+      #{logoutDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pallasli.webapp.edu.model.UserLoginLog" >
+    insert into user_login_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="loginId != null" >
+        login_id,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="proxyIp != null" >
+        proxy_ip,
+      </if>
+      <if test="loginDate != null" >
+        login_date,
+      </if>
+      <if test="logoutDate != null" >
+        logout_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="loginId != null" >
+        #{loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyIp != null" >
+        #{proxyIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logoutDate != null" >
+        #{logoutDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pallasli.webapp.edu.model.UserLoginLogExample" resultType="java.lang.Integer" >
+    select count(*) from user_login_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update user_login_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginId != null" >
+        login_id = #{record.loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginName != null" >
+        login_name = #{record.loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginIp != null" >
+        login_ip = #{record.loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.proxyIp != null" >
+        proxy_ip = #{record.proxyIp,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loginDate != null" >
+        login_date = #{record.loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.logoutDate != null" >
+        logout_date = #{record.logoutDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update user_login_log
+    set id = #{record.id,jdbcType=VARCHAR},
+      login_id = #{record.loginId,jdbcType=VARCHAR},
+      login_name = #{record.loginName,jdbcType=VARCHAR},
+      login_ip = #{record.loginIp,jdbcType=VARCHAR},
+      proxy_ip = #{record.proxyIp,jdbcType=VARCHAR},
+      login_date = #{record.loginDate,jdbcType=TIMESTAMP},
+      logout_date = #{record.logoutDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pallasli.webapp.edu.model.UserLoginLog" >
+    update user_login_log
+    <set >
+      <if test="loginId != null" >
+        login_id = #{loginId,jdbcType=VARCHAR},
+      </if>
+      <if test="loginName != null" >
+        login_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyIp != null" >
+        proxy_ip = #{proxyIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logoutDate != null" >
+        logout_date = #{logoutDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pallasli.webapp.edu.model.UserLoginLog" >
+    update user_login_log
+    set login_id = #{loginId,jdbcType=VARCHAR},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      proxy_ip = #{proxyIp,jdbcType=VARCHAR},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      logout_date = #{logoutDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
