@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优教云综合教育公共服务平台</title>
+<link href="/common/css/style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.back { width:100px; float:right; text-decoration:none; color:#666666;}
+.back a { text-decoration:none; color:#666666;}
+.back a:hover {
+	color:#5497CC;
+	text-decoration:none;
+}
+
+</style>
+<style>
+#top{background:#ffffff;line-height:14px;color:#666666;font-size:12px;position:absolute;top:2px;right:6pt;border-bottom:1px solid #000099;padding-top:3px}
+#top a{font-size:12px;text-decoration:none;padding:2px 2px 1px 2px;}
+#top a:link,#top a:visited{color:#000099}
+#top a:active,#top a:hover{color:#ff0000}
+#top span{padding:2px 2px 1px 2px;line-height:14px}
+/* .current_dir{color:#FFFFFF} */
+#top .current_dir{color:#FFFFFF;background:#cccccc;border:1px solid #666666;border-bottom:0}
+#top .current_dir a:link,#top current_dir a:visited{color:#ffffff}
+</style>
+<SCRIPT type="text/javascript">
+var Max=25;
+var bestAve;
+var then;
+var nowDec;
+var nowBest;
+var nowWorst;
+var runing=0;
+var timeint;
+var i=0;
+var totalsec;
+var sec;
+var min;
+var subsec;
+var secdis;
+var mindis;
+var subsecdis;
+var datas=new Array()
+var nowSecondes;
+function getAv(st,ed)
+{
+	for(i=st;i<=ed;i++)
+	{
+		datas.join(" ")
+		
+	}
+}
+
+function stop(evt)
+{
+	if (runing==1 && evt.keyCode==32)
+	clearTimeout(timeint);
+}
+function toSeconds(dec)
+{	var Ms,sec
+	var tmpDec=dec.split(":")
+	if(tmpDec[0]*10/10>0)
+	{
+		Ms=tmpDec[0]*60
+		return(Ms+tmpDec[1]*10/10)
+	}else{
+		return(tmpDec[1]*10/10)
+		}
+	
+}
+
+function begin(evt)
+{
+	if (evt.keyCode==32)
+	{
+		if (runing==0){
+		then=new Date();
+		runing=1;
+		show();
+		}
+		else if (runing==1)
+			{
+				runing=2;
+			}
+			else 
+			{
+			ShowDatas(toSeconds(nowSeconds))
+			document.getElementById("watch").innerHTML="00:00.00";
+			runing=0;
+			
+			}
+	}
+}
+var a=0;
+function ShowDatas(dec)
+{
+	if(dec==0){return false}
+	var newDec=get2(dec)
+	datas.push(newDec)	//添加记录
+	
+	
+	SortDatas()	//排序得到最大最小值
+	ShowDetails()
+	spanBest.innerHTML="<b style=color:red>"+sec2minsec(nowBest)+"</b>"
+	spanWorst.innerHTML="<b>"+sec2minsec(nowWorst)+"</b>"
+	var tmp1=0;
+	for(i=0;i<datas.length;i++)
+	{
+		tmp1+=datas[i]
+	}
+	
+	spanAv.innerHTML="<b>"+sec2minsec(get2(tmp1/datas.length))+"</b>"
+	 
+}
+var bestAve=new Array();
+function sec2minsec(n)
+{       if (n>60)
+        {
+        var tmpmins=Math.floor(n/60);
+		var	tmpseconds=get2(n-tmpmins*60);
+		var tmpstring
+		if (tmpseconds<10)
+		{  tmpstring=tmpmins+":0"+tmpseconds;
+		}
+	   else  tmpstring=tmpmins+":"+tmpseconds;
+	 return tmpstring
+	 }
+	 else return n;
+}
+function ShowDetails()
+{
+if(datas.length>12){a=datas.length -12}
+var tmpTd="<table cellspacing=1 bgcolor=olive><tr align=center bgcolor=EEEEEE><th width=50>1<th width=50>2<th width=50>3<th width=50>4<th width=50>"
+	tmpTd+="5<td width=50>6<th width=50>7<th width=50>8<th width=50>9<th width=50>10<th width=50>11<th width=50>12</tr><tr bgcolor=white>";
+	for(i=a;i<(12+a);i++)
+	{
+		bestAve[i-a]=datas[i];//将当前12局成绩存入数组
+		tmpTd+="<td align=center>"
+		if(datas[i]==undefined){tmpTd+="-"}
+		else
+		{	
+			if(datas[i]==nowBest || datas[i]==nowWorst)
+			{   
+
+				tmpTd+=sec2minsec(datas[i])+"*"
+			}else
+			{  
+			  tmpTd+=sec2minsec(datas[i]); 
+			}
+		}	
+		tmpTd+="</td>"
+	}
+	tmpTd+="</tr></table>"
+	//alert(datas.join(","));
+	div1.innerHTML="";
+	div1.innerHTML=tmpTd;
+	rndCube();
+	document.focus();
+	
+}
+function show()
+{	var now=new Date();
+	diff=now.getTime()-then.getTime();
+	totalsec=Math.floor(diff/1000);
+	sec=totalsec%60;
+	if(sec<10)
+	{
+		secdis="0"+sec;
+		}
+		else
+		{
+		secdis=sec;
+	}
+	min=(totalsec-sec)/60;
+	
+	if (min<10)
+	{
+		mindis="0"+min;
+		}
+		else
+		{
+		mindis=min;
+	}
+	
+	subsec=Math.floor((diff%1000)/10);
+	
+	if (subsec<10)
+	{
+		subsecdis="0"+subsec;
+		}
+		else 
+		{
+		subsecdis=subsec;
+	}
+	nowSeconds=mindis+":"+secdis+"."+subsecdis;
+	document.getElementById("watch").innerHTML=nowSeconds;
+	timeint=setTimeout("show()",50)
+}
+function get2(dec) //取两位小数点
+{
+	return Math.round(dec*100)/100
+}
+ 
+function SortDatas()//最大最小值
+{
+	var tmpArr=new Array()
+	for(i=0;i<datas.length;i++)
+	{
+		tmpArr[i]=datas[i]
+	}
+	tmpArr.sort(function(a,b){ return a-b;})
+	nowBest=tmpArr[0]
+	nowWorst=tmpArr[tmpArr.length-1]
+	 ShowBestAv()
+}
+
+function mycls()
+{	 
+	clearTimeout(timeint);
+	nowSeconds="00:00:00";
+	runing=0;
+	datas=new Array(); 
+	ShowDatas(0);
+	ShowDetails();
+	document.getElementById("watch").innerHTML="00:00.00";
+	btn1.focus();
+	
+
+}
+
+function ShowBestAv()
+{
+	var av=0;
+		bestAve.sort();
+		if(bestAve[11]==undefined){return false}
+		for(i=1;i<bestAve.length-1;i++)
+		{
+			av+=bestAve[i];
+		}
+		spanBestAv.innerHTML=get2(av/10);
+		//alert(bestAve)
+
+}	
+</SCRIPT>
+
+<SCRIPT>
+function cancel()
+{   clearTimeout(timeint);
+
+	nowSeconds="00:00:00";
+	
+	runing=0;
+	btn1.focus();
+	rndCube();
+	document.getElementById("watch").innerHTML="00:00.00";
+	
+
+}
+function rndCube()
+{
+	var move="";
+	var rndMove=new Array("R","L","F","B","U","D")
+	var add=0;
+	var tmpRnd;
+	var arr=new Array();
+	while(true)
+	{	
+		if(add>=Max){break}
+		//tmpRnd=Math.round(Math.random()*5)
+		if(tmpRnd==arr[arr.length -1])
+		{	tmpRnd=Math.floor(Math.random()*6);
+		}
+		else
+		{	arr.push(tmpRnd)
+			add++
+		}
+	
+	}
+		for(i=0;i<arr.length;i++)
+		{
+			var tmp=Math.floor(Math.random()*5)
+			if(tmp==4)
+			{	move+=rndMove[arr[i]]+"2";}
+			else if(tmp==2 || tmp==3)
+			{	move+=rndMove[arr[i]]+"'";}
+            else 
+            {	move+=rndMove[arr[i]];}
+			move+=" ";
+		}
+		
+	
+		rndDiv.innerHTML=move;
+}
+
+</SCRIPT>
+</head>
+
+<BODY onkeydown=stop(event) onkeyup=begin(event) onload=rndCube()>
+
+<div class="title_bg2" style="font-size:12px;">
+  <div class="right_news">
+    	<Div class="title_bg">
+        <div style="width:200px; float:left;"><span style="width:31px; float:left; padding:0px 0px 0px 20px;"><img src="/common/images/jsq1.jpg" width="28" height="28" /></span>在线计时器</div>
+        <span class="back"><a href="javascript:history.back(-1);">返回</a></span>        </Div>
+        <div class="Rolling">
+        	<CENTER><br>
+<DIV id=watch style="FONT-WEIGHT: bold; FONT-SIZE: 48pt; FILTER: shadraw(x=1,y=1,color=black); WIDTH: 359px; COLOR: navy; FONT-FAMILY: Arial; POSITION: relative; HEIGHT: 80px; TEXT-ALIGN: center; left: 0px; top: 0px;">00:00.00</DIV>
+<P><FONT size=2><strong style="color: red">使用说明：</strong>用<FONT 
+color=#000080><B>空格</B></FONT>键<B>开始</B>(松开时触发)、<B>停止</B>(按下时触发)、<B>复位</B>(同时记录成绩)</FONT></P>
+<P><B><FONT color=#ff0000 size=2>注意：</FONT></B><FONT size=2>请先点击计时窗口空白处，使当前窗口处于活动状态。</FONT></P>
+<DIV id=rndDiv style="FONT: bold 12pt Arial"></DIV>　
+  <INPUT onclick=mycls(); type=button value=清除所有记录><INPUT onclick=cancel();div1.focus() type=button value=不记录此次成绩> 
+　<INPUT id=btn1 style="WIDTH: 0px; HEIGHT: 0px" onclick=document.focus type=button> 
+　 
+<DIV id=div1 style="margin-bottom:20px;">
+<TABLE cellSpacing=1 bgColor=olive>
+  <TBODY>
+  <TR align=middle bgColor=#eeeeee>
+    <TD width=50>1 
+    <TD width=50>2 
+    <TD width=50>3 
+    <TD width=50>4 
+    <TD width=50>5 
+    <TD width=50>6 
+    <TD width=50>7 
+    <TD width=50>8 
+    <TD width=50>9 
+    <TD width=50>10 
+    <TD width=50>11 
+    <TD width=50>12 </TD>
+  <TR align=middle bgColor=white>
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- 
+    <TD width=50>- </TD></TR></TBODY></TABLE></DIV>
+</CENTER>
+        </div>
+  </div>
+	</div>
+</body>
+</html>

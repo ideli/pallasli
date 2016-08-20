@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优教云综合教育公共服务平台</title>
+<link href="/work/css/login.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="/common/js/jquery-1.4.2.min.js"></script> 
+<script type="text/javascript">
+//================cookie begin====================
+var Cookies = {};   
+
+Cookies.set = function(name, value){   
+     var argv = arguments;   
+     var argc = arguments.length;   
+	 var expires = new Date((new Date()).getTime() + 10 * 60000000);
+     var path = (argc > 3) ? argv[3] : '/';   
+	 var domain = ".yjy100.cn";   
+     var secure = (argc > 5) ? argv[5] : false;   
+     document.cookie = name + "=" + escape (value) +   
+       ((expires == null) ? "" : ("; expires=" + expires.toGMTString())) +   
+       ((path == null) ? "" : ("; path=" + path)) +   
+       ((domain == null) ? "" : ("; domain=" + domain)) +   
+       ((secure == true) ? "; secure" : "");   
+};   
+
+
+Cookies.get = function(name){   
+    var arg = name + "=";   
+    var alen = arg.length;   
+    var clen = document.cookie.length;   
+    var i = 0;   
+    var j = 0;   
+    while(i < clen){   
+        j = i + alen;   
+        if (document.cookie.substring(i, j) == arg)   
+            return Cookies.getCookieVal(j);   
+        i = document.cookie.indexOf(" ", i) + 1;   
+        if(i == 0)   
+            break;   
+    }   
+	return "";   
+};   
+
+
+Cookies.clear = function(name) {   
+  if(Cookies.get(name)){   
+    var expdate = new Date();    
+    expdate.setTime(expdate.getTime() - (86400 * 1000 * 1));    
+    Cookies.set(name, "", expdate);    
+  }   
+};   
+  
+Cookies.getCookieVal = function(offset){   
+   var endstr = document.cookie.indexOf(";", offset);   
+   if(endstr == -1){   
+       endstr = document.cookie.length;   
+   }   
+   return unescape(document.cookie.substring(offset, endstr));   
+}; 
+
+//================cookie end====================
+document.domain="yjy100.cn";
+
+var api = frameElement.api, W = api.opener, cDG;
+		/*1：您的帐号已被停用，请与系统管理员联系!
+		  2：用户名或密码不正确!
+		  
+		  3：您的帐号还没有审核，请耐心等待，详询：4006-126-028!
+		  4：抱歉，您的帐号没有通过审核，详询：4006-126-028!
+		  5：抱歉，您的帐号已过期，请联系：4006-126-028!
+		  
+		  6：您所在学校帐号还没有审核，请耐心等待，不能登录!
+		  7：抱歉，您所在学校没有通过审核，不能登录!
+		  8：抱歉，您所在学校帐号已过期，不能登录！		  		 		
+		*/
+function loginIt(){
+   $.get("/home/myLogin.action?random=" + Math.random(),{accounts: $("#userName").val(),passWord: $("#passWord").val()}, function(data){
+        if (data==1){
+          alert("您的帐号已被停用，请与系统管理员联系！");
+          return false;
+        }else if (data==123456){
+        	top.$.dialog({title:'密码修改',content:'url:/index/resetpassword.html',lock:true,width:958,height:568});
+        	api.close();
+        }else if (data==2){
+          alert("您输入登录名或密码不正确！");
+          return false;
+        }else if (data==3){
+          alert("您的帐号还没有审核，请耐心等待，详询：4006-126-028!");
+          return false;
+        }else if (data==4){
+          alert("抱歉，您的帐号没有通过审核，详询：4006-126-028!");
+          return false;
+        }else if (data==5){
+          alert("抱歉，您的帐号已过期，请联系：4006-126-028!");
+          return false;
+        }else if (data==6){
+          alert("您所在学校帐号还没有审核，请耐心等待，不能登录!");
+          return false;
+        }else if (data==7){
+          alert("抱歉，您所在学校没有通过审核，不能登录!");
+          return false;
+        }else if (data==8){
+          alert("抱歉，您所在学校帐号已过期，不能登录！");
+          return false;
+        }else if (data==21){
+            alert("抱歉，该手机号绑定了多个账号，不能登录！");
+            return false;
+        }else if (data==22){
+            alert("抱歉，该邮箱绑定了多个账号，不能登录！");
+            return false;
+        }else if (data==23){
+            alert("抱歉，该身份证号绑定了多个账号，不能登录！");
+            return false;
+        }else{         
+          //api.opener.document.location.reload(); 
+          //api.close();
+           //自动登录
+		   if($("#autologin").val() == 1){
+		   		Cookies.set("autologin",$("#userName").val()+"*"+$("#passWord").val());
+		   }else{
+		   		Cookies.clear("autologin");
+		   }
+			top.document.location.reload(); 
+        }
+        
+      });
+}
+
+function  lo(){  
+	if(event.keyCode==13){  
+		loginIt();
+	}	 
+} 
+
+
+</script>
+</head>
+
+<body>
+  <div class="bk_nr">
+    <div class="input">
+    	<div class="user">用户名：</div><input name="userName" type="text" class="bk_input"  placeholder="账号/手机号/邮箱/身份证号"  id="userName" />
+    </div>
+    <div class="input">
+   	  <div class="user">密　码：</div><input name="passWord" type="password" class="bk_input" id="passWord" onKeyDown="javascript:lo();"/>
+    </div>
+    <div class="input_next">
+      <div class="next"><!-- 下次自动登录
+        <input name="checkbox" type="checkbox" id="checkbox" checked="checked" /> -->
+         <label for="autologin" onclick="autoset();"><input type="checkbox" id="autologin" value="0"/>下次自动登录 </label>     
+         <a href="http://www.yjy100.cn/getpassword/index.html" target="_blank">忘记密码</a>&nbsp;&nbsp;<a href="/schoolreg.action" target="_blank">立即注册</a>
+      </div>
+     </div>
+       <div class="input_next"><div class="next"><input type="button" value="登录" onclick="javascript:loginIt();" />　　　　　　<input type="button" value="取消"  onclick="api.close();" />
+    </div></div>
+  </div>
+  <script type="text/javascript">
+   			function autoset(){
+   				if($("#autologin").val() == "1"){
+   					$("#autologin").val("0");
+   					
+   				}else{
+   					$("#autologin").val("1");
+   				}
+   			}
+   			$(function(){
+   				var userS = Cookies.get("autologin");
+				if(userS !="" && userS != "undefined"){
+					var user = userS.split("*");
+					$("#userName").val(user[0]);
+					$("#passWord").val(user[1]);
+					$("label[for='autologin']").click();
+				}
+   			});
+   			
+   		</script>
+</body>
+</html>

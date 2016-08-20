@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>找回密码_安全中心-优教云综合教育公共服务平台</title>
+<link href="/getpassword/css/content.css" rel="stylesheet" type="text/css" />
+<link href="/getpassword/css/bdok.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="/common/lhgdialog/lhgdialog/jquery-1.7.2.min.js"></script>
+<script type ="text/javascript" src ="/common/js/AnalysisJson.js"></script>
+<script type ="text/javascript" src ="/common/js/login.js"></script>
+<script type="text/javascript" src="/common/lhgdialog/lhgdialog/lhgdialog.min.js"></script>
+<script>
+$(function(){
+	var $c = $("#count");
+	var s = setInterval(function(){
+		var v = parseInt($c.html());
+		if(v>0)$c.html(--v);
+		else {
+			location.href='/';
+			clearInterval(s);
+		}
+	},1000);
+});
+</script>
+</head>
+
+<body onload="javascript:checklogin();">
+<div id="head">
+<div class="login_top">
+ <script type ="text/javascript" src ="/common/js/tophtml.js"></script>
+</div>
+ </div>
+<div id="gpBar"><img src="/getpassword/images/logo.jpg"/></div>
+<div id="content" class="clearfix">
+	<h2 class="title01 mt20">找回密码</h2>
+    <div class="mt30 flow clearfix">
+        <dl>
+            <dt id="flow1" >
+                <span class="num">1</span>
+                输入帐号
+            </dt>
+            <dd>
+                <i class="iconG01 iconG01_1">&nbsp;</i>
+            </dd>
+            <dt id="flow2" >
+                <span class="num">2</span>
+                发送密码重置邮件</dt>
+      <dd>
+                <i class="iconG01 iconG01_1">&nbsp;</i>
+            </dd>
+            <dt id="flow3">
+                <span class="num">3</span>
+                重置密码
+            </dt>
+            <dd>
+                <i class="iconG01 iconG01_1">&nbsp;</i>
+            </dd>
+            <dt id="flow4" class="on">
+                <span class="num">4</span>
+                完成
+            </dt>
+        </dl>
+    </div>
+    <div class="mt30">
+           <div class="bdnr1">
+             <ul>
+               <li style="color:#6da500; font-size:18px; font-weight:bold ">重置密码成功！</li>
+                <li>密码已重置， <span style="color:#ff8100" id="count">5</span> 秒钟后系统自动回首页！</li>
+                <li><img src="/getpassword/images/hindex.jpg" style="cursor:pointer;" onclick="location.href='/'"/></li>
+             </ul>
+          </div>
+
+    </div>
+  
+</div>
+<div style="min-height:200px;"">&nbsp;</div>
+<script type ="text/javascript" src ="/getpassword/foot.js"></script>
+</body>
+</html>

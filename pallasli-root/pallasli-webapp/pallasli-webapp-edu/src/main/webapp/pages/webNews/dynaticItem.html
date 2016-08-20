@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>优教云综合教育公共服务平台</title>
+<link href="/index/css/style.css" rel="stylesheet" type="text/css">
+<link href="/index/css/download.css" rel="stylesheet" type="text/css">
+<link href="/index/css/dyinfo.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/common/lhgdialog/lhgdialog/jquery-1.7.2.min.js"></script>
+<script src="/index/js/index.jsindex.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="boxAll"> 
+	<!-- ！！！！！！！请注意！！！！！ 下面这一行是新变化！！！新增navHotline 这里是变化1/4 -->
+	<div class="main navHotline">
+		<div class="left leftL">
+			<div class="logo"><a href="/"><img src="/index/images/logo.jpg" width="325" height="50" alt="优教云综合教育公共服务平台"></a></div>
+			<!-- ！！！！！！！请注意！！！！！ 下面这2行是新变化！！！新增 热线电话 和 云端书城 这里是变化2/4 -->
+			<h3 class="hotline">热线电话：40061260128</h3>
+			<div class="nav"> <a href="/">首页</a> <a href="/service/index.html">服务中心</a> <a href="/downcenter.action">下载专区</a> <a href="/index/dt/yddt.html">云端动态</a> </div>
+			
+		</div>
+		<div class="right rightR">
+			<div class="others">
+				<a href="/community/course/CourseList.action" target="_blank">淘课社区</a> | <a href="/work/searchActivity.action" target="_blank">作品参赛</a> | <a href="http://tsg.yjy100.cn/" target="_blank">云端书城</a>	</div>		
+		</div>
+		<span class="clear"></span>
+	</div>
+</div>
+
+<div class="downloadAllBg">
+	<div class="main download">
+        <!-- 图片 -->
+    	<div class="showBox sb_pic">
+        	<table width="100%" cellpadding="0" cellspacing="0">
+            	<tr>
+                	<th valign="top" width="640">
+                    	<div class="sbCon">
+                            <div class="pic">
+                            	<img width="630" src="/index/dt/one/1.JPG" alt="" />
+                            </div>
+                        </div>
+                        <div class="num">
+                        	<a class="on" title="/index/dt/one/1.JPG" href="javascript:void(null)" name="河北云端教学观摩会开幕式">1</a>
+                            <a title="/index/dt/one/2.JPG" href="javascript:void(null)" name="中央电教馆丁新副馆长，河北省教育厅闫春来副厅长、巡视员，全国NOC组委会宋成栋主任，教育部全国督学、河北省创新学会会长，原教育厅副厅长韩清林，河北省电教馆李淮馆长等领导参加会议；上海师范大学黎加厚教授做点评；">2</a>
+                            <a title="/index/dt/one/4.JPG" href="javascript:void(null)" name="河北省电化教育馆李淮馆长主持会议">3</a>
+                            <a title="/index/dt/one/8.JPG" href="javascript:void(null)" name="中央电教馆丁新付馆长讲话">4</a>
+                            <a title="/index/dt/one/5.JPG" href="javascript:void(null)" name="河北省教育厅闫春来副厅长做关于推进河北省云端教学的报告">5</a>
+                            <a title="/index/dt/one/10.JPG" href="javascript:void(null)" name="教育部全国督学、河北省创新学会会长，原教育厅副厅长韩清林先生。">6</a>
+                            <a title="/index/dt/one/7.JPG" href="javascript:void(null)" name="讲解员在会上讲云端">7</a>
+                            <a title="/index/dt/one/9.JPG" href="javascript:void(null)" name="上海师范大学黎家厚教授讲微课">8</a>
+                            <a title="/index/dt/one/6.JPG" href="javascript:void(null)" name="讲解员同与会者云端互动">9</a>
+                            <a title="/index/dt/one/3.JPG" href="javascript:void(null)" name="与会人员参与互动课堂">10</a>
+                        </div>
+                    </th>
+                    <td valign="top">
+                    	<h4 class="sbTitle">“河北云端教学观摩会”在鹿泉一中召开</h4>
+                        <p class="desc" id="ms">河北云端教学观摩会开幕式</p>
+                        <p class="date" align="right">2013-04-27</p>
+                        <!--<p class="back">
+                        	<a href="#" onclick="history.go(-1)"><<返回</a>
+                        </p>-->
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- 图片 -->
+    </div>
+</div>
+
+<div class="bottom">
+	<div class="main">
+		<p>Copyright © 2012-2014 yjy100.cn, Inc. All Rights Reserved 冀ICP备12007424号<br>
+			优教云综合教育公共服务平台 
+	</div>
+</div>
+
+<script type="text/javascript">
+//picSwitch
+$(document).ready(function(){
+	$(".sb_pic").find('.num').find('a').mouseover(function(){
+		$(".sb_pic").find('.num').find('a').removeClass('on');
+		$(this).addClass('on');
+		var largePath = $(this).attr("title");
+        var sm = $(this).attr("name");
+		$(".sb_pic").find('.pic').find('img').attr({ src: largePath });
+        $("#ms").html(sm);
+       
+        
+	});
+});
+</script>
+</body>
+</html>
