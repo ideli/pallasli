@@ -13,3 +13,11 @@ pallasli-root/**/node_modules/*
 
 pallasli-root/pallasli-study/log/*
  
+
+
+
+
+
+*.png
+
+*.gif
