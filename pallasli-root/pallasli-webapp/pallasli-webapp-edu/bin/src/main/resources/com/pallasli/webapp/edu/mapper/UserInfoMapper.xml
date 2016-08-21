@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pallasli.webapp.edu.mapper.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.pallasli.webapp.edu.model.UserInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_caption" property="userCaption" jdbcType="VARCHAR" />
+    <result column="idcards" property="idcards" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="birth_place" property="birthPlace" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="telphone" property="telphone" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="registered_place" property="registeredPlace" jdbcType="VARCHAR" />
+    <result column="present_place" property="presentPlace" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, user_caption, idcards, sex, birth_place, qq, telphone, mobile, registered_place, 
+    present_place, birthday
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.pallasli.webapp.edu.model.UserInfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.pallasli.webapp.edu.model.UserInfoExample" >
+    delete from user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.pallasli.webapp.edu.model.UserInfo" >
+    insert into user_info (id, user_id, user_caption, 
+      idcards, sex, birth_place, 
+      qq, telphone, mobile, 
+      registered_place, present_place, birthday
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userCaption,jdbcType=VARCHAR}, 
+      #{idcards,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{birthPlace,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{telphone,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{registeredPlace,jdbcType=VARCHAR}, #{presentPlace,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pallasli.webapp.edu.model.UserInfo" >
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userCaption != null" >
+        user_caption,
+      </if>
+      <if test="idcards != null" >
+        idcards,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthPlace != null" >
+        birth_place,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="telphone != null" >
+        telphone,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="registeredPlace != null" >
+        registered_place,
+      </if>
+      <if test="presentPlace != null" >
+        present_place,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCaption != null" >
+        #{userCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="idcards != null" >
+        #{idcards,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="birthPlace != null" >
+        #{birthPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredPlace != null" >
+        #{registeredPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="presentPlace != null" >
+        #{presentPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.pallasli.webapp.edu.model.UserInfoExample" resultType="java.lang.Integer" >
+    select count(*) from user_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update user_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userCaption != null" >
+        user_caption = #{record.userCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idcards != null" >
+        idcards = #{record.idcards,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=TINYINT},
+      </if>
+      <if test="record.birthPlace != null" >
+        birth_place = #{record.birthPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qq != null" >
+        qq = #{record.qq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telphone != null" >
+        telphone = #{record.telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mobile != null" >
+        mobile = #{record.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registeredPlace != null" >
+        registered_place = #{record.registeredPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.presentPlace != null" >
+        present_place = #{record.presentPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update user_info
+    set id = #{record.id,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      user_caption = #{record.userCaption,jdbcType=VARCHAR},
+      idcards = #{record.idcards,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=TINYINT},
+      birth_place = #{record.birthPlace,jdbcType=VARCHAR},
+      qq = #{record.qq,jdbcType=VARCHAR},
+      telphone = #{record.telphone,jdbcType=VARCHAR},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      registered_place = #{record.registeredPlace,jdbcType=VARCHAR},
+      present_place = #{record.presentPlace,jdbcType=VARCHAR},
+      birthday = #{record.birthday,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pallasli.webapp.edu.model.UserInfo" >
+    update user_info
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userCaption != null" >
+        user_caption = #{userCaption,jdbcType=VARCHAR},
+      </if>
+      <if test="idcards != null" >
+        idcards = #{idcards,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="birthPlace != null" >
+        birth_place = #{birthPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null" >
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredPlace != null" >
+        registered_place = #{registeredPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="presentPlace != null" >
+        present_place = #{presentPlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pallasli.webapp.edu.model.UserInfo" >
+    update user_info
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_caption = #{userCaption,jdbcType=VARCHAR},
+      idcards = #{idcards,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      birth_place = #{birthPlace,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      telphone = #{telphone,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      registered_place = #{registeredPlace,jdbcType=VARCHAR},
+      present_place = #{presentPlace,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
