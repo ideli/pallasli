@@ -1,8 +1,8 @@
 **/.project
 **/.classpath
-**/.settings/*
+**/.settings/**
 
-**/target/*
+**/target/**
 
 *.class
 
@@ -14,10 +14,3 @@ pallasli-root/**/node_modules/*
 pallasli-root/pallasli-study/log/*
  
 
-
-
-
-
-*.png
-
-*.gif
