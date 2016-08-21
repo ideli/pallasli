@@ -1,0 +1,77 @@
+﻿@charset "utf-8";
+/* CSS Document */
+@import url(common.css);
+
+/* ------------------------------------------------------- *
+ * login_top
+ * ------------------------------------------------------- */
+#head .login_top {
+	background-image:url(/getpassword/images/top_login.jpg);
+	background-repeat:repeat-x;
+	line-height:28px;
+}
+#head .top {
+	width:960px;
+	margin:auto;
+	font-size:12px;
+	color:#666666;
+	height: 30px;
+}
+#head .login {
+	width:450px;
+	float:left;
+	height:30px;
+	text-decoration:none;
+}
+#head .login_logo {
+	width:136px;
+	float:left;
+}
+#head .login a {
+	color:#666666;
+	text-decoration:none;
+}
+#head .login a:hover {
+	color:#0066CC;
+	text-decoration:none;
+	cursor: pointer;
+}
+#head .Collection {
+	width:500px;
+	float:right;
+	text-align:right;
+	text-decoration:none;
+}
+#head .Collection a {
+	color:#666666;
+	text-decoration:none;
+}
+/* ------------------------------------------------------- *
+ * head
+ * ------------------------------------------------------- */
+#gpBar{
+	margin:20px auto;
+	width:900px;
+}
+
+/* ------------------------------------------------------- *
+ * content
+ * ------------------------------------------------------- */
+#content {
+	margin:0 auto;
+	width:860px;
+	border-top:1px solid #dedede;
+	padding:20px;
+	background-color:#f8f8f8;
+}
+/* ------------------------------------------------------- *
+ * foot
+ * ------------------------------------------------------- */
+#foot{
+	margin-top:20px;
+}
+#foot p{
+	text-align:center;
+	color:#999;
+}
+

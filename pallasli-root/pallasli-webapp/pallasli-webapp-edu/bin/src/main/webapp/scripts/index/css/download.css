@@ -1,0 +1,19 @@
+/* appCenter @St. 2013-03-19 */
+.downloadAllBg { width: 100%; background: #FFF url(../images/appCenterAllBg.jpg) center top no-repeat; }
+.download { background: url(../images/downloadMainBg.jpg) center top no-repeat; }
+.download .title { height: 53px; margin: 0; padding: 0; }
+/*.appCenter .title .t { float: left; width: 200px; display: none; }*/
+.download .title .t { float: left; width: 280px; color:#FF9900;font-size:18px;padding-left:20px;padding-top:20px;  }
+.download .title img{padding-top:3px;padding-right:2px;padding-bottom:3px;border:0}
+.download .btnBox ul li{float:left;padding:10px; font-size:14px;}
+.download .btnList ul li{float:left;padding:10px; font-size:14px; width:215px;}
+
+
+.download .title .txt { display: block; text-align: right; font-size: 16px; line-height: 24px; color: #333; padding: 27px 18px 0 0; width: 400px; float: right; }
+.download .btnBox { text-align: center; }
+.nav {padding: 25px 0px 10px;}
+
+.rightR {width: 355px; margin-top: 85px; position: relative;}
+.others {	top: -70px; width: 340px; height: 30px; text-align: right; right: 0px; color: rgb(204, 204, 204); padding-right: 15px; position: absolute;}
+.others a {	color: rgb(204, 204, 204);}
+.others a:hover {	color: rgb(255, 255, 255); text-decoration: none;}

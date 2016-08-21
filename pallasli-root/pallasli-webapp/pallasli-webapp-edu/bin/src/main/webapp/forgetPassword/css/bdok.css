@@ -1,0 +1,165 @@
+@charset "utf-8";
+/* CSS Document */
+*{ 
+    padding:0; 
+    margin:0; 
+} 
+/*--绑定邮箱弹框--*/
+ul{
+   margin-top:15px;
+   margin-bottom:18px;
+   list-style-type:none;
+}
+
+#bdok
+{
+   width:463px;
+   margin:0 auto;
+   padding:0;
+   word-wrap: break-word;
+   white-space: normal;
+   border:2px solid #f4f4f4;
+}
+
+.bdbiaoti{
+    background-image:url(../images/save01.jpg);
+	background-repeat:repeat-x;
+    height:38px;
+	font-size: 12px;
+	color: #666;
+	line-height: 38px;
+	font-weight: bold;
+}
+.guanbi {
+    margin-right:15px;
+    margin-top:8px;
+	float:right; 
+}
+
+.bdnr{
+width:90%;
+margin:0 auto;
+	font-size: 12px;
+	color: #666666;
+	margin-bottom:20px;
+	
+}
+.bdnr li{
+height:35px;
+}
+
+.bdnr1{
+width:98%;
+margin:0 auto;
+	font-size: 12px;
+	color: #666666;
+	margin-bottom:20px;
+	
+}
+.bdnr1 li{
+height:40px;}
+
+
+/*--激活邮件--*/
+
+#lan{
+margin:0 auto;
+padding:0;
+width:734px;
+border:2px solid #4e9dd5;
+}
+.lanbanner{
+height:124px;
+background-image:url(../images/lan_01.jpg);
+background-repeat:repeat-x;
+}
+
+.lanzi{
+
+font-size:12px;
+color:#fff;
+line-height:30px;
+margin-left:20px;
+}
+
+.lanlogo{
+margin-top:20px;
+margin-left:20px;
+
+}
+.lanlogo span{
+margin-left:10px;
+color:#FFFFFF;
+display:inline;
+font-family:"黑体";
+font-size:26px;
+font-weight:bold;
+}
+
+.cheng{
+margin:15px  20px;
+height:26px;
+border:1px solid #f7ecce;
+background-color:#fff8e5;
+font:"宋体";
+font-size:14px;
+color:#f98639;
+text-align:center;
+line-height:26px;
+}
+.cheng2{
+margin:15px 18px 70px 20px;
+
+font:"宋体";
+font-size:12px;
+text-align:left;
+line-height:26px;
+}
+
+/*--2中找回密码方式--*/
+
+.2zhong{
+
+width:350px;
+height:200px;
+float:left;}
+.zhong1{
+margin-left:30px;
+height:100px;}
+
+.clearfix{
+display:block;
+overflow:hidden;}
+
+.email0{
+margin-top:30px;
+margin-left:15px;
+width:400px;
+height:200px;
+float:left;
+}
+.email1{
+margin-top:30px;
+width:400px;
+height:200px;
+float:right;
+}
+.emailtu{
+width:70px;
+float:left;
+height:100px;
+margin:15px 15px 0 20px;
+}
+.emailtu2{
+width:35px;
+float:left;
+height:100px;
+margin:15px 15px 0 20px;
+}
+
+.email0 li{
+height:30px;
+}
+.email1 li{
+height:30px;
+}

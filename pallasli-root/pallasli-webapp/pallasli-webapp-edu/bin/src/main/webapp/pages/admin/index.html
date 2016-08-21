@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="import" href="/pages/admin/import.html"/>
+</head>
+<body>
+<div>
+	<div class="admin_left_navigation">
+		<ul>
+			<li class="admin_menu"><input name="resourceManager" type="button" value="资源管理" /></li>
+			<li class="admin_menu"><input name="authorityManager" type="button" value="权限管理" /></li>
+			<li class="admin_menu"><input name="roleManager" type="button" value="角色管理" /></li>
+			<li class="admin_menu"><input name="orgnizationManager" type="button" value="机构管理" /></li>
+			<li class="admin_menu"><input name="userManager" type="button" value="用户管理" /></li>
+			<li class="admin_menu"><input name="dataAuthorityManager" type="button" value="数据权限管理" /></li>
+			<li class="admin_menu"><input name="loginLog" type="button" value="登录日志" /></li>
+			<li class="admin_menu"><input name="operationLog" type="button" value="操作日志" /></li>
+		</ul>
+	</div>
+	<div class="admin_main">
+	
+	<div>
+</div>
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".admin_menu input").click(function(){
+		var name=$(this).attr("name");
+		//$(".admin_main").load("/pages/admin/"+name+".html",function(result){
+		//	console.log(result)
+		//});
+		pallasli.loadHtml($(".admin_main"),"/pages/admin/"+name+".html","/scripts/admin/"+name+".js");
+	});
+});
+</script>
+</html>

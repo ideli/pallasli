@@ -1,0 +1,212 @@
+@charset "utf-8";
+/* CSS Document */
+
+.downloadAllBg{
+	padding-top:20px;
+	padding-bottom:20px;	
+}
+
+/* -------------------------------------------- *
+ * 云端动态-list
+ * -------------------------------------------- */
+.tag a{
+	display:inline-block;
+	padding:5px 20px;
+	background-color:#FF9900;
+	font-weight:bold;
+	color:#ffffff;
+	border:2px solid #fff;
+}
+.tag a:hover{
+	text-decoration:none;
+	background-color:#FFBC5D;
+}
+.tag a:visited{
+	color:#fff;	
+}
+h3{
+	margin-bottom:10px;
+	margin-top:20px;
+	border-left:3px solid #000;
+	padding-left:6px;
+	font-size:16px;
+	font-weight:bold;
+	line-height:16px;
+	color:#000;
+	font-family:"微软雅黑";
+}
+.item{
+	float:left;
+	width:284px;
+	padding:15px;
+	border:1px solid #E5FAFF;
+}
+.active{
+	position:relative;
+	border-color:#FFCB7E;
+	background-color:#FFF7E8;
+}
+.item table{
+	table-layout:fixed;	
+}
+.item th a{
+	display:block;
+	width:80px;
+}
+.item th img{
+	width:80px;
+	border:2px solid #FFF;
+}
+.item h4{
+	height:50px;
+	line-height:16px;
+	overflow:hidden;
+}
+.item h4 label{
+	font-size:12px;
+	font-weight:bold;
+	color:#333;
+}
+.item h4 .date{
+	color:#666;	
+}
+.item td a{
+	color:#36C;
+}
+.videoList .item th img{
+	width:140px;
+}
+.videoList .item h4{
+	height:82px;
+	line-height:16px;
+	overflow:hidden;
+}
+.resList{
+	line-height:28px;	
+}
+.resList a{
+	display:inline-block;
+	padding-right:20px;
+	padding-left:20px;
+	background:url(../images/sign01.gif) no-repeat left center;
+	color:#333;
+	font-size:14px;
+}
+.resList a:hover{
+	color:#FF9900;
+	text-decoration:underline;
+	background-image:url(../images/sign02.gif);
+}
+.previewShowWindow {
+	display:none;
+	position:absolute;
+	border:2px solid #333;
+	padding:5px;
+	background-color:#fff;
+	color:#fff;
+	text-align:center;
+	z-index:999;
+}
+/* -------------------------------------------- *
+ * 云端动态-detail
+ * -------------------------------------------- */
+/* sb_video
+ * ----------------------------- */
+.showBox table{
+	table-layout:fixed;	
+}
+.showBox table td{
+	padding-left:15px;	
+}
+.showBox table td .back a{
+	color:#0066cc;	
+}
+.sb_video .sbCon{
+	padding:5px;
+	background-color:#000;
+}
+.sb_video .sbCon .video{
+	width:630px;
+	overflow:hidden;
+}
+.sb_video .sbTitle{
+	border-bottom:1px solid #fff;
+	padding-bottom:15px;
+	color:#036;
+	text-align:left;
+	font-size:16px;
+}
+.sb_video .desc{
+	margin-top:20px;
+	color:#333;
+	font-size:14px;
+}
+.sb_video .date{
+	margin-top:10px;
+	color:#333;	
+}
+/* sb_pic
+ * ----------------------------- */
+.sb_pic .sbCon{
+	border:1px solid #ccc;
+	padding:4px;
+	background-color:#fff;
+}
+.sb_pic .sbCon .video{
+	width:630px;
+	overflow:hidden;
+}
+.sb_pic .sbTitle{
+	border-bottom:1px solid #fff;
+	padding-bottom:15px;
+	color:#036;
+	text-align:left;
+	font-size:16px;
+}
+.sb_pic .desc{
+	margin-top:20px;
+	color:#333;
+	font-size:14px;
+}
+.sb_pic .date{
+	margin-top:10px;
+	color:#333;	
+}
+.sb_pic .num a{
+	display:inline-block;
+	padding:5px 20px;
+	background-color:#ccc;
+	color:#333;
+	font-size:14px;
+}
+.sb_pic .num a.on{
+	background-color:#FF9900;
+	color:#fff;
+	text-decoration:none;
+}
+/* sb_zl
+ * ----------------------------- */
+.sb_zl .sbCon{
+	padding:5px;
+	background-color:#fff;
+}
+.sb_zl .sbCon .video{
+	width:630px;
+	overflow:hidden;
+}
+.sb_zl .sbTitle{
+	border-bottom:1px solid #fff;
+	padding-bottom:15px;
+	color:#036;
+	text-align:left;
+	font-size:16px;
+}
+.sb_zl .desc{
+	margin-top:20px;
+	color:#333;
+	font-size:14px;
+}
+.sb_zl .date{
+	margin-top:10px;
+	color:#333;	
+}

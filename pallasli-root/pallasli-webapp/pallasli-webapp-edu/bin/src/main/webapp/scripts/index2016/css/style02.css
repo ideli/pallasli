@@ -1,0 +1,23 @@
+@charset "utf-8";
+/* CSS Document */
+body{ background:url(../images/appCenterAllBg.jpg) top center no-repeat;}
+.main02{width:960px; margin:30px auto 0 auto;}
+.page_tit{font-size:18px; font-weight:bold;color:#0672bf;border-left:5px solid #0672bf;padding-left:12px;}
+.page_info{ border:1px solid #d2d2d2; background-color:#fff; min-height:400px;margin-top:15px;}
+.news_list{}
+.news_list ul li{ padding:15px;height:60px; border-bottom:1px solid #ddd;}
+.news_list ul li img{ float:left; padding:1px; background-color:#fff; border:1px solid #d2d2d2;}
+.news_list .yjdt_tit{ width:650px;}
+.news_list .time{ float:right; color:#999; width:100px; font-size:14px; text-align:center;}
+.news_list .yjdt_text{width:650px; height:40px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+
+.paging{ text-align:center;font-size:14px;padding:30px 0;}
+.paging a{ color:#444;margin:0 5px;}
+.paging a.current{color:#048de6; font-weight:bold;}
+
+.news{padding:20px;}
+.news_tit{ text-align:center; font-size:18px;margin-top:30px; font-weight:bold;}
+.news_intro{ text-align:center;padding:15px 0;color:#999;border-bottom:1px solid #ddd;}
+.news_intro span{margin:0 5px;}
+.news_text{ line-height:24px;margin-top:20px;}
+
