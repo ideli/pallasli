@@ -94,55 +94,47 @@ public class DSATest {
 
 		// 分别保存在 myprikey.dat 和 mypubkey.dat 中 , 以便下次不在生成
 		// ( 生成密钥对的时间比较长
-		java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(
-				new java.io.FileOutputStream("myprikey.dat"));
+		java.io.ObjectOutputStream out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("myprikey.dat"));
 		out.writeObject(prikey);
 		out.close();
-		out = new java.io.ObjectOutputStream(new java.io.FileOutputStream(
-				"mypubkey.dat"));
+		out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("mypubkey.dat"));
 		out.writeObject(pubkey);
 		out.close();
 		// 用他私人密钥 (prikey) 对他所确认的信息 (info) 进行数字签名产生一个签名数组
 		// 从文件中读入私人密钥 (prikey)
-		java.io.ObjectInputStream in = new java.io.ObjectInputStream(
-				new java.io.FileInputStream("myprikey.dat"));
+		java.io.ObjectInputStream in = new java.io.ObjectInputStream(new java.io.FileInputStream("myprikey.dat"));
 		PrivateKey myprikey = (PrivateKey) in.readObject();
 		in.close();
 		System.out.println(myprikey.getAlgorithm());
 		System.out.println(myprikey.getFormat());
 		System.out.println(new String(myprikey.getEncoded(), "UTF-8"));
 		// 初始一个 Signature 对象 , 并用私钥对信息签名
-		java.security.Signature signet = java.security.Signature
-				.getInstance("DSA");
+		java.security.Signature signet = java.security.Signature.getInstance("DSA");
 		signet.initSign(myprikey);
 		String myinfo = "加密的信息";
 		signet.update(myinfo.getBytes());
 		byte[] signed = signet.sign();
 		// 把信息和签名保存在一个文件中 (myinfo.dat)
-		out = new java.io.ObjectOutputStream(new java.io.FileOutputStream(
-				"myinfo.dat"));
+		out = new java.io.ObjectOutputStream(new java.io.FileOutputStream("myinfo.dat"));
 		out.writeObject(myinfo);
 		out.writeObject(signed);
 		out.close();
 		// 把他的公钥的信息及签名发给其它用户
 		// 其他用户用他的公共密钥 (pubkey) 和签名 (signed) 和信息 (info) 进行验证是否由他签名的信息
 		// 读入公钥
-		in = new java.io.ObjectInputStream(new java.io.FileInputStream(
-				"mypubkey.dat"));
+		in = new java.io.ObjectInputStream(new java.io.FileInputStream("mypubkey.dat"));
 		pubkey = (PublicKey) in.readObject();
 		in.close();
 		//
 		// 读入签名和信息
-		in = new java.io.ObjectInputStream(new java.io.FileInputStream(
-				"myinfo.dat"));
+		in = new java.io.ObjectInputStream(new java.io.FileInputStream("myinfo.dat"));
 		String info = (String) in.readObject();
 		signed = (byte[]) in.readObject();
 		in.close();
 		System.out.println(info);
 		//
 		// 初始一个 Signature 对象 , 并用公钥和签名进行验证
-		java.security.Signature signetcheck = java.security.Signature
-				.getInstance("DSA");
+		java.security.Signature signetcheck = java.security.Signature.getInstance("DSA");
 		signetcheck.initVerify(pubkey);
 		signetcheck.update(info.getBytes());
 		if (signetcheck.verify(signed)) {
@@ -153,8 +145,7 @@ public class DSATest {
 		byte[] bobEncodedPubKey = pubkey.getEncoded(); // 生成编码
 		// 传送二进制编码
 		// 以下代码转换编码为相应 key 对象
-		X509EncodedKeySpec bobPubKeySpec = new X509EncodedKeySpec(
-				bobEncodedPubKey);
+		X509EncodedKeySpec bobPubKeySpec = new X509EncodedKeySpec(bobEncodedPubKey);
 		KeyFactory keyFactory = KeyFactory.getInstance("DSA");
 		PublicKey bobPubKey = keyFactory.generatePublic(bobPubKeySpec);
 		// 对于 Private key 是用 PKCS#8 编码 , 例码如下 :
@@ -167,18 +158,4 @@ public class DSATest {
 
 	}
 
-	public String byte2hex(byte[] b) {
-		String hs = "";
-		String stmp = "";
-		for (int n = 0; n < b.length; n++) {
-			stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-			if (stmp.length() == 1)
-				hs = hs + "0" + stmp;
-			else
-				hs = hs + stmp;
-			if (n < b.length - 1)
-				hs = hs + ":";
-		}
-		return hs.toUpperCase();
-	}
 }

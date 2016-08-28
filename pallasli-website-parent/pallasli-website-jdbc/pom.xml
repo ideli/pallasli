@@ -16,5 +16,10 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.pallasli.base</groupId>
+			<artifactId>base.utils</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

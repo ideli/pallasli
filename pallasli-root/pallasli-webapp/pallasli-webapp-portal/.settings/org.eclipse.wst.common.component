@@ -4,27 +4,6 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="pallasli-chat-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-chat/pallasli-chat">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-basic-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-basic/pallasli-basic">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-web-basic-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-web-basic/pallasli-web-basic">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-utils-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-utils/pallasli-utils">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-orgnization-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-orgnization/pallasli-orgnization">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-jdbc-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-jdbc/pallasli-jdbc">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="pallasli-study-mybatis-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pallasli-study-mybatis/pallasli-study-mybatis">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="pallasli-webapp-portal"/>
         <property name="java-output-path" value="/pallasli-webapp-portal/target/classes"/>
     </wb-module>

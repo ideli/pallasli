@@ -65,25 +65,10 @@ public class DESTest {
 		// 对于密钥的保存各传送可使用对象流或者用二进制编码 , 相关参考代码如下
 		deskey = keygen.generateKey();
 		byte[] desEncode = deskey.getEncoded();
-		javax.crypto.spec.SecretKeySpec destmp = new javax.crypto.spec.SecretKeySpec(
-				desEncode, "DES");
+		javax.crypto.spec.SecretKeySpec destmp = new javax.crypto.spec.SecretKeySpec(desEncode, "DES");
 		SecretKey mydeskey = destmp;
 		System.out.println(mydeskey.getEncoded());
 
 	}
 
-	public static String byte2hex(byte[] b) {
-		String hs = "";
-		String stmp = "";
-		for (int n = 0; n < b.length; n++) {
-			stmp = (java.lang.Integer.toHexString(b[n] & 0XFF));
-			if (stmp.length() == 1)
-				hs = hs + "0" + stmp;
-			else
-				hs = hs + stmp;
-			if (n < b.length - 1)
-				hs = hs + ":";
-		}
-		return hs.toUpperCase();
-	}
 }

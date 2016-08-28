@@ -9,12 +9,6 @@ import org.apache.zookeeper.ZooDefs.Ids;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * TODO
- * 
- * @author cuiran
- * @version TODO
- */
 public class ZooKeeperOperator extends AbstractZooKeeper {
 
 	private static Logger log = LoggerFactory.getLogger(ZooKeeperOperator.class.getName());
