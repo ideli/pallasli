@@ -17,9 +17,9 @@ public class ZHConverterUtilsTest {
 	public void convert()
 
 	{
-		String a = new ZHConverterUtils(propertyFiles[ZHConverterUtils.TRADITIONAL]).convert("应该");
+		String a = new ZHConverterUtils(propertyFiles[ZHConverterUtils.TRADITIONAL]).convert("应该應該");
 		System.out.println(a);
-		a = new ZHConverterUtils(propertyFiles[ZHConverterUtils.SIMPLIFIED]).convert("應該");
+		a = new ZHConverterUtils(propertyFiles[ZHConverterUtils.SIMPLIFIED]).convert("應該应该");
 		System.out.println(a);
 	}
 }

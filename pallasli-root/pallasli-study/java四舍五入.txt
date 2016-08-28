@@ -1,58 +1,37 @@
 目前 Java 支持7中舍入法：
 
 1、 ROUND_UP：远离零方向舍入。向绝对值最大的方向舍入，只要舍弃位非0即进位。
-
 2、 ROUND_DOWN：趋向零方向舍入。向绝对值最小的方向输入，所有的位都要舍弃，不存在进位情况。
-
 3、 ROUND_CEILING：向正无穷方向舍入。向正最大方向靠拢。若是正数，舍入行为类似于 ROUND_UP，若为负数，舍入行为类似于 ROUND_DOWN。 Math.round() 方法就是使用的此模式。
-
 4、 ROUND_FLOOR：向负无穷方向舍入。向负无穷方向靠拢。若是正数，舍入行为类似于 ROUND_DOWN；若为负数，舍入行为类似于 ROUND_UP。
-
 5、 HALF_UP：最近数字舍入(5进)。这是我们最经典的四舍五入。
-
 6、 HALF_DOWN：最近数字舍入(5舍)。在这里5是要舍弃的。
-
 7、 HAIL_EVEN：银行家舍入法。
 
 提到四舍五入那么保留位就必不可少了，在 Java 运算中我们可以使用多种方式来实现保留位。
 
 保留位
 方式一：四舍五入
-
-
     double   f   =   111231.5585;
     BigDecimal   b   =   new   BigDecimal(f);
     double   f1   =   b.setScale(2,   RoundingMode.HALF_UP).doubleValue();
 在这里使用 BigDecimal ，并且采用 setScale 方法来设置精确度，同时使用 RoundingMode.HALF_UP 表示使用最近数字舍入法则来近似计算。在这里我们可以看出 BigDecimal 和四舍五入是绝妙的搭配。
 
 方式二：
-
-
     java.text.DecimalFormat   df   =new   java.text.DecimalFormat(”#.00″);
     df.format(你要格式化的数字);
 例：new java.text.DecimalFormat(”#.00″).format(3.1415926)
-
 .00 表示两位小数 #.0000四位小数 以此类推…
 
 方式三：
-
-
     double d = 3.1415926;
-
     String result = String .format(”%.2f”);
-
     %.2f %. 表示 小数点前任意位数   2 表示两位小数 格式后的结果为f 表示浮点型。
 方式四：
 
 此外如果使用 struts 标签做输出的话，有个 format 属性,设置为 format=”0.00″就是保留两位小数
-
-例如：
-
-
+例如
     <bean:write name="entity" property="dkhAFSumPl"  format="0.00" />
-
     或者
-
     <fmt:formatNumber type="number" value="${10000.22/100}" maxFractionDigits="0"/>
-
     maxFractionDigits表示保留的位数
