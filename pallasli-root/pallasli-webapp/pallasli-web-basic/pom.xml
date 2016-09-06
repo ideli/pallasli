@@ -223,11 +223,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>pallasli-xmljson</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>pallasli-orgnization</artifactId>
 			<version>${project.version}</version>
 		</dependency>

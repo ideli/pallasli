@@ -10,6 +10,10 @@ import com.pallasli.sql.mybatis.MyBatisGeneratorTool;
  */
 public class Generate {
 	public static void main(String[] args) {
-		MyBatisGeneratorTool.run();
+		try {
+			MyBatisGeneratorTool.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

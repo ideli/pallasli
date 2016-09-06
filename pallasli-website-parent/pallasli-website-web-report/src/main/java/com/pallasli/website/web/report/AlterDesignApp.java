@@ -49,8 +49,9 @@ public class AlterDesignApp extends AbstractSampleApp {
 	 *
 	 */
 	public static void main(String[] args) throws JRException {
-		// new AlterDesignApp().fill();
-		// new AlterDesignApp().pdf();
+		new AlterDesignApp().fill();
+		new AlterDesignApp().pdf();
+		args = new String[] { "pdf", "fill", "test", "print" };
 		main(new AlterDesignApp(), args);
 	}
 
@@ -68,7 +69,7 @@ public class AlterDesignApp extends AbstractSampleApp {
 	 */
 	public void fill() throws JRException {
 		long start = System.currentTimeMillis();
-		File sourceFile = new File("build/reports/AlterDesignReport.jasper");
+		File sourceFile = new File("src/main/resources/AlterDesignReport.jasper");
 		System.err.println(" : " + sourceFile.getAbsolutePath());
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(sourceFile);
 

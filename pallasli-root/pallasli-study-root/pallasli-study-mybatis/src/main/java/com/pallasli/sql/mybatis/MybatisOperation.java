@@ -28,7 +28,6 @@ public class MybatisOperation {
 			Statement stmt = conn.createStatement();
 			ret = stmt.executeQuery(sql);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			sqlSession.close();
@@ -66,7 +65,8 @@ public class MybatisOperation {
 		//
 		//
 		// String sql =
-		// "create table Generate (ID VARCHAR(20), NAME longtext, MONEY DOUBLE, REVISION int)";
+		// "create table Generate (ID VARCHAR(20), NAME longtext, MONEY DOUBLE,
+		// REVISION int)";
 		// sql = "update generate set dd=1";
 		// SqlSession sqlSession = sqlSessionFactory.openSession();
 		// sqlSession.getConnection();
