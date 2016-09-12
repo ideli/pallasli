@@ -10,9 +10,9 @@ import com.pallas.knowledge.bean.KnowledgeType;
 import com.pallas.knowledge.dao.impl.KnowledgeDAOImpl;
 import com.pallas.knowledge.dao.impl.KnowledgeTypeDAOImpl;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.xml.Dom4jXmlFileUtils;
-import com.pallasli.xml.Dom4jXmlParseUtils;
-import com.pallasli.xml.XmlUtils;
+import com.pallasli.utils.Dom4jXmlFileUtils;
+import com.pallasli.utils.Dom4jXmlParseUtils;
+import com.pallasli.utils.XmlUtils;
 
 public class XmlToSql {
 

@@ -14,7 +14,7 @@ import org.dom4j.io.XMLWriter;
 import com.pallas.knowledge.bean.KnowledgeType;
 import com.pallas.knowledge.dao.impl.KnowledgeTypeDAOImpl;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.xml.Dom4jXmlFileUtils;
+import com.pallasli.utils.Dom4jXmlFileUtils;
 
 public class SqlToXml {
 

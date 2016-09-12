@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.pallas.designer.resolve.DesignObject;
 import com.pallas.designer.resolve.model.Layout;
-import com.pallasli.json.JsonUtils;
 
 public class DesignForExt4Reader extends DesignReader {
 
@@ -67,7 +66,7 @@ public class DesignForExt4Reader extends DesignReader {
 	@Override
 	public DesignObject loadLayout() {
 		DesignObject layout = new Layout();
-		String json = JsonUtils.getJsonContent("/data/designer/pages/page1/layout.json");
+		String json = com.pallasli.utils.JsonUtils.getJsonContent("/data/designer/pages/page1/layout.json");
 		layout = fromJsonToLayout(json);
 		return layout;
 	}

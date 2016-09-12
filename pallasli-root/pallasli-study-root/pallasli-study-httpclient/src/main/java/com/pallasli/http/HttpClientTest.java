@@ -5,11 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
-import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,11 +30,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -50,7 +45,6 @@ import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClients;
@@ -64,9 +58,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class HttpClientTest {
 
@@ -145,14 +136,11 @@ public class HttpClientTest {
 		// HttpGet httpGet = new
 		// HttpGet("http://www.google.com.hk/search?hl=zh&ie=utf-8&num=30&output=rss&q=java+%7C+hibernate+%7C+spring&tbm=blg");
 
-		HttpGet httpGet = new HttpGet(
-				"http://localhost:8080/designerApp/home.html");
+		HttpGet httpGet = new HttpGet("http://localhost:8080/designerApp/home.html");
 		System.out.println(httpGet.getURI());
-		URI uri = new URIBuilder().setScheme("http").setHost("localhost")
-				.setPort(8080).setPath("/designerApp/home.html")
-				.setParameter("q", "httpclient")
-				.setParameter("btnG", "Google Search").setParameter("aq", "f")
-				.setParameter("oq", "").build();
+		URI uri = new URIBuilder().setScheme("http").setHost("localhost").setPort(8080)
+				.setPath("/designerApp/home.html").setParameter("q", "httpclient").setParameter("btnG", "Google Search")
+				.setParameter("aq", "f").setParameter("oq", "").build();
 		httpGet = new HttpGet(uri);
 		System.out.println(httpGet.getURI());
 		// HttpGet httpGet = new HttpGet("http://itindex.net/");
@@ -160,11 +148,9 @@ public class HttpClientTest {
 		try {
 
 			HttpResponse httpResp = httpclient.execute(httpGet);
-			HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1,
-					HttpStatus.SC_OK, "OK");
+			HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "OK");
 			response.addHeader("Set-Cookie", "c1=a; path=/; domain=localhost");
-			response.addHeader("Set-Cookie",
-					"c2=b; path=\"/\", c3=c; domain=\"localhost\"");
+			response.addHeader("Set-Cookie", "c2=b; path=\"/\", c3=c; domain=\"localhost\"");
 			Header h1 = response.getFirstHeader("Set-Cookie");
 			System.out.println(h1);
 			Header h2 = response.getLastHeader("Set-Cookie");
@@ -174,8 +160,7 @@ public class HttpClientTest {
 			while (it.hasNext()) {
 				System.out.println(it.next());
 			}
-			HeaderElementIterator it2 = new BasicHeaderElementIterator(
-					response.headerIterator("Set-Cookie"));
+			HeaderElementIterator it2 = new BasicHeaderElementIterator(response.headerIterator("Set-Cookie"));
 
 			while (it2.hasNext()) {
 				HeaderElement elem = it2.nextElement();
@@ -228,8 +213,7 @@ public class HttpClientTest {
 		// }
 
 		if (entity != null) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					entity.getContent(), "UTF-8"), 8192);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent(), "UTF-8"), 8192);
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
@@ -262,8 +246,7 @@ public class HttpClientTest {
 			if (ht.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				HttpEntity he = ht.getEntity();
 				InputStream is = he.getContent();
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(is));
+				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				String response = "";
 				String readLine = null;
 				while ((readLine = br.readLine()) != null) {
@@ -321,41 +304,41 @@ public class HttpClientTest {
 
 	}
 
-	public void requestWithHandler() {
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet("http://localhost/json");
-
-		ResponseHandler<MyJsonObject> rh = new ResponseHandler<MyJsonObject>() {
-
-			@Override
-			public MyJsonObject handleResponse(final HttpResponse response)
-					throws IOException {
-				StatusLine statusLine = response.getStatusLine();
-				HttpEntity entity = response.getEntity();
-				if (statusLine.getStatusCode() >= 300) {
-					throw new HttpResponseException(statusLine.getStatusCode(),
-							statusLine.getReasonPhrase());
-				}
-				if (entity == null) {
-					throw new ClientProtocolException(
-							"Response contains no content");
-				}
-				Gson gson = new GsonBuilder().create();
-				ContentType contentType = ContentType.getOrDefault(entity);
-				Charset charset = contentType.getCharset();
-				Reader reader = new InputStreamReader(entity.getContent(),
-						charset);
-				return gson.fromJson(reader, MyJsonObject.class);
-			}
-		};
-		try {
-			MyJsonObject myjson = httpclient.execute(httpget, rh);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	// public void requestWithHandler() {
+	// CloseableHttpClient httpclient = HttpClients.createDefault();
+	// HttpGet httpget = new HttpGet("http://localhost/json");
+	//
+	// ResponseHandler<MyJsonObject> rh = new ResponseHandler<MyJsonObject>() {
+	//
+	// @Override
+	// public MyJsonObject handleResponse(final HttpResponse response)
+	// throws IOException {
+	// StatusLine statusLine = response.getStatusLine();
+	// HttpEntity entity = response.getEntity();
+	// if (statusLine.getStatusCode() >= 300) {
+	// throw new HttpResponseException(statusLine.getStatusCode(),
+	// statusLine.getReasonPhrase());
+	// }
+	// if (entity == null) {
+	// throw new ClientProtocolException(
+	// "Response contains no content");
+	// }
+	// Gson gson = new GsonBuilder().create();
+	// ContentType contentType = ContentType.getOrDefault(entity);
+	// Charset charset = contentType.getCharset();
+	// Reader reader = new InputStreamReader(entity.getContent(),
+	// charset);
+	// return gson.fromJson(reader, MyJsonObject.class);
+	// }
+	// };
+	// try {
+	// MyJsonObject myjson = httpclient.execute(httpget, rh);
+	// } catch (ClientProtocolException e) {
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	public void other() throws ClientProtocolException, IOException {
 
@@ -371,8 +354,7 @@ public class HttpClientTest {
 		ConnectionKeepAliveStrategy keepAliveStrat = new DefaultConnectionKeepAliveStrategy() {
 
 			@Override
-			public long getKeepAliveDuration(HttpResponse response,
-					HttpContext context) {
+			public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
 				long keepAlive = super.getKeepAliveDuration(response, context);
 				if (keepAlive == -1) {
 					// Keep connections alive 5 seconds if a keep-alive value
@@ -383,8 +365,7 @@ public class HttpClientTest {
 			}
 
 		};
-		CloseableHttpClient httpclient = HttpClients.custom()
-				.setKeepAliveStrategy(keepAliveStrat).build();
+		CloseableHttpClient httpclient = HttpClients.custom().setKeepAliveStrategy(keepAliveStrat).build();
 
 		/**
 		 * HttpContext可以包含任意类型的对象，因此如果在多线程中共享上下文会不安全。推荐每个线程都只包含自己的http上下文。
@@ -396,9 +377,8 @@ public class HttpClientTest {
 		 * HttpRequest的实例，表示Http请求。在执行上下文中，最终的HttpRequest对象会代表http消息的状态
 		 * 。Http/1.0和Http/1.1都默认使用相对的uri。但是如果使用了非隧道模式的代理服务器，就会使用绝对路径的uri。
 		 * HttpResponse的实例，表示Http响应 java.lang.Boolean对象，表示是否请求被成功的发送给目标服务器
-		 * RequestConfig对象，表示http request的配置信息
-		 * java.util.List<Uri>对象，表示Http响应中的所有重定向地址
-		 * 我们可以使用HttpClientContext这个适配器来简化和上下文交互的过程。
+		 * RequestConfig对象，表示http request的配置信息 java.util.List
+		 * <Uri>对象，表示Http响应中的所有重定向地址 我们可以使用HttpClientContext这个适配器来简化和上下文交互的过程。
 		 */
 
 		HttpContext context = new BasicHttpContext();
@@ -413,8 +393,7 @@ public class HttpClientTest {
 		 * 在下面的例子中，我们在开头设置的参数，会被保存在上下文中，并且会应用到后续的http请求中。
 		 */
 		httpclient = HttpClients.createDefault();
-		RequestConfig requestConfig = RequestConfig.custom()
-				.setSocketTimeout(1000).setConnectTimeout(1000).build();
+		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(1000).setConnectTimeout(1000).build();
 
 		HttpGet httpget1 = new HttpGet("http://localhost/1");
 		httpget1.setConfig(requestConfig);
@@ -454,8 +433,8 @@ public class HttpClientTest {
 		// 如果要自定义异常处理机制，我们需要实现HttpRequestRetryHandler接口。
 		HttpRequestRetryHandler myRetryHandler = new HttpRequestRetryHandler() {
 
-			public boolean retryRequest(IOException exception,
-					int executionCount, HttpContext context) {
+			@Override
+			public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
 				if (executionCount >= 5) {
 					// Do not retry if over max retry count
 					return false;
@@ -476,8 +455,7 @@ public class HttpClientTest {
 					// SSL handshake exception
 					return false;
 				}
-				HttpClientContext clientContext = HttpClientContext
-						.adapt(context);
+				HttpClientContext clientContext = HttpClientContext.adapt(context);
 				HttpRequest request = clientContext.getRequest();
 				boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
 				if (idempotent) {
@@ -487,23 +465,19 @@ public class HttpClientTest {
 				return false;
 			}
 		};
-		httpclient = HttpClients.custom().setRetryHandler(myRetryHandler)
-				.build();
+		httpclient = HttpClients.custom().setRetryHandler(myRetryHandler).build();
 
 		// Http协议拦截器
-		httpclient = HttpClients.custom()
-				.addInterceptorLast(new HttpRequestInterceptor() {
+		httpclient = HttpClients.custom().addInterceptorLast(new HttpRequestInterceptor() {
 
-					public void process(final HttpRequest request,
-							final HttpContext context) throws HttpException,
-							IOException {
-						AtomicInteger count = (AtomicInteger) context
-								.getAttribute("count");
-						request.addHeader("Count",
-								Integer.toString(count.getAndIncrement()));
-					}
+			@Override
+			public void process(final HttpRequest request, final HttpContext context)
+					throws HttpException, IOException {
+				AtomicInteger count = (AtomicInteger) context.getAttribute("count");
+				request.addHeader("Count", Integer.toString(count.getAndIncrement()));
+			}
 
-				}).build();
+		}).build();
 
 		AtomicInteger count = new AtomicInteger(1);
 		HttpClientContext localContext = HttpClientContext.create();
@@ -533,8 +507,7 @@ public class HttpClientTest {
 		// as required by the HTTP specification.
 		// 我们可以使用自定义的重定向策略来放松Http规范对Post方法重定向的限制。
 		LaxRedirectStrategy redirectStrategy = new LaxRedirectStrategy();
-		httpclient = HttpClients.custom().setRedirectStrategy(redirectStrategy)
-				.build();
+		httpclient = HttpClients.custom().setRedirectStrategy(redirectStrategy).build();
 		// HttpClient在请求执行过程中，经常需要重写请求的消息。
 		// HTTP/1.0和HTTP/1.1都默认使用相对的uri路径。同样，原始的请求可能会被一次或者多次的重定向。最终结对路径的解释可以使用最初的请求和上下文。URIUtils类的resolve方法可以用于将拦截的绝对路径构建成最终的请求。这个方法包含了最后一个分片标识符或者原始请求。
 		httpclient = HttpClients.createDefault();
@@ -544,10 +517,8 @@ public class HttpClientTest {
 		try {
 			HttpHost target2 = context2.getTargetHost();
 			List<URI> redirectLocations = context2.getRedirectLocations();
-			URI location = URIUtils.resolve(httpget.getURI(), target,
-					redirectLocations);
-			System.out.println("Final HTTP location: "
-					+ location.toASCIIString());
+			URI location = URIUtils.resolve(httpget.getURI(), target, redirectLocations);
+			System.out.println("Final HTTP location: " + location.toASCIIString());
 			// Expected to be an absolute URI
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
@@ -608,8 +579,7 @@ public class HttpClientTest {
 		HttpHost localhost = new HttpHost("locahost", 80);
 		cm.setMaxPerRoute(new HttpRoute(localhost), 50);
 
-		CloseableHttpClient httpClient = HttpClients.custom()
-				.setConnectionManager(cm).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).build();
 
 		/**
 		 * 当使用了请求连接池管理器（比如PoolingClientConnectionManager）后，
@@ -624,8 +594,7 @@ public class HttpClientTest {
 		httpClient = HttpClients.custom().setConnectionManager(cm).build();
 
 		// URIs to perform GETs on
-		String[] urisToGet = { "http://www.domain1.com/",
-				"http://www.domain2.com/", "http://www.domain3.com/",
+		String[] urisToGet = { "http://www.domain1.com/", "http://www.domain2.com/", "http://www.domain3.com/",
 				"http://www.domain4.com/" };
 
 		// create a thread for each URI
@@ -656,8 +625,8 @@ public class HttpClientTest {
 		 **/
 		ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
 
-			public long getKeepAliveDuration(HttpResponse response,
-					HttpContext context) {
+			@Override
+			public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
 				// Honor 'keep-alive' header
 				HeaderElementIterator it = new BasicHeaderElementIterator(
 						response.headerIterator(HTTP.CONN_KEEP_ALIVE));
@@ -672,10 +641,8 @@ public class HttpClientTest {
 						}
 					}
 				}
-				HttpHost target = (HttpHost) context
-						.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
-				if ("www.naughty-server.com".equalsIgnoreCase(target
-						.getHostName())) {
+				HttpHost target = (HttpHost) context.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
+				if ("www.naughty-server.com".equalsIgnoreCase(target.getHostName())) {
 					// Keep alive for 5 seconds only
 					return 5 * 1000;
 				} else {
@@ -685,8 +652,7 @@ public class HttpClientTest {
 			}
 
 		};
-		CloseableHttpClient client = HttpClients.custom()
-				.setKeepAliveStrategy(myStrategy).build();
+		CloseableHttpClient client = HttpClients.custom().setKeepAliveStrategy(myStrategy).build();
 	}
 }
 
@@ -754,8 +720,7 @@ class GetThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			CloseableHttpResponse response = httpClient.execute(httpget,
-					context);
+			CloseableHttpResponse response = httpClient.execute(httpget, context);
 			try {
 				HttpEntity entity = response.getEntity();
 			} finally {

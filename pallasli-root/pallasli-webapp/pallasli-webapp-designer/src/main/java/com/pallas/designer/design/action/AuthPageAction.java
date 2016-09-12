@@ -14,8 +14,8 @@ import com.pallas.designer.design.bean.AuthGrid;
 import com.pallas.designer.design.bean.AuthPage;
 import com.pallas.designer.design.bean.SimpleFormAuthPage;
 import com.pallas.designer.design.bean.SimpleGridAuthPage;
-import com.pallasli.json.JsonUtils;
 import com.pallasli.utils.FileUtils;
+import com.pallasli.utils.JsonUtils;
 
 public class AuthPageAction {
 	public static AuthPageAction instance() {
@@ -29,7 +29,7 @@ public class AuthPageAction {
 		String path = basePath.replace("WEB-INF/classes/", "") + "data/design/pages/p_addMenu/components.json";
 
 		String json = FileUtils.readFileToString(path);
-		JsonElement page = JsonUtils.fromStringToJsonElement(json);
+		JsonElement page = com.pallasli.utils.JsonUtils.fromStringToJsonElement(json);
 		JsonArray fieldArray = page.getAsJsonObject().get("f_fields").getAsJsonArray();
 
 		Iterator<JsonElement> it0 = fieldArray.iterator();

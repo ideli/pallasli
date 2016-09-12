@@ -14,3 +14,9 @@ pallasli-root/**/node_modules/*
 pallasli-root/pallasli-study/log/*
  
 
+
+pallasli-designer-parent/pallasli-designer-web/.tern-project
+
+pallasli-root/pallasli-webapp/pallasli-webapp-pm-ext/.project
+
+pallasli-root/pallasli-webapp/pallasli-webapp-portal/.project

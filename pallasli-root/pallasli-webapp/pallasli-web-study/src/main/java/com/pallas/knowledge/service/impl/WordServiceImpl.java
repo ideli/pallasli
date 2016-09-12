@@ -16,8 +16,8 @@ import com.google.gson.JsonObject;
 import com.pallas.knowledge.bean.TreeNode;
 import com.pallas.knowledge.service.WordService;
 import com.pallasli.constant.SystemConstant;
-import com.pallasli.xml.Dom4jXmlFileUtils;
-import com.pallasli.xml.Dom4jXmlParseUtils;
+import com.pallasli.utils.Dom4jXmlFileUtils;
+import com.pallasli.utils.Dom4jXmlParseUtils;
 
 public class WordServiceImpl implements WordService {
 	@SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class WordServiceImpl implements WordService {
 		List<TreeNode> list = new ArrayList<TreeNode>();
 		JsonObject addNode = data.get(0).getAsJsonObject();
 		String node = addNode.has("node") ? addNode.get("node").getAsString() : "";
-		Document doc = Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml");
+		Document doc = com.pallasli.utils.Dom4jXmlFileUtils.load(SystemConstant.WEB_ROOT + "data/WordsTypeTree.xml");
 		try {
 			list = (List<TreeNode>) Dom4jXmlParseUtils.parseXml2List(doc, TreeNode.class, "node[id='" + node + "']");
 		} catch (Exception e) {
