@@ -40,8 +40,7 @@ public class LoadOnStart extends HttpServlet implements ApplicationContextAware 
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext context)
-			throws BeansException {
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
 		this.context = (WebApplicationContext) context;
 	}
 }
