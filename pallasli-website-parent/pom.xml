@@ -7,17 +7,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>pallasli-website-web-bpm</module>
-		<module>pallasli-website-filter</module>
 		<module>pallasli-website-log</module>
-		<module>pallasli-website-login</module>
-		<module>pallasli-website-redis</module>
 		<module>pallasli-website-report</module>
-		<module>pallasli-website-encryption</module>
-		<module>pallasli-website-jdbc</module>
-		<module>pallasli-website-protocol</module>
-		<module>pallasli-website-socket</module>
-		<module>pallasli-website-web-report</module>
-		<module>pallasli-website-properties-des</module>
 		<module>pallasli-website-web-OA</module>
 		<module>pallasli-website-web-pm</module>
 		<module>pallasli-website-kafka-storm</module>

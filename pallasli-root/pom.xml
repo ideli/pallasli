@@ -7,25 +7,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>pallasli-annotation</module>
-		<module>pallasli-basic</module>
-		<module>pallasli-chat</module>
-		<module>pallasli-component</module>
-		<module>pallasli-context</module>
-		<module>pallasli-ftp</module>
-		<module>pallasli-jasperreport-font</module>
-		<module>pallasli-jdbc</module>
-		<module>pallasli-lucene</module>
-		<module>pallasli-mail</module>
-		<module>pallasli-orgnization</module>
 		<module>pallasli-study-root</module>
-		<module>pallasli-swing</module>
-		<module>pallasli-utils</module>
-		<module>pallasli-wabpm</module>
 		<module>pallasli-webapp</module>
 		<module>pallasli-ws</module>
-		<module>pallasli-testlog</module>
-		<module>pallasli-iputils</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

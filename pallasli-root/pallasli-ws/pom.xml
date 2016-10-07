@@ -10,7 +10,6 @@
 	<modules>
 		<module>pallasli-ws-cxf</module>
 		<module>pallasli-ws-axis</module>
-		<module>pallasli-ws-container</module>
 		<module>pallasli-ws-study-ws</module>
 		<module>pallasli-ws-study-client</module>
 		<module>pallasli-ws-study-security</module>

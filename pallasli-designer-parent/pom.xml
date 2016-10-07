@@ -6,6 +6,5 @@
   <packaging>pom</packaging>
   <modules>
   	<module>pallasli-designer-web</module>
-  	<module>pallasli-designer-report</module>
   </modules>
 </project>

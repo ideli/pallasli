@@ -13,11 +13,8 @@
 		<module>pallasli-web-study</module>
 		<module>pallasli-webapp-activiti</module>
 		<module>pallasli-webapp-bpm-design</module>
-		<module>pallasli-webapp-dbanalysis</module>
 		<module>pallasli-webapp-designer</module>
-		<module>pallasli-webapp-jms</module>
 		<module>pallasli-webapp-learning</module>
-		<module>pallasli-webapp-log</module>
 		<module>pallasli-webapp-orgnization</module>
 		<module>pallasli-webapp-pm</module>
 		<module>pallasli-webapp-pm-ext</module>
@@ -25,13 +22,7 @@
 		<module>pallasli-webapp-report</module>
 		<module>pallasli-webapp-reporttest</module>
 		<module>pallasli-webapp-edu</module>
-		<module>pallasli-webapp-edu-log</module>
 		<module>pallasli-webapp-edu-database-manager</module>
-		<module>pallasli-webapp-edu-server-manager</module>
-		<module>pallasli-webapp-edu-email</module>
-		<module>pallasli-webapp-edu-im</module>
-		<module>pallasli-webapp-edu-designer</module>
-		<module>pallasli-webapp-edu-testlog</module>
 		<module>pallasli-webapp-edu-fileserver</module>
 	</modules>
 	<dependencies>

@@ -17,7 +17,11 @@
 		-rf -resume-from <arg> 从指定的模块回复反应堆 mvn clean install -rf account-email mvn 
 		help:active-profiles :查看当前激活的profiles mvn help:all-profiles : 查看所有profiles 
 		mvn help:effective -pom 查看完整的pom信息 -->
-
+<properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<spring.version>4.0.2.RELEASE</spring.version>
+	<distribution.repository>www.pallasli.com</distribution.repository>
+</properties>
 	<profiles>
 		<profile>
 			<id>downloadSources</id>
@@ -76,10 +80,6 @@
 		<system>urltracker</system>
 		<url>http://10.18.96.90/URTracker/Accounts/Login.aspx</url>
 	</issueManagement>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>4.0.2.RELEASE</spring.version>
-	</properties>
 	<repositories>
 		<repository>
 			<id>springsource-milestones</id>
@@ -87,17 +87,8 @@
 			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url>
 		</repository>
 	</repositories>
-	<dependencies></dependencies>
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<locales>zh_CN</locales>
-				</configuration>
-			</plugin>
 			<!-- 生成javadoc文档包的插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -270,7 +261,7 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
-				<version>1.4.9</version>
+				<version>1.0</version>
 				<configuration>
 					<container>
 						<containerId>tomcat7x</containerId>
