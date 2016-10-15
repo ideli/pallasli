@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.pallasli.controller.demo.UserController;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class HelloControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mvc = MockMvcBuilders.standaloneSetup(new HelloController()).build();
+		mvc = MockMvcBuilders.standaloneSetup(new UserController()).build();
 	}
 
 	@Test

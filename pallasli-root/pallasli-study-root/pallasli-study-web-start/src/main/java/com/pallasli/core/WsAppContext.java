@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.pallasli.core.constant.PropertiesConstants;
-import com.pallasli.core.constant.SystemConstants;
+import com.pallasli.core.constant.AppConstants;
 import com.pallasli.core.properties.PropertiesFactory;
 import com.pallasli.core.properties.PropertiesHelper;
 
@@ -33,14 +33,14 @@ public class WsAppContext {
 		PropertiesHelper pHelper = PropertiesFactory
 				.getPropertiesHelper(PropertiesConstants.SERVER);
 		String forceLoad = pHelper.getValue("forceLoad",
-				SystemConstants.FORCELOAD_N);
+				AppConstants.FORCELOAD_N);
 		try {
-			if (forceLoad.equalsIgnoreCase(SystemConstants.FORCELOAD_N)) {
+			if (forceLoad.equalsIgnoreCase(AppConstants.FORCELOAD_N)) {
 				log.info("系统正在初始化Spring...");
 			}
 			applicationContext = new ClassPathXmlApplicationContext(
 					new String[] { "application.xml" });
-			if (forceLoad.equalsIgnoreCase(SystemConstants.FORCELOAD_N)) {
+			if (forceLoad.equalsIgnoreCase(AppConstants.FORCELOAD_N)) {
 				log.info("Spring初始化成功,SpringBean已经被实例化。");
 			}
 		} catch (Exception e) {

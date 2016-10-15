@@ -9,7 +9,7 @@ import com.pallasli.bean.demo.User;
 //@EnableAutoConfiguration
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class  UserController {
 
 	@RequestMapping("/{id}")
 	public User view(@PathVariable("id") Long id) {

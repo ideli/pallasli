@@ -10,7 +10,7 @@ import java.util.Properties;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import com.pallasli.core.constant.ServerConstants;
+
 
 public class PropertiesHelper {
 	private static Logger log = LogManager.getLogger(PropertiesHelper.class);
@@ -28,11 +28,11 @@ public class PropertiesHelper {
 			objProperties = new Properties();
 			objProperties.load(is);
 		} catch (FileNotFoundException e) {
-			log.error(ServerConstants.Exception_Head + "未找到属性资源文件!");
+
 			e.printStackTrace();
 			throw e;
 		} catch (Exception e) {
-			log.error(ServerConstants.Exception_Head + "读取属性资源文件发生未知错误!");
+
 			e.printStackTrace();
 			throw e;
 		} finally {
@@ -55,7 +55,7 @@ public class PropertiesHelper {
 			outStream = new FileOutputStream(file);
 			objProperties.store(outStream, "#G4Studio");
 		} catch (Exception e) {
-			log.error(ServerConstants.Exception_Head + "保存属性文件出错.");
+
 			e.printStackTrace();
 		} finally {
 			try {
